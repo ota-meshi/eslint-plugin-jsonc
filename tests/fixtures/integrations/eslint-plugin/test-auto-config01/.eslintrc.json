@@ -1,0 +1,11 @@
+{
+    "root": true,
+    "extends": ["plugin:jsonc/auto-config","eslint:recommended"],
+    "rules": {
+        "indent": "error",
+        "no-unused-vars": "off",
+        "no-multi-spaces": "error",
+        "no-multiple-empty-lines": "error",
+        "jsonc/no-comments": "error"
+    }
+}

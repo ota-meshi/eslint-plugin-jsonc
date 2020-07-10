@@ -1,0 +1,8 @@
+/.nyc_output
+/coverage
+/node_modules
+/tests/fixtures/integrations
+/assets
+/dist
+/docs/.vuepress/dist
+/docs/.vuepress/components/demo/demo-code.js
