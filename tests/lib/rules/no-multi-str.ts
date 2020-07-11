@@ -10,12 +10,12 @@ tester.run("no-multi-str", rule as any, {
     invalid: [
         {
             code: '{"GOOD": "Line 1 \\\nLine 2"}',
-            errors: ["Multiline support is limited to JSON5 only."],
+            errors: 1, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
         },
         {
             filename: "test.json",
             code: '"Line 1 \\\nLine 2"',
-            errors: ["Multiline support is limited to JSON5 only."],
+            errors: 1, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
         },
     ],
 })
