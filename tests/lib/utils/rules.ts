@@ -1,8 +1,8 @@
+import type { RuleModule } from "../../../lib/types"
 import assert from "assert"
 import path from "path"
 import fs from "fs"
 
-import type { RuleModule } from "../../../lib/types"
 import { rules as allRules } from "../../../lib/utils/rules"
 
 /**
@@ -59,6 +59,9 @@ describe("Check if the strict of all rules is correct", () => {
 
         describe("Check if the messages are correct", () => {
             describe(rule.meta.docs.ruleId, () => {
+                if (!rule.meta.messages) {
+                    return
+                }
                 for (const messageId of Object.keys(rule.meta.messages)) {
                     it(messageId, () => {
                         const message = rule.meta.messages[messageId]
