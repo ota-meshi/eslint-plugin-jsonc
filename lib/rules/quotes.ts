@@ -1,0 +1,23 @@
+import coreRule from "eslint/lib/rules/quotes"
+import { createRule, defineWrapperListener } from "../utils"
+
+export default createRule("quotes", {
+    meta: {
+        docs: {
+            description: "enforce use of double or single quotes",
+            recommended: ["json", "jsonc"],
+            extensionRule: true,
+        },
+        fixable: coreRule.meta?.fixable,
+        schema: coreRule.meta?.schema!,
+        messages: coreRule.meta?.messages!,
+        type: coreRule.meta?.type!,
+    },
+    create(context) {
+        const options = [...context.options]
+        if (!options[0] || options[0] === "backtick") {
+            options[0] = "double"
+        }
+        return defineWrapperListener(coreRule, context, options)
+    },
+})
