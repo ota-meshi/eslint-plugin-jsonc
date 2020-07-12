@@ -72,18 +72,12 @@ export function defineWrapperListener(
      * Get the proxy node
      */
     function getProxyNode(node: JSONNode): any {
-        const cache: any = {}
         const type = node.type.startsWith("JSON")
             ? node.type.slice(4)
             : node.type
+        const cache: any = { type }
         return new Proxy(node, {
             get(_t, key) {
-                if (key === "type") {
-                    return type
-                }
-                if (key === "kind" && node.type === "JSONProperty") {
-                    return "init"
-                }
                 if (key in cache) {
                     return cache[key]
                 }

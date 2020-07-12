@@ -172,6 +172,10 @@ function convertPropertyNode(
         type: "JSONProperty",
         key: convertNode(node.key, tokens) as JSONLiteral | JSONIdentifier,
         value: convertNode(node.value, tokens) as JSONExpression,
+        kind: node.kind,
+        computed: node.computed,
+        method: node.method,
+        shorthand: node.shorthand,
         ...getFixLocation(node),
     }
     checkUnexpectKeys(node, tokens, nn)
@@ -284,7 +288,7 @@ function convertUnaryExpressionNode(
     const nn: JSONUnaryExpression = {
         type: "JSONUnaryExpression",
         operator,
-        prefix: true,
+        prefix: node.prefix,
         argument: convertNode(argument, tokens) as
             | JSONNumberLiteral
             | JSONNumberIdentifier,
