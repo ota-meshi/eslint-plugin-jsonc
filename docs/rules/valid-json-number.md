@@ -24,7 +24,7 @@ This rule reports numbers that cannot be parsed with JSON.
     "GOOD": [123, 0.4, -42],
 
     /* ✗ BAD */
-    "BAD": [123., .4, +42]
+    "BAD": [123., .4, +42, Infinity, NaN]
 }
 ```
 

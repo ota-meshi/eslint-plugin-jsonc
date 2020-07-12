@@ -1,0 +1,5 @@
+{
+    a: NaN,
+    b: +NaN,
+    c:-NaN
+}

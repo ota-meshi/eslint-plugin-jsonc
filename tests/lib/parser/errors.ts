@@ -291,6 +291,26 @@ typeof 123
             index: 3,
             char: "1",
         },
+        {
+            code: `
++"str"
+`,
+            message: "Unexpected string literal.",
+            lineNumber: 2,
+            column: 2,
+            index: 2,
+            char: '"',
+        },
+        {
+            code: `
++(+1)
+`,
+            message: "Unexpected unary expression.",
+            lineNumber: 2,
+            column: 3,
+            index: 3,
+            char: "+",
+        },
     ]) {
         it(`parseForESLint error on ${JSON.stringify(code)}`, () => {
             const e = getParseError(code)

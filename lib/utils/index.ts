@@ -46,7 +46,7 @@ export function defineWrapperListener(
     for (const key of Object.keys(listener)) {
         const original = listener[key]
         const jsonKey = key.replace(
-            /(?:^|\b)(ExpressionStatement|ArrayExpression|ObjectExpression|Property|Identifier|Literal)(?:\b|$)/gu,
+            /(?:^|\b)(ExpressionStatement|ArrayExpression|ObjectExpression|Property|Identifier|Literal|UnaryExpression)(?:\b|$)/gu,
             "JSON$1",
         )
         jsonListener[jsonKey] = function (node: JSONNode, ...args) {

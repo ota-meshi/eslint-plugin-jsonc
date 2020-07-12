@@ -33,41 +33,76 @@ export interface JSONProgram extends BaseJSONNode {
     body: [JSONExpressionStatement]
     comments: Comment[]
     tokens: AST.Token[]
+    parent?: null
 }
 
 export interface JSONExpressionStatement extends BaseJSONNode {
     type: "JSONExpressionStatement"
     expression: JSONExpression
+    parent?: JSONProgram
 }
 
 export type JSONExpression =
     | JSONArrayExpression
     | JSONObjectExpression
     | JSONLiteral
+    | JSONUnaryExpression
+    | JSONNumberIdentifier
 
 export interface JSONArrayExpression extends BaseJSONNode {
     type: "JSONArrayExpression"
     elements: JSONExpression[]
+    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
 
 export interface JSONObjectExpression extends BaseJSONNode {
     type: "JSONObjectExpression"
     properties: JSONProperty[]
+    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
 
 export interface JSONProperty extends BaseJSONNode {
     type: "JSONProperty"
     key: JSONIdentifier | JSONLiteral
     value: JSONExpression
+    parent?: JSONObjectExpression
 }
 
 export interface JSONIdentifier extends BaseJSONNode {
     type: "JSONIdentifier"
     name: string
+    parent?:
+        | JSONArrayExpression
+        | JSONProperty
+        | JSONExpressionStatement
+        | JSONUnaryExpression
+}
+
+export interface JSONNumberIdentifier extends JSONIdentifier {
+    name: "Infinity" | "NaN"
 }
 
 export interface JSONLiteral extends BaseJSONNode {
     type: "JSONLiteral"
     value: string | boolean | number | null
     raw: string
+    parent?:
+        | JSONArrayExpression
+        | JSONProperty
+        | JSONExpressionStatement
+        | JSONUnaryExpression
+}
+
+export interface JSONNumberLiteral extends JSONLiteral {
+    type: "JSONLiteral"
+    value: number
+    raw: string
+}
+
+export interface JSONUnaryExpression extends BaseJSONNode {
+    type: "JSONUnaryExpression"
+    operator: "-" | "+"
+    prefix: true
+    argument: JSONNumberLiteral | JSONNumberIdentifier
+    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
