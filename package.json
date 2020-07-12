@@ -13,9 +13,9 @@
     "lint": "eslint \"tests\" \"lib\" \"docs/.vuepress\" --ext .js,.vue,.ts",
     "eslint-fix": "eslint \"tests\" \"lib\" \"docs/.vuepress\" --ext .js,.vue,.ts --fix",
     "pretest": "npm run build",
-    "pretest:base": "npm run setup-types",
     "test:base": "mocha --require ts-node/register \"tests/lib/**/*.ts\" --reporter dot --timeout 60000",
-    "test": "npm run test:nyc",
+    "test": "npm run test:base",
+    "pretest:nyc": "npm run build",
     "test:nyc": "nyc --reporter=lcov npm run test:base",
     "test:debug": "mocha --require ts-node/register --inspect-brk \"tests/lib/**/*.ts\" --reporter dot",
     "update": "ts-node ./tools/update.ts && npm run eslint-fix && npm run test:nyc",
@@ -28,7 +28,8 @@
     "docs-deploysetup:copy": "npx cpx \"docs/\\.vuepress/dist/**\" . -u",
     "preversion": "npm test && npm run update && git add .",
     "version": "npm run eslint-fix && git add .",
-    "setup-types": "node ./tools/setup-eslint-rule-types.js"
+    "setup-types": "node ./tools/setup-eslint-rule-types.js",
+    "update-fixtures": "ts-node ./tools/update-fixtures.ts"
   },
   "repository": {
     "type": "git",

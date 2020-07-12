@@ -22,6 +22,9 @@ import {
     JSONLiteral,
     JSONIdentifier,
     Locations,
+    JSONUnaryExpression,
+    JSONNumberIdentifier,
+    JSONNumberLiteral,
 } from "./ast"
 import { getKeys, getNodes } from "./traverse"
 import {
@@ -45,8 +48,11 @@ export function convertNode(node: Node, tokens: AST.Token[]): JSONNode {
     if (node.type === "ArrayExpression") {
         return convertArrayExpressionNode(node, tokens)
     }
-    if (node.type === "Literal" || node.type === "UnaryExpression") {
+    if (node.type === "Literal") {
         return convertLiteralNode(node, tokens)
+    }
+    if (node.type === "UnaryExpression") {
+        return convertUnaryExpressionNode(node, tokens)
     }
     if (node.type === "Identifier") {
         return convertIdentifierNode(node, tokens)
@@ -84,7 +90,9 @@ function convertProgramNode(node: Program, tokens: AST.Token[]): JSONProgram {
     }
     const expression = bodyNode.expression
     if (expression.type === "Identifier") {
-        return throwUnexpectedNodeError(expression, tokens)
+        if (!isNumIdentifier(expression)) {
+            return throwUnexpectedNodeError(expression, tokens)
+        }
     }
     const body: JSONExpressionStatement = {
         type: "JSONExpressionStatement",
@@ -156,7 +164,9 @@ function convertPropertyNode(
         return throwUnexpectedNodeError(node.key, tokens)
     }
     if (node.value.type === "Identifier") {
-        return throwUnexpectedNodeError(node.value, tokens)
+        if (!isNumIdentifier(node.value)) {
+            return throwUnexpectedNodeError(node.value, tokens)
+        }
     }
     const nn: JSONProperty = {
         type: "JSONProperty",
@@ -192,7 +202,9 @@ function convertArrayExpressionNode(
                 )
             }
             if (child.type === "Identifier") {
-                return throwUnexpectedNodeError(child, tokens)
+                if (!isNumIdentifier(child)) {
+                    return throwUnexpectedNodeError(child, tokens)
+                }
             }
             return convertNode(child, tokens) as JSONExpression
         }),
@@ -205,39 +217,18 @@ function convertArrayExpressionNode(
 /**
  * Convert Literal node to JSONLiteral node
  */
-function convertLiteralNode(
-    node: Literal | UnaryExpression,
-    tokens: AST.Token[],
-): JSONLiteral {
+function convertLiteralNode(node: Literal, tokens: AST.Token[]): JSONLiteral {
     /* istanbul ignore next */
-    if (node.type !== "Literal" && node.type !== "UnaryExpression") {
+    if (node.type !== "Literal") {
         return throwUnexpectedNodeError(node, tokens)
     }
-    let literal: Literal
-    let value: number | string | null | boolean | RegExp | undefined
-    if (node.type === "UnaryExpression") {
-        if (node.operator !== "-" && node.operator !== "+") {
-            return throwUnexpectedNodeError(node, tokens)
-        }
-        const argument = node.argument
-        if (argument.type !== "Literal" || typeof argument.value !== "number") {
-            return throwUnexpectedNodeError(node.argument, tokens)
-        }
-        if (node.range![0] + 1 !== argument.range![0]) {
-            return throwUnexpectedTokenError(" ", argument)
-        }
-        literal = argument
-        value = node.operator === "-" ? -argument.value : argument.value
-    } else {
-        literal = node
-        value = node.value
-    }
+    const value = node.value
 
-    if ((literal as RegExpLiteral).regex) {
-        return throwUnexpectedNodeError(literal, tokens)
+    if ((node as RegExpLiteral).regex) {
+        return throwUnexpectedNodeError(node, tokens)
     }
-    if ((literal as any).bigint) {
-        return throwUnexpectedNodeError(literal, tokens)
+    if ((node as any).bigint) {
+        return throwUnexpectedNodeError(node, tokens)
     }
     if (value !== null) {
         if (
@@ -245,16 +236,61 @@ function convertLiteralNode(
             typeof value !== "number" &&
             typeof value !== "boolean"
         ) {
-            return throwUnexpectedNodeError(literal, tokens)
+            return throwUnexpectedNodeError(node, tokens)
         }
     }
     const nn: JSONLiteral = {
         type: "JSONLiteral",
         value,
-        raw: literal.raw!,
+        raw: node.raw!,
         ...getFixLocation(node),
     }
-    checkUnexpectKeys(literal, tokens, nn)
+    checkUnexpectKeys(node, tokens, nn)
+    return nn
+}
+
+/**
+ * Convert UnaryExpression node to JSONUnaryExpression node
+ */
+function convertUnaryExpressionNode(
+    node: UnaryExpression,
+    tokens: AST.Token[],
+): JSONUnaryExpression {
+    /* istanbul ignore next */
+    if (node.type !== "UnaryExpression") {
+        return throwUnexpectedNodeError(node, tokens)
+    }
+    const operator = node.operator
+
+    if (operator !== "-" && operator !== "+") {
+        return throwUnexpectedNodeError(node, tokens)
+    }
+    const argument = node.argument
+    if (argument.type === "Literal") {
+        if (typeof argument.value !== "number") {
+            return throwUnexpectedNodeError(argument, tokens)
+        }
+    } else if (argument.type === "Identifier") {
+        if (!isNumIdentifier(argument)) {
+            return throwUnexpectedNodeError(argument, tokens)
+        }
+    } else {
+        return throwUnexpectedNodeError(argument, tokens)
+    }
+    if (node.range![0] + 1 !== argument.range![0]) {
+        return throwUnexpectedTokenError(" ", argument)
+    }
+
+    const nn: JSONUnaryExpression = {
+        type: "JSONUnaryExpression",
+        operator,
+        prefix: true,
+        argument: convertNode(argument, tokens) as
+            | JSONNumberLiteral
+            | JSONNumberIdentifier,
+        ...getFixLocation(node),
+    }
+    checkUnexpectKeys(node, tokens, nn)
     return nn
 }
 
@@ -276,6 +312,15 @@ function convertIdentifierNode(
     }
     checkUnexpectKeys(node, tokens, nn)
     return nn
+}
+
+/**
+ * Check if given node is NaN or Infinity
+ */
+function isNumIdentifier(
+    node: Identifier,
+): node is Identifier & { name: "NaN" | "Infinity" } {
+    return node.name === "NaN" || node.name === "Infinity"
 }
 
 /**

@@ -1,0 +1,75 @@
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "JSONExpressionStatement",
+      "expression": {
+        "type": "JSONIdentifier",
+        "name": "Infinity",
+        "range": [
+          0,
+          8
+        ],
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 8
+          }
+        }
+      },
+      "range": [
+        0,
+        10
+      ],
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 1
+        }
+      }
+    }
+  ],
+  "comments": [],
+  "tokens": [
+    {
+      "type": "Identifier",
+      "value": "Infinity",
+      "range": [
+        0,
+        8
+      ],
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 8
+        }
+      }
+    }
+  ],
+  "range": [
+    0,
+    10
+  ],
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 2,
+      "column": 1
+    }
+  }
+}

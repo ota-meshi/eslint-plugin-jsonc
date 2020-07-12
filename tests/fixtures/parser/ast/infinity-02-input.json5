@@ -1,0 +1,5 @@
+{
+    a: Infinity,
+    b: +Infinity,
+    c:-Infinity
+}

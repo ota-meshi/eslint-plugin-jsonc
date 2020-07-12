@@ -33,5 +33,42 @@ tester.run("valid-json-number", rule as any, {
             output: "123",
             errors: ["Invalid number for JSON."],
         },
+        {
+            code: "[Infinity, +Infinity, -Infinity]",
+            output: null,
+            errors: [
+                "Invalid number for JSON.",
+                "Invalid number for JSON.",
+                "Invalid number for JSON.",
+            ],
+        },
+        {
+            code: "[NaN, +NaN, -NaN]",
+            output: null,
+            errors: [
+                "Invalid number for JSON.",
+                "Invalid number for JSON.",
+                "Invalid number for JSON.",
+            ],
+        },
+        {
+            code: `{
+                NaN :
+                  NaN,
+                Infinity:
+                  Infinity
+            }`,
+            output: null,
+            errors: [
+                {
+                    message: "Invalid number for JSON.",
+                    line: 3,
+                },
+                {
+                    message: "Invalid number for JSON.",
+                    line: 5,
+                },
+            ],
+        },
     ],
 })

@@ -1,6 +1,11 @@
-import type { JSONLiteral } from "../parser/ast"
+import type {
+    JSONLiteral,
+    JSONUnaryExpression,
+    JSONIdentifier,
+} from "../parser/ast"
 import type { RuleListener } from "../types"
 import { createRule } from "../utils"
+import { isExpression } from "../utils/ast"
 
 export default createRule("valid-json-number", {
     meta: {
@@ -22,6 +27,23 @@ export default createRule("valid-json-number", {
         }
         const sourceCode = context.getSourceCode()
         return {
+            JSONUnaryExpression(node: JSONUnaryExpression) {
+                if (node.operator === "+") {
+                    if (node.argument.type === "JSONIdentifier") {
+                        return
+                    }
+                    context.report({
+                        loc: node.loc,
+                        messageId: "invalid",
+                        fix(fixer) {
+                            return fixer.removeRange([
+                                node.range[0],
+                                node.range[0] + 1,
+                            ])
+                        },
+                    })
+                }
+            },
             JSONLiteral(node: JSONLiteral) {
                 if (typeof node.value !== "number") {
                     return
@@ -41,6 +63,15 @@ export default createRule("valid-json-number", {
                         },
                     })
                 }
+            },
+            JSONIdentifier(node: JSONIdentifier) {
+                if (!isExpression(node)) {
+                    return
+                }
+                context.report({
+                    loc: node.loc,
+                    messageId: "invalid",
+                })
             },
         }
     },
