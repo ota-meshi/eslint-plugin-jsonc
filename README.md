@@ -94,6 +94,28 @@ eslint --ext .js,.json src
 eslint "src/**/*.{js,json}"
 ```
 
+## Editor Integrations
+
+### Visual Studio Code
+
+Use the [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extension that Microsoft provides officially.
+
+You have to configure the `eslint.validate` option of the extension to check `.json` files, because the extension targets only `*.js` or `*.jsx` files by default.
+
+Example **.vscode/settings.json**:
+
+```json
+{
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "json5"
+  ]
+}
+```
+
 <!--USAGE_SECTION_END-->
 
 ## Rules
