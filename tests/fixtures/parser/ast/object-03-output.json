@@ -69,6 +69,10 @@
                       }
                     }
                   },
+                  "kind": "init",
+                  "computed": false,
+                  "method": false,
+                  "shorthand": false,
                   "range": [
                     23,
                     29
@@ -123,6 +127,10 @@
                       }
                     }
                   },
+                  "kind": "init",
+                  "computed": false,
+                  "method": false,
+                  "shorthand": false,
                   "range": [
                     39,
                     45
@@ -154,6 +162,10 @@
                 }
               }
             },
+            "kind": "init",
+            "computed": false,
+            "method": false,
+            "shorthand": false,
             "range": [
               6,
               52

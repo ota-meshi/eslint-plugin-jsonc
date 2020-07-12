@@ -172,6 +172,10 @@ function convertPropertyNode(
         type: "JSONProperty",
         key: convertNode(node.key, tokens) as JSONLiteral | JSONIdentifier,
         value: convertNode(node.value, tokens) as JSONExpression,
+        kind: "init",
+        computed: false,
+        method: false,
+        shorthand: false,
         ...getFixLocation(node),
     }
     checkUnexpectKeys(node, tokens, nn)

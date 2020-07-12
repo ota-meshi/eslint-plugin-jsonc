@@ -65,6 +65,10 @@ export interface JSONProperty extends BaseJSONNode {
     type: "JSONProperty"
     key: JSONIdentifier | JSONLiteral
     value: JSONExpression
+    kind: "init"
+    method: false
+    shorthand: false
+    computed: false
     parent?: JSONObjectExpression
 }
 

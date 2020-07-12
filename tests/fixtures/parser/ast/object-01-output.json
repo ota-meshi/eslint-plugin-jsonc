@@ -46,6 +46,10 @@
                 }
               }
             },
+            "kind": "init",
+            "computed": false,
+            "method": false,
+            "shorthand": false,
             "range": [
               1,
               12
