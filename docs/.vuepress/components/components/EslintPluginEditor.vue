@@ -87,7 +87,7 @@ export default {
                 parser: "json-eslint-parser",
                 parserOptions: {
                     sourceType: "script",
-                    ecmaVersion: 2019,
+                    ecmaVersion: 2020,
                 },
             }
         },

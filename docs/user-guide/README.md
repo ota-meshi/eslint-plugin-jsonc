@@ -13,6 +13,8 @@ npm install --save-dev eslint eslint-plugin-jsonc
 
 ## Usage
 
+<!--USAGE_GUIDE_START-->
+
 ### Configuration
 
 Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
@@ -73,5 +75,44 @@ Example **.vscode/settings.json**:
     "jsonc",
     "json5"
   ]
+}
+```
+
+<!--USAGE_GUIDE_END-->
+
+## :question: FAQ
+
+### How to parse files other than `.json` and `.json5`?
+
+This plugin will parse `.json` and `.json5` using the configuration provided by the plugin.
+To parse other extensions, you need to add a setting to your configuration.
+
+Example **.eslintrc.js**:
+
+```js
+module.exports = {
+  // ...
+  // Add the following settings.
+  overrides: [
+    {
+      files: ["*.json6"], // If you want to parse `.json6`
+      parser: "eslint-plugin-jsonc", // Set this plugin as a parser.
+    },
+  ],
+}
+```
+
+If you want to apply `plugin:jsonc/auto-config` to files with this extension, add the following settings.
+
+```diff
+module.exports = {
+  // ...
+  overrides: [
+    {
+      files: ["*.json6"],
+      parser: "eslint-plugin-jsonc",
++     processor: "jsonc/auto-config",
+    },
+  ],
 }
 ```

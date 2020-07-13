@@ -1,6 +1,7 @@
 import type { Node } from "estree"
 import type { VisitorKeys } from "eslint-visitor-keys"
 import { KEYS } from "./visitor-keys"
+import { JSONNode } from "./ast"
 
 //------------------------------------------------------------------------------
 // Helpers
@@ -33,7 +34,7 @@ function fallbackKeysFilter(this: any, key: string): boolean {
  * @param node The node to get.
  * @returns The keys to traverse.
  */
-export function getFallbackKeys(node: Node): string[] {
+export function getFallbackKeys(node: Node | JSONNode): string[] {
     return Object.keys(node).filter(fallbackKeysFilter, node)
 }
 
@@ -42,7 +43,10 @@ export function getFallbackKeys(node: Node): string[] {
  * @param node The node to get.
  * @returns The keys to traverse.
  */
-export function getKeys(node: Node, visitorKeys?: VisitorKeys): string[] {
+export function getKeys(
+    node: Node | JSONNode,
+    visitorKeys?: VisitorKeys,
+): string[] {
     const keys = (visitorKeys || KEYS)[node.type] || getFallbackKeys(node)
 
     return keys.filter((key) => !getNodes(node, key).next().done)
@@ -52,7 +56,7 @@ export function getKeys(node: Node, visitorKeys?: VisitorKeys): string[] {
  * Get the nodes of the given node.
  * @param node The node to get.
  */
-export function* getNodes(node: Node, key: string) {
+export function* getNodes(node: Node | JSONNode, key: string) {
     const child = (node as any)[key]
     if (Array.isArray(child)) {
         for (const c of child) {
@@ -80,7 +84,11 @@ function isNode(x: any): x is Node {
  * @param parent The parent node.
  * @param visitor The node visitor.
  */
-function traverse(node: Node, parent: Node | null, visitor: Visitor): void {
+function traverse(
+    node: Node | JSONNode,
+    parent: Node | JSONNode | null,
+    visitor: Visitor<Node | JSONNode>,
+): void {
     visitor.enterNode(node, parent)
 
     const keys = getKeys(node, visitor.visitorKeys)
@@ -97,17 +105,22 @@ function traverse(node: Node, parent: Node | null, visitor: Visitor): void {
 // Exports
 //------------------------------------------------------------------------------
 
-export interface Visitor {
+export interface Visitor<N> {
     visitorKeys?: VisitorKeys
-    enterNode(node: Node, parent: Node | null): void
-    leaveNode(node: Node, parent: Node | null): void
+    enterNode(node: N, parent: N | null): void
+    leaveNode(node: N, parent: N | null): void
 }
 
+export function traverseNodes(node: JSONNode, visitor: Visitor<JSONNode>): void
+export function traverseNodes(node: Node, visitor: Visitor<Node>): void
 /**
  * Traverse the given AST tree.
  * @param node Root node to traverse.
  * @param visitor Visitor.
  */
-export function traverseNodes(node: Node, visitor: Visitor): void {
+export function traverseNodes(
+    node: Node | JSONNode,
+    visitor: Visitor<Node | JSONNode>,
+): void {
     traverse(node, null, visitor)
 }

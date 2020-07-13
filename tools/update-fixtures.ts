@@ -12,6 +12,12 @@ function replacer(key: string, value: any) {
     if (key === "parent") {
         return undefined
     }
+    if (value instanceof RegExp) {
+        return String(value)
+    }
+    if (typeof value === "bigint") {
+        return `${String(value)}n`
+    }
     return value
 }
 
@@ -21,7 +27,7 @@ function replacer(key: string, value: any) {
 function parse(code: string) {
     return parseForESLint(code, {
         comment: true,
-        ecmaVersion: 2019,
+        ecmaVersion: 2020,
         eslintScopeManager: true,
         eslintVisitorKeys: true,
         filePath: "test.json",
@@ -34,10 +40,15 @@ function parse(code: string) {
 
 for (const filename of fs
     .readdirSync(FIXTURE_ROOT)
-    .filter((f) => f.endsWith("input.json5"))) {
+    .filter(
+        (f) =>
+            f.endsWith("input.json5") ||
+            f.endsWith("input.json6") ||
+            f.endsWith("input.jsonx"),
+    )) {
     const inputFileName = path.join(FIXTURE_ROOT, filename)
     const outputFileName = inputFileName.replace(
-        /input\.json5$/u,
+        /input\.json[56x]$/u,
         "output.json",
     )
 

@@ -9,6 +9,9 @@ import type {
     Literal,
     Identifier,
     UnaryExpression,
+    TemplateLiteral,
+    TemplateElement,
+    Expression,
 } from "estree"
 import type { AST } from "eslint"
 import {
@@ -25,16 +28,48 @@ import {
     JSONUnaryExpression,
     JSONNumberIdentifier,
     JSONNumberLiteral,
+    JSONTemplateLiteral,
+    JSONTemplateElement,
+    JSONRegExpLiteral,
+    JSONBigIntLiteral,
+    JSONKeywordLiteral,
+    JSONStringLiteral,
 } from "./ast"
 import { getKeys, getNodes } from "./traverse"
 import {
     ParseError,
     throwUnexpectedNodeError,
     throwExpectedTokenError,
-    throwUnexpectedCommaTokenError,
     throwUnexpectedTokenError,
 } from "./errors"
 
+export function convertNode(node: Program, tokens: AST.Token[]): JSONProgram
+export function convertNode(
+    node: ObjectExpression,
+    tokens: AST.Token[],
+): JSONObjectExpression
+export function convertNode(
+    node: ArrayExpression,
+    tokens: AST.Token[],
+): JSONArrayExpression
+export function convertNode(node: Literal, tokens: AST.Token[]): JSONLiteral
+export function convertNode(
+    node: UnaryExpression,
+    tokens: AST.Token[],
+): JSONUnaryExpression
+export function convertNode(
+    node: Identifier,
+    tokens: AST.Token[],
+): JSONIdentifier
+export function convertNode(
+    node: TemplateLiteral,
+    tokens: AST.Token[],
+): JSONTemplateLiteral
+export function convertNode(
+    node: Expression,
+    tokens: AST.Token[],
+): JSONExpression
+export function convertNode(node: Node, tokens: AST.Token[]): JSONNode
 /**
  * Convert ES node to JSON node
  */
@@ -56,6 +91,9 @@ export function convertNode(node: Node, tokens: AST.Token[]): JSONNode {
     }
     if (node.type === "Identifier") {
         return convertIdentifierNode(node, tokens)
+    }
+    if (node.type === "TemplateLiteral") {
+        return convertTemplateLiteralNode(node, tokens)
     }
     return throwUnexpectedNodeError(node, tokens)
 }
@@ -90,13 +128,13 @@ function convertProgramNode(node: Program, tokens: AST.Token[]): JSONProgram {
     }
     const expression = bodyNode.expression
     if (expression.type === "Identifier") {
-        if (!isNumIdentifier(expression)) {
+        if (!isStaticValueIdentifier(expression)) {
             return throwUnexpectedNodeError(expression, tokens)
         }
     }
     const body: JSONExpressionStatement = {
         type: "JSONExpressionStatement",
-        expression: convertNode(expression, tokens) as JSONExpression,
+        expression: convertNode(expression, tokens),
         ...getFixLocation(bodyNode),
     }
 
@@ -129,7 +167,7 @@ function convertObjectExpressionNode(
         ),
         ...getFixLocation(node),
     }
-    checkUnexpectKeys(node, tokens, nn)
+    checkUnexpectedKeys(node, tokens, nn)
     return nn
 }
 
@@ -157,20 +195,24 @@ function convertPropertyNode(
         return throwExpectedTokenError(":", node.key)
     }
     if (node.key.type === "Literal") {
-        if (typeof node.key.value !== "string") {
+        const keyValueType = typeof node.key.value
+        if (keyValueType !== "string" && keyValueType !== "number") {
             return throwUnexpectedNodeError(node.key, tokens)
         }
     } else if (node.key.type !== "Identifier") {
         return throwUnexpectedNodeError(node.key, tokens)
     }
     if (node.value.type === "Identifier") {
-        if (!isNumIdentifier(node.value)) {
+        if (!isStaticValueIdentifier(node.value)) {
             return throwUnexpectedNodeError(node.value, tokens)
         }
     }
     const nn: JSONProperty = {
         type: "JSONProperty",
-        key: convertNode(node.key, tokens) as JSONLiteral | JSONIdentifier,
+        key: convertNode(node.key, tokens) as
+            | JSONStringLiteral
+            | JSONNumberLiteral
+            | JSONIdentifier,
         value: convertNode(node.value, tokens) as JSONExpression,
         kind: node.kind,
         computed: node.computed,
@@ -178,7 +220,7 @@ function convertPropertyNode(
         shorthand: node.shorthand,
         ...getFixLocation(node),
     }
-    checkUnexpectKeys(node, tokens, nn)
+    checkUnexpectedKeys(node, tokens, nn)
     return nn
 }
 
@@ -193,29 +235,31 @@ function convertArrayExpressionNode(
     if (node.type !== "ArrayExpression") {
         return throwUnexpectedNodeError(node, tokens)
     }
+    const elements = node.elements.map((child) => {
+        if (!child) {
+            return null
+        }
+        if (child.type === "Identifier") {
+            if (!isStaticValueIdentifier(child)) {
+                return throwUnexpectedNodeError(child, tokens)
+            }
+        }
+        return convertNode(child, tokens) as JSONExpression
+    })
     const nn: JSONArrayExpression = {
         type: "JSONArrayExpression",
-        elements: node.elements.map((child, index) => {
-            if (!child) {
-                return throwUnexpectedCommaTokenError(
-                    index > 0
-                        ? node.elements[index - 1].range![1]
-                        : node.range![0],
-                    tokens,
-                    true,
-                )
-            }
-            if (child.type === "Identifier") {
-                if (!isNumIdentifier(child)) {
-                    return throwUnexpectedNodeError(child, tokens)
-                }
-            }
-            return convertNode(child, tokens) as JSONExpression
-        }),
+        elements,
         ...getFixLocation(node),
     }
-    checkUnexpectKeys(node, tokens, nn)
+    checkUnexpectedKeys(node, tokens, nn)
     return nn
+}
+
+/**
+ * Check if the given node is RegExpLiteral
+ */
+function isRegExpLiteral(node: Literal): node is RegExpLiteral {
+    return Boolean((node as RegExpLiteral).regex)
 }
 
 /**
@@ -226,30 +270,34 @@ function convertLiteralNode(node: Literal, tokens: AST.Token[]): JSONLiteral {
     if (node.type !== "Literal") {
         return throwUnexpectedNodeError(node, tokens)
     }
-    const value = node.value
 
-    if ((node as RegExpLiteral).regex) {
-        return throwUnexpectedNodeError(node, tokens)
+    let nn: JSONLiteral
+    if (isRegExpLiteral(node)) {
+        nn = {
+            type: "JSONLiteral",
+            value: node.value,
+            raw: node.raw!,
+            regex: node.regex,
+            ...getFixLocation(node),
+        } as JSONRegExpLiteral
+    } else if ((node as any).bigint) {
+        nn = {
+            type: "JSONLiteral",
+            value: node.value,
+            raw: node.raw!,
+            bigint: (node as any).bigint,
+            ...getFixLocation(node),
+        } as JSONBigIntLiteral
+    } else {
+        const value = node.value
+        nn = {
+            type: "JSONLiteral",
+            value,
+            raw: node.raw!,
+            ...getFixLocation(node),
+        } as JSONStringLiteral | JSONNumberLiteral | JSONKeywordLiteral
     }
-    if ((node as any).bigint) {
-        return throwUnexpectedNodeError(node, tokens)
-    }
-    if (value !== null) {
-        if (
-            typeof value !== "string" &&
-            typeof value !== "number" &&
-            typeof value !== "boolean"
-        ) {
-            return throwUnexpectedNodeError(node, tokens)
-        }
-    }
-    const nn: JSONLiteral = {
-        type: "JSONLiteral",
-        value,
-        raw: node.raw!,
-        ...getFixLocation(node),
-    }
-    checkUnexpectKeys(node, tokens, nn)
+    checkUnexpectedKeys(node, tokens, nn)
     return nn
 }
 
@@ -275,14 +323,11 @@ function convertUnaryExpressionNode(
             return throwUnexpectedNodeError(argument, tokens)
         }
     } else if (argument.type === "Identifier") {
-        if (!isNumIdentifier(argument)) {
+        if (!isNumberIdentifier(argument)) {
             return throwUnexpectedNodeError(argument, tokens)
         }
     } else {
         return throwUnexpectedNodeError(argument, tokens)
-    }
-    if (node.range![0] + 1 !== argument.range![0]) {
-        return throwUnexpectedTokenError(" ", argument)
     }
 
     const nn: JSONUnaryExpression = {
@@ -294,7 +339,7 @@ function convertUnaryExpressionNode(
             | JSONNumberIdentifier,
         ...getFixLocation(node),
     }
-    checkUnexpectKeys(node, tokens, nn)
+    checkUnexpectedKeys(node, tokens, nn)
     return nn
 }
 
@@ -314,14 +359,88 @@ function convertIdentifierNode(
         name: node.name,
         ...getFixLocation(node),
     }
-    checkUnexpectKeys(node, tokens, nn)
+    checkUnexpectedKeys(node, tokens, nn)
     return nn
+}
+
+/**
+ * Convert TemplateLiteral node to JSONTemplateLiteral node
+ */
+function convertTemplateLiteralNode(
+    node: TemplateLiteral,
+    tokens: AST.Token[],
+): JSONTemplateLiteral {
+    /* istanbul ignore next */
+    if (node.type !== "TemplateLiteral") {
+        return throwUnexpectedNodeError(node, tokens)
+    }
+    if (node.expressions.length) {
+        const token = getTokenAfterNode(tokens, node.quasis[0].range![0], {
+            type: "Template",
+        })
+        const loc: BaseNode = {
+            type: "Punctuator",
+            loc: {
+                start: {
+                    line: token.loc.end.line,
+                    column: token.loc.end.column - 2,
+                },
+                end: token.loc.end,
+            },
+            range: [token.range[1] - 2, token.range[1]],
+        }
+        return throwUnexpectedTokenError("$", loc)
+    }
+
+    const quasis: [JSONTemplateElement] = [
+        convertTemplateElementNode(node.quasis[0], tokens),
+    ]
+
+    const nn: JSONTemplateLiteral = {
+        type: "JSONTemplateLiteral",
+        quasis,
+        expressions: [],
+        ...getFixLocation(node),
+    }
+    checkUnexpectedKeys(node, tokens, nn)
+    return nn
+}
+
+/**
+ * Convert TemplateElement node to JSONTemplateElement node
+ */
+function convertTemplateElementNode(
+    node: TemplateElement,
+    tokens: AST.Token[],
+): JSONTemplateElement {
+    /* istanbul ignore next */
+    if (node.type !== "TemplateElement") {
+        return throwUnexpectedNodeError(node, tokens)
+    }
+
+    const nn: JSONTemplateElement = {
+        type: "JSONTemplateElement",
+        tail: node.tail,
+        value: node.value,
+        ...getFixLocation(node),
+    }
+    checkUnexpectedKeys(node, tokens, nn)
+    return nn
+}
+
+/**
+ * Check if given node is NaN or Infinity or undefined
+ */
+function isStaticValueIdentifier(
+    node: Identifier,
+): node is Identifier & { name: "NaN" | "Infinity" | "undefined" } {
+    return isNumberIdentifier(node) || node.name === "undefined"
 }
 
 /**
  * Check if given node is NaN or Infinity
  */
-function isNumIdentifier(
+function isNumberIdentifier(
     node: Identifier,
 ): node is Identifier & { name: "NaN" | "Infinity" } {
     return node.name === "NaN" || node.name === "Infinity"
@@ -330,7 +449,7 @@ function isNumIdentifier(
 /**
  * Check unknown keys
  */
-function checkUnexpectKeys(
+function checkUnexpectedKeys(
     node: Node,
     tokens: AST.Token[],
     jsonNode: JSONNode,
@@ -394,4 +513,48 @@ export function getFixLocation(node: BaseNode | AST.Token): Locations {
             },
         },
     }
+}
+
+/**
+ * Get the specified token before a given node.
+ * @returns The specified token.
+ */
+export function getTokenBeforeNode(
+    tokens: AST.Token[],
+    offset: number,
+    { type, value }: { type: AST.TokenType | "Template"; value?: string },
+): AST.Token {
+    const tokenIndex = tokens.findIndex(
+        (token) => token.range[0] <= offset && offset < token.range[1],
+    )
+
+    for (let index = tokenIndex; index >= 0; index--) {
+        const token = tokens[index]
+        if (token.type === type && (value == null || token.value === value)) {
+            return token
+        }
+    }
+    return tokens[tokenIndex]
+}
+
+/**
+ * Get the specified token after a given node.
+ * @returns The specified token.
+ */
+export function getTokenAfterNode(
+    tokens: AST.Token[],
+    offset: number,
+    { type, value }: { type: AST.TokenType | "Template"; value?: string },
+): AST.Token {
+    const tokenIndex = tokens.findIndex(
+        (token) => token.range[0] <= offset && offset < token.range[1],
+    )
+    for (let index = tokenIndex; index < tokens.length; index++) {
+        const token = tokens[index]
+        if (token.type === type && (value == null || token.value === value)) {
+            return token
+        }
+    }
+
+    return tokens[tokenIndex]
 }

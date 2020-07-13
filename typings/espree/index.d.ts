@@ -1,6 +1,3 @@
-import { Linter } from "eslint"
+import type { Program } from "estree"
 
-export function parseForESLint(
-    text: string,
-    options?: any,
-): Linter.ESLintParseResult
+export function parse(text: string, options?: any): Program

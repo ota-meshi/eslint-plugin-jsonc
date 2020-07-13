@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        require.config({
+          paths: {
+              json5: "https://unpkg.com/json5@2.1.3/dist/index",
+              json6: "https://unpkg.com/json-6@1.0.7/dist/index",
+          },
+          waitSeconds: 40
+        });
+    </script>
+    <script src="https://unpkg.com/jsox@1.1.121/lib/jsox.js"></script>
+</head>
+<body>
+    <textarea id="input"></textarea>
+    <pre id="output3"></pre>
+    <pre id="output5"></pre>
+    <pre id="output6"></pre>
+    <pre id="outputx"></pre>
+    <script>
+        require(["json5", "json6"],
+            function (JSON5, JSON6) {
+                document.getElementById('input').addEventListener('input', (evt) => {
+                    const value = evt.target.value
+                    try {
+                        const object = JSON.parse(value)
+                        document.getElementById('output3').textContent = 'JSON:\n'+JSON.stringify(object, null, 2)
+                    } catch (e) {
+                        document.getElementById('output3').textContent = 'JSON:\n'+e.message
+                    }
+                    try {
+                        const object = JSON5.parse(value)
+                        document.getElementById('output5').textContent = 'JSON5:\n'+JSON5.stringify(object, null, 2)
+                    } catch (e) {
+                        document.getElementById('output5').textContent = 'JSON5:\n'+e.message
+                    }
+                    try {
+                        const object = JSON6.parse(value)
+                        document.getElementById('output6').textContent = 'JSON6:\n'+JSON6.stringify(object, null, 2)
+                    } catch (e) {
+                        document.getElementById('output6').textContent = 'JSON6:\n'+e.message
+                    }
+                    try {
+                        const object = JSOX.parse(value)
+                        document.getElementById('outputx').textContent = 'JSOX:\n'+JSOX.stringify(object, null, 2)
+                    } catch (e) {
+                        document.getElementById('outputx').textContent = 'JSOX:\n'+e.message
+                    }
+                })
+            }
+        )
+    </script>
+</body>
