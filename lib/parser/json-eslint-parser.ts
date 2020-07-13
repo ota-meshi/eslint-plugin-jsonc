@@ -19,6 +19,7 @@ import {
 } from "./convert"
 import { JSONProgram } from "./ast"
 
+const KNOWN_JSON_EXT = new Set<string>([".json", ".json5"])
 const KNOWN_NON_JSON_EXT = new Set<string>([
     ".js",
     ".jsx",
@@ -98,7 +99,7 @@ function isJSONFile(code: string, options: any): boolean {
     const filePath = options.filePath as string | undefined
     if (filePath) {
         const ext = path.extname(filePath.toLowerCase())
-        if (ext === ".json") {
+        if (KNOWN_JSON_EXT.has(ext)) {
             return true
         }
         if (KNOWN_NON_JSON_EXT.has(ext)) {

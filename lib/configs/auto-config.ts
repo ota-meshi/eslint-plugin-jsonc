@@ -6,7 +6,7 @@ export = {
     extends: [baseExtend],
     overrides: [
         {
-            files: ["*.json"],
+            files: ["*.json", "*.json5"],
             processor: "jsonc/auto-config",
         },
     ],
