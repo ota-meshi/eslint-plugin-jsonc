@@ -6,7 +6,7 @@ const tester = new RuleTester({
 })
 
 tester.run("no-number-props", rule as any, {
-    valid: ['{"key": 123}', "123", "[123]"],
+    valid: ['{"key": 123}', "{key: 123}", "123", "[123]"],
     invalid: [
         {
             code: "{123: 123}",
