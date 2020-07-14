@@ -10,13 +10,13 @@ tester.run("no-regexp-literals", rule as any, {
     invalid: [
         {
             code: "/reg/",
-            errors: ["RegExp literals keys are not allowed."],
+            errors: ["RegExp literals are not allowed."],
         },
         {
             code: "[/reg/, {'/val/': /reg/}]",
             errors: [
-                "RegExp literals keys are not allowed.",
-                "RegExp literals keys are not allowed.",
+                "RegExp literals are not allowed.",
+                "RegExp literals are not allowed.",
             ],
         },
     ],

@@ -10,7 +10,7 @@ export default createRule("no-regexp-literals", {
         },
         schema: [],
         messages: {
-            unexpected: "RegExp literals keys are not allowed.",
+            unexpected: "RegExp literals are not allowed.",
         },
         type: "problem",
     },
