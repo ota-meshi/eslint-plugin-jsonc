@@ -9,6 +9,7 @@ import keySpacing from "../rules/key-spacing"
 import noComments from "../rules/no-comments"
 import noDupeKeys from "../rules/no-dupe-keys"
 import noMultiStr from "../rules/no-multi-str"
+import noNumberProps from "../rules/no-number-props"
 import noOctalEscape from "../rules/no-octal-escape"
 import noSparseArrays from "../rules/no-sparse-arrays"
 import noTemplateLiterals from "../rules/no-template-literals"
@@ -34,6 +35,7 @@ export const rules = [
     noComments,
     noDupeKeys,
     noMultiStr,
+    noNumberProps,
     noOctalEscape,
     noSparseArrays,
     noTemplateLiterals,

@@ -136,6 +136,7 @@ The rules with the following star :star: are included in the config.
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
 | [jsonc/no-comments](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-comments.html) | disallow comments |  | :star: |  |  |
+| [jsonc/no-number-props](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-number-props.html) | disallow number property keys | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-template-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-template-literals.html) | disallow template literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-undefined-value](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-undefined-value.html) | disallow `undefined` |  | :star: | :star: | :star: |
 | [jsonc/valid-json-number](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/valid-json-number.html) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
