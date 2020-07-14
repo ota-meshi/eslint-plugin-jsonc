@@ -6,6 +6,7 @@ export = {
     extends: [baseExtend],
     rules: {
         // eslint-plugin-jsonc rules
+        "jsonc/no-bigint-literals": "error",
         "jsonc/no-dupe-keys": "error",
         "jsonc/no-useless-escape": "error",
     },

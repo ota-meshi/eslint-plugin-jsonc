@@ -6,6 +6,7 @@ import commaDangle from "../rules/comma-dangle"
 import commaStyle from "../rules/comma-style"
 import indent from "../rules/indent"
 import keySpacing from "../rules/key-spacing"
+import noBigintLiterals from "../rules/no-bigint-literals"
 import noComments from "../rules/no-comments"
 import noDupeKeys from "../rules/no-dupe-keys"
 import noMultiStr from "../rules/no-multi-str"
@@ -27,6 +28,7 @@ export const rules = [
     commaStyle,
     indent,
     keySpacing,
+    noBigintLiterals,
     noComments,
     noDupeKeys,
     noMultiStr,

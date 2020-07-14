@@ -13,6 +13,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
+| [jsonc/no-bigint-literals](./no-bigint-literals.md) | disallow BigInt literals |  | :star: | :star: | :star: |
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
 | [jsonc/valid-json-number](./valid-json-number.md) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
 
