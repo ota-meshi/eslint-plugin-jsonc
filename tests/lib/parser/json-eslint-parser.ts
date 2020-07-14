@@ -17,7 +17,8 @@ function replacer(key: string, value: any) {
         return String(value)
     }
     if (typeof value === "bigint") {
-        return `${String(value)}n`
+        return null // Make it null so it can be checked on node8.
+        // return `${String(value)}n`
     }
     return value
 }
