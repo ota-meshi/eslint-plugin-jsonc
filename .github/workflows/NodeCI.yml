@@ -52,6 +52,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
     - name: Install Packages
       run: npm install
     - name: Test
@@ -60,4 +62,3 @@ jobs:
       uses: coverallsapp/github-action@v1.1.1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
