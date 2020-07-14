@@ -28,6 +28,37 @@ function parse(code: string) {
     return result
 }
 
+/**
+ * safe replacer
+ */
+function stringify(value: any): string {
+    return JSON.stringify(
+        value,
+        (_k: string, val: any) => {
+            if (typeof val === "number") {
+                if (isNaN(val)) {
+                    return "__NaN__"
+                }
+                if (val === Infinity) {
+                    return "__Infinity__"
+                }
+                if (val === -Infinity) {
+                    return "__-Infinity__"
+                }
+            }
+            if (typeof val === "bigint") {
+                return `${val}n`
+            }
+            if (typeof val === "undefined") {
+                return "__undefined__"
+            }
+
+            return val
+        },
+        2,
+    )
+}
+
 describe("isExpression", () => {
     for (const code of [
         '{"foo": "bar"}',
@@ -91,14 +122,14 @@ describe("getStaticJSONValue", () => {
         "[Infinity, NaN, undefined]",
         "[`abc`, + 42]",
         "[1,,,,,5]",
-        "[42n, /reg/]",
+        ...(typeof BigInt === "undefined" ? [] : ["[42n, /reg/]"]),
     ]) {
         it(code, () => {
             const ast = parse(code).ast
-            assert.deepStrictEqual(
-                getStaticJSONValue(ast as any),
+            assert.strictEqual(
+                stringify(getStaticJSONValue(ast as any)),
                 // eslint-disable-next-line no-eval
-                eval(`(${code})`),
+                stringify(eval(`(${code})`)),
             )
         })
     }
