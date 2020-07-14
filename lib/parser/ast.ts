@@ -28,6 +28,8 @@ export type JSONNode =
     | JSONExpression
     | JSONProperty
     | JSONIdentifier
+    | JSONTemplateLiteral
+    | JSONTemplateElement
 export interface JSONProgram extends BaseJSONNode {
     type: "Program"
     body: [JSONExpressionStatement]
@@ -48,10 +50,12 @@ export type JSONExpression =
     | JSONLiteral
     | JSONUnaryExpression
     | JSONNumberIdentifier
+    | JSONUndefinedIdentifier
+    | JSONTemplateLiteral
 
 export interface JSONArrayExpression extends BaseJSONNode {
     type: "JSONArrayExpression"
-    elements: JSONExpression[]
+    elements: (JSONExpression | null)[]
     parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
 
@@ -63,7 +67,7 @@ export interface JSONObjectExpression extends BaseJSONNode {
 
 export interface JSONProperty extends BaseJSONNode {
     type: "JSONProperty"
-    key: JSONIdentifier | JSONLiteral
+    key: JSONIdentifier | JSONStringLiteral | JSONNumberLiteral
     value: JSONExpression
     kind: "init"
     method: false
@@ -86,9 +90,11 @@ export interface JSONNumberIdentifier extends JSONIdentifier {
     name: "Infinity" | "NaN"
 }
 
-export interface JSONLiteral extends BaseJSONNode {
+export interface JSONUndefinedIdentifier extends JSONIdentifier {
+    name: "undefined"
+}
+interface JSONLiteralBase extends BaseJSONNode {
     type: "JSONLiteral"
-    value: string | boolean | number | null
     raw: string
     parent?:
         | JSONArrayExpression
@@ -97,11 +103,41 @@ export interface JSONLiteral extends BaseJSONNode {
         | JSONUnaryExpression
 }
 
-export interface JSONNumberLiteral extends JSONLiteral {
-    type: "JSONLiteral"
-    value: number
-    raw: string
+export interface JSONStringLiteral extends JSONLiteralBase {
+    value: string
+    regex: null
+    bigint: null
 }
+export interface JSONNumberLiteral extends JSONLiteralBase {
+    value: number
+    regex: null
+    bigint: null
+}
+export interface JSONKeywordLiteral extends JSONLiteralBase {
+    value: boolean | null
+    regex: null
+    bigint: null
+}
+export interface JSONRegExpLiteral extends JSONLiteralBase {
+    value: null
+    regex: {
+        pattern: string
+        flags: string
+    }
+    bigint: null
+}
+export interface JSONBigIntLiteral extends JSONLiteralBase {
+    value: null
+    regex: null
+    bigint: string
+}
+
+export type JSONLiteral =
+    | JSONStringLiteral
+    | JSONNumberLiteral
+    | JSONKeywordLiteral
+    | JSONRegExpLiteral
+    | JSONBigIntLiteral
 
 export interface JSONUnaryExpression extends BaseJSONNode {
     type: "JSONUnaryExpression"
@@ -109,4 +145,21 @@ export interface JSONUnaryExpression extends BaseJSONNode {
     prefix: true
     argument: JSONNumberLiteral | JSONNumberIdentifier
     parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
+}
+
+export interface JSONTemplateLiteral extends BaseJSONNode {
+    type: "JSONTemplateLiteral"
+    quasis: [JSONTemplateElement]
+    expressions: []
+    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
+}
+
+export interface JSONTemplateElement extends BaseJSONNode {
+    type: "JSONTemplateElement"
+    tail: boolean
+    value: {
+        cooked: string
+        raw: string
+    }
+    parent?: JSONTemplateLiteral
 }

@@ -153,56 +153,6 @@ describe("Check that parsing error is correct.", () => {
         },
         {
             code: `
-{42:42}
-`,
-            message: "Unexpected number literal.",
-            lineNumber: 2,
-            column: 2,
-            index: 2,
-            char: "4",
-        },
-        {
-            code: `
-{a:/reg/}
-`,
-            message: "Unexpected regex literal.",
-            lineNumber: 2,
-            column: 4,
-            index: 4,
-            char: "/",
-        },
-        {
-            code: `
-{"42":42n}
-`,
-            message: "Unexpected bigint literal.",
-            lineNumber: 2,
-            column: 7,
-            index: 7,
-            char: "4",
-        },
-        {
-            code: `
-[,'a']
-`,
-            message: "Unexpected token ','.",
-            lineNumber: 2,
-            column: 2,
-            index: 2,
-            char: ",",
-        },
-        {
-            code: `
-['a',,'b']
-`,
-            message: "Unexpected token ','.",
-            lineNumber: 2,
-            column: 5,
-            index: 5,
-            char: ",",
-        },
-        {
-            code: `
 [('a')]
 `,
             message: "Unexpected token '('.",
@@ -283,16 +233,6 @@ typeof 123
         },
         {
             code: `
-- 1
-`,
-            message: "Unexpected token ' '.",
-            lineNumber: 2,
-            column: 3,
-            index: 3,
-            char: "1",
-        },
-        {
-            code: `
 +"str"
 `,
             message: "Unexpected string literal.",
@@ -310,6 +250,46 @@ typeof 123
             column: 3,
             index: 3,
             char: "+",
+        },
+        {
+            code: `
+\`\${''}\`
+`,
+            message: "Unexpected token '$'.",
+            lineNumber: 2,
+            column: 2,
+            index: 2,
+            char: "$",
+        },
+        {
+            code: `
+\`a\${''}b\`
+`,
+            message: "Unexpected token '$'.",
+            lineNumber: 2,
+            column: 3,
+            index: 3,
+            char: "$",
+        },
+        {
+            code: `
+-undefined
+`,
+            message: "Unexpected identifier 'undefined'.",
+            lineNumber: 2,
+            column: 2,
+            index: 2,
+            char: "u",
+        },
+        {
+            code: `
++undefined
+`,
+            message: "Unexpected identifier 'undefined'.",
+            lineNumber: 2,
+            column: 2,
+            index: 2,
+            char: "u",
         },
     ]) {
         it(`parseForESLint error on ${JSON.stringify(code)}`, () => {

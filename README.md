@@ -29,7 +29,7 @@ Also, [JSONC] and [JSON5], which are variants of [JSON], are more similar to Jav
 
 ### How does `eslint-plugin-jsonc` work?
 
-This plugin parses `.json` with its own parser, but this parser just converts AST parsed by `espree` (ESLint standard parser) into AST with another name. However, AST that does not exist in [JSON] and [JSON5] will be reported as a parse error. By converting the AST to another name, we prevent false positives from ESLint standard rules.  
+This plugin parses `.json` with its own parser, but this parser just converts AST parsed by `espree` (ESLint standard parser) into AST with another name. However, ASTs that do not exist in [JSON] and JSON-superset syntaxes are reported as parsing errors. By converting the AST to another name, we prevent false positives from ESLint core rules.  
 Moreover, You can do the same linting using the extended rules of the ESLint core rules provided by this plugin.
 
 <!--DOCS_IGNORE_START-->
@@ -54,8 +54,11 @@ npm install --save-dev eslint eslint-plugin-jsonc
 ## Usage
 
 <!--USAGE_SECTION_START-->
+<!--USAGE_GUIDE_START-->
 
-Create `.eslintrc.*` file to configure rules. See also: [http://eslint.org/docs/user-guide/configuring](http://eslint.org/docs/user-guide/configuring).
+### Configuration
+
+Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
 
 Example **.eslintrc.js**:
 
@@ -73,8 +76,6 @@ module.exports = {
 }
 ```
 
-## Configs
-
 This plugin provides configs:
 
 - `plugin:jsonc/base` ... Configuration to enable correct JSON parsing.
@@ -83,7 +84,9 @@ This plugin provides configs:
 - `plugin:jsonc/recommended-with-json5` ... Recommended configuration for JSON5.
 - `plugin:jsonc/auto-config` ... Automatically apply jsonc rules similar to your configured ESLint core rules to JSON.
 
-## Running ESLint from the command line
+See [the rule list](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/) to get the `rules` that this plugin provides.
+
+### Running ESLint from the command line
 
 If you want to run `eslint` from the command line, make sure you include the `.json` extension using [the `--ext` option](https://eslint.org/docs/user-guide/configuring#specifying-file-extensions-to-lint) or a glob pattern, because ESLint targets only `.js` files by default.
 
@@ -116,6 +119,7 @@ Example **.vscode/settings.json**:
 }
 ```
 
+<!--USAGE_GUIDE_END-->
 <!--USAGE_SECTION_END-->
 
 ## Rules

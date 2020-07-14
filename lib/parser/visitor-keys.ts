@@ -7,4 +7,7 @@ export const KEYS: SourceCode.VisitorKeys = Evk.unionWith({
     JSONProperty: ["key", "value"],
     JSONIdentifier: [],
     JSONLiteral: [],
+    JSONUnaryExpression: ["argument"],
+    JSONTemplateLiteral: ["quasis", "expressions"],
+    JSONTemplateElement: [],
 }) as SourceCode.VisitorKeys

@@ -181,26 +181,6 @@ export function throwUnexpectedNodeError(
 }
 
 /**
- * Throw syntax error for unexpected comma token.
- */
-export function throwUnexpectedCommaTokenError(
-    offset: number,
-    tokens: AST.Token[],
-    after?: boolean,
-) {
-    return throwUnexpectedTokenError(
-        ",",
-        (after
-            ? getCommaTokenAfterNode(tokens, offset)
-            : getCommaTokenBeforeNode(tokens, offset)) || {
-            type: "",
-            loc: { start: { line: 1, column: 0 }, end: { line: 1, column: 0 } },
-            range: [0, 0],
-        },
-    )
-}
-
-/**
  * Throw syntax error of outside of code.
  */
 export function throwErrorAsAdjustingOutsideOfCode(
@@ -233,54 +213,4 @@ function isAcornStyleParseError(
         typeof x.loc.line === "number" &&
         typeof x.loc.column === "number"
     )
-}
-
-/**
- * Get the comma token before a given node.
- * @param tokens The token list.
- * @param offset The offset to get the comma after this offset.
- * @returns The comma token.
- */
-function getCommaTokenBeforeNode(
-    tokens: AST.Token[],
-    offset: number,
-): AST.Token | null {
-    let tokenIndex = tokens.findIndex(
-        (token) => token.range[0] <= offset && offset < token.range[1],
-    )
-
-    while (tokenIndex >= 0) {
-        const token = tokens[tokenIndex]
-        if (token.type === "Punctuator" && token.value === ",") {
-            return token
-        }
-        tokenIndex -= 1
-    }
-
-    return null
-}
-
-/**
- * Get the comma token after a given node.
- * @param tokens The token list.
- * @param offset The offset to get the comma after this offset.
- * @returns The comma token.
- */
-function getCommaTokenAfterNode(
-    tokens: AST.Token[],
-    offset: number,
-): AST.Token | null {
-    let tokenIndex = tokens.findIndex(
-        (token) => token.range[0] <= offset && offset < token.range[1],
-    )
-
-    while (tokenIndex < tokens.length) {
-        const token = tokens[tokenIndex]
-        if (token.type === "Punctuator" && token.value === ",") {
-            return token
-        }
-        tokenIndex += 1
-    }
-
-    return null
 }

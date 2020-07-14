@@ -8,6 +8,7 @@ import recommendedWithJsonc from "./configs/recommended-with-jsonc"
 import recommendedWithJson5 from "./configs/recommended-with-json5"
 import { parseForESLint } from "./parser/json-eslint-parser"
 import { traverseNodes } from "./parser/traverse"
+import { getStaticJSONValue } from "./utils/ast"
 
 const configs = {
     base,
@@ -32,4 +33,5 @@ export = {
 
     // tools
     traverseNodes,
+    getStaticJSONValue,
 }

@@ -13,6 +13,13 @@ function replacer(key: string, value: any) {
     if (key === "parent") {
         return undefined
     }
+    if (value instanceof RegExp) {
+        return String(value)
+    }
+    if (typeof value === "bigint") {
+        return null // Make it null so it can be checked on node8.
+        // return `${String(value)}n`
+    }
     return value
 }
 
@@ -33,11 +40,16 @@ function parse(code: string) {
 describe("Check for AST.", () => {
     for (const filename of fs
         .readdirSync(FIXTURE_ROOT)
-        .filter((f) => f.endsWith("input.json5"))) {
+        .filter(
+            (f) =>
+                f.endsWith("input.json5") ||
+                f.endsWith("input.json6") ||
+                f.endsWith("input.jsonx"),
+        )) {
         it(filename, () => {
             const inputFileName = path.join(FIXTURE_ROOT, filename)
             const outputFileName = inputFileName.replace(
-                /input\.json5$/u,
+                /input\.json[56x]$/u,
                 "output.json",
             )
 
