@@ -20,6 +20,7 @@ import objectPropertyNewline from "../rules/object-property-newline"
 import quoteProps from "../rules/quote-props"
 import quotes from "../rules/quotes"
 import sortKeys from "../rules/sort-keys"
+import spaceUnaryOps from "../rules/space-unary-ops"
 import validJsonNumber from "../rules/valid-json-number"
 
 export const rules = [
@@ -44,5 +45,6 @@ export const rules = [
     quoteProps,
     quotes,
     sortKeys,
+    spaceUnaryOps,
     validJsonNumber,
 ] as RuleModule[]

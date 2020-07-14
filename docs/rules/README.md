@@ -40,3 +40,4 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/quote-props](./quote-props.md) | require quotes around object literal property names | :wrench: | :star: | :star: |  |
 | [jsonc/quotes](./quotes.md) | enforce use of double or single quotes | :wrench: | :star: | :star: |  |
 | [jsonc/sort-keys](./sort-keys.md) | require object keys to be sorted |  |  |  |  |
+| [jsonc/space-unary-ops](./space-unary-ops.md) | disallow spaces after unary operators | :wrench: | :star: | :star: | :star: |

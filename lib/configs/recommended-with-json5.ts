@@ -11,5 +11,6 @@ export = {
         "jsonc/no-template-literals": "error",
         "jsonc/no-undefined-value": "error",
         "jsonc/no-useless-escape": "error",
+        "jsonc/space-unary-ops": "error",
     },
 }
