@@ -11,6 +11,7 @@ import noDupeKeys from "../rules/no-dupe-keys"
 import noMultiStr from "../rules/no-multi-str"
 import noOctalEscape from "../rules/no-octal-escape"
 import noTemplateLiterals from "../rules/no-template-literals"
+import noUndefinedValue from "../rules/no-undefined-value"
 import noUselessEscape from "../rules/no-useless-escape"
 import objectCurlyNewline from "../rules/object-curly-newline"
 import objectCurlySpacing from "../rules/object-curly-spacing"
@@ -33,6 +34,7 @@ export const rules = [
     noMultiStr,
     noOctalEscape,
     noTemplateLiterals,
+    noUndefinedValue,
     noUselessEscape,
     objectCurlyNewline,
     objectCurlySpacing,

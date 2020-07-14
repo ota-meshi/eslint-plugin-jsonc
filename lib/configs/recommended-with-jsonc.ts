@@ -9,6 +9,7 @@ export = {
         "jsonc/no-dupe-keys": "error",
         "jsonc/no-multi-str": "error",
         "jsonc/no-template-literals": "error",
+        "jsonc/no-undefined-value": "error",
         "jsonc/no-useless-escape": "error",
         "jsonc/quote-props": "error",
         "jsonc/quotes": "error",

@@ -15,6 +15,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
 | [jsonc/no-template-literals](./no-template-literals.md) | disallow template literals | :wrench: | :star: | :star: | :star: |
+| [jsonc/no-undefined-value](./no-undefined-value.md) | disallow `undefined` |  | :star: | :star: | :star: |
 | [jsonc/valid-json-number](./valid-json-number.md) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
 
 ## Extension Rules
