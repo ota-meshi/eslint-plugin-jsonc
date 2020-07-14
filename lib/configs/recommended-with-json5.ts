@@ -7,6 +7,7 @@ export = {
     rules: {
         // eslint-plugin-jsonc rules
         "jsonc/no-dupe-keys": "error",
+        "jsonc/no-template-literals": "error",
         "jsonc/no-useless-escape": "error",
     },
 }

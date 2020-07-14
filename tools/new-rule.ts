@@ -50,6 +50,9 @@ import rule from "../../../lib/rules/${ruleId}"
 
 const tester = new RuleTester({
     parser: require.resolve("../../../lib/parser/json-eslint-parser"),
+    parserOptions: {
+        ecmaVersion: 2020,
+    },
 })
 
 tester.run("${ruleId}", rule as any, {
