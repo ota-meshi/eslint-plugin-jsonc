@@ -8,5 +8,6 @@ export = {
         // eslint-plugin-jsonc rules
         "jsonc/no-dupe-keys": "error",
         "jsonc/no-useless-escape": "error",
+        "jsonc/space-unary-ops": "error",
     },
 }

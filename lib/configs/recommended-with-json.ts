@@ -13,6 +13,7 @@ export = {
         "jsonc/no-useless-escape": "error",
         "jsonc/quote-props": "error",
         "jsonc/quotes": "error",
+        "jsonc/space-unary-ops": "error",
         "jsonc/valid-json-number": "error",
     },
 }
