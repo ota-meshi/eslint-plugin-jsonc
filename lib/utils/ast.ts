@@ -53,6 +53,15 @@ export function isNumberIdentifier(
     )
 }
 
+/**
+ * Checks if given node is JSONUndefinedIdentifier
+ */
+export function isUndefinedIdentifier(
+    node: JSONIdentifier,
+): node is JSONUndefinedIdentifier {
+    return isExpression(node) && node.name === "undefined"
+}
+
 export type JSONValue =
     | string
     | number
