@@ -32,6 +32,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/no-dupe-keys](./no-dupe-keys.md) | disallow duplicate keys in object literals |  | :star: | :star: | :star: |
 | [jsonc/no-multi-str](./no-multi-str.md) | disallow multiline strings |  | :star: | :star: |  |
 | [jsonc/no-octal-escape](./no-octal-escape.md) | disallow octal escape sequences in string literals |  |  |  |  |
+| [jsonc/no-sparse-arrays](./no-sparse-arrays.md) | disallow sparse arrays |  | :star: | :star: | :star: |
 | [jsonc/no-useless-escape](./no-useless-escape.md) | disallow unnecessary escape usage |  | :star: | :star: | :star: |
 | [jsonc/object-curly-newline](./object-curly-newline.md) | enforce consistent line breaks inside braces | :wrench: |  |  |  |
 | [jsonc/object-curly-spacing](./object-curly-spacing.md) | enforce consistent spacing inside braces | :wrench: |  |  |  |

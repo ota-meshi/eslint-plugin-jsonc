@@ -32,10 +32,10 @@ export default createRule("${ruleId}", {
             description: "...",
             recommended: true,
         },
-        fixable: coreRule.meta?.fixable,
-        schema: coreRule.meta?.schema!,
-        messages: coreRule.meta?.messages!,
-        type: coreRule.meta?.type!,
+        fixable: coreRule.meta!.fixable,
+        schema: coreRule.meta!.schema!,
+        messages: coreRule.meta!.messages!,
+        type: coreRule.meta!.type!,
     },
     create(context) {
         return defineWrapperListener(coreRule, context, context.options)
