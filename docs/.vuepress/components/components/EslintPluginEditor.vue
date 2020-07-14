@@ -121,7 +121,6 @@ export default {
         // Load linter asynchronously.
         const [{ default: eslint4b }, { parseForESLint }] = await Promise.all([
             import("eslint4b"),
-            // eslint-disable-next-line @mysticatea/node/no-extraneous-import
             import("espree").then(() =>
                 import("../../../../dist/parser/json-eslint-parser")
             ),
