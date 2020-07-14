@@ -7,6 +7,7 @@ export = {
     rules: {
         // eslint-plugin-jsonc rules
         "jsonc/comma-dangle": "error",
+        "jsonc/no-bigint-literals": "error",
         "jsonc/no-comments": "error",
         "jsonc/no-dupe-keys": "error",
         "jsonc/no-multi-str": "error",
