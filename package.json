@@ -48,7 +48,7 @@
   "bugs": {
     "url": "https://github.com/ota-meshi/eslint-plugin-jsonc/issues"
   },
-  "homepage": "https://github.com/ota-meshi/eslint-plugin-jsonc#readme",
+  "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
   "peerDependencies": {
     "eslint": ">=6.0.0"
   },
