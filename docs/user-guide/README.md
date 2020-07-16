@@ -1,6 +1,6 @@
 # User Guide
 
-## Installation
+## :cd: Installation
 
 ```bash
 npm install --save-dev eslint eslint-plugin-jsonc
@@ -11,7 +11,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 - Node.js v8.10.0 and above
 :::
 
-## Usage
+## :book: Usage
 
 <!--USAGE_GUIDE_START-->
 
@@ -56,7 +56,7 @@ eslint --ext .js,.json src
 eslint "src/**/*.{js,json}"
 ```
 
-## Editor Integrations
+## :computer: Editor Integrations
 
 ### Visual Studio Code
 

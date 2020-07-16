@@ -3,6 +3,7 @@ import { rules } from "../lib/utils/rules"
 
 //eslint-disable-next-line require-jsdoc
 export default function renderRulesTableContent(
+    categoryLevel: number,
     buildRulePath = (ruleName: string) => `./${ruleName}.md`,
 ) {
     const pluginRules = rules.filter(
@@ -51,13 +52,13 @@ export default function renderRulesTableContent(
 
     // -----------------------------------------------------------------------------
     let rulesTableContent = `
-## JSONC Rules
+#${"#".repeat(categoryLevel)} JSONC Rules
 
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
 ${pluginRules.map(toRuleRow).join("\n")}
 
-## Extension Rules
+#${"#".repeat(categoryLevel)} Extension Rules
 
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|

@@ -12,7 +12,7 @@
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-jsonc/workflows/CI/badge.svg?branch=master)](https://github.com/ota-meshi/eslint-plugin-jsonc/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/ota-meshi/eslint-plugin-jsonc/badge.svg?branch=master)](https://coveralls.io/github/ota-meshi/eslint-plugin-jsonc?branch=master)
 
-## Features
+## :name_badge: Features
 
 This ESLint plugin provides linting rules relate to better ways to help you avoid problems when using [JSON], [JSONC] and [JSON5].
 
@@ -21,7 +21,7 @@ This ESLint plugin provides linting rules relate to better ways to help you avoi
 
 You can check on the [Online DEMO](./playground/).
 
-## Why is it ESLint plugin?
+## :question: Why is it ESLint plugin?
 
 ESLint is a great linter for JavaScript.  
 Since [JSON] is a subset of JavaScript, the same parser and rules can be applied to [JSON].  
@@ -32,15 +32,15 @@ Also, [JSONC] and [JSON5], which are variants of [JSON], are more similar to Jav
 This plugin parses `.json` with its own parser, but this parser just converts AST parsed by `espree` (ESLint standard parser) into AST with another name. However, ASTs that do not exist in [JSON] and JSON-superset syntaxes are reported as parsing errors. By converting the AST to another name, we prevent false positives from ESLint core rules.  
 Moreover, You can do the same linting using the extended rules of the ESLint core rules provided by this plugin.
 
-## Usage
+## :book: Usage
 
 See [User Guide](./user-guide/README.md).
 
-## Rules
+## :white_check_mark: Rules
 
 See [Available Rules](./rules/README.md).
 
-## License
+## :lock: License
 
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 

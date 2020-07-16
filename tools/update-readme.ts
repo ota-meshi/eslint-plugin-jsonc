@@ -5,6 +5,7 @@ import renderRulesTableContent from "./render-rules"
 const isWin = os.platform().startsWith("win")
 
 let insertText = `\n${renderRulesTableContent(
+    2,
     (name) =>
         `https://ota-meshi.github.io/eslint-plugin-jsonc/rules/${name}.html`,
 )}\n`

@@ -12,7 +12,7 @@
 [![Build Status](https://github.com/ota-meshi/eslint-plugin-jsonc/workflows/CI/badge.svg?branch=master)](https://github.com/ota-meshi/eslint-plugin-jsonc/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/ota-meshi/eslint-plugin-jsonc/badge.svg?branch=master)](https://coveralls.io/github/ota-meshi/eslint-plugin-jsonc?branch=master)
 
-## Features
+## :name_badge: Features
 
 This ESLint plugin provides linting rules relate to better ways to help you avoid problems when using [JSON], [JSONC] and [JSON5].
 
@@ -21,7 +21,7 @@ This ESLint plugin provides linting rules relate to better ways to help you avoi
 
 You can check on the [Online DEMO](https://ota-meshi.github.io/eslint-plugin-jsonc/playground/).
 
-## Why is it ESLint plugin?
+## :question: Why is it ESLint plugin?
 
 ESLint is a great linter for JavaScript.  
 Since [JSON] is a subset of JavaScript, the same parser and rules can be applied to [JSON].  
@@ -34,11 +34,11 @@ Moreover, You can do the same linting using the extended rules of the ESLint cor
 
 <!--DOCS_IGNORE_START-->
 
-## Documentation
+## :book: Documentation
 
 See [documents](https://ota-meshi.github.io/eslint-plugin-jsonc/).
 
-## Installation
+## :cd: Installation
 
 ```bash
 npm install --save-dev eslint eslint-plugin-jsonc
@@ -51,7 +51,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 
 <!--DOCS_IGNORE_END-->
 
-## Usage
+## :book: Usage
 
 <!--USAGE_SECTION_START-->
 <!--USAGE_GUIDE_START-->
@@ -97,7 +97,7 @@ eslint --ext .js,.json src
 eslint "src/**/*.{js,json}"
 ```
 
-## Editor Integrations
+## :computer: Editor Integrations
 
 ### Visual Studio Code
 
@@ -122,7 +122,7 @@ Example **.vscode/settings.json**:
 <!--USAGE_GUIDE_END-->
 <!--USAGE_SECTION_END-->
 
-## Rules
+## :white_check_mark: Rules
 
 <!--RULES_SECTION_START-->
 
@@ -131,7 +131,7 @@ The rules with the following star :star: are included in the config.
 
 <!--RULES_TABLE_START-->
 
-## JSONC Rules
+### JSONC Rules
 
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
@@ -143,7 +143,7 @@ The rules with the following star :star: are included in the config.
 | [jsonc/no-undefined-value](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-undefined-value.html) | disallow `undefined` |  | :star: | :star: | :star: |
 | [jsonc/valid-json-number](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/valid-json-number.html) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
 
-## Extension Rules
+### Extension Rules
 
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
@@ -172,7 +172,7 @@ The rules with the following star :star: are included in the config.
 
 <!--DOCS_IGNORE_START-->
 
-## Contributing
+## :beers: Contributing
 
 Welcome contributing!
 
@@ -185,7 +185,7 @@ Please use GitHub's Issues/PRs.
 
 <!--DOCS_IGNORE_END-->
 
-## License
+## :lock: License
 
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 
