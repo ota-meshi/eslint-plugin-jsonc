@@ -35,13 +35,13 @@ export interface JSONProgram extends BaseJSONNode {
     body: [JSONExpressionStatement]
     comments: Comment[]
     tokens: AST.Token[]
-    parent?: null
+    parent: null
 }
 
 export interface JSONExpressionStatement extends BaseJSONNode {
     type: "JSONExpressionStatement"
     expression: JSONExpression
-    parent?: JSONProgram
+    parent: JSONProgram
 }
 
 export type JSONExpression =
@@ -56,13 +56,13 @@ export type JSONExpression =
 export interface JSONArrayExpression extends BaseJSONNode {
     type: "JSONArrayExpression"
     elements: (JSONExpression | null)[]
-    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
+    parent: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
 
 export interface JSONObjectExpression extends BaseJSONNode {
     type: "JSONObjectExpression"
     properties: JSONProperty[]
-    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
+    parent: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
 
 export interface JSONProperty extends BaseJSONNode {
@@ -73,7 +73,7 @@ export interface JSONProperty extends BaseJSONNode {
     method: false
     shorthand: false
     computed: false
-    parent?: JSONObjectExpression
+    parent: JSONObjectExpression
 }
 
 export interface JSONIdentifier extends BaseJSONNode {
@@ -144,14 +144,14 @@ export interface JSONUnaryExpression extends BaseJSONNode {
     operator: "-" | "+"
     prefix: true
     argument: JSONNumberLiteral | JSONNumberIdentifier
-    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
+    parent: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
 
 export interface JSONTemplateLiteral extends BaseJSONNode {
     type: "JSONTemplateLiteral"
     quasis: [JSONTemplateElement]
     expressions: []
-    parent?: JSONArrayExpression | JSONProperty | JSONExpressionStatement
+    parent: JSONArrayExpression | JSONProperty | JSONExpressionStatement
 }
 
 export interface JSONTemplateElement extends BaseJSONNode {
@@ -161,5 +161,5 @@ export interface JSONTemplateElement extends BaseJSONNode {
         cooked: string
         raw: string
     }
-    parent?: JSONTemplateLiteral
+    parent: JSONTemplateLiteral
 }

@@ -136,6 +136,7 @@ function convertProgramNode(node: Program, tokens: AST.Token[]): JSONProgram {
         type: "JSONExpressionStatement",
         expression: convertNode(expression, tokens),
         ...getFixLocation(bodyNode),
+        parent: null as never,
     }
 
     const nn: JSONProgram = {
@@ -144,6 +145,7 @@ function convertProgramNode(node: Program, tokens: AST.Token[]): JSONProgram {
         comments: [],
         tokens: [],
         ...getFixLocation(node),
+        parent: null as never,
     }
     return nn
 }
@@ -166,6 +168,7 @@ function convertObjectExpressionNode(
             convertPropertyNode(p as Property, tokens),
         ),
         ...getFixLocation(node),
+        parent: null as never,
     }
     checkUnexpectedKeys(node, tokens, nn)
     return nn
@@ -219,6 +222,7 @@ function convertPropertyNode(
         method: node.method,
         shorthand: node.shorthand,
         ...getFixLocation(node),
+        parent: null as never,
     }
     checkUnexpectedKeys(node, tokens, nn)
     return nn
@@ -250,6 +254,7 @@ function convertArrayExpressionNode(
         type: "JSONArrayExpression",
         elements,
         ...getFixLocation(node),
+        parent: null as never,
     }
     checkUnexpectedKeys(node, tokens, nn)
     return nn
@@ -338,6 +343,7 @@ function convertUnaryExpressionNode(
             | JSONNumberLiteral
             | JSONNumberIdentifier,
         ...getFixLocation(node),
+        parent: null as never,
     }
     checkUnexpectedKeys(node, tokens, nn)
     return nn
@@ -401,6 +407,7 @@ function convertTemplateLiteralNode(
         quasis,
         expressions: [],
         ...getFixLocation(node),
+        parent: null as never,
     }
     checkUnexpectedKeys(node, tokens, nn)
     return nn
@@ -423,6 +430,7 @@ function convertTemplateElementNode(
         tail: node.tail,
         value: node.value,
         ...getFixLocation(node),
+        parent: null as never,
     }
     checkUnexpectedKeys(node, tokens, nn)
     return nn
