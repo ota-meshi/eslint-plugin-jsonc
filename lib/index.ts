@@ -10,6 +10,8 @@ import { parseForESLint } from "./parser/json-eslint-parser"
 import { traverseNodes } from "./parser/traverse"
 import { getStaticJSONValue } from "./utils/ast"
 
+import type * as AST from "./parser/ast"
+
 const configs = {
     base,
     "auto-config": autoConfig,
@@ -23,15 +25,48 @@ const rules = ruleList.reduce((obj, r) => {
     return obj
 }, {} as { [key: string]: RuleModule })
 
-export = {
+export default {
     configs,
     rules,
     processors,
-
     // as parser
     parseForESLint,
-
     // tools
+    parseJSON,
     traverseNodes,
     getStaticJSONValue,
+}
+export {
+    configs,
+    rules,
+    processors,
+    // as parser
+    parseForESLint,
+    // tools
+    parseJSON,
+    traverseNodes,
+    getStaticJSONValue,
+    // types
+    AST,
+}
+
+/**
+ * Parse JSON source code
+ */
+function parseJSON(code: string, options?: any): AST.JSONProgram {
+    const parserOptions = Object.assign(
+        { filePath: "<input>", ecmaVersion: 2019 },
+        options || {},
+        {
+            loc: true,
+            range: true,
+            raw: true,
+            tokens: true,
+            comment: true,
+            eslintVisitorKeys: true,
+            eslintScopeManager: true,
+        },
+    )
+
+    return parseForESLint(code, parserOptions).ast as never
 }

@@ -2,7 +2,7 @@ import assert from "assert"
 import path from "path"
 import fs from "fs"
 
-import { parseForESLint } from "../../../lib/parser/json-eslint-parser"
+import { parseJSON } from "../../../lib/index"
 
 const FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast")
 
@@ -24,17 +24,7 @@ function replacer(key: string, value: any) {
 }
 
 function parse(code: string) {
-    return parseForESLint(code, {
-        comment: true,
-        ecmaVersion: 2020,
-        eslintScopeManager: true,
-        eslintVisitorKeys: true,
-        filePath: "test.json",
-        loc: true,
-        range: true,
-        raw: true,
-        tokens: true,
-    })
+    return parseJSON(code, { ecmaVersion: 2020 })
 }
 
 describe("Check for AST.", () => {
@@ -54,7 +44,7 @@ describe("Check for AST.", () => {
             )
 
             const input = fs.readFileSync(inputFileName, "utf8")
-            const ast = JSON.stringify(parse(input).ast, replacer, 2)
+            const ast = JSON.stringify(parse(input), replacer, 2)
             const output = fs.readFileSync(outputFileName, "utf8")
             assert.strictEqual(ast, output)
         })

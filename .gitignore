@@ -104,6 +104,8 @@ dist
 .tern-port
 
 /typings/eslint/lib
+/dist-ts
+/index.d.ts
 
 # docs
 /404.html
