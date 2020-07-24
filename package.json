@@ -21,7 +21,7 @@
     "clean": "rimraf .nyc_output dist coverage",
     "lint": "eslint \"tests\" \"lib\" \"docs/.vuepress\" --ext .js,.vue,.ts",
     "eslint-fix": "eslint \"tests\" \"lib\" \"docs/.vuepress\" --ext .js,.vue,.ts --fix",
-    "pretest": "npm run build:ts",
+    "pretest": "npm run setup-types",
     "test:base": "mocha --require ts-node/register \"tests/lib/**/*.ts\" --reporter dot --timeout 60000",
     "test": "npm run test:base",
     "test:nyc": "nyc --reporter=lcov npm run test:base",
