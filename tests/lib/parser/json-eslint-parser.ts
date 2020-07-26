@@ -44,9 +44,12 @@ describe("Check for AST.", () => {
             )
 
             const input = fs.readFileSync(inputFileName, "utf8")
-            const ast = JSON.stringify(parse(input), replacer, 2)
+            const ast = parse(input)
+            const astJson = JSON.stringify(ast, replacer, 2)
             const output = fs.readFileSync(outputFileName, "utf8")
-            assert.strictEqual(ast, output)
+            assert.strictEqual(astJson, output)
+
+            assert.strictEqual(ast.range[1] - ast.range[0], input.length)
         })
     }
 })

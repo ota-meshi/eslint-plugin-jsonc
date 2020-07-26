@@ -58,6 +58,9 @@ export function parseForESLint(
             return throwUnexpectedTokenError(",", last)
         }
 
+        ast.range[1] = statement.range![1] = last.range[1]
+        ast.loc.end.line = statement.loc!.end.line = last.loc.end.line
+        ast.loc.end.column = statement.loc!.end.column = last.loc.end.column
         ast.body = [statement]
         statement.expression = expression
 
