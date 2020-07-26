@@ -62,7 +62,7 @@
       },
       "range": [
         0,
-        16
+        14
       ],
       "loc": {
         "start": {
@@ -70,8 +70,8 @@
           "column": 0
         },
         "end": {
-          "line": 2,
-          "column": 1
+          "line": 1,
+          "column": 14
         }
       }
     }
@@ -171,7 +171,7 @@
   ],
   "range": [
     0,
-    16
+    14
   ],
   "loc": {
     "start": {
@@ -179,8 +179,8 @@
       "column": 0
     },
     "end": {
-      "line": 2,
-      "column": 1
+      "line": 1,
+      "column": 14
     }
   }
 }
