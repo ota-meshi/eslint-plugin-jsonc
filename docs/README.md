@@ -32,6 +32,8 @@ Also, [JSONC] and [JSON5], which are variants of [JSON], are more similar to Jav
 This plugin parses `.json` with its own parser, but this parser just converts AST parsed by `espree` (ESLint standard parser) into AST with another name. However, ASTs that do not exist in [JSON] and the superset of JSON syntaxes are reported as parsing errors. By converting the AST to another name, we prevent false positives from ESLint core rules.  
 Moreover, You can do the same linting using the extended rules of the ESLint core rules provided by this plugin.
 
+The parser package used by this plugin is [jsonc-eslint-parser].
+
 ## :book: Usage
 
 See [User Guide](./user-guide/README.md).
@@ -47,3 +49,4 @@ See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 [JSON]: https://json.org/
 [JSONC]: https://github.com/microsoft/node-jsonc-parser
 [JSON5]: https://json5.org/
+[jsonc-eslint-parser]: https://github.com/ota-meshi/jsonc-eslint-parser
