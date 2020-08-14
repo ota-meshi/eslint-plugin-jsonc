@@ -2,7 +2,7 @@ import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/no-regexp-literals"
 
 const tester = new RuleTester({
-    parser: require.resolve("../../../lib/parser/json-eslint-parser"),
+    parser: require.resolve("jsonc-eslint-parser"),
 })
 
 tester.run("no-regexp-literals", rule as any, {

@@ -1,4 +1,4 @@
-import type { JSONTemplateLiteral } from "../parser/ast"
+import type { AST } from "jsonc-eslint-parser"
 import { createRule } from "../utils"
 
 export default createRule("no-template-literals", {
@@ -17,7 +17,7 @@ export default createRule("no-template-literals", {
     },
     create(context) {
         return {
-            JSONTemplateLiteral(node: JSONTemplateLiteral) {
+            JSONTemplateLiteral(node: AST.JSONTemplateLiteral) {
                 context.report({
                     loc: node.loc,
                     messageId: "unexpected",

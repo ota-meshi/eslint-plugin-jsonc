@@ -1,4 +1,4 @@
-import type { JSONProperty } from "../parser/ast"
+import type { AST } from "jsonc-eslint-parser"
 import { createRule } from "../utils"
 
 export default createRule("no-number-props", {
@@ -17,7 +17,7 @@ export default createRule("no-number-props", {
     },
     create(context) {
         return {
-            JSONProperty(node: JSONProperty) {
+            JSONProperty(node: AST.JSONProperty) {
                 if (node.key.type !== "JSONLiteral") {
                     return
                 }

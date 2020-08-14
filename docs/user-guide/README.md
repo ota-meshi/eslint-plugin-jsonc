@@ -96,7 +96,7 @@ module.exports = {
   overrides: [
     {
       files: ["*.json6"], // If you want to parse `.json6`
-      parser: "eslint-plugin-jsonc", // Set this plugin as a parser.
+      parser: "jsonc-eslint-parser", // Set jsonc-eslint-parser.
     },
   ],
 }
@@ -110,7 +110,7 @@ module.exports = {
   overrides: [
     {
       files: ["*.json6"],
-      parser: "eslint-plugin-jsonc",
+      parser: "jsonc-eslint-parser",
 +     processor: "jsonc/auto-config",
     },
   ],

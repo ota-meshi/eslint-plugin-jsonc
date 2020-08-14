@@ -1,6 +1,5 @@
-import type { JSONIdentifier } from "../parser/ast"
+import { AST, isUndefinedIdentifier } from "jsonc-eslint-parser"
 import { createRule } from "../utils"
-import { isUndefinedIdentifier } from "../utils/ast"
 
 export default createRule("no-undefined-value", {
     meta: {
@@ -17,7 +16,7 @@ export default createRule("no-undefined-value", {
     },
     create(context) {
         return {
-            JSONIdentifier(node: JSONIdentifier) {
+            JSONIdentifier(node: AST.JSONIdentifier) {
                 if (!isUndefinedIdentifier(node)) {
                     return
                 }

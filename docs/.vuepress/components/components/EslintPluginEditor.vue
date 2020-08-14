@@ -84,7 +84,7 @@ export default {
                     SharedArrayBuffer: false,
                 },
                 rules: this.rules,
-                parser: "json-eslint-parser",
+                parser: "jsonc-eslint-parser",
                 parserOptions: {
                     sourceType: "script",
                     ecmaVersion: 2020,
@@ -104,7 +104,7 @@ export default {
             const Linter = this.eslint4b
 
             const linter = new Linter()
-            linter.defineParser("json-eslint-parser", {
+            linter.defineParser("jsonc-eslint-parser", {
                 parseForESLint: this.parseForESLint,
             })
 
@@ -121,9 +121,8 @@ export default {
         // Load linter asynchronously.
         const [{ default: eslint4b }, { parseForESLint }] = await Promise.all([
             import("eslint4b"),
-            import("espree").then(() =>
-                import("../../../../dist/parser/json-eslint-parser")
-            ),
+            // eslint-disable-next-line @mysticatea/node/no-extraneous-import
+            import("espree").then(() => import("jsonc-eslint-parser")),
         ])
         this.eslint4b = eslint4b
         this.parseForESLint = parseForESLint

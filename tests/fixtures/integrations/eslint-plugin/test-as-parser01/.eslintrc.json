@@ -4,7 +4,7 @@
     "overrides": [
         {
             "files": ["*.json6"],
-            "parser": "eslint-plugin-jsonc"
+            "parser": "jsonc-eslint-parser"
         }
     ]
 }

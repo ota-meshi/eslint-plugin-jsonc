@@ -3,7 +3,7 @@ export = {
     overrides: [
         {
             files: ["*.json", "*.json5"],
-            parser: require.resolve("../parser/json-eslint-parser"),
+            parser: require.resolve("jsonc-eslint-parser"),
         },
     ],
 }
