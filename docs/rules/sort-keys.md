@@ -8,11 +8,13 @@ description: "require object keys to be sorted"
 
 > require object keys to be sorted
 
+- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+
 ## :book: Rule Details
 
 This rule checks all property definitions of object expressions and verifies that all variables are sorted alphabetically.
 
-<eslint-code-block>
+<eslint-code-block fix>
 
 ```json5
 /* eslint jsonc/sort-keys: 'error' */
