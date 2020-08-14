@@ -16,6 +16,7 @@ import type {
     JSONKeywordLiteral,
     JSONRegExpLiteral,
     JSONBigIntLiteral,
+    JSONLiteral,
 } from "../parser/ast"
 
 /**
@@ -85,6 +86,9 @@ export function getStaticJSONValue(node: JSONNumberLiteral): number
 export function getStaticJSONValue(node: JSONKeywordLiteral): boolean | null
 export function getStaticJSONValue(node: JSONRegExpLiteral): RegExp
 export function getStaticJSONValue(node: JSONBigIntLiteral): bigint
+export function getStaticJSONValue(
+    node: JSONLiteral,
+): string | number | boolean | RegExp | bigint | null
 
 export function getStaticJSONValue(node: JSONObjectExpression): JSONObjectValue
 export function getStaticJSONValue(node: JSONArrayExpression): JSONValue[]
@@ -126,10 +130,18 @@ export function getStaticJSONValue(
     }
     if (node.type === "JSONLiteral") {
         if (node.regex) {
-            return new RegExp(node.regex.pattern, node.regex.flags)
+            try {
+                return new RegExp(node.regex.pattern, node.regex.flags)
+            } catch {
+                return `/${node.regex.pattern}/${node.regex.flags}`
+            }
         }
         if (node.bigint != null) {
-            return BigInt(node.bigint)
+            try {
+                return BigInt(node.bigint)
+            } catch {
+                return `${node.bigint}`
+            }
         }
         return node.value
     }
