@@ -6,11 +6,13 @@ import autoConfig from "./configs/auto-config"
 import recommendedWithJson from "./configs/recommended-with-json"
 import recommendedWithJsonc from "./configs/recommended-with-jsonc"
 import recommendedWithJson5 from "./configs/recommended-with-json5"
-import { parseForESLint } from "./parser/json-eslint-parser"
-import { traverseNodes } from "./parser/traverse"
-import { getStaticJSONValue } from "./utils/ast"
-
-import type * as AST from "./parser/ast"
+// backward compatibility
+import {
+    parseForESLint,
+    traverseNodes,
+    AST,
+    getStaticJSONValue,
+} from "jsonc-eslint-parser"
 
 const configs = {
     base,

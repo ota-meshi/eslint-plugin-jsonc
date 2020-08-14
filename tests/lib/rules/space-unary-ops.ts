@@ -2,7 +2,7 @@ import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/space-unary-ops"
 
 const tester = new RuleTester({
-    parser: require.resolve("../../../lib/parser/json-eslint-parser"),
+    parser: require.resolve("jsonc-eslint-parser"),
 })
 
 tester.run("space-unary-ops", rule as any, {

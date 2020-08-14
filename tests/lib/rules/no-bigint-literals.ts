@@ -2,7 +2,7 @@ import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/no-bigint-literals"
 
 const tester = new RuleTester({
-    parser: require.resolve("../../../lib/parser/json-eslint-parser"),
+    parser: require.resolve("jsonc-eslint-parser"),
     parserOptions: {
         ecmaVersion: 2020,
     },

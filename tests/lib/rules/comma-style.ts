@@ -2,7 +2,7 @@ import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/comma-style"
 
 const tester = new RuleTester({
-    parser: require.resolve("../../../lib/parser/json-eslint-parser"),
+    parser: require.resolve("jsonc-eslint-parser"),
 })
 
 tester.run("comma-style", rule as any, {

@@ -2,7 +2,7 @@ import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/object-curly-spacing"
 
 const tester = new RuleTester({
-    parser: require.resolve("../../../lib/parser/json-eslint-parser"),
+    parser: require.resolve("jsonc-eslint-parser"),
 })
 
 tester.run("object-curly-spacing", rule as any, {

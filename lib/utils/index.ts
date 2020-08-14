@@ -1,6 +1,6 @@
 import type { RuleListener, RuleModule, PartialRuleModule } from "../types"
 import type { Rule } from "eslint"
-import { JSONNode } from "../parser/ast"
+import type { AST } from "jsonc-eslint-parser"
 
 /**
  * Define the rule.
@@ -49,7 +49,7 @@ export function defineWrapperListener(
             /(?:^|\b)(ExpressionStatement|ArrayExpression|ObjectExpression|Property|Identifier|Literal|UnaryExpression)(?:\b|$)/gu,
             "JSON$1",
         )
-        jsonListener[jsonKey] = function (node: JSONNode, ...args) {
+        jsonListener[jsonKey] = function (node: AST.JSONNode, ...args) {
             original.call(this, getProxyNode(node) as never, ...args)
         }
     }
@@ -71,7 +71,7 @@ export function defineWrapperListener(
     /**
      * Get the proxy node
      */
-    function getProxyNode(node: JSONNode): any {
+    function getProxyNode(node: AST.JSONNode): any {
         const type = node.type.startsWith("JSON")
             ? node.type.slice(4)
             : node.type

@@ -1,11 +1,6 @@
-import type {
-    JSONLiteral,
-    JSONUnaryExpression,
-    JSONIdentifier,
-} from "../parser/ast"
+import { AST, isNumberIdentifier } from "jsonc-eslint-parser"
 import type { RuleListener } from "../types"
 import { createRule } from "../utils"
-import { isNumberIdentifier } from "../utils/ast"
 
 /**
  * Checks if the given string is valid number as JSON.
@@ -45,7 +40,7 @@ export default createRule("valid-json-number", {
         }
         const sourceCode = context.getSourceCode()
         return {
-            JSONUnaryExpression(node: JSONUnaryExpression) {
+            JSONUnaryExpression(node: AST.JSONUnaryExpression) {
                 if (node.argument.type === "JSONIdentifier") {
                     return
                 }
@@ -82,7 +77,7 @@ export default createRule("valid-json-number", {
                     })
                 }
             },
-            JSONLiteral(node: JSONLiteral) {
+            JSONLiteral(node: AST.JSONLiteral) {
                 if (typeof node.value !== "number") {
                     return
                 }
@@ -100,7 +95,7 @@ export default createRule("valid-json-number", {
                     })
                 }
             },
-            JSONIdentifier(node: JSONIdentifier) {
+            JSONIdentifier(node: AST.JSONIdentifier) {
                 if (!isNumberIdentifier(node)) {
                     return
                 }

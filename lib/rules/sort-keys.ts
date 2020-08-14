@@ -4,8 +4,7 @@
 import naturalCompare from "natural-compare"
 import { createRule } from "../utils"
 import { isCommaToken } from "eslint-utils"
-import type { JSONProperty, JSONObjectExpression } from "../parser/ast"
-import { getStaticJSONValue } from "../utils/ast"
+import { AST, getStaticJSONValue } from "jsonc-eslint-parser"
 
 //------------------------------------------------------------------------------
 // Helpers
@@ -14,7 +13,7 @@ import { getStaticJSONValue } from "../utils/ast"
 /**
  * Gets the property name of the given `Property` node.
  */
-function getPropertyName(node: JSONProperty): string {
+function getPropertyName(node: AST.JSONProperty): string {
     const prop = node.key
     if (prop.type === "JSONIdentifier") {
         return prop.name
@@ -96,13 +95,13 @@ export default createRule("sort-keys", {
         const isValidOrder = buildValidator(order, insensitive, natural)
         type Stack = {
             upper: Stack | null
-            prevList: { name: string; node: JSONProperty }[]
+            prevList: { name: string; node: AST.JSONProperty }[]
             numKeys: number
         }
         let stack: Stack = { upper: null, prevList: [], numKeys: 0 }
 
         return {
-            JSONObjectExpression(node: JSONObjectExpression) {
+            JSONObjectExpression(node: AST.JSONObjectExpression) {
                 stack = {
                     upper: stack,
                     prevList: [],
@@ -114,7 +113,7 @@ export default createRule("sort-keys", {
                 stack = stack.upper!
             },
 
-            JSONProperty(node: JSONProperty) {
+            JSONProperty(node: AST.JSONProperty) {
                 const prevList = stack.prevList
                 const numKeys = stack.numKeys
                 const thisName = getPropertyName(node)

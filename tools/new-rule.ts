@@ -23,6 +23,7 @@ const logger = console
     fs.writeFileSync(
         ruleFile,
         `
+import type { AST } from "jsonc-eslint-parser"
 import coreRule from "eslint/lib/rules/${ruleId}"
 import { createRule, defineWrapperListener } from "../utils"
 
@@ -49,7 +50,7 @@ export default createRule("${ruleId}", {
 import rule from "../../../lib/rules/${ruleId}"
 
 const tester = new RuleTester({
-    parser: require.resolve("../../../lib/parser/json-eslint-parser"),
+    parser: require.resolve("jsonc-eslint-parser"),
     parserOptions: {
         ecmaVersion: 2020,
     },
