@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-jsonc",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "ESLint plugin for JSON, JSONC and JSON5 files.",
   "main": "dist/index.js",
   "typescript": {
@@ -62,7 +62,6 @@
   "devDependencies": {
     "@mysticatea/eslint-plugin": "^13.0.0",
     "@types/eslint": "^7.2.0",
-    "@types/estree": "0.0.44",
     "@types/mocha": "^7.0.2",
     "@types/natural-compare": "^1.4.0",
     "@types/node": "^14.0.13",
@@ -71,7 +70,6 @@
     "dts-bundle": "^0.7.3",
     "eslint": "^7.3.0",
     "eslint4b": "^7.3.1",
-    "espree": "^7.1.0",
     "mocha": "^7.0.0",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
@@ -87,7 +85,7 @@
   },
   "dependencies": {
     "eslint-utils": "^2.1.0",
-    "jsonc-eslint-parser": "^0.5.0",
+    "jsonc-eslint-parser": "^0.5.2",
     "natural-compare": "^1.4.0"
   }
 }
