@@ -1,4 +1,5 @@
-import { AST, isNumberIdentifier } from "jsonc-eslint-parser"
+import type { AST } from "jsonc-eslint-parser"
+import { isNumberIdentifier } from "jsonc-eslint-parser"
 import type { RuleListener } from "../types"
 import { createRule } from "../utils"
 

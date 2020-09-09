@@ -4,7 +4,8 @@
 import naturalCompare from "natural-compare"
 import { createRule } from "../utils"
 import { isCommaToken } from "eslint-utils"
-import { AST, getStaticJSONValue } from "jsonc-eslint-parser"
+import type { AST } from "jsonc-eslint-parser"
+import { getStaticJSONValue } from "jsonc-eslint-parser"
 
 //------------------------------------------------------------------------------
 // Helpers

@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 import pako from "../../../../node_modules/pako"
 
 /**
@@ -19,6 +20,7 @@ function getEnabledRules(allRules) {
  * @param {State} state The state to serialize.
  * @returns {string} The serialized string.
  */
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 export function serializeState(state) {
     const saveData = {
         code: state.code,
@@ -30,12 +32,11 @@ export function serializeState(state) {
         (typeof window !== "undefined" && window.btoa(compressedString)) ||
         compressedString
 
-    //eslint-disable-next-line no-console
     console.log(
         `The compress rate of serialized string: ${(
             (100 * base64.length) /
             jsonString.length
-        ).toFixed(1)}% (${jsonString.length}B → ${base64.length}B)`
+        ).toFixed(1)}% (${jsonString.length}B → ${base64.length}B)`,
     )
 
     return base64

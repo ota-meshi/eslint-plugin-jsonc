@@ -1,4 +1,6 @@
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 import * as coreRules from "../../../../node_modules/eslint4b/dist/core-rules"
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 import plugin from "../../../../"
 
 const CATEGORY_TITLES = {
@@ -51,9 +53,10 @@ for (const k of Object.keys(coreRules)) {
 }
 
 allRules.sort((a, b) =>
-    a.ruleId > b.ruleId ? 1 : a.ruleId < b.ruleId ? -1 : 0
+    a.ruleId > b.ruleId ? 1 : a.ruleId < b.ruleId ? -1 : 0,
 )
 
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 export const categories = []
 
 for (const rule of allRules) {
@@ -80,9 +83,10 @@ categories.sort((a, b) =>
         ? 1
         : a.title < b.title
         ? -1
-        : 0
+        : 0,
 )
 
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 export const DEFAULT_RULES_CONFIG = allRules.reduce((c, r) => {
     if (r.ruleId === "vue/no-parsing-error") {
         c[r.ruleId] = "error"
@@ -92,4 +96,5 @@ export const DEFAULT_RULES_CONFIG = allRules.reduce((c, r) => {
     return c
 }, {})
 
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 export const rules = allRules

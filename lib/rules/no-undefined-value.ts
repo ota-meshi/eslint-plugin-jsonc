@@ -1,4 +1,5 @@
-import { AST, isUndefinedIdentifier } from "jsonc-eslint-parser"
+import type { AST } from "jsonc-eslint-parser"
+import { isUndefinedIdentifier } from "jsonc-eslint-parser"
 import { createRule } from "../utils"
 
 export default createRule("no-undefined-value", {

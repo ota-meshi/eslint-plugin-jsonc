@@ -9,12 +9,12 @@ export default createRule("no-multi-str", {
             extensionRule: true,
         },
         fixable: coreRule.meta?.fixable,
-        schema: coreRule.meta?.schema!,
+        schema: coreRule.meta!.schema!,
         messages: {
-            ...coreRule.meta?.messages!,
+            ...coreRule.meta!.messages!,
             multilineString: "Multiline support is limited to JSON5 only.",
         },
-        type: coreRule.meta?.type!,
+        type: coreRule.meta!.type!,
     },
     create(context) {
         return defineWrapperListener(coreRule, context, context.options)

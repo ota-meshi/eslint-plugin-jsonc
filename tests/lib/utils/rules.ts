@@ -12,12 +12,12 @@ function getDirRules() {
     const rulesRoot = path.resolve(__dirname, "../../../lib/rules")
     const result = fs.readdirSync(rulesRoot)
     const rules: { [key: string]: RuleModule } = {}
-    for (const name of result) {
-        const ruleName = name.replace(/\.ts$/u, "")
+    for (const filename of result) {
+        const ruleName = filename.replace(/\.ts$/u, "")
         const ruleId = `jsonc/${ruleName}`
 
-        // eslint-disable-next-line @mysticatea/ts/no-require-imports
-        const rule = require(path.join(rulesRoot, name)).default
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- for test
+        const rule = require(path.join(rulesRoot, filename)).default
         rules[ruleId] = rule
     }
     return rules

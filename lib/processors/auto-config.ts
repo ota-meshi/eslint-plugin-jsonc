@@ -1,8 +1,7 @@
 import type { Linter, CLIEngine } from "eslint"
 import { rules } from "../utils/rules"
 
-let engine: CLIEngine
-let ruleNames: Set<string>
+let engine: CLIEngine, ruleNames: Set<string>
 
 /**
  * Get CLIEngine instance
@@ -11,9 +10,9 @@ function getCLIEngine() {
     if (engine) {
         return engine
     }
-    // eslint-disable-next-line @mysticatea/ts/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
     engine = new (require("eslint/lib/cli-engine").CLIEngine)({})
-    // eslint-disable-next-line @mysticatea/ts/no-require-imports, @mysticatea/ts/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
     engine.addPlugin("eslint-plugin-jsonc", require(".."))
     return engine
 }
@@ -38,7 +37,7 @@ function getJsoncRule(rule: string) {
 
 const targetCache = new Map<string, { prefix: string; code: string }>()
 export = {
-    preprocess(code: string, filename: string) {
+    preprocess(code: string, filename: string): string[] {
         const config = getConfig(filename)
         if (config.rules) {
             const autoConfig: { [name: string]: Linter.RuleEntry } = {}

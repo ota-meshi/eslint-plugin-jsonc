@@ -9,9 +9,9 @@ export default createRule("quote-props", {
             extensionRule: true,
         },
         fixable: coreRule.meta?.fixable,
-        schema: coreRule.meta?.schema!,
-        messages: coreRule.meta?.messages!,
-        type: coreRule.meta?.type!,
+        schema: coreRule.meta!.schema!,
+        messages: coreRule.meta!.messages!,
+        type: coreRule.meta!.type!,
     },
     create(context) {
         const options = [...context.options]
