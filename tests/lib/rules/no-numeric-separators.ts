@@ -1,6 +1,11 @@
 import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/no-numeric-separators"
-
+import { Linter } from "eslint"
+import semver from "semver"
+if (!semver.gte(Linter.version, "7.3.0")) {
+    // @ts-expect-error
+    return
+}
 const tester = new RuleTester({
     parser: require.resolve("jsonc-eslint-parser"),
     parserOptions: {
