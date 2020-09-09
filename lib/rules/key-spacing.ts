@@ -10,9 +10,9 @@ export default createRule("key-spacing", {
             extensionRule: true,
         },
         fixable: coreRule.meta?.fixable,
-        schema: coreRule.meta?.schema!,
-        messages: coreRule.meta?.messages!,
-        type: coreRule.meta?.type!,
+        schema: coreRule.meta!.schema!,
+        messages: coreRule.meta!.messages!,
+        type: coreRule.meta!.type!,
     },
     create(context) {
         return defineWrapperListener(coreRule, context, context.options)

@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 import pako from "../../../../node_modules/pako"
 
 /**
@@ -5,6 +6,7 @@ import pako from "../../../../node_modules/pako"
  * @param {string} serializedString A serialized string.
  * @returns {object} The deserialized state.
  */
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 export function deserializeState(serializedString) {
     const state = {
         code: undefined,

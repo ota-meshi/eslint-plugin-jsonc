@@ -21,7 +21,8 @@ export function createRule(
                 ruleName,
             },
         },
-        create: rule.create as any,
+        // eslint-disable-next-line @typescript-eslint/unbound-method -- special
+        create: rule.create as never,
     }
 }
 
@@ -37,7 +38,9 @@ export function defineWrapperListener(
         return {}
     }
     const listener = coreRule.create({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
         // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/naming-convention -- special
         __proto__: context,
         options,
     }) as RuleListener
@@ -55,7 +58,7 @@ export function defineWrapperListener(
     }
 
     /**
-     *  Check wheather a given value is a node.
+     *  Check whether a given value is a node.
      */
     function isNode(data: any): boolean {
         return (

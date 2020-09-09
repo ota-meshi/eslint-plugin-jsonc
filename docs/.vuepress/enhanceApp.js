@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 export default () =>
     // {
     //     Vue, // the version of Vue being used in the VuePress app
