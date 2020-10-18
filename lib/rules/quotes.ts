@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/quotes"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("quotes")
 
 export default createRule("quotes", {
     meta: {

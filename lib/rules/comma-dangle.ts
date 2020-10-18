@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/comma-dangle"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("comma-dangle")
 
 export default createRule("comma-dangle", {
     meta: {

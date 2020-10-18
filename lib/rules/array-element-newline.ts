@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/array-element-newline"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("array-element-newline")
 
 export default createRule("array-element-newline", {
     meta: {

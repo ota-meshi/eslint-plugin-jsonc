@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/no-sparse-arrays"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("no-sparse-arrays")
 
 export default createRule("no-sparse-arrays", {
     meta: {

@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/object-property-newline"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("object-property-newline")
 
 export default createRule("object-property-newline", {
     meta: {

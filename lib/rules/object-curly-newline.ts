@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/object-curly-newline"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("object-curly-newline")
 
 export default createRule("object-curly-newline", {
     meta: {

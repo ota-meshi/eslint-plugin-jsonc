@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/no-useless-escape"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("no-useless-escape")
 
 export default createRule("no-useless-escape", {
     meta: {
