@@ -1,2 +1,3 @@
 const Linter = require('eslint4b')
-module.exports = { Linter }
+const CLIEngine = require('../../../../node_modules/eslint/lib/cli-engine').CLIEngine
+module.exports = { Linter, CLIEngine }
