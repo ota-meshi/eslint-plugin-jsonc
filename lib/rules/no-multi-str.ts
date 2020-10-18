@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/no-multi-str"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("no-multi-str")
 
 export default createRule("no-multi-str", {
     meta: {

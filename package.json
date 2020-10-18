@@ -12,7 +12,7 @@
     "index.d.ts"
   ],
   "scripts": {
-    "prebuild": "npm run -s clean && npm run setup-types",
+    "prebuild": "npm run -s clean",
     "build": "npm run build:ts && npm run build:dts",
     "build:ts": "tsc --project ./tsconfig.build.json",
     "build:dts": "npm run build:dts-step1 && npm run build:dts-step2",
@@ -21,7 +21,6 @@
     "clean": "rimraf .nyc_output dist coverage",
     "lint": "eslint \"tests\" \"lib\" \"docs/.vuepress\" --ext .js,.vue,.ts",
     "eslint-fix": "eslint \"tests\" \"lib\" \"docs/.vuepress\" --ext .js,.vue,.ts --fix",
-    "pretest": "npm run setup-types",
     "test:base": "mocha --require ts-node/register \"tests/lib/**/*.ts\" --reporter dot --timeout 60000",
     "test": "npm run test:base",
     "test:nyc": "nyc --reporter=lcov npm run test:base",
@@ -35,8 +34,7 @@
     "docs-deploysetup:clean": "rimraf assets",
     "docs-deploysetup:copy": "npx cpx \"docs/\\.vuepress/dist/**\" . -u",
     "preversion": "npm test && npm run update && git add .",
-    "version": "npm run eslint-fix && git add .",
-    "setup-types": "node ./tools/setup-eslint-rule-types.js"
+    "version": "npm run eslint-fix && git add ."
   },
   "repository": {
     "type": "git",

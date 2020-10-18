@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/no-octal-escape"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("no-octal-escape")
 
 export default createRule("no-octal-escape", {
     meta: {

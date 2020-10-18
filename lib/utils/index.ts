@@ -100,3 +100,19 @@ export function defineWrapperListener(
 
     return jsonListener
 }
+
+let ruleMap: Map<string, Rule.RuleModule> | null = null
+
+/**
+ * Get the core rule implementation from the rule name
+ */
+export function getCoreRule(name: string): Rule.RuleModule {
+    let map: Map<string, Rule.RuleModule>
+    if (ruleMap) {
+        map = ruleMap
+    } else {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- load eslint
+        ruleMap = map = new (require("eslint").Linter)().getRules()
+    }
+    return map.get(name)!
+}

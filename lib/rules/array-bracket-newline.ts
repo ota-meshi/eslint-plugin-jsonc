@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/array-bracket-newline"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("array-bracket-newline")
 
 export default createRule("array-bracket-newline", {
     meta: {

@@ -24,8 +24,8 @@ const logger = console
         ruleFile,
         `
 import type { AST } from "jsonc-eslint-parser"
-import coreRule from "eslint/lib/rules/${ruleId}"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("${ruleId}")
 
 export default createRule("${ruleId}", {
     meta: {

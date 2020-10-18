@@ -1,5 +1,5 @@
-import coreRule from "eslint/lib/rules/array-bracket-spacing"
-import { createRule, defineWrapperListener } from "../utils"
+import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+const coreRule = getCoreRule("array-bracket-spacing")
 
 export default createRule("array-bracket-spacing", {
     meta: {
