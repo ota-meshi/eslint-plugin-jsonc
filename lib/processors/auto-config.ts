@@ -11,7 +11,7 @@ function getCLIEngine() {
         return engine
     }
     // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
-    engine = new (require("eslint/lib/cli-engine").CLIEngine)({})
+    engine = new (require("eslint").CLIEngine)({})
     // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
     engine.addPlugin("eslint-plugin-jsonc", require(".."))
     return engine

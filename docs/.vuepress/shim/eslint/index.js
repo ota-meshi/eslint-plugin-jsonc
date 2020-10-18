@@ -1,2 +1,3 @@
 const Linter = require('eslint4b')
-module.exports = { Linter }
+class CLIEngine {}
+module.exports = { Linter, CLIEngine }
