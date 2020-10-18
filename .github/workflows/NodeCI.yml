@@ -58,8 +58,6 @@ jobs:
         node-version: 10.x
     - name: Install Packages
       run: npm install
-    - name: Setup
-      run: npm run setup-types
     - name: Test
       run: npm run test:nyc
     - name: Coveralls GitHub Action
