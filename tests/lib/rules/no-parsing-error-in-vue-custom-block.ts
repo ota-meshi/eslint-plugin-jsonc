@@ -30,5 +30,16 @@ tester.run("no-parsing-error-in-vue-custom-block", rule as any, {
                 },
             ],
         },
+        {
+            code: `<i18n></i18n>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                {
+                    message: "Unexpected end of expression.",
+                    line: 1,
+                    column: 7,
+                },
+            ],
+        },
     ],
 })
