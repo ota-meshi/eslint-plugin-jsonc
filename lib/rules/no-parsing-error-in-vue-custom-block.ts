@@ -1,5 +1,9 @@
 import type { AST } from "jsonc-eslint-parser"
+import type { VAttribute, VElement } from "vue-eslint-parser/ast"
 import { createRule } from "../utils"
+import type { RuleListener } from "../types"
+import * as jsoncESLintParser from "jsonc-eslint-parser"
+import type { Rule } from "eslint"
 
 export default createRule("no-parsing-error-in-vue-custom-block", {
     meta: {
@@ -18,23 +22,63 @@ export default createRule("no-parsing-error-in-vue-custom-block", {
         }
         const parseError = context.parserServices.parseError
         if (parseError) {
-            let loc: AST.Position | undefined = undefined
-            if ("column" in parseError && "lineNumber" in parseError) {
-                loc = {
-                    line: parseError.lineNumber,
-                    column: parseError.column,
-                }
+            return errorReportVisitor(context, parseError)
+        }
+        const parseCustomBlockElement:
+            | ((parser: any, options: any) => any)
+            | undefined = context.parserServices.parseCustomBlockElement
+        const customBlockElement: VElement | undefined =
+            context.parserServices.customBlock
+
+        if (customBlockElement && parseCustomBlockElement) {
+            let lang = getLang(customBlockElement)
+            if (!lang) {
+                lang = "json"
             }
-            return {
-                Program(node) {
-                    context.report({
-                        node,
-                        loc,
-                        message: parseError.message,
-                    })
-                },
+            const { error } = parseCustomBlockElement(jsoncESLintParser, {
+                jsonSyntax: lang,
+            })
+            if (error) {
+                return errorReportVisitor(context, error)
             }
         }
         return {}
     },
 })
+
+/**
+ * Report error
+ */
+function errorReportVisitor(
+    context: Rule.RuleContext,
+    error: any,
+): RuleListener {
+    let loc: AST.Position | undefined = undefined
+    if ("column" in error && "lineNumber" in error) {
+        loc = {
+            line: error.lineNumber,
+            column: error.column,
+        }
+    }
+    return {
+        Program(node) {
+            context.report({
+                node,
+                loc,
+                message: error.message,
+            })
+        },
+    }
+}
+
+/**
+ * Get lang from given custom block
+ */
+function getLang(customBlock: VElement) {
+    return (
+        customBlock.startTag.attributes.find(
+            (attr): attr is VAttribute =>
+                !attr.directive && attr.key.name === "lang",
+        )?.value?.value || null
+    )
+}

@@ -17,6 +17,10 @@ tester.run("no-parsing-error-in-vue-custom-block", rule as any, {
             code: `<i18n>{"key": "value"}</i18n>`,
             parser: require.resolve("vue-eslint-parser"),
         },
+        {
+            code: `<i18n lang="json5">/**/123</i18n>`,
+            parser: require.resolve("vue-eslint-parser"),
+        },
     ],
     invalid: [
         {
@@ -38,6 +42,28 @@ tester.run("no-parsing-error-in-vue-custom-block", rule as any, {
                     message: "Unexpected end of expression.",
                     line: 1,
                     column: 7,
+                },
+            ],
+        },
+        {
+            code: `<i18n>/**/123</i18n>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                {
+                    message: "Unexpected comment.",
+                    line: 1,
+                    column: 7,
+                },
+            ],
+        },
+        {
+            code: `<i18n lang="json">/**/123</i18n>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                {
+                    message: "Unexpected comment.",
+                    line: 1,
+                    column: 19,
                 },
             ],
         },
