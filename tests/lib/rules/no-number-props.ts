@@ -13,5 +13,11 @@ tester.run("no-number-props", rule as any, {
             output: '{"123": 123}',
             errors: ["The number property keys are not allowed."],
         },
+        {
+            code: `<custom-block lang="json">{123: 123}</custom-block>`,
+            output: `<custom-block lang="json">{"123": 123}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["The number property keys are not allowed."],
+        },
     ],
 })

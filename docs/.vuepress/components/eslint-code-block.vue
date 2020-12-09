@@ -6,6 +6,9 @@
         :rules="rules"
         dark
         :fix="fix"
+        :language="language"
+        :file-name="fileName"
+        :parser="parser"
     />
 </template>
 
@@ -24,6 +27,18 @@ export default {
             default() {
                 return {}
             },
+        },
+        language: {
+            type: String,
+            default:undefined
+        },
+        fileName: {
+            type: String,
+            default:undefined
+        },
+        parser: {
+            type: String,
+            default:undefined
         },
     },
 

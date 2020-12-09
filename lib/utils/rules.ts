@@ -14,6 +14,7 @@ import noMultiStr from "../rules/no-multi-str"
 import noNumberProps from "../rules/no-number-props"
 import noNumericSeparators from "../rules/no-numeric-separators"
 import noOctalEscape from "../rules/no-octal-escape"
+import noParsingErrorInVueCustomBlock from "../rules/no-parsing-error-in-vue-custom-block"
 import noRegexpLiterals from "../rules/no-regexp-literals"
 import noSparseArrays from "../rules/no-sparse-arrays"
 import noTemplateLiterals from "../rules/no-template-literals"
@@ -44,6 +45,7 @@ export const rules = [
     noNumberProps,
     noNumericSeparators,
     noOctalEscape,
+    noParsingErrorInVueCustomBlock,
     noRegexpLiterals,
     noSparseArrays,
     noTemplateLiterals,

@@ -18,6 +18,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
 | [jsonc/no-number-props](./no-number-props.md) | disallow number property keys | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-numeric-separators](./no-numeric-separators.md) | disallow numeric separators | :wrench: | :star: | :star: | :star: |
+| [jsonc/no-parsing-error-in-vue-custom-block](./no-parsing-error-in-vue-custom-block.md) | disallow parsing errors in vue custom blocks |  | :star: | :star: | :star: |
 | [jsonc/no-regexp-literals](./no-regexp-literals.md) | disallow RegExp literals |  | :star: | :star: | :star: |
 | [jsonc/no-template-literals](./no-template-literals.md) | disallow template literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-undefined-value](./no-undefined-value.md) | disallow `undefined` |  | :star: | :star: | :star: |

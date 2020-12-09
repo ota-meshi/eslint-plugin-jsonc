@@ -16,5 +16,10 @@ tester.run("no-sparse-arrays", rule as any, {
             code: "[,2,3,4]",
             errors: ["Unexpected comma in middle of array."],
         },
+        {
+            code: `<custom-block lang="json">[,,]</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Unexpected comma in middle of array."],
+        },
     ],
 })

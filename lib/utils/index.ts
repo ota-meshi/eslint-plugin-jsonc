@@ -1,6 +1,8 @@
 import type { RuleListener, RuleModule, PartialRuleModule } from "../types"
 import type { Rule } from "eslint"
 import type { AST } from "jsonc-eslint-parser"
+import * as jsoncESLintParser from "jsonc-eslint-parser"
+import type { AST as V } from "vue-eslint-parser"
 
 /**
  * Define the rule.
@@ -21,8 +23,29 @@ export function createRule(
                 ruleName,
             },
         },
-        // eslint-disable-next-line @typescript-eslint/unbound-method -- special
-        create: rule.create as never,
+        create(context: Rule.RuleContext): any {
+            if (
+                typeof context.parserServices.defineCustomBlocksVisitor ===
+                "function"
+            ) {
+                return context.parserServices.defineCustomBlocksVisitor(
+                    context,
+                    jsoncESLintParser,
+                    {
+                        target(lang: string | null, block: V.VElement) {
+                            if (lang) {
+                                return /json(?:c|5)?/i.test(lang)
+                            }
+                            return block.name === "i18n"
+                        },
+                        create(blockContext: Rule.RuleContext) {
+                            return rule.create(blockContext)
+                        },
+                    },
+                )
+            }
+            return rule.create(context)
+        },
     }
 }
 
@@ -48,6 +71,9 @@ export function defineWrapperListener(
     const jsonListener: RuleListener = {}
     for (const key of Object.keys(listener)) {
         const original = listener[key]
+        if (!original) {
+            continue
+        }
         const jsonKey = key.replace(
             /(?:^|\b)(ExpressionStatement|ArrayExpression|ObjectExpression|Property|Identifier|Literal|UnaryExpression)(?:\b|$)/gu,
             "JSON$1",

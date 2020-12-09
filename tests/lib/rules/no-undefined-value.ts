@@ -34,5 +34,10 @@ tester.run("no-undefined-value", rule as any, {
                 },
             ],
         },
+        {
+            code: `<custom-block lang="json">undefined</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["`undefined` is not allowed."],
+        },
     ],
 })

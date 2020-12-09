@@ -32,5 +32,11 @@ tester.run("object-property-newline", rule as any, {
                 "Object properties must go on a new line.",
             ],
         },
+        {
+            code: `<custom-block lang="json">{ "foo": "foo", "bar": "bar" }</custom-block>`,
+            output: `<custom-block lang="json">{ "foo": "foo",\n"bar": "bar" }</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Object properties must go on a new line."],
+        },
     ],
 })

@@ -93,5 +93,13 @@ tester.run("sort-keys", rule as any, {
                 "Expected object keys to be in descending order. 'c' should be before 'b'.",
             ],
         },
+        {
+            code: `<custom-block lang="json">{a:1, A: 2, B:3, b:4}</custom-block>`,
+            output: `<custom-block lang="json">{ A: 2,a:1, B:3, b:4}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                "Expected object keys to be in ascending order. 'A' should be before 'a'.",
+            ],
+        },
     ],
 })
