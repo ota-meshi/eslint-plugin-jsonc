@@ -39,12 +39,16 @@ export function createRule(
                             return block.name === "i18n"
                         },
                         create(blockContext: Rule.RuleContext) {
-                            return rule.create(blockContext)
+                            return rule.create(blockContext, {
+                                customBlock: true,
+                            })
                         },
                     },
                 )
             }
-            return rule.create(context)
+            return rule.create(context, {
+                customBlock: false,
+            })
         },
     }
 }

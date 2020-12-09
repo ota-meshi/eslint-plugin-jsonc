@@ -12,7 +12,10 @@ export default createRule("no-parsing-error-in-vue-custom-block", {
         messages: {},
         type: "problem",
     },
-    create(context) {
+    create(context, { customBlock }) {
+        if (!customBlock) {
+            return {}
+        }
         const parseError = context.parserServices.parseError
         if (parseError) {
             let loc: AST.Position | undefined = undefined
