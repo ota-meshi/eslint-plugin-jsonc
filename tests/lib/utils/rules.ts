@@ -9,15 +9,31 @@ import { rules as allRules } from "../../../lib/utils/rules"
  * @returns {Array} Get the list of rules placed in the directory.
  */
 function getDirRules() {
-    const rulesRoot = path.resolve(__dirname, "../../../lib/rules")
-    const result = fs.readdirSync(rulesRoot)
     const rules: { [key: string]: RuleModule } = {}
-    for (const filename of result) {
+
+    const rulesRoot = path.resolve(__dirname, "../../../lib/rules")
+    for (const filename of fs
+        .readdirSync(rulesRoot)
+        .filter((n) => n.endsWith(".ts"))) {
         const ruleName = filename.replace(/\.ts$/u, "")
         const ruleId = `jsonc/${ruleName}`
 
         // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- for test
         const rule = require(path.join(rulesRoot, filename)).default
+        rules[ruleId] = rule
+    }
+
+    const vueCustomBlockRulesLibRoot = path.resolve(
+        __dirname,
+        "../../../lib/rules/vue-custom-block",
+    )
+    for (const filename of fs.readdirSync(vueCustomBlockRulesLibRoot)) {
+        const ruleName = `vue-custom-block/${filename.replace(/\.ts$/u, "")}`
+        const ruleId = `jsonc/${ruleName}`
+
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- for test
+        const rule = require(path.join(vueCustomBlockRulesLibRoot, filename))
+            .default
         rules[ruleId] = rule
     }
     return rules

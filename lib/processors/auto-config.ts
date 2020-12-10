@@ -1,60 +1,14 @@
-import type { Linter, CLIEngine } from "eslint"
-import { rules } from "../utils/rules"
-
-let engine: CLIEngine, ruleNames: Set<string>
-
-/**
- * Get CLIEngine instance
- */
-function getCLIEngine() {
-    if (engine) {
-        return engine
-    }
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
-    engine = new (require("eslint").CLIEngine)({})
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
-    engine.addPlugin("eslint-plugin-jsonc", require(".."))
-    return engine
-}
-
-/**
- * Get config for the given filename
- * @param filename
- */
-function getConfig(filename: string) {
-    return getCLIEngine().getConfigForFile(filename)
-}
-
-/**
- * Get jsonc rule from the given base rule name
- * @param filename
- */
-function getJsoncRule(rule: string) {
-    ruleNames = ruleNames || new Set(rules.map((r) => r.meta.docs.ruleName))
-
-    return ruleNames.has(rule) ? `jsonc/${rule}` : null
-}
+import type { Linter } from "eslint"
+import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config"
 
 const targetCache = new Map<string, { prefix: string; code: string }>()
 export = {
     preprocess(code: string, filename: string): string[] {
-        const config = getConfig(filename)
-        if (config.rules) {
-            const autoConfig: { [name: string]: Linter.RuleEntry } = {}
-            for (const ruleName of Object.keys(config.rules)) {
-                const jsoncName = getJsoncRule(ruleName)
-                if (jsoncName && !config.rules[jsoncName]) {
-                    const entry = config.rules[ruleName]
-                    if (entry && entry !== "off") {
-                        autoConfig[jsoncName] = entry
-                    }
-                }
-            }
-            if (Object.keys(autoConfig).length) {
-                const prefix = `/*eslint ${JSON.stringify(autoConfig)}*/\n\n\n`
-                targetCache.set(filename, { prefix, code })
-                return [`${prefix}${code}`]
-            }
+        const config = getAutoConfig(filename)
+        if (Object.keys(config).length) {
+            const prefix = `/*eslint ${JSON.stringify(config)}*/\n\n\n`
+            targetCache.set(filename, { prefix, code })
+            return [`${prefix}${code}`]
         }
         return [code]
     },

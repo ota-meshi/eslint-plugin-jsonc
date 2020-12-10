@@ -1,5 +1,5 @@
 import { RuleTester } from "eslint"
-import rule from "../../../lib/rules/no-parsing-error-in-vue-custom-block"
+import rule from "../../../../lib/rules/vue-custom-block/no-parsing-error"
 
 const tester = new RuleTester({
     parser: require.resolve("jsonc-eslint-parser"),
@@ -8,7 +8,7 @@ const tester = new RuleTester({
     },
 })
 
-tester.run("no-parsing-error-in-vue-custom-block", rule as any, {
+tester.run("vue-custom-block/no-parsing-error", rule as any, {
     valid: [
         '{"key": "value"}',
         '"string"',

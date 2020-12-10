@@ -13,7 +13,6 @@ export = {
         "jsonc/no-multi-str": "error",
         "jsonc/no-number-props": "error",
         "jsonc/no-numeric-separators": "error",
-        "jsonc/no-parsing-error-in-vue-custom-block": "error",
         "jsonc/no-regexp-literals": "error",
         "jsonc/no-sparse-arrays": "error",
         "jsonc/no-template-literals": "error",
@@ -23,5 +22,6 @@ export = {
         "jsonc/quotes": "error",
         "jsonc/space-unary-ops": "error",
         "jsonc/valid-json-number": "error",
+        "jsonc/vue-custom-block/no-parsing-error": "error",
     },
 }

@@ -1,10 +1,10 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "jsonc/no-parsing-error-in-vue-custom-block"
+title: "jsonc/vue-custom-block/no-parsing-error"
 description: "disallow parsing errors in vue custom blocks"
 ---
-# jsonc/no-parsing-error-in-vue-custom-block
+# jsonc/vue-custom-block/no-parsing-error
 
 > disallow parsing errors in vue custom blocks
 
@@ -26,7 +26,7 @@ This rule reports JSON parsing errors in Vue custom blocks.
 </my-block>
 
 <script>
-/* eslint jsonc/no-parsing-error-in-vue-custom-block: 'error' */
+/* eslint jsonc/vue-custom-block/no-parsing-error: 'error' */
 </script>
 ```
 
@@ -38,5 +38,5 @@ Nothing.
 
 ## Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-parsing-error-in-vue-custom-block.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-parsing-error-in-vue-custom-block.js)
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/vue-custom-block/no-parsing-error.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/vue-custom-block/no-parsing-error.js)

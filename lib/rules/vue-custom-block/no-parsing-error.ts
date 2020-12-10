@@ -1,14 +1,14 @@
 import type { AST } from "jsonc-eslint-parser"
 import type { VAttribute, VElement } from "vue-eslint-parser/ast"
-import { createRule } from "../utils"
-import type { RuleListener } from "../types"
+import { createRule } from "../../utils"
+import type { RuleListener } from "../../types"
 import * as jsoncESLintParser from "jsonc-eslint-parser"
 import type { Rule } from "eslint"
 
-export default createRule("no-parsing-error-in-vue-custom-block", {
+export default createRule("vue-custom-block/no-parsing-error", {
     meta: {
         docs: {
-            description: "disallow parsing errors in vue custom blocks",
+            description: "disallow parsing errors in Vue custom blocks",
             recommended: ["json", "json5", "jsonc"],
             extensionRule: false,
         },

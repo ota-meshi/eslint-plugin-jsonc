@@ -1,7 +1,7 @@
 import type { RuleModule } from "../lib/types"
 import { rules } from "../lib/utils/rules"
 
-//eslint-disable-next-line require-jsdoc
+//eslint-disable-next-line require-jsdoc, @typescript-eslint/explicit-module-boundary-types -- tools
 export default function renderRulesTableContent(
     categoryLevel: number,
     buildRulePath = (ruleName: string) => `./${ruleName}.md`,
@@ -17,7 +17,7 @@ export default function renderRulesTableContent(
 
     // -----------------------------------------------------------------------------
 
-    //eslint-disable-next-line require-jsdoc
+    //eslint-disable-next-line require-jsdoc -- tools
     function toRuleRow(rule: RuleModule) {
         const fixableMark = rule.meta.fixable ? ":wrench:" : ""
         const jsonMark = (rule.meta.docs.recommended || []).includes("json")
@@ -37,7 +37,7 @@ export default function renderRulesTableContent(
         return `| ${link} | ${description} | ${fixableMark} | ${jsonMark} | ${jsoncMark} | ${json5Mark} |`
     }
 
-    //eslint-disable-next-line require-jsdoc
+    //eslint-disable-next-line require-jsdoc -- tools
     function toDeprecatedRuleRow(rule: RuleModule) {
         const link = `[${rule.meta.docs.ruleId}](${buildRulePath(
             rule.meta.docs.ruleName || "",
