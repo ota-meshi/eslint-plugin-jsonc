@@ -11,16 +11,16 @@
                     <label class="category-title">
                         <input
                             :checked="
-                                category.rules.every((rule) =>
+                                filterRules(category.rules).every((rule) =>
                                     isErrorState(rule.ruleId)
                                 )
                             "
                             type="checkbox"
                             :indeterminate.prop="
-                                !category.rules.every((rule) =>
+                                !filterRules(category.rules).every((rule) =>
                                     isErrorState(rule.ruleId)
                                 ) &&
-                                !category.rules.every(
+                                !filterRules(category.rules).every(
                                     (rule) => !isErrorState(rule.ruleId)
                                 )
                             "
@@ -32,7 +32,7 @@
 
                 <ul class="rules">
                     <li
-                        v-for="rule in category.rules"
+                        v-for="rule in filterRules(category.rules)"
                         :key="rule.ruleId"
                         class="rule"
                         :class="rule.classes"
@@ -90,9 +90,12 @@ export default {
     },
     watch: {},
     methods: {
+        filterRules(rules) {
+            return rules.filter(rule=>rule.ruleId !== 'jsonc/auto')
+        },
         onAllClick(category, e) {
             const rules = Object.assign({}, this.rules)
-            for (const rule of category.rules) {
+            for (const rule of this.filterRules(category.rules)) {
                 if (e.target.checked) {
                     rules[rule.ruleId] = "error"
                 } else {
