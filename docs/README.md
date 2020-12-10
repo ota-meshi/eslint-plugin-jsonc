@@ -16,7 +16,7 @@
 
 This ESLint plugin provides linting rules relate to better ways to help you avoid problems when using [JSON], [JSONC] and [JSON5].
 
-- You can apply rules similar to the rules you use for JavaScript to JSON using the shareable config `"plugin:jsonc/auto-config"` provided by this plugin.
+- You can apply rules similar to the rules you use for JavaScript to JSON using the [`"jsonc/auto"`](./rules/auto.md) rule provided by this plugin.
 - You can choose the appropriate config provided by this plugin depending on whether you are using [JSON], [JSONC] or [JSON5].
 
 You can check on the [Online DEMO](./playground/).

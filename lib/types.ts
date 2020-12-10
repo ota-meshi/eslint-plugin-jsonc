@@ -6,6 +6,7 @@ export interface RuleListener {
 
 export interface RuleModule {
     meta: RuleMetaData
+    jsoncDefineRule: PartialRuleModule
     create(context: Rule.RuleContext): RuleListener
 }
 

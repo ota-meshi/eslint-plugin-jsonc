@@ -13,7 +13,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
-| [jsonc/key-name-casing](./key-name-casing.md) | enforce naming convention to property key names |  |  |  |  |
+| [jsonc/auto](./auto.md) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
 | [jsonc/no-bigint-literals](./no-bigint-literals.md) | disallow BigInt literals |  | :star: | :star: | :star: |
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
 | [jsonc/no-number-props](./no-number-props.md) | disallow number property keys | :wrench: | :star: | :star: | :star: |
@@ -22,7 +22,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/no-template-literals](./no-template-literals.md) | disallow template literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-undefined-value](./no-undefined-value.md) | disallow `undefined` |  | :star: | :star: | :star: |
 | [jsonc/valid-json-number](./valid-json-number.md) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
-| [jsonc/vue-custom-block/no-parsing-error](./vue-custom-block/no-parsing-error.md) | disallow parsing errors in vue custom blocks |  | :star: | :star: | :star: |
+| [jsonc/vue-custom-block/no-parsing-error](./vue-custom-block/no-parsing-error.md) | disallow parsing errors in Vue custom blocks |  | :star: | :star: | :star: |
 
 ## Extension Rules
 

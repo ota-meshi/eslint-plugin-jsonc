@@ -23,6 +23,7 @@ export function createRule(
                 ruleName,
             },
         },
+        jsoncDefineRule: rule,
         create(context: Rule.RuleContext): any {
             if (
                 typeof context.parserServices.defineCustomBlocksVisitor ===

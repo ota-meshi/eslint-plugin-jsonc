@@ -9,10 +9,10 @@ import plugin from "../../lib/index"
 // -----------------------------------------------------------------------------
 
 const TEST_CWD = path.join(__dirname, "../fixtures/integrations/eslint-plugin")
-const FIXTURE_ROOT = path.join(TEST_CWD, "./test-auto-config01/src")
+const FIXTURE_ROOT = path.join(TEST_CWD, "./test-auto-rule01/src")
 
-describe("auto-config", () => {
-    it("should auto-config enable", () => {
+describe("auto rule", () => {
+    it("should auto rule enable", () => {
         const fixtures: { [name: string]: string } = {}
         for (const filename of fs.readdirSync(FIXTURE_ROOT)) {
             const code = fs.readFileSync(
@@ -42,13 +42,11 @@ describe("auto-config", () => {
         })
         engine.addPlugin("eslint-plugin-jsonc", plugin)
         fixEngine.addPlugin("eslint-plugin-jsonc", plugin)
-        const resultFixBefore = engine.executeOnFiles([
-            "test-auto-config01/src",
-        ])
+        const resultFixBefore = engine.executeOnFiles(["test-auto-rule01/src"])
         assert.strictEqual(resultFixBefore.errorCount, 2)
 
         const resultFixAfter = fixEngine.executeOnFiles([
-            "test-auto-config01/src",
+            "test-auto-rule01/src",
         ])
         assert.strictEqual(resultFixAfter.errorCount, 0)
         CLIEngine.outputFixes(resultFixAfter)

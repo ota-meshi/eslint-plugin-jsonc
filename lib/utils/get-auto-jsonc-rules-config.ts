@@ -1,5 +1,5 @@
 import type { Linter, CLIEngine } from "eslint"
-import { rules } from "../utils/rules"
+import type { RuleModule } from "../types"
 
 let engine: CLIEngine, ruleNames: Set<string>
 
@@ -30,7 +30,14 @@ function getConfig(filename: string) {
  * @param filename
  */
 function getJsoncRule(rule: string) {
-    ruleNames = ruleNames || new Set(rules.map((r) => r.meta.docs.ruleName))
+    ruleNames =
+        ruleNames ||
+        new Set(
+            // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
+            (require("./rules").rules as RuleModule[]).map(
+                (r) => r.meta.docs.ruleName,
+            ),
+        )
 
     return ruleNames.has(rule) ? `jsonc/${rule}` : null
 }

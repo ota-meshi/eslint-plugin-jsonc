@@ -7,6 +7,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 ```
 
 ::: tip Requirements
+
 - ESLint v6.0.0 and above
 - Node.js v8.10.0 and above
 :::
@@ -41,7 +42,6 @@ This plugin provides configs:
 - `plugin:jsonc/recommended-with-json` ... Recommended configuration for JSON.
 - `plugin:jsonc/recommended-with-jsonc` ... Recommended configuration for JSONC.
 - `plugin:jsonc/recommended-with-json5` ... Recommended configuration for JSON5.
-- `plugin:jsonc/auto-config` ... Automatically apply jsonc rules similar to your configured ESLint core rules to JSON.
 
 See [the rule list](../rules/README.md) to get the `rules` that this plugin provides.
 
@@ -97,21 +97,6 @@ module.exports = {
     {
       files: ["*.json6"], // If you want to parse `.json6`
       parser: "jsonc-eslint-parser", // Set jsonc-eslint-parser.
-    },
-  ],
-}
-```
-
-If you want to apply `plugin:jsonc/auto-config` to files with this extension, add the following settings.
-
-```diff
-module.exports = {
-  // ...
-  overrides: [
-    {
-      files: ["*.json6"],
-      parser: "jsonc-eslint-parser",
-+     processor: "jsonc/auto-config",
     },
   ],
 }

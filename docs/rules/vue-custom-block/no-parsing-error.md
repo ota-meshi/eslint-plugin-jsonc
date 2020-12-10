@@ -2,11 +2,11 @@
 pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/vue-custom-block/no-parsing-error"
-description: "disallow parsing errors in vue custom blocks"
+description: "disallow parsing errors in Vue custom blocks"
 ---
 # jsonc/vue-custom-block/no-parsing-error
 
-> disallow parsing errors in vue custom blocks
+> disallow parsing errors in Vue custom blocks
 
 - :gear: This rule is included in all of `"plugin:jsonc/recommended-with-json"`, `"plugin:jsonc/recommended-with-json5"` and `"plugin:jsonc/recommended-with-jsonc"`.
 

@@ -16,7 +16,7 @@
 
 This ESLint plugin provides linting rules relate to better ways to help you avoid problems when using [JSON], [JSONC] and [JSON5].
 
-- You can apply rules similar to the rules you use for JavaScript to JSON using the shareable config `"plugin:jsonc/auto-config"` provided by this plugin.
+- You can apply rules similar to the rules you use for JavaScript to JSON using the [`"jsonc/auto"`](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html) rule provided by this plugin.
 - You can choose the appropriate config provided by this plugin depending on whether you are using [JSON], [JSONC] or [JSON5].
 
 You can check on the [Online DEMO](https://ota-meshi.github.io/eslint-plugin-jsonc/playground/).
@@ -47,7 +47,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 ```
 
 > **Requirements**
-> 
+>
 > - ESLint v6.0.0 and above
 > - Node.js v8.10.0 and above
 
@@ -84,7 +84,6 @@ This plugin provides configs:
 - `plugin:jsonc/recommended-with-json` ... Recommended configuration for JSON.
 - `plugin:jsonc/recommended-with-jsonc` ... Recommended configuration for JSONC.
 - `plugin:jsonc/recommended-with-json5` ... Recommended configuration for JSON5.
-- `plugin:jsonc/auto-config` ... Automatically apply jsonc rules similar to your configured ESLint core rules to JSON.
 
 See [the rule list](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/) to get the `rules` that this plugin provides.
 
@@ -137,7 +136,7 @@ The rules with the following star :star: are included in the config.
 
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
-| [jsonc/key-name-casing](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-name-casing.html) | enforce naming convention to property key names |  |  |  |  |
+| [jsonc/auto](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
 | [jsonc/no-bigint-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-bigint-literals.html) | disallow BigInt literals |  | :star: | :star: | :star: |
 | [jsonc/no-comments](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-comments.html) | disallow comments |  | :star: |  |  |
 | [jsonc/no-number-props](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-number-props.html) | disallow number property keys | :wrench: | :star: | :star: | :star: |
@@ -146,7 +145,7 @@ The rules with the following star :star: are included in the config.
 | [jsonc/no-template-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-template-literals.html) | disallow template literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-undefined-value](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-undefined-value.html) | disallow `undefined` |  | :star: | :star: | :star: |
 | [jsonc/valid-json-number](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/valid-json-number.html) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
-| [jsonc/vue-custom-block/no-parsing-error](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/vue-custom-block/no-parsing-error.html) | disallow parsing errors in vue custom blocks |  | :star: | :star: | :star: |
+| [jsonc/vue-custom-block/no-parsing-error](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/vue-custom-block/no-parsing-error.html) | disallow parsing errors in Vue custom blocks |  | :star: | :star: | :star: |
 
 ### Extension Rules
 

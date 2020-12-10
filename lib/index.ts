@@ -1,6 +1,5 @@
 import type { RuleModule } from "./types"
 import { rules as ruleList } from "./utils/rules"
-import processors from "./processors"
 import base from "./configs/base"
 import autoConfig from "./configs/auto-config"
 import recommendedWithJson from "./configs/recommended-with-json"
@@ -30,7 +29,6 @@ const rules = ruleList.reduce((obj, r) => {
 export default {
     configs,
     rules,
-    processors,
     // as parser
     parseForESLint,
     // tools
@@ -41,7 +39,6 @@ export default {
 export {
     configs,
     rules,
-    processors,
     // as parser
     parseForESLint,
     // tools
