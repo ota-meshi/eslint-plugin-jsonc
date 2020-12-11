@@ -14,6 +14,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
 | [jsonc/auto](./auto.md) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
+| [jsonc/key-name-casing](./key-name-casing.md) | enforce naming convention to property key names |  |  |  |  |
 | [jsonc/no-bigint-literals](./no-bigint-literals.md) | disallow BigInt literals |  | :star: | :star: | :star: |
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
 | [jsonc/no-number-props](./no-number-props.md) | disallow number property keys | :wrench: | :star: | :star: | :star: |

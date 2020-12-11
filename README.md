@@ -20,6 +20,8 @@ This ESLint plugin provides linting rules relate to better ways to help you avoi
 - You can apply rules similar to the rules you use for JavaScript to JSON using the [`"jsonc/auto"`](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html) rule provided by this plugin.
 - You can choose the appropriate config provided by this plugin depending on whether you are using [JSON], [JSONC] or [JSON5].
 - Supports [Vue SFC](https://vue-loader.vuejs.org/spec.html) custom blocks such as `<i18n>`.
+- Supports ESLint directives. e.g. `// eslint-disable-next-line`
+- You can check your code in real-time using the ESLint editor integrations.
 
 You can check on the [Online DEMO](https://ota-meshi.github.io/eslint-plugin-jsonc/playground/).
 
@@ -139,6 +141,7 @@ The rules with the following star :star: are included in the config.
 | Rule ID | Description | Fixable | JSON | JSONC | JSON5 |
 |:--------|:------------|:-------:|:----:|:-----:|:-----:|
 | [jsonc/auto](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
+| [jsonc/key-name-casing](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-name-casing.html) | enforce naming convention to property key names |  |  |  |  |
 | [jsonc/no-bigint-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-bigint-literals.html) | disallow BigInt literals |  | :star: | :star: | :star: |
 | [jsonc/no-comments](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-comments.html) | disallow comments |  | :star: |  |  |
 | [jsonc/no-number-props](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-number-props.html) | disallow number property keys | :wrench: | :star: | :star: | :star: |
