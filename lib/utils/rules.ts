@@ -5,6 +5,7 @@ import arrayElementNewline from "../rules/array-element-newline"
 import commaDangle from "../rules/comma-dangle"
 import commaStyle from "../rules/comma-style"
 import indent from "../rules/indent"
+import keyNameCasing from "../rules/key-name-casing"
 import keySpacing from "../rules/key-spacing"
 import noBigintLiterals from "../rules/no-bigint-literals"
 import noComments from "../rules/no-comments"
@@ -34,6 +35,7 @@ export const rules = [
     commaDangle,
     commaStyle,
     indent,
+    keyNameCasing,
     keySpacing,
     noBigintLiterals,
     noComments,
