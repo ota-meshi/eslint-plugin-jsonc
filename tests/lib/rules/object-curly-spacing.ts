@@ -16,5 +16,14 @@ tester.run("object-curly-spacing", rule as any, {
                 "There should be no space before '}'.",
             ],
         },
+        {
+            code: `<custom-block lang="json">{ "key": "value" }</custom-block>`,
+            output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                "There should be no space after '{'.",
+                "There should be no space before '}'.",
+            ],
+        },
     ],
 })

@@ -16,5 +16,16 @@ tester.run("array-bracket-spacing", rule as any, {
                 "There should be no space before ']'.",
             ],
         },
+        {
+            code: `<i18n>[ 1, 2 ]</i18n><custom-block lang="jsonc">[ 1 ]</custom-block>`,
+            output: `<i18n>[1, 2]</i18n><custom-block lang="jsonc">[1]</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                "There should be no space after '['.",
+                "There should be no space before ']'.",
+                "There should be no space after '['.",
+                "There should be no space before ']'.",
+            ],
+        },
     ],
 })

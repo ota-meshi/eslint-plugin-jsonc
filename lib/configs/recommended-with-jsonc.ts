@@ -20,5 +20,6 @@ export = {
         "jsonc/quotes": "error",
         "jsonc/space-unary-ops": "error",
         "jsonc/valid-json-number": "error",
+        "jsonc/vue-custom-block/no-parsing-error": "error",
     },
 }

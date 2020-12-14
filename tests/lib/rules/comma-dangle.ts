@@ -19,5 +19,11 @@ tester.run("comma-dangle", rule as any, {
             options: [{ arrays: "always", objects: "never" }],
             errors: ["Missing trailing comma.", "Unexpected trailing comma."],
         },
+        {
+            code: `<i18n>{"key": "value",}</i18n><custom-block>{"key": "value",}</custom-block>`,
+            output: `<i18n>{"key": "value"}</i18n><custom-block>{"key": "value",}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Unexpected trailing comma."],
+        },
     ],
 })

@@ -39,5 +39,44 @@ tester.run("comma-style", rule as any, {
                 "',' should be placed last.",
             ],
         },
+        {
+            code: `<i18n>{
+                "BAD": ["apples"
+                    , "oranges"],
+                "BAD": {
+                    "a": 1
+                    , "b": 2
+                }
+            }</i18n>
+            <custom-block lang="yml">{
+                "BAD": ["apples"
+                    , "oranges"],
+                "BAD": {
+                    "a": 1
+                    , "b": 2
+                }
+            }</custom-block>`,
+            output: `<i18n>{
+                "BAD": ["apples",
+                     "oranges"],
+                "BAD": {
+                    "a": 1,
+                     "b": 2
+                }
+            }</i18n>
+            <custom-block lang="yml">{
+                "BAD": ["apples"
+                    , "oranges"],
+                "BAD": {
+                    "a": 1
+                    , "b": 2
+                }
+            }</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                "',' should be placed last.",
+                "',' should be placed last.",
+            ],
+        },
     ],
 })

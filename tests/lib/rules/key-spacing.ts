@@ -16,5 +16,14 @@ tester.run("key-spacing", rule as any, {
                 "Missing space before value for key 'key'.",
             ],
         },
+        {
+            code: `<custom-block lang="json">{"key" :"value"}</custom-block>`,
+            output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                "Extra space after key 'key'.",
+                "Missing space before value for key 'key'.",
+            ],
+        },
     ],
 })

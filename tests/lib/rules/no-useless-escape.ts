@@ -13,5 +13,10 @@ tester.run("no-useless-escape", rule as any, {
             code: '"hol\\a"',
             errors: ["Unnecessary escape character: \\a."],
         },
+        {
+            code: `<custom-block lang="json">"hol\\a"</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Unnecessary escape character: \\a."],
+        },
     ],
 })

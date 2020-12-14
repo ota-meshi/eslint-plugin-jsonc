@@ -13,5 +13,11 @@ tester.run("quote-props", rule as any, {
             output: '{"key": "value"}',
             errors: ["Unquoted property 'key' found."],
         },
+        {
+            code: `<custom-block lang="json">{key: "value"}</custom-block>`,
+            output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Unquoted property 'key' found."],
+        },
     ],
 })

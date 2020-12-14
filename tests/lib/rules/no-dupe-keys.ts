@@ -12,5 +12,10 @@ tester.run("no-dupe-keys", rule as any, {
             code: '{"key": "value", "key": "value"}',
             errors: ["Duplicate key 'key'."],
         },
+        {
+            code: `<custom-block lang="json">{"key": "value", "key": "value"}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Duplicate key 'key'."],
+        },
     ],
 })

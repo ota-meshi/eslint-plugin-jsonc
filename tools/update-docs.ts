@@ -3,7 +3,7 @@ import fs from "fs"
 import { rules } from "../lib/utils/rules"
 import type { RuleModule } from "../lib/types"
 
-//eslint-disable-next-line require-jsdoc
+//eslint-disable-next-line require-jsdoc -- tools
 function formatItems(items: string[]) {
     if (items.length <= 2) {
         return items.join(" and ")
@@ -13,7 +13,7 @@ function formatItems(items: string[]) {
     }`
 }
 
-//eslint-disable-next-line require-jsdoc
+//eslint-disable-next-line require-jsdoc -- tools
 function yamlValue(val: any) {
     if (typeof val === "string") {
         return `"${val.replace(/\\/gu, "\\\\").replace(/"/gu, '\\"')}"`
@@ -24,9 +24,12 @@ function yamlValue(val: any) {
 const ROOT = path.resolve(__dirname, "../docs/rules")
 
 class DocFile {
-    private rule: RuleModule
-    private filePath: string
+    private readonly rule: RuleModule
+
+    private readonly filePath: string
+
     private content: string
+
     public constructor(rule: RuleModule) {
         this.rule = rule
         this.filePath = path.join(ROOT, `${rule.meta.docs.ruleName}.md`)
@@ -64,7 +67,7 @@ class DocFile {
         } else {
             if (recommended) {
                 const presets = []
-                // eslint-disable-next-line @mysticatea/ts/require-array-sort-compare
+                // eslint-disable-next-line @typescript-eslint/require-array-sort-compare -- tools
                 for (const rec of recommended.sort()) {
                     presets.push(`\`"plugin:jsonc/recommended-with-${rec}"\``)
                 }
@@ -179,7 +182,7 @@ ${
     }
 
     public write() {
-        // eslint-disable-next-line @mysticatea/ts/no-require-imports
+        // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- tools
         const isWin = require("os").platform().startsWith("win")
 
         this.content = this.content.replace(/\r?\n/gu, isWin ? "\r\n" : "\n")

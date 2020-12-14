@@ -1,11 +1,12 @@
 import type { JSONSchema4 } from "json-schema"
 import type { Rule } from "eslint"
 export interface RuleListener {
-    [key: string]: (node: never) => void
+    [key: string]: ((node: never) => void) | undefined
 }
 
 export interface RuleModule {
     meta: RuleMetaData
+    jsoncDefineRule: PartialRuleModule
     create(context: Rule.RuleContext): RuleListener
 }
 
@@ -29,7 +30,10 @@ export interface RuleMetaData {
 
 export interface PartialRuleModule {
     meta: PartialRuleMetaData
-    create(context: Rule.RuleContext): RuleListener
+    create(
+        context: Rule.RuleContext,
+        params: { customBlock: boolean },
+    ): RuleListener
 }
 
 export interface PartialRuleMetaData {

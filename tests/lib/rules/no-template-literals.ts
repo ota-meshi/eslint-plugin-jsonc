@@ -31,5 +31,11 @@ tester.run("no-template-literals", rule as any, {
             output: '"temp\\n\\nlate"',
             errors: ["The template literals are not allowed."],
         },
+        {
+            code: `<custom-block lang="json">{"foo":\`template\`}</custom-block>`,
+            output: `<custom-block lang="json">{"foo":"template"}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["The template literals are not allowed."],
+        },
     ],
 })

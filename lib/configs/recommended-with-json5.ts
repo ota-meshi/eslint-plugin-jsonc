@@ -16,5 +16,6 @@ export = {
         "jsonc/no-undefined-value": "error",
         "jsonc/no-useless-escape": "error",
         "jsonc/space-unary-ops": "error",
+        "jsonc/vue-custom-block/no-parsing-error": "error",
     },
 }

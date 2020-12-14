@@ -2,6 +2,7 @@ import type { RuleModule } from "../types"
 import arrayBracketNewline from "../rules/array-bracket-newline"
 import arrayBracketSpacing from "../rules/array-bracket-spacing"
 import arrayElementNewline from "../rules/array-element-newline"
+import auto from "../rules/auto"
 import commaDangle from "../rules/comma-dangle"
 import commaStyle from "../rules/comma-style"
 import indent from "../rules/indent"
@@ -27,11 +28,13 @@ import quotes from "../rules/quotes"
 import sortKeys from "../rules/sort-keys"
 import spaceUnaryOps from "../rules/space-unary-ops"
 import validJsonNumber from "../rules/valid-json-number"
+import vueCustomBlockNoParsingError from "../rules/vue-custom-block/no-parsing-error"
 
 export const rules = [
     arrayBracketNewline,
     arrayBracketSpacing,
     arrayElementNewline,
+    auto,
     commaDangle,
     commaStyle,
     indent,
@@ -57,4 +60,5 @@ export const rules = [
     sortKeys,
     spaceUnaryOps,
     validJsonNumber,
+    vueCustomBlockNoParsingError,
 ] as RuleModule[]

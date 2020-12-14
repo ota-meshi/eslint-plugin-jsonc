@@ -38,5 +38,11 @@ tester.run("space-unary-ops", rule as any, {
                 },
             ],
         },
+        {
+            code: `<custom-block lang="json">- 1</custom-block>`,
+            output: `<custom-block lang="json">-1</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Unexpected space after unary operator '-'."],
+        },
     ],
 })

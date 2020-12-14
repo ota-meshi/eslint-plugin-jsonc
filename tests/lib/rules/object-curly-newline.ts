@@ -13,5 +13,11 @@ tester.run("object-curly-newline", rule as any, {
             output: '{"key": "value"}',
             errors: ["Unexpected line break after this opening brace."],
         },
+        {
+            code: `<custom-block lang="json">{\n"key": "value"}</custom-block>`,
+            output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Unexpected line break after this opening brace."],
+        },
     ],
 })

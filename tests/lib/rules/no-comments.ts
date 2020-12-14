@@ -32,5 +32,12 @@ tester.run("no-comments", rule as any, {
                 },
             ],
         },
+        {
+            code: `<custom-block lang="json">
+            // comment
+            "a"</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["Unexpected comment."],
+        },
     ],
 })

@@ -19,5 +19,10 @@ tester.run("no-regexp-literals", rule as any, {
                 "RegExp literals are not allowed.",
             ],
         },
+        {
+            code: `<custom-block lang="json">/reg/</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["RegExp literals are not allowed."],
+        },
     ],
 })

@@ -22,5 +22,20 @@ tester.run("array-element-newline", rule as any, {
                 "There should be a linebreak after this element.",
             ],
         },
+        {
+            code: `<i18n>[1, 2, 3]</i18n><custom-block lang="json5">[1, 2, 3]</custom-block>`,
+            output: `<i18n>[1,
+2,
+3]</i18n><custom-block lang="json5">[1,
+2,
+3]</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                "There should be a linebreak after this element.",
+                "There should be a linebreak after this element.",
+                "There should be a linebreak after this element.",
+                "There should be a linebreak after this element.",
+            ],
+        },
     ],
 })

@@ -22,5 +22,10 @@ tester.run("no-bigint-literals", rule as any, {
                 "BigInt literals are not allowed.",
             ],
         },
+        {
+            code: `<custom-block lang="json">42n</custom-block>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: ["BigInt literals are not allowed."],
+        },
     ],
 })
