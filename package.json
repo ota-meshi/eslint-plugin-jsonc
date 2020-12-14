@@ -86,7 +86,7 @@
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5",
     "vue-eslint-editor": "^1.1.0",
-    "vue-eslint-parser": "file:vue-eslint-parser-7.3.0.tgz",
+    "vue-eslint-parser": "^7.3.0",
     "vuepress": "^1.5.2"
   },
   "dependencies": {

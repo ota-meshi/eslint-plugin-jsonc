@@ -19,7 +19,8 @@ This ESLint plugin provides linting rules relate to better ways to help you avoi
 - You can use ESLint to lint [JSON].
 - You can apply rules similar to the rules you use for JavaScript to JSON using the [`"jsonc/auto"`](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html) rule provided by this plugin.
 - You can choose the appropriate config provided by this plugin depending on whether you are using [JSON], [JSONC] or [JSON5].
-- Supports [Vue SFC](https://vue-loader.vuejs.org/spec.html) custom blocks such as `<i18n>`.
+- Supports [Vue SFC](https://vue-loader.vuejs.org/spec.html) custom blocks such as `<i18n>`.  
+  Requirements `vue-eslint-parser` v7.3.0 and above.
 - Supports ESLint directives. e.g. `// eslint-disable-next-line`
 - You can check your code in real-time using the ESLint editor integrations.
 
