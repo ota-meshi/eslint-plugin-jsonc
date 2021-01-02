@@ -1,5 +1,5 @@
 import type { Linter, CLIEngine } from "eslint"
-import { existsSync } from "fs"
+import { existsSync, statSync } from "fs"
 import { dirname } from "path"
 import type { RuleModule } from "../types"
 
@@ -20,17 +20,26 @@ function getCLIEngine() {
 }
 
 /**
+ * Checks whether the given filename is directory.
+ */
+function isDirectory(filename: string) {
+    return statSync(filename).isDirectory()
+}
+
+/**
  * Get config for the given filename
  * @param filename
  */
 function getConfig(filename: string) {
     let filePath = filename
-    while (filePath && !existsSync(filePath)) {
-        const nextFilePath = dirname(filePath)
-        if (nextFilePath === filePath) {
+    let dir = dirname(filePath)
+    while (dir && (!existsSync(dir) || !isDirectory(dir))) {
+        const nextDir = dirname(dir)
+        if (nextDir === dir) {
             return {}
         }
-        filePath = nextFilePath
+        filePath = dir
+        dir = nextDir
     }
     return getCLIEngine().getConfigForFile(filePath)
 }
