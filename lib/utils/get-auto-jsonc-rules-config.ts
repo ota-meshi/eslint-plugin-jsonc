@@ -1,4 +1,6 @@
 import type { Linter, CLIEngine } from "eslint"
+import { existsSync } from "fs"
+import { dirname } from "path"
 import type { RuleModule } from "../types"
 
 let engine: CLIEngine, ruleNames: Set<string>
@@ -22,7 +24,15 @@ function getCLIEngine() {
  * @param filename
  */
 function getConfig(filename: string) {
-    return getCLIEngine().getConfigForFile(filename)
+    let filePath = filename
+    while (filePath && !existsSync(filePath)) {
+        const nextFilePath = dirname(filePath)
+        if (nextFilePath === filePath) {
+            return {}
+        }
+        filePath = nextFilePath
+    }
+    return getCLIEngine().getConfigForFile(filePath)
 }
 
 /**

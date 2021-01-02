@@ -19,6 +19,6 @@
     },
     "esModuleInterop": true
   },
-  "include": ["lib/**/*", "tests/lib/**/*", "tools/**/*", "typings/**/*"],
+  "include": ["lib/**/*", "tests/lib/**/*", "tests-integrations/lib/**/*", "tools/**/*", "typings/**/*"],
   "exclude": ["dist/**/*"]
 }
