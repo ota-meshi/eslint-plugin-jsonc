@@ -16,6 +16,8 @@ This rule checks all property definitions of object expressions and verifies tha
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/sort-keys: 'error' */
 {

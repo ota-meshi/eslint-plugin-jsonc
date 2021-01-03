@@ -14,6 +14,8 @@ This rule disallows octal escape sequences in string literals.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-octal-escape: 'error' */
 {

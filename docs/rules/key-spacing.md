@@ -16,6 +16,8 @@ This rule enforces consistent spacing between keys and values in object literal 
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/key-spacing: 'error' */
 {
@@ -33,11 +35,13 @@ This rule enforces consistent spacing between keys and values in object literal 
 
 ```json
 {
-  "jsonc/key-spacing": ["error", {
-    "beforeColon": false,
-    "afterColon": true,
-    "mode": "strict"
-  }]
+    "jsonc/key-spacing": ["error",
+        {
+            "beforeColon": false,
+            "afterColon": true,
+            "mode": "strict"
+        }
+    ]
 }
 ```
 

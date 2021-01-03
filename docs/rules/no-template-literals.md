@@ -19,6 +19,8 @@ JSON, JSONC and JSON5 do not allow template literal.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-template-literals: 'error' */
 {

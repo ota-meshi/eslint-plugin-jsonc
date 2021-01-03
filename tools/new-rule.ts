@@ -84,6 +84,8 @@ This rule reports ???.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 \`\`\`json5
 /* eslint jsonc/${ruleId}: 'error' */
 {
@@ -109,7 +111,7 @@ Nothing.
 }
 \`\`\`
 
-Same as [${ruleId}] rule option. See [here](https://eslint.org/docs/rules/${ruleId}#options) for details. 
+Same as [${ruleId}] rule option. See [here](https://eslint.org/docs/rules/${ruleId}#options) for details.
 
 - 
 

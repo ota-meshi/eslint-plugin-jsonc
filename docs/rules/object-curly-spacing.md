@@ -16,6 +16,8 @@ This rule enforces consistent spacing inside braces of object literals.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/object-curly-spacing: 'error' */
 {
@@ -33,11 +35,13 @@ This rule enforces consistent spacing inside braces of object literals.
 
 ```json
 {
-  "jsonc/object-curly-spacing": ["error", "never"]
+    "jsonc/object-curly-spacing": ["error",
+        "never"
+    ]
 }
 ```
 
-Same as [object-curly-spacing] rule option. See [here](https://eslint.org/docs/rules/object-curly-spacing#options) for details. 
+Same as [object-curly-spacing] rule option. See [here](https://eslint.org/docs/rules/object-curly-spacing#options) for details.
 
 ## :couple: Related rules
 

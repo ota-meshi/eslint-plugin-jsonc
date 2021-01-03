@@ -17,6 +17,8 @@ This rule enforces consistent use of trailing commas in object and array literal
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/comma-dangle: 'error' */
 {
@@ -36,14 +38,20 @@ This rule enforces consistent use of trailing commas in object and array literal
 
 ## :wrench: Options
 
+<!-- eslint-skip -->
+
 ```json
 {
-  "jsonc/comma-dangle": ["error", "never"],
-  // or
-  "jsonc/comma-dangle": ["error", {
-    "arrays": "never",
-    "objects": "never"
-  }]
+    "jsonc/comma-dangle": ["error",
+        "never"
+    ],
+    // or
+    "jsonc/comma-dangle": ["error",
+        {
+            "arrays": "never",
+            "objects": "never"
+        }
+    ]
 }
 ```
 

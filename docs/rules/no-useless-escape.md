@@ -16,6 +16,8 @@ This rule flags escapes that can be safely removed without changing behavior.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-useless-escape: 'error' */
 {

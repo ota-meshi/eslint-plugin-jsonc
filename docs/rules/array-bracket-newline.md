@@ -16,6 +16,8 @@ This rule enforces line breaks after opening and before closing array brackets.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/array-bracket-newline: 'error' */
 {
@@ -42,10 +44,12 @@ This rule enforces line breaks after opening and before closing array brackets.
 
 ```json
 {
-  "jsonc/array-bracket-newline": ["error", {
-    "multiline": true,
-    "minItems": null
-  }]
+    "jsonc/array-bracket-newline": ["error",
+        {
+            "multiline": true,
+            "minItems": null
+        }
+    ]
 }
 ```
 

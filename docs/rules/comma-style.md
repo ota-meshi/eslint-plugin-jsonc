@@ -16,6 +16,8 @@ This rule enforce consistent comma style in array literals and object literals.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/comma-style: 'error' */
 {
@@ -43,7 +45,9 @@ This rule enforce consistent comma style in array literals and object literals.
 
 ```json
 {
-  "jsonc/comma-style": ["error", "last"]
+    "jsonc/comma-style": ["error",
+        "last"
+    ]
 }
 ```
 

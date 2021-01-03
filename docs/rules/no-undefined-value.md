@@ -18,6 +18,8 @@ JSON, JSONC and JSON5 do not allow `undefined`.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-undefined-value: 'error' */
 {

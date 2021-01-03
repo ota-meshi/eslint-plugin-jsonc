@@ -20,6 +20,8 @@ However, JSON and JSONC can only use double quotes.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/quotes: 'error' */
 {
@@ -37,7 +39,10 @@ However, JSON and JSONC can only use double quotes.
 
 ```json
 {
-  "jsonc/quotes": ["error", "double", { "avoidEscape": false }]
+    "jsonc/quotes": ["error",
+        "double",
+        {"avoidEscape": false}
+    ]
 }
 ```
 

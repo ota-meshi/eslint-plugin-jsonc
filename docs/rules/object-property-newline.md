@@ -16,6 +16,8 @@ This rule permits you to restrict the locations of property specifications in ob
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/object-property-newline: 'error' */
 {

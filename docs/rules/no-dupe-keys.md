@@ -16,6 +16,8 @@ This rule disallows duplicate keys in object literals.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-dupe-keys: 'error' */
 {

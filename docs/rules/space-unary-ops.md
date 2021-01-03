@@ -19,6 +19,8 @@ JSON, JSONC and JSON5 do not allow spaces after the sign.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/space-unary-ops: 'error' */
 {

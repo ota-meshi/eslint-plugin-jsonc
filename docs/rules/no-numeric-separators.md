@@ -15,8 +15,9 @@ description: "disallow numeric separators"
 
 This rule reports the use of numeric separators.
 
-
 <eslint-code-block fix>
+
+<!-- eslint-skip -->
 
 ```json5
 /* eslint jsonc/no-numeric-separators: 'error' */

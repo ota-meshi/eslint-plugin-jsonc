@@ -16,6 +16,8 @@ This rule enforces consistent line breaks inside braces of object literals.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/object-curly-newline: 'error' */
 {
@@ -39,13 +41,15 @@ This rule enforces consistent line breaks inside braces of object literals.
 
 ```json
 {
-  "jsonc/object-curly-newline": ["error", {
-    "consistent": true
-  }]
+    "jsonc/object-curly-newline": ["error",
+        {
+            "consistent": true
+        }
+    ]
 }
 ```
 
-Same as [object-curly-newline] rule option. See [here](https://eslint.org/docs/rules/object-curly-newline#options) for details. 
+Same as [object-curly-newline] rule option. See [here](https://eslint.org/docs/rules/object-curly-newline#options) for details.
 
 ## :couple: Related rules
 

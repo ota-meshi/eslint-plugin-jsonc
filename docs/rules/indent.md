@@ -16,6 +16,8 @@ This rule enforces a consistent indentation style. The default style is `4 space
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/indent: 'error' */
 {
@@ -37,7 +39,10 @@ This rule enforces a consistent indentation style. The default style is `4 space
 
 ```json
 {
-  "jsonc/indent": ["error", 4, {}]
+    "jsonc/indent": ["error",
+        4,
+        {}
+    ]
 }
 ```
 

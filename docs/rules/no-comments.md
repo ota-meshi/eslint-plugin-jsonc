@@ -18,6 +18,8 @@ Cannot use comments when in JSON.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-comments: 'error' */
 {

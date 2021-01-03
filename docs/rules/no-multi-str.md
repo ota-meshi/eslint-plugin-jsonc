@@ -16,6 +16,8 @@ This rule is aimed at preventing the use of multiline strings.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-multi-str: 'error' */
 {

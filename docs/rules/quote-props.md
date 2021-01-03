@@ -17,6 +17,8 @@ This rule requires quotes around object literal property names.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/quote-props: 'error' */
 {
@@ -34,7 +36,10 @@ This rule requires quotes around object literal property names.
 
 ```json
 {
-  "jsonc/quote-props": ["error", "always", {}]
+    "jsonc/quote-props": ["error",
+        "always",
+        {}
+    ]
 }
 ```
 

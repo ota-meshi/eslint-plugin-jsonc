@@ -18,6 +18,8 @@ JSON, JSONC and JSON5 do not allow arrays contain empty slots.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-sparse-arrays: 'error' */
 {

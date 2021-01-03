@@ -14,6 +14,8 @@ This rule enforces a naming convention to property key names.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/key-name-casing: 'error' */
 {
@@ -36,14 +38,16 @@ Nothing.
 
 ```json5
 {
-  "jsonc/key-name-casing": ["error", {
-    "camelCase": true,
-    "PascalCase": false,
-    "SCREAMING_SNAKE_CASE": false,
-    "kebab-case": false,
-    "snake_case": false,
-    "ignores": []
-  }]
+    "jsonc/key-name-casing": ["error",
+        {
+            "camelCase": true,
+            "PascalCase": false,
+            "SCREAMING_SNAKE_CASE": false,
+            "kebab-case": false,
+            "snake_case": false,
+            "ignores": []
+        }
+    ]
 }
 ```
 

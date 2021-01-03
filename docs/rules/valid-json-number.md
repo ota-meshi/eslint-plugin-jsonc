@@ -17,6 +17,8 @@ This rule reports numbers that cannot be parsed with JSON.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/valid-json-number: 'error' */
 {

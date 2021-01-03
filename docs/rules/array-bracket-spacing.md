@@ -16,6 +16,8 @@ This rule enforces consistent spacing inside array brackets.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/array-bracket-spacing: 'error' */
 {
@@ -33,11 +35,13 @@ This rule enforces consistent spacing inside array brackets.
 
 ```json
 {
-  "jsonc/array-bracket-spacing": ["error", "never"]
+    "jsonc/array-bracket-spacing": ["error",
+        "never"
+    ]
 }
 ```
 
-Same as [array-bracket-spacing] rule option. See [here](https://eslint.org/docs/rules/array-bracket-spacing#options) for details. 
+Same as [array-bracket-spacing] rule option. See [here](https://eslint.org/docs/rules/array-bracket-spacing#options) for details.
 
 ## :couple: Related rules
 

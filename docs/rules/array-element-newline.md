@@ -16,6 +16,8 @@ This rule enforces line breaks between array elements.
 
 <eslint-code-block fix>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/array-element-newline: 'error' */
 {
@@ -35,11 +37,13 @@ This rule enforces line breaks between array elements.
 
 ```json
 {
-  "jsonc/array-element-newline": ["error", "always"]
+    "jsonc/array-element-newline": ["error",
+        "always"
+    ]
 }
 ```
 
-Same as [array-element-newline] rule option. See [here](https://eslint.org/docs/rules/array-element-newline#options) for details. 
+Same as [array-element-newline] rule option. See [here](https://eslint.org/docs/rules/array-element-newline#options) for details.
 
 ## :couple: Related rules
 

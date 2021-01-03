@@ -16,6 +16,8 @@ This rule reports JSON parsing errors in Vue custom blocks.
 
 <eslint-code-block parser="vue-eslint-parser" file-name="sample.vue" language="html">
 
+<!-- eslint-skip -->
+
 ```vue
 <i18n>
 { "foo": }

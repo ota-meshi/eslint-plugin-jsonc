@@ -18,6 +18,8 @@ JSON, JSONC and JSON5 do not allow BigInt literals.
 
 <eslint-code-block>
 
+<!-- eslint-skip -->
+
 ```json5
 /* eslint jsonc/no-bigint-literals: 'error' */
 {
