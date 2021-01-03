@@ -20,28 +20,34 @@ function getCLIEngine() {
 }
 
 /**
- * Checks whether the given filename is directory.
+ * Checks if the given file name can get the configuration.
  */
-function isDirectory(filename: string) {
-    return statSync(filename).isDirectory()
+function isValidFilename(filename: string) {
+    const dir = dirname(filename)
+    if (existsSync(dir) && statSync(dir).isDirectory()) {
+        if (existsSync(filename) && statSync(filename).isDirectory()) {
+            return false
+        }
+        return true
+    }
+
+    return false
 }
 
 /**
  * Get config for the given filename
  * @param filename
  */
-function getConfig(filename: string) {
-    let filePath = filename
-    let dir = dirname(filePath)
-    while (dir && (!existsSync(dir) || !isDirectory(dir))) {
-        const nextDir = dirname(dir)
-        if (nextDir === dir) {
+function getConfig(filename: string): Linter.Config {
+    while (!isValidFilename(filename)) {
+        const dir = dirname(filename)
+        if (dir === filename) {
             return {}
         }
-        filePath = dir
-        dir = nextDir
+        // eslint-disable-next-line no-param-reassign -- ignore
+        filename = dir
     }
-    return getCLIEngine().getConfigForFile(filePath)
+    return getCLIEngine().getConfigForFile(filename)
 }
 
 /**
