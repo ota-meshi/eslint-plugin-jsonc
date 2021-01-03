@@ -1,4 +1,6 @@
 import type { Linter, CLIEngine } from "eslint"
+import { existsSync, statSync } from "fs"
+import { dirname } from "path"
 import type { RuleModule } from "../types"
 
 let engine: CLIEngine, ruleNames: Set<string>
@@ -18,10 +20,33 @@ function getCLIEngine() {
 }
 
 /**
+ * Checks if the given file name can get the configuration.
+ */
+function isValidFilename(filename: string) {
+    const dir = dirname(filename)
+    if (existsSync(dir) && statSync(dir).isDirectory()) {
+        if (existsSync(filename) && statSync(filename).isDirectory()) {
+            return false
+        }
+        return true
+    }
+
+    return false
+}
+
+/**
  * Get config for the given filename
  * @param filename
  */
-function getConfig(filename: string) {
+function getConfig(filename: string): Linter.Config {
+    while (!isValidFilename(filename)) {
+        const dir = dirname(filename)
+        if (dir === filename) {
+            return {}
+        }
+        // eslint-disable-next-line no-param-reassign -- ignore
+        filename = dir
+    }
     return getCLIEngine().getConfigForFile(filename)
 }
 

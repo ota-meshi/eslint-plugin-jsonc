@@ -1,0 +1,17 @@
+{
+  "name": "test-for-eslint-plugin-jsonc-with-md",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-plugin-markdown": "^2.0.0-0",
+    "eslint-plugin-jsonc": "file:../../../"
+  }
+}
