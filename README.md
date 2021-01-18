@@ -115,13 +115,13 @@ Example **.vscode/settings.json**:
 
 ```json
 {
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "json",
-    "jsonc",
-    "json5"
-  ]
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "json",
+        "jsonc",
+        "json5"
+    ]
 }
 ```
 
@@ -195,10 +195,18 @@ Please use GitHub's Issues/PRs.
 
 <!--DOCS_IGNORE_END-->
 
+## :couple: Related Packages
+
+<!-- - [eslint-plugin-jsonc](https://github.com/ota-meshi/eslint-plugin-jsonc) ... ESLint plugin for JSON, JSON with comments (JSONC) and JSON5. -->
+- [eslint-plugin-yml](https://github.com/ota-meshi/eslint-plugin-yml) ... ESLint plugin for YAML.
+- [eslint-plugin-toml](https://github.com/ota-meshi/eslint-plugin-toml) ... ESLint plugin for TOML.
+- [jsonc-eslint-parser](https://github.com/ota-meshi/jsonc-eslint-parser) ... JSON, JSONC and JSON5 parser for use with ESLint plugins.
+- [yaml-eslint-parser](https://github.com/ota-meshi/yaml-eslint-parser) ... YAML parser for use with ESLint plugins.
+- [toml-eslint-parser](https://github.com/ota-meshi/toml-eslint-parser) ... TOML parser for use with ESLint plugins.
+
 ## :lock: License
 
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
-
 
 [JSON]: https://json.org/
 [JSONC]: https://github.com/microsoft/node-jsonc-parser
