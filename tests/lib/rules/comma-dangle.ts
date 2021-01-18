@@ -20,6 +20,7 @@ tester.run("comma-dangle", rule as any, {
             errors: ["Missing trailing comma.", "Unexpected trailing comma."],
         },
         {
+            filename: "test.vue",
             code: `<i18n>{"key": "value",}</i18n><custom-block>{"key": "value",}</custom-block>`,
             output: `<i18n>{"key": "value"}</i18n><custom-block>{"key": "value",}</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

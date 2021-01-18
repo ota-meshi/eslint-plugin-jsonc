@@ -40,6 +40,7 @@ tester.run("comma-style", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<i18n>{
                 "BAD": ["apples"
                     , "oranges"],

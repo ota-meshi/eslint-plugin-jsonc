@@ -122,6 +122,7 @@ tester.run("valid-json-number", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">0x123</custom-block>`,
             output: `<custom-block lang="json">291</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

@@ -13,6 +13,7 @@ tester.run("no-octal-escape", rule as any, {
             errors: ["Don't use octal: '\\251'. Use '\\u....' instead."],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">{"BAD": "Copyright \\251"}</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),
             errors: ["Don't use octal: '\\251'. Use '\\u....' instead."],

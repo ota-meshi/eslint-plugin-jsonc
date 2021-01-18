@@ -17,6 +17,7 @@ tester.run("array-bracket-spacing", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<i18n>[ 1, 2 ]</i18n><custom-block lang="jsonc">[ 1 ]</custom-block>`,
             output: `<i18n>[1, 2]</i18n><custom-block lang="jsonc">[1]</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

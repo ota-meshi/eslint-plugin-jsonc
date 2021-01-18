@@ -33,6 +33,7 @@ tester.run("no-comments", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">
             // comment
             "a"</custom-block>`,

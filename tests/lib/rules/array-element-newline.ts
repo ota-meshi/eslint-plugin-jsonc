@@ -23,6 +23,7 @@ tester.run("array-element-newline", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<i18n>[1, 2, 3]</i18n><custom-block lang="json5">[1, 2, 3]</custom-block>`,
             output: `<i18n>[1,
 2,

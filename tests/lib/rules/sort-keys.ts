@@ -94,6 +94,7 @@ tester.run("sort-keys", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">{a:1, A: 2, B:3, b:4}</custom-block>`,
             output: `<custom-block lang="json">{ A: 2,a:1, B:3, b:4}</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

@@ -17,6 +17,7 @@ tester.run("key-spacing", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">{"key" :"value"}</custom-block>`,
             output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

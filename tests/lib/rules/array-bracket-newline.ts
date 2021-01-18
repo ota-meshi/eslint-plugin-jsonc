@@ -25,6 +25,7 @@ tester.run("array-bracket-newline", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<i18n>[1,\n2]</i18n><custom-block lang="json">[\n1\n]</custom-block>`,
             output: `<i18n>[\n1,\n2\n]</i18n><custom-block lang="json">[1]</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),
