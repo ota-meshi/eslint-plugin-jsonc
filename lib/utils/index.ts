@@ -26,7 +26,6 @@ export function createRule(
         },
         jsoncDefineRule: rule,
         create(context: Rule.RuleContext): any {
-            if (context.id === "vue-custom-block/no-parsing-error") debugger
             if (
                 typeof context.parserServices.defineCustomBlocksVisitor ===
                     "function" &&
