@@ -18,6 +18,7 @@ tester.run("no-multi-str", rule as any, {
             errors: 1, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">"Line 1 \\\nLine 2"</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),
             errors: 1, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],

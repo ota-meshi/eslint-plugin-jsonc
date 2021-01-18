@@ -39,6 +39,7 @@ tester.run("space-unary-ops", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">- 1</custom-block>`,
             output: `<custom-block lang="json">-1</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

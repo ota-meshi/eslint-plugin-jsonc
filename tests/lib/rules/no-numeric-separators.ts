@@ -32,6 +32,7 @@ tester.run("no-numeric-separators", rule as any, {
             errors: ["Numeric separators are not allowed."],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">{"a": 1_23}</custom-block>`,
             output: `<custom-block lang="json">{"a": 123}</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

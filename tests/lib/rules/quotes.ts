@@ -28,6 +28,7 @@ tester.run("quotes", rule as any, {
             errors: ["Strings must use doublequote."],
         },
         {
+            filename: "test.vue",
             code: `<custom-block lang="json">['element']</custom-block>`,
             output: `<custom-block lang="json">["element"]</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),

@@ -1,0 +1,15 @@
+{
+    "root": true,
+    "plugins": [
+        "jsonc"
+    ],
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+        "parser": "jsonc-eslint-parser",
+        "sourceType": "module",
+        "ecmaVersion": 2015
+    },
+    "rules": {
+        "jsonc/indent": "error"
+    }
+}

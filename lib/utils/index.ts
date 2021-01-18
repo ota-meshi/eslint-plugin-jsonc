@@ -3,6 +3,7 @@ import type { Rule } from "eslint"
 import type { AST } from "jsonc-eslint-parser"
 import * as jsoncESLintParser from "jsonc-eslint-parser"
 import type { AST as V } from "vue-eslint-parser"
+import path from "path"
 
 /**
  * Define the rule.
@@ -27,7 +28,8 @@ export function createRule(
         create(context: Rule.RuleContext): any {
             if (
                 typeof context.parserServices.defineCustomBlocksVisitor ===
-                "function"
+                    "function" &&
+                path.extname(context.getFilename()) === ".vue"
             ) {
                 return context.parserServices.defineCustomBlocksVisitor(
                     context,

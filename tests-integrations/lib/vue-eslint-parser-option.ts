@@ -7,11 +7,11 @@ import plugin from "../../lib/index"
 // Tests
 // -----------------------------------------------------------------------------
 
-const TEST_CWD = path.join(__dirname, "../fixtures/eslint-plugin-markdown")
+const TEST_CWD = path.join(__dirname, "../fixtures/vue-eslint-parser-option")
 
 const ESLINT = path.join(TEST_CWD, `./node_modules/eslint`)
 
-describe("Integration with eslint-plugin-markdown", () => {
+describe("Integration with vue-eslint-parser with option", () => {
     let originalCwd: string
 
     before(() => {
@@ -33,13 +33,13 @@ describe("Integration with eslint-plugin-markdown", () => {
             extensions: [".js", ".json", ".yaml"],
         })
         engine.addPlugin("eslint-plugin-jsonc", plugin)
-        const r = engine.executeOnFiles(["./test.md"])
+        const r = engine.executeOnFiles(["./test.json"])
 
         assert.strictEqual(r.results.length, 1)
         assert.strictEqual(r.results[0].messages.length, 1)
         assert.strictEqual(
             r.results[0].messages[0].message,
-            "[jsonc/array-bracket-newline] There should be no linebreak before ']'.",
+            "Expected indentation of 4 spaces but found 0.",
         )
     })
 })

@@ -14,16 +14,19 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
         '"string"',
         '["element"]',
         {
+            filename: "test.vue",
             code: `<i18n>{"key": "value"}</i18n>`,
             parser: require.resolve("vue-eslint-parser"),
         },
         {
+            filename: "test.vue",
             code: `<i18n lang="json5">/**/123</i18n>`,
             parser: require.resolve("vue-eslint-parser"),
         },
     ],
     invalid: [
         {
+            filename: "test.vue",
             code: `<i18n>{"key" "value"}</i18n>`,
             parser: require.resolve("vue-eslint-parser"),
             errors: [
@@ -35,6 +38,7 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<i18n></i18n>`,
             parser: require.resolve("vue-eslint-parser"),
             errors: [
@@ -46,6 +50,7 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<i18n>/**/123</i18n>`,
             parser: require.resolve("vue-eslint-parser"),
             errors: [
@@ -57,6 +62,7 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
             ],
         },
         {
+            filename: "test.vue",
             code: `<i18n lang="json">/**/123</i18n>`,
             parser: require.resolve("vue-eslint-parser"),
             errors: [
