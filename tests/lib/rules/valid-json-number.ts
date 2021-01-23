@@ -3,6 +3,9 @@ import rule from "../../../lib/rules/valid-json-number"
 
 const tester = new RuleTester({
     parser: require.resolve("jsonc-eslint-parser"),
+    parserOptions: {
+        ecmaVersion: 2020,
+    },
 })
 
 tester.run("valid-json-number", rule as any, {
@@ -22,7 +25,7 @@ tester.run("valid-json-number", rule as any, {
             output: "[0.4, 42]",
             errors: [
                 {
-                    message: "Invalid number for JSON.",
+                    message: "Leading decimal point is not allowed in JSON.",
                     line: 1,
                     column: 2,
                     endLine: 1,
@@ -40,7 +43,7 @@ tester.run("valid-json-number", rule as any, {
         {
             code: "123.",
             output: "123",
-            errors: ["Invalid number for JSON."],
+            errors: ["Trailing decimal point is not allowed in JSON."],
         },
         {
             filename: "test.json5",
@@ -114,7 +117,7 @@ tester.run("valid-json-number", rule as any, {
             output: "291",
             errors: [
                 {
-                    message: "Invalid number for JSON.",
+                    message: "Hexadecimal literals are not allowed in JSON.",
                     line: 1,
                     column: 1,
                     endColumn: 6,
@@ -122,11 +125,40 @@ tester.run("valid-json-number", rule as any, {
             ],
         },
         {
+            code: "[-0x123, +0x123]",
+            output: "[-291, 0x123]",
+            errors: [
+                "Hexadecimal literals are not allowed in JSON.",
+                "Plus signs are not allowed in JSON.",
+                "Hexadecimal literals are not allowed in JSON.",
+            ],
+        },
+        {
+            code: "[0o123,-0o123,+0o123]",
+            output: "[83,-83,0o123]",
+            errors: [
+                "Octal literals are not allowed in JSON.",
+                "Octal literals are not allowed in JSON.",
+                "Plus signs are not allowed in JSON.",
+                "Octal literals are not allowed in JSON.",
+            ],
+        },
+        {
+            code: "[0b1001,-0b1001,+0b1001]",
+            output: "[9,-9,0b1001]",
+            errors: [
+                "Binary literals are not allowed in JSON.",
+                "Binary literals are not allowed in JSON.",
+                "Plus signs are not allowed in JSON.",
+                "Binary literals are not allowed in JSON.",
+            ],
+        },
+        {
             filename: "test.vue",
             code: `<custom-block lang="json">0x123</custom-block>`,
             output: `<custom-block lang="json">291</custom-block>`,
             parser: require.resolve("vue-eslint-parser"),
-            errors: ["Invalid number for JSON."],
+            errors: ["Hexadecimal literals are not allowed in JSON."],
         },
     ],
 })

@@ -1,3 +1,4 @@
+import type { Rule } from "eslint"
 import type { AST } from "jsonc-eslint-parser"
 import { isNumberIdentifier } from "jsonc-eslint-parser"
 import type { RuleListener } from "../types"
@@ -7,9 +8,6 @@ import { createRule } from "../utils"
  * Checks if the given string is valid number as JSON.
  */
 function isValidNumber(text: string): boolean {
-    if (text.startsWith(".") || text.endsWith(".")) {
-        return false
-    }
     try {
         JSON.parse(text)
     } catch {
@@ -32,6 +30,13 @@ export default createRule("valid-json-number", {
             invalidSpace: "Spaces after minus sign are not allowed in JSON.",
             invalidPlus: "Plus signs are not allowed in JSON.",
             invalidIdentifier: "`{{name}}` are not allowed in JSON.",
+            invalidLeadingDecimalPoint:
+                "Leading decimal point is not allowed in JSON.",
+            invalidTrailingDecimalPoint:
+                "Trailing decimal point is not allowed in JSON.",
+            invalidHex: "Hexadecimal literals are not allowed in JSON.",
+            invalidOctal: "Octal literals are not allowed in JSON.",
+            invalidBinary: "Binary literals are not allowed in JSON.",
         },
         type: "problem",
     },
@@ -83,16 +88,51 @@ export default createRule("valid-json-number", {
                     return
                 }
                 const text = sourceCode.text.slice(...node.range)
+
+                if (text.startsWith(".")) {
+                    context.report({
+                        loc: node.loc,
+                        messageId: "invalidLeadingDecimalPoint",
+                        fix(fixer) {
+                            return fixer.insertTextBeforeRange(node.range, "0")
+                        },
+                    })
+                    return
+                }
+                if (text.endsWith(".")) {
+                    context.report({
+                        loc: node.loc,
+                        messageId: "invalidTrailingDecimalPoint",
+                        fix(fixer) {
+                            return fixer.removeRange([
+                                node.range[1] - 1,
+                                node.range[1],
+                            ])
+                        },
+                    })
+                    return
+                }
+                if (
+                    text.startsWith("0x") ||
+                    text.startsWith("0o") ||
+                    text.startsWith("0b")
+                ) {
+                    context.report({
+                        loc: node.loc,
+                        messageId: text.startsWith("0x")
+                            ? "invalidHex"
+                            : text.startsWith("0o")
+                            ? "invalidOctal"
+                            : "invalidBinary",
+                        fix: buildFix(node),
+                    })
+                    return
+                }
                 if (!isValidNumber(text)) {
                     context.report({
                         loc: node.loc,
                         messageId: "invalid",
-                        fix(fixer) {
-                            return fixer.replaceTextRange(
-                                node.range,
-                                `${node.value}`,
-                            )
-                        },
+                        fix: buildFix(node),
                     })
                 }
             },
@@ -108,6 +148,17 @@ export default createRule("valid-json-number", {
                     },
                 })
             },
+        }
+
+        /**
+         * Build fixer for number
+         */
+        function buildFix(
+            node: AST.JSONLiteral,
+        ): (fixer: Rule.RuleFixer) => Rule.Fix {
+            return (fixer) => {
+                return fixer.replaceTextRange(node.range, `${node.value}`)
+            }
         }
     },
 })
