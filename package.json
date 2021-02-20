@@ -19,8 +19,8 @@
         "build:dts-step1": "tsc --declaration --outDir dist-ts --project ./tsconfig.build.json",
         "build:dts-step2": "dts-bundle --name eslint-plugin-jsonc --main ./dist-ts/index.d.ts --out ../index.d.ts",
         "clean": "rimraf .nyc_output dist coverage",
-        "lint": "eslint \"tests\" \"lib\" \"docs\" --ext .js,.vue,.ts,.md,.json,.json5",
-        "eslint-fix": "eslint \"tests\" \"lib\" \"docs\" --ext .js,.vue,.ts,.md,.json,.json5 --fix",
+        "lint": "eslint . --ext .js,.vue,.ts,.md,.json,.json5",
+        "eslint-fix": "eslint . --ext .js,.vue,.ts,.md,.json,.json5 --fix",
         "test:base": "mocha --require ts-node/register \"tests/lib/**/*.ts\" --reporter dot --timeout 60000",
         "test": "npm run test:base",
         "test:nyc": "nyc --reporter=lcov npm run test:base",
@@ -57,7 +57,7 @@
         "eslint": "^5.0.0 || >=6.0.0"
     },
     "devDependencies": {
-        "@ota-meshi/eslint-plugin": "^0.0.12",
+        "@ota-meshi/eslint-plugin": "^0.0.13",
         "@types/eslint": "^7.2.0",
         "@types/eslint-scope": "^3.7.0",
         "@types/eslint-visitor-keys": "^1.0.0",
@@ -73,6 +73,7 @@
         "eslint-config-prettier": "^7.0.0",
         "eslint-plugin-eslint-comments": "^3.2.0",
         "eslint-plugin-eslint-plugin": "^2.3.0",
+        "eslint-plugin-json-schema-validator": "^0.2.1",
         "eslint-plugin-jsonc": "^0.9.0",
         "eslint-plugin-markdown": "^2.0.0-0",
         "eslint-plugin-node": "^11.1.0",

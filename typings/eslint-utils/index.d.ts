@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair -- ignore
+/* eslint-disable one-var, @typescript-eslint/naming-convention -- ignore */
 import type { Comment } from "estree"
 import type { AST } from "eslint"
 

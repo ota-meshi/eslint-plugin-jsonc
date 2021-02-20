@@ -1,10 +1,14 @@
 /.nyc_output
 /coverage
+/dist
+/dist-ts
+/docs/.vuepress/dist
+/docs/.vuepress/components/demo/demo-code.js
 /node_modules
 /tests/fixtures/integrations
 /tests/fixtures/**/*.vue
 /tests/fixtures/**/*.json
+/tests-integrations/fixtures/eslint-plugin-markdown/test.md
+/tests-integrations/fixtures/vue-eslint-parser-option/test.json
 /assets
-/dist
-/docs/.vuepress/dist
-/docs/.vuepress/components/demo/demo-code.js
+/index.d.ts
