@@ -70,7 +70,7 @@
         "babel-eslint": "^10.1.0",
         "dts-bundle": "^0.7.3",
         "eslint": "^7.3.0",
-        "eslint-config-prettier": "^7.0.0",
+        "eslint-config-prettier": "^8.0.0",
         "eslint-plugin-eslint-comments": "^3.2.0",
         "eslint-plugin-eslint-plugin": "^2.3.0",
         "eslint-plugin-json-schema-validator": "^0.2.1",
