@@ -39,6 +39,30 @@ Moreover, You can do the same linting using the extended rules of the ESLint cor
 
 The parser package used by this plugin is [jsonc-eslint-parser].
 
+### How is it different from other JSON plugins?
+
+#### Plugins that Do Not use AST
+
+e.g. [eslint-plugin-json](https://www.npmjs.com/package/eslint-plugin-json)
+
+These plugins use the processor to parse and return the results independently, without providing the ESLint engine with AST and source code text.
+
+Plugins don't provide AST, so you can't use directive comments (e.g. `/* eslint-disable */`).  
+Plugins don't provide source code text, so you can't use it with plugins and rules that use text (e.g. [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier), [eol-last](https://eslint.org/docs/rules/eol-last)).  
+Also, most plugins don't support JSON5.
+
+**eslint-plugin-jsonc** works by providing AST and source code text to ESLint.
+
+#### Plugins that use the same AST as JavaScript
+
+e.g. [eslint-plugin-json-files](https://www.npmjs.com/package/eslint-plugin-json-files), [eslint-plugin-json-es](https://www.npmjs.com/package/eslint-plugin-json-es)
+
+These plugins use the same AST as JavaScript for linting.
+
+Since the plugin uses the same AST as JavaScript, it may not report syntax that is not available in JSON (e.g. `1 + 1`). Also, ESLint core rules and other plug-in rules can false positives (e.g. [quote-props](https://eslint.org/docs/rules/quote-props) rule reports quote on keys), which can complicate the configuration.
+
+The AST used by **eslint-plugin-jsonc** is similar to JavaScript AST, but with a different node name. This will prevent false positives. This means that it can be easily used in combination with other plugins.
+
 <!--DOCS_IGNORE_START-->
 
 ## :book: Documentation

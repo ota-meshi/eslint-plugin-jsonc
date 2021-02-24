@@ -1,8 +1,5 @@
-// const version = require("./package.json").version
-
 module.exports = {
     parserOptions: {
-        // sourceType: "script",
         ecmaVersion: 2020,
         project: require.resolve("./tsconfig.json"),
     },
@@ -59,16 +56,6 @@ module.exports = {
                 project: "./tsconfig.json",
             },
         },
-        // {
-        //     files: ["lib/rules/**"],
-        //     rules: {
-        //         "eslint-plugin/report-message-format": [
-        //             "error",
-        //             "[^a-z].*\\.$",
-        //         ],
-        //         "eslint-plugin/require-meta-docs-url": "off",
-        //     },
-        // },
         {
             files: ["scripts/**/*.ts", "tests/**/*.ts"],
             rules: {
@@ -77,28 +64,5 @@ module.exports = {
                 "@typescript-eslint/ban-ts-comment": "off",
             },
         },
-        // {
-        //     files: ["*.vue"],
-        //     parserOptions: {
-        //         sourceType: "module",
-        //     },
-        //     globals: {
-        //         require: true,
-        //     },
-        // },
-        // {
-        //     files: ["docs/.vuepress/**"],
-        //     parserOptions: {
-        //         sourceType: "module",
-        //         ecmaVersion: 2020,
-        //         parser: "babel-eslint",
-        //     },
-        //     globals: {
-        //         window: true,
-        //     },
-        //     rules: {
-        //         "require-jsdoc": "off",
-        //     },
-        // },
     ],
 }

@@ -32,6 +32,7 @@ export function serializeState(state) {
         (typeof window !== "undefined" && window.btoa(compressedString)) ||
         compressedString
 
+    // eslint-disable-next-line no-console -- Demo
     console.log(
         `The compress rate of serialized string: ${(
             (100 * base64.length) /

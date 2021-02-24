@@ -38,6 +38,7 @@ export function deserializeState(serializedString) {
             }
         }
     } catch (error) {
+        // eslint-disable-next-line no-console -- Demo
         console.error(error)
     }
 
