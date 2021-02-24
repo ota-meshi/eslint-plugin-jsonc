@@ -7,6 +7,7 @@ export default createRule("object-curly-spacing", {
             description: "enforce consistent spacing inside braces",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

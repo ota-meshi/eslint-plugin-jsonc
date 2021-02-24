@@ -7,6 +7,7 @@ export default createRule("quotes", {
             description: "enforce use of double or single quotes",
             recommended: ["json", "jsonc"],
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

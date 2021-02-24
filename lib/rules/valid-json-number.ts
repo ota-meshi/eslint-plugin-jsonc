@@ -22,6 +22,7 @@ export default createRule("valid-json-number", {
             description: "disallow invalid number for JSON",
             recommended: ["json", "jsonc"],
             extensionRule: false,
+            layout: false,
         },
         fixable: "code",
         schema: [],

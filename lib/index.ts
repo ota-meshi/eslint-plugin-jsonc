@@ -5,6 +5,7 @@ import autoConfig from "./configs/auto-config"
 import recommendedWithJson from "./configs/recommended-with-json"
 import recommendedWithJsonc from "./configs/recommended-with-jsonc"
 import recommendedWithJson5 from "./configs/recommended-with-json5"
+import prettier from "./configs/prettier"
 // backward compatibility
 import {
     parseForESLint,
@@ -19,6 +20,7 @@ const configs = {
     "recommended-with-json": recommendedWithJson,
     "recommended-with-jsonc": recommendedWithJsonc,
     "recommended-with-json5": recommendedWithJson5,
+    prettier,
 }
 
 const rules = ruleList.reduce((obj, r) => {

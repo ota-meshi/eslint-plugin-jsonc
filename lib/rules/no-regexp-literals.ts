@@ -7,6 +7,7 @@ export default createRule("no-regexp-literals", {
             description: "disallow RegExp literals",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
+            layout: false,
         },
         schema: [],
         messages: {

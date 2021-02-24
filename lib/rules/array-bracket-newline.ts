@@ -8,6 +8,7 @@ export default createRule("array-bracket-newline", {
                 "enforce line breaks after opening and before closing array brackets",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

@@ -7,6 +7,7 @@ export default createRule("comma-dangle", {
             description: "require or disallow trailing commas",
             recommended: ["json"],
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

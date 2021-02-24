@@ -7,6 +7,7 @@ export default createRule("array-bracket-spacing", {
             description: "disallow or enforce spaces inside of brackets",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

@@ -16,6 +16,7 @@ export default createRule("key-name-casing", {
             description: "enforce naming convention to property key names",
             recommended: null,
             extensionRule: false,
+            layout: false,
         },
         schema: [
             {
@@ -60,7 +61,7 @@ export default createRule("key-name-casing", {
             doesNotMatchFormat:
                 "Property name `{{name}}` must match one of the following formats: {{formats}}",
         },
-        type: "layout",
+        type: "suggestion",
     },
     create(context) {
         if (!context.parserServices.isJSON) {

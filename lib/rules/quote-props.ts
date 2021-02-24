@@ -7,6 +7,7 @@ export default createRule("quote-props", {
             description: "require quotes around object literal property names",
             recommended: ["json", "jsonc"],
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

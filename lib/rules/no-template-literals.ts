@@ -7,6 +7,7 @@ export default createRule("no-template-literals", {
             description: "disallow template literals",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
+            layout: false,
         },
         fixable: "code",
         schema: [],

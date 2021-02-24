@@ -7,6 +7,7 @@ export default createRule("no-octal-escape", {
             description: "disallow octal escape sequences in string literals",
             recommended: null,
             extensionRule: true,
+            layout: false,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,
