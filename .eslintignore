@@ -12,3 +12,6 @@
 /tests-integrations/fixtures/vue-eslint-parser-option/test.json
 /assets
 /index.d.ts
+!/.github
+!/.vscode
+!/docs/.vuepress
