@@ -12,16 +12,16 @@
                         <input
                             :checked="
                                 filterRules(category.rules).every((rule) =>
-                                    isErrorState(rule.ruleId)
+                                    isErrorState(rule.ruleId),
                                 )
                             "
                             type="checkbox"
                             :indeterminate.prop="
                                 !filterRules(category.rules).every((rule) =>
-                                    isErrorState(rule.ruleId)
+                                    isErrorState(rule.ruleId),
                                 ) &&
                                 !filterRules(category.rules).every(
-                                    (rule) => !isErrorState(rule.ruleId)
+                                    (rule) => !isErrorState(rule.ruleId),
                                 )
                             "
                             @input="onAllClick(category, $event)"
@@ -91,7 +91,7 @@ export default {
     watch: {},
     methods: {
         filterRules(rules) {
-            return rules.filter(rule=>rule.ruleId !== 'jsonc/auto')
+            return rules.filter((rule) => rule.ruleId !== "jsonc/auto")
         },
         onAllClick(category, e) {
             const rules = Object.assign({}, this.rules)

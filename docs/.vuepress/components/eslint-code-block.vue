@@ -30,15 +30,15 @@ export default {
         },
         language: {
             type: String,
-            default:undefined
+            default: undefined,
         },
         fileName: {
             type: String,
-            default:undefined
+            default: undefined,
         },
         parser: {
             type: String,
-            default:undefined
+            default: undefined,
         },
     },
 
@@ -65,7 +65,7 @@ export default {
             return nodes
                 .map(
                     (node) =>
-                        node.text || this.computeCodeFromSlot(node.children)
+                        node.text || this.computeCodeFromSlot(node.children),
                 )
                 .join("")
         },
