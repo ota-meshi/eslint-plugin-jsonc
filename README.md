@@ -39,9 +39,9 @@ Moreover, You can do the same linting using the extended rules of the ESLint cor
 
 The parser package used by this plugin is [jsonc-eslint-parser].
 
-### How is it different from other JSON plugins?
+## :question: How is it different from other JSON plugins?
 
-#### Plugins that Do Not use AST
+### Plugins that do not use AST
 
 e.g. [eslint-plugin-json](https://www.npmjs.com/package/eslint-plugin-json)
 
@@ -53,13 +53,13 @@ Also, most plugins don't support JSON5.
 
 **eslint-plugin-jsonc** works by providing AST and source code text to ESLint.
 
-#### Plugins that use the same AST as JavaScript
+### Plugins that use the same AST as JavaScript
 
 e.g. [eslint-plugin-json-files](https://www.npmjs.com/package/eslint-plugin-json-files), [eslint-plugin-json-es](https://www.npmjs.com/package/eslint-plugin-json-es)
 
 These plugins use the same AST as JavaScript for linting.
 
-Since the plugin uses the same AST as JavaScript, it may not report syntax that is not available in JSON (e.g. `1 + 1`). Also, ESLint core rules and other plugin rules can false positives (e.g. [quote-props](https://eslint.org/docs/rules/quote-props) rule reports quote on keys), which can complicate the configuration.
+Since the plugin uses the same AST as JavaScript, it may not report syntax that is not available in JSON (e.g. `1 + 1`). Also, ESLint core rules and other plugin rules can false positives (e.g. [quote-props](https://eslint.org/docs/rules/quote-props) rule reports quote on keys), which can complicate the your configuration.
 
 The AST used by **eslint-plugin-jsonc** is similar to JavaScript AST, but with a different node name. This will prevent false positives. This means that it can be easily used in combination with other plugins.
 
@@ -205,7 +205,21 @@ The rules with the following star :star: are included in the config.
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
 
+## :rocket: To Do More Verification
+
+### Verify using JSON Schema
+
+You can verify using JSON Schema by checking and installing [eslint-plugin-json-schema-validator].
+
+### Verify the [Vue I18n] message resource files
+
+You can verify the message files by checking and installing [@intlify/eslint-plugin-vue-i18n].
+
 <!--DOCS_IGNORE_START-->
+
+## :traffic_light: Semantic Versioning Policy
+
+**eslint-plugin-jsonc** follows [Semantic Versioning](http://semver.org/) and [ESLint's Semantic Versioning Policy](https://github.com/eslint/eslint#semantic-versioning-policy).
 
 ## :beers: Contributing
 
@@ -237,3 +251,6 @@ See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 [JSONC]: https://github.com/microsoft/node-jsonc-parser
 [JSON5]: https://json5.org/
 [jsonc-eslint-parser]: https://github.com/ota-meshi/jsonc-eslint-parser
+[eslint-plugin-json-schema-validator]: https://github.com/ota-meshi/eslint-plugin-json-schema-validator
+[@intlify/eslint-plugin-vue-i18n]: https://github.com/intlify/eslint-plugin-vue-i18n
+[Vue I18n]: https://github.com/intlify/vue-i18n-next
