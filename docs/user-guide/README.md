@@ -102,3 +102,9 @@ module.exports = {
   ],
 }
 ```
+
+### How to verify JSON using JSON Schema?
+
+You can verify using JSON Schema by checking and installing [eslint-plugin-json-schema-validator]. I believe it will help you.
+
+[eslint-plugin-json-schema-validator]: https://github.com/ota-meshi/eslint-plugin-json-schema-validator
