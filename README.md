@@ -217,6 +217,10 @@ You can verify the message files by checking and installing [@intlify/eslint-plu
 
 <!--DOCS_IGNORE_START-->
 
+## :traffic_light: Semantic Versioning Policy
+
+**eslint-plugin-jsonc** follows [Semantic Versioning](http://semver.org/) and [ESLint's Semantic Versioning Policy](https://github.com/eslint/eslint#semantic-versioning-policy).
+
 ## :beers: Contributing
 
 Welcome contributing!
