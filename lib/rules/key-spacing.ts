@@ -8,6 +8,7 @@ export default createRule("key-spacing", {
                 "enforce consistent spacing between keys and values in object literal properties",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

@@ -7,6 +7,7 @@ export default createRule("no-sparse-arrays", {
             description: "disallow sparse arrays",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: true,
+            layout: false,
         },
         fixable: coreRule.meta!.fixable,
         schema: coreRule.meta!.schema!,

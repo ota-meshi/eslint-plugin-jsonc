@@ -7,6 +7,7 @@ export default createRule("no-dupe-keys", {
             description: "disallow duplicate keys in object literals",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: true,
+            layout: false,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

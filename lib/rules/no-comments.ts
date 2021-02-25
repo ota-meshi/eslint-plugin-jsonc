@@ -7,6 +7,7 @@ export default createRule("no-comments", {
             description: "disallow comments",
             recommended: ["json"],
             extensionRule: false,
+            layout: false,
         },
         schema: [],
         messages: {

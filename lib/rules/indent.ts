@@ -7,6 +7,7 @@ export default createRule("indent", {
             description: "enforce consistent indentation",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

@@ -7,6 +7,7 @@ export default createRule("no-bigint-literals", {
             description: "disallow BigInt literals",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
+            layout: false,
         },
         schema: [],
         messages: {

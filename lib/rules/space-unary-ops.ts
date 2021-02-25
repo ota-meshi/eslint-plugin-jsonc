@@ -7,6 +7,7 @@ export default createRule("space-unary-ops", {
             description: "disallow spaces after unary operators",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta!.fixable,
         schema: coreRule.meta!.schema!,

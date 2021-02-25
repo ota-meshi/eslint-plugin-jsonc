@@ -9,6 +9,7 @@ export default createRule("auto", {
                 "apply jsonc rules similar to your configured ESLint core rules",
             recommended: null,
             extensionRule: false,
+            layout: false,
         },
         fixable: "code",
         schema: [],

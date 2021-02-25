@@ -11,6 +11,7 @@ export default createRule("vue-custom-block/no-parsing-error", {
             description: "disallow parsing errors in Vue custom blocks",
             recommended: ["json", "json5", "jsonc"],
             extensionRule: false,
+            layout: false,
         },
         schema: [],
         messages: {},

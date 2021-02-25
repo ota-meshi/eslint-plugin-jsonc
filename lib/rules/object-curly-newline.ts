@@ -7,6 +7,7 @@ export default createRule("object-curly-newline", {
             description: "enforce consistent line breaks inside braces",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

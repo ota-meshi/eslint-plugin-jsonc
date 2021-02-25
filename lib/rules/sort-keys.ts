@@ -54,6 +54,7 @@ export default createRule("sort-keys", {
             description: "require object keys to be sorted",
             recommended: null,
             extensionRule: true,
+            layout: false,
         },
         fixable: "code",
         schema: [

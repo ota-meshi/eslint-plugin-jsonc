@@ -7,6 +7,7 @@ export default createRule("array-element-newline", {
             description: "enforce line breaks between array elements",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

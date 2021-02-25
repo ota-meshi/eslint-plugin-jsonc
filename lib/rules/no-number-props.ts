@@ -7,6 +7,7 @@ export default createRule("no-number-props", {
             description: "disallow number property keys",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
+            layout: false,
         },
         fixable: "code",
         schema: [],

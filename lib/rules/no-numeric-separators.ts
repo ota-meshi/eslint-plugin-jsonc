@@ -8,6 +8,7 @@ export default createRule("no-numeric-separators", {
             description: "disallow numeric separators",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
+            layout: false,
         },
         fixable: "code",
         schema: [],

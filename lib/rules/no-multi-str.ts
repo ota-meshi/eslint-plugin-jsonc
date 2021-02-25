@@ -7,6 +7,7 @@ export default createRule("no-multi-str", {
             description: "disallow multiline strings",
             recommended: ["json", "jsonc"],
             extensionRule: true,
+            layout: false,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

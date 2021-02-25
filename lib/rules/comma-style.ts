@@ -7,6 +7,7 @@ export default createRule("comma-style", {
             description: "enforce consistent comma style",
             recommended: null,
             extensionRule: true,
+            layout: true,
         },
         fixable: coreRule.meta?.fixable,
         schema: coreRule.meta!.schema!,

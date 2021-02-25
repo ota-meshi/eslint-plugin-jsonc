@@ -20,6 +20,7 @@ export interface RuleMetaData {
         replacedBy?: []
         default?: "error" | "warn"
         extensionRule: boolean
+        layout: boolean
     }
     messages: { [messageId: string]: string }
     fixable?: "code" | "whitespace"
@@ -43,6 +44,7 @@ export interface PartialRuleMetaData {
         replacedBy?: []
         default?: "error" | "warn"
         extensionRule: boolean
+        layout: boolean
     }
     messages: { [messageId: string]: string }
     fixable?: "code" | "whitespace"

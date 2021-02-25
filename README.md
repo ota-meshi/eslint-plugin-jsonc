@@ -59,7 +59,7 @@ e.g. [eslint-plugin-json-files](https://www.npmjs.com/package/eslint-plugin-json
 
 These plugins use the same AST as JavaScript for linting.
 
-Since the plugin uses the same AST as JavaScript, it may not report syntax that is not available in JSON (e.g. `1 + 1`). Also, ESLint core rules and other plug-in rules can false positives (e.g. [quote-props](https://eslint.org/docs/rules/quote-props) rule reports quote on keys), which can complicate the configuration.
+Since the plugin uses the same AST as JavaScript, it may not report syntax that is not available in JSON (e.g. `1 + 1`). Also, ESLint core rules and other plugin rules can false positives (e.g. [quote-props](https://eslint.org/docs/rules/quote-props) rule reports quote on keys), which can complicate the configuration.
 
 The AST used by **eslint-plugin-jsonc** is similar to JavaScript AST, but with a different node name. This will prevent false positives. This means that it can be easily used in combination with other plugins.
 
@@ -113,6 +113,7 @@ This plugin provides configs:
 - `plugin:jsonc/recommended-with-json` ... Recommended configuration for JSON.
 - `plugin:jsonc/recommended-with-jsonc` ... Recommended configuration for JSONC.
 - `plugin:jsonc/recommended-with-json5` ... Recommended configuration for JSON5.
+- `plugin:jsonc/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
 
 See [the rule list](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/) to get the `rules` that this plugin provides.
 

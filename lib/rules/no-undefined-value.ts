@@ -8,6 +8,7 @@ export default createRule("no-undefined-value", {
             description: "disallow `undefined`",
             recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
+            layout: false,
         },
         schema: [],
         messages: {
