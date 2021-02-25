@@ -11,6 +11,7 @@ import keySpacing from "../rules/key-spacing"
 import noBigintLiterals from "../rules/no-bigint-literals"
 import noComments from "../rules/no-comments"
 import noDupeKeys from "../rules/no-dupe-keys"
+import noFloatingDecimal from "../rules/no-floating-decimal"
 import noMultiStr from "../rules/no-multi-str"
 import noNumberProps from "../rules/no-number-props"
 import noNumericSeparators from "../rules/no-numeric-separators"
@@ -43,6 +44,7 @@ export const rules = [
     noBigintLiterals,
     noComments,
     noDupeKeys,
+    noFloatingDecimal,
     noMultiStr,
     noNumberProps,
     noNumericSeparators,

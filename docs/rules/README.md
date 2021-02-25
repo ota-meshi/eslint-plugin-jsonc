@@ -37,6 +37,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/indent](./indent.md) | enforce consistent indentation | :wrench: |  |  |  |
 | [jsonc/key-spacing](./key-spacing.md) | enforce consistent spacing between keys and values in object literal properties | :wrench: |  |  |  |
 | [jsonc/no-dupe-keys](./no-dupe-keys.md) | disallow duplicate keys in object literals |  | :star: | :star: | :star: |
+| [jsonc/no-floating-decimal](./no-floating-decimal.md) | disallow leading or trailing decimal points in numeric literals | :wrench: | :star: | :star: |  |
 | [jsonc/no-multi-str](./no-multi-str.md) | disallow multiline strings |  | :star: | :star: |  |
 | [jsonc/no-octal-escape](./no-octal-escape.md) | disallow octal escape sequences in string literals |  |  |  |  |
 | [jsonc/no-sparse-arrays](./no-sparse-arrays.md) | disallow sparse arrays |  | :star: | :star: | :star: |

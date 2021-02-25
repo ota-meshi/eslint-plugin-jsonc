@@ -13,6 +13,7 @@ export = {
         "jsonc/comma-style": "off",
         "jsonc/indent": "off",
         "jsonc/key-spacing": "off",
+        "jsonc/no-floating-decimal": "off",
         "jsonc/object-curly-newline": "off",
         "jsonc/object-curly-spacing": "off",
         "jsonc/object-property-newline": "off",
