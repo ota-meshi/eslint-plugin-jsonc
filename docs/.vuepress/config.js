@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require("path")
 const { rules } = require("../../dist/utils/rules")
 
 function ruleToLink({
@@ -20,7 +20,7 @@ module.exports = {
             resolve: {
                 alias: {
                     module: require.resolve("./shim/module"),
-                    eslint: path.resolve(__dirname, './shim/eslint')
+                    eslint: path.resolve(__dirname, "./shim/eslint"),
                 },
             },
         }
@@ -58,7 +58,7 @@ module.exports = {
                         .filter(
                             (rule) =>
                                 !rule.meta.docs.extensionRule &&
-                                !rule.meta.deprecated
+                                !rule.meta.deprecated,
                         )
                         .map(ruleToLink),
                 },
@@ -69,7 +69,7 @@ module.exports = {
                         .filter(
                             (rule) =>
                                 rule.meta.docs.extensionRule &&
-                                !rule.meta.deprecated
+                                !rule.meta.deprecated,
                         )
                         .map(ruleToLink),
                 },

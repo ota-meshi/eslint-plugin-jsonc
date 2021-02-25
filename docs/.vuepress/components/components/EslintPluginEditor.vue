@@ -44,15 +44,15 @@ export default {
         },
         language: {
             type: String,
-            default:"json"
+            default: "json",
         },
         fileName: {
             type: String,
-            default: "a.json"
+            default: "a.json",
         },
         parser: {
             type: String,
-            default: "jsonc-eslint-parser"
+            default: "jsonc-eslint-parser",
         },
     },
 
@@ -105,7 +105,11 @@ export default {
             }
         },
         linter() {
-            if (!this.eslint4b || !this.jsoncESLintParser || !this.vueESLintParser) {
+            if (
+                !this.eslint4b ||
+                !this.jsoncESLintParser ||
+                !this.vueESLintParser
+            ) {
                 return null
             }
             const Linter = this.eslint4b
@@ -125,7 +129,11 @@ export default {
 
     async mounted() {
         // Load linter asynchronously.
-        const [{ default: eslint4b }, jsoncESLintParser, vueESLintParser] = await Promise.all([
+        const [
+            { default: eslint4b },
+            jsoncESLintParser,
+            vueESLintParser,
+        ] = await Promise.all([
             import("eslint4b"),
             import("espree").then(() => import("jsonc-eslint-parser")),
             import("espree").then(() => import("vue-eslint-parser")),
@@ -142,25 +150,25 @@ export default {
             monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
                 {
                     validate: false,
-                }
+                },
             )
             monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
                 {
                     validate: false,
-                }
+                },
             )
         })
         editor.$watch("codeEditor", () => {
             if (editor.codeEditor) {
                 editor.codeEditor.onDidChangeModelDecorations(() =>
-                    this.onDidChangeModelDecorations(editor.codeEditor)
+                    this.onDidChangeModelDecorations(editor.codeEditor),
                 )
             }
         })
         editor.$watch("fixedCodeEditor", () => {
             if (editor.fixedCodeEditor) {
                 editor.fixedCodeEditor.onDidChangeModelDecorations(() =>
-                    this.onDidChangeModelDecorations(editor.fixedCodeEditor)
+                    this.onDidChangeModelDecorations(editor.fixedCodeEditor),
                 )
             }
         })

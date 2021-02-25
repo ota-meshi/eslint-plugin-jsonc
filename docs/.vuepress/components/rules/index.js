@@ -88,7 +88,7 @@ categories.sort((a, b) =>
 
 // eslint-disable-next-line node/no-unsupported-features/es-syntax -- DEMO
 export const DEFAULT_RULES_CONFIG = allRules.reduce((c, r) => {
-    if(r.ruleId === "jsonc/auto") {
+    if (r.ruleId === "jsonc/auto") {
         return c
     }
     if (r.ruleId === "vue/no-parsing-error") {
