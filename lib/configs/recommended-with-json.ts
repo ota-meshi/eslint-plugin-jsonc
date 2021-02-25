@@ -10,6 +10,7 @@ export = {
         "jsonc/no-bigint-literals": "error",
         "jsonc/no-comments": "error",
         "jsonc/no-dupe-keys": "error",
+        "jsonc/no-floating-decimal": "error",
         "jsonc/no-multi-str": "error",
         "jsonc/no-number-props": "error",
         "jsonc/no-numeric-separators": "error",
