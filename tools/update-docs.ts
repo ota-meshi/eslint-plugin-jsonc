@@ -140,7 +140,7 @@ This rule was introduced in eslint-plugin-jsonc ${this.since}
         }## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/${ruleName}.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/${ruleName}.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/${ruleName}.ts)
 ${
     this.rule.meta.docs.extensionRule
         ? `
