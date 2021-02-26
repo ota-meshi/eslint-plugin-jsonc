@@ -98,7 +98,7 @@
     },
     "dependencies": {
         "eslint-utils": "^2.1.0",
-        "jsonc-eslint-parser": "^0.6.0",
+        "jsonc-eslint-parser": "^1.0.0",
         "natural-compare": "^1.4.0"
     }
 }
