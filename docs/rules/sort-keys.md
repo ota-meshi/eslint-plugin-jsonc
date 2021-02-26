@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/sort-keys"
 description: "require object keys to be sorted"
+since: "v0.1.0"
 ---
 # jsonc/sort-keys
 
@@ -41,7 +42,11 @@ Same as [sort-keys] rule option. See [here](https://eslint.org/docs/rules/sort-k
 
 [sort-keys]: https://eslint.org/docs/rules/sort-keys
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/sort-keys.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/sort-keys.js)

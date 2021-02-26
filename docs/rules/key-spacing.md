@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/key-spacing"
 description: "enforce consistent spacing between keys and values in object literal properties"
+since: "v0.1.0"
 ---
 # jsonc/key-spacing
 
@@ -53,7 +54,11 @@ Same as [key-spacing] rule option. See [here](https://eslint.org/docs/rules/key-
 
 [key-spacing]: https://eslint.org/docs/rules/key-spacing
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/key-spacing.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/key-spacing.js)

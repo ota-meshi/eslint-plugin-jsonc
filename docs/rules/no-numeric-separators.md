@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-numeric-separators"
 description: "disallow numeric separators"
+since: "v0.6.0"
 ---
 # jsonc/no-numeric-separators
 
@@ -36,7 +37,11 @@ This rule reports the use of numeric separators.
 
 Nothing.
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.6.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-numeric-separators.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-numeric-separators.js)

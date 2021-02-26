@@ -23,6 +23,23 @@ function yamlValue(val: any) {
 
 const ROOT = path.resolve(__dirname, "../docs/rules")
 
+//eslint-disable-next-line require-jsdoc -- tools
+function pickSince(content: string): string | null {
+    const fileIntro = /^---\n(.*\n)+---\n*/g.exec(content)
+    if (fileIntro) {
+        const since = /since: "?(v\d+\.\d+\.\d+)"?/.exec(fileIntro[0])
+        if (since) {
+            return since[1]
+        }
+    }
+    // eslint-disable-next-line no-process-env -- ignore
+    if (process.env.IN_VERSION_SCRIPT) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- ignore
+        return `v${require("../package.json").version}`
+    }
+    return null
+}
+
 class DocFile {
     private readonly rule: RuleModule
 
@@ -30,10 +47,13 @@ class DocFile {
 
     private content: string
 
+    private readonly since: string | null
+
     public constructor(rule: RuleModule) {
         this.rule = rule
         this.filePath = path.join(ROOT, `${rule.meta.docs.ruleName}.md`)
         this.content = fs.readFileSync(this.filePath, "utf8")
+        this.since = pickSince(this.content)
     }
 
     public static read(rule: RuleModule) {
@@ -83,6 +103,11 @@ class DocFile {
                 "- :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.",
             )
         }
+        if (!this.since) {
+            notes.unshift(
+                `- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>`,
+            )
+        }
 
         // Add an empty line after notes.
         if (notes.length >= 1) {
@@ -103,8 +128,16 @@ class DocFile {
 
     public updateFooter() {
         const { ruleName } = this.rule.meta.docs
-        const footerPattern = /## Implementation[\s\S]+$/u
-        const footer = `## Implementation
+        const footerPattern = /## (?:(?::mag:)? ?Implementation|:rocket: Version).+$/s
+        const footer = `${
+            this.since
+                ? `## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc ${this.since}
+
+`
+                : ""
+        }## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/${ruleName}.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/${ruleName}.js)
@@ -165,12 +198,13 @@ ${
             sidebarDepth: 0,
             title: ruleId,
             description,
+            ...(this.since ? { since: this.since } : {}),
         }
         const computed = `---\n${Object.keys(fileIntro)
             .map((key) => `${key}: ${yamlValue((fileIntro as any)[key])}`)
             .join("\n")}\n---\n`
 
-        const fileIntroPattern = /^---\n(.*\n)+---\n*/gu
+        const fileIntroPattern = /^---\n(.*\n)+?---\n*/gu
 
         if (fileIntroPattern.test(this.content)) {
             this.content = this.content.replace(fileIntroPattern, computed)

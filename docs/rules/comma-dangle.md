@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/comma-dangle"
 description: "require or disallow trailing commas"
+since: "v0.1.0"
 ---
 # jsonc/comma-dangle
 
@@ -70,7 +71,11 @@ You can also use an object option to configure this rule for each type of syntax
 
 [comma-dangle]: https://eslint.org/docs/rules/comma-dangle
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/comma-dangle.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/comma-dangle.js)

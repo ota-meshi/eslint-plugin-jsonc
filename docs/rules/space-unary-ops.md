@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/space-unary-ops"
 description: "disallow spaces after unary operators"
+since: "v0.2.0"
 ---
 # jsonc/space-unary-ops
 
@@ -44,7 +45,11 @@ Nothing.
 
 [space-unary-ops]: https://eslint.org/docs/rules/space-unary-ops
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.2.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/space-unary-ops.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/space-unary-ops.js)

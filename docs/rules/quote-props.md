@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/quote-props"
 description: "require quotes around object literal property names"
+since: "v0.1.0"
 ---
 # jsonc/quote-props
 
@@ -64,7 +65,11 @@ See [here](https://eslint.org/docs/rules/quote-props#options) for details.
 
 [quote-props]: https://eslint.org/docs/rules/quote-props
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/quote-props.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/quote-props.js)
