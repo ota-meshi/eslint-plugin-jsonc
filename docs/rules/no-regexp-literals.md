@@ -42,4 +42,4 @@ This rule was introduced in eslint-plugin-jsonc v0.2.0
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-regexp-literals.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-regexp-literals.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-regexp-literals.ts)

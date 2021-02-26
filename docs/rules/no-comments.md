@@ -42,4 +42,4 @@ This rule was introduced in eslint-plugin-jsonc v0.1.0
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-comments.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-comments.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-comments.ts)

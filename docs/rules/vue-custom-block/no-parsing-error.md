@@ -46,4 +46,4 @@ This rule was introduced in eslint-plugin-jsonc v0.8.0
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/vue-custom-block/no-parsing-error.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/vue-custom-block/no-parsing-error.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/vue-custom-block/no-parsing-error.ts)
