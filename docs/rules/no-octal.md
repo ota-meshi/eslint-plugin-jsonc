@@ -44,6 +44,6 @@ Nothing.
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-octal.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-octal.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-octal.ts)
 
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/no-octal)</sup>
