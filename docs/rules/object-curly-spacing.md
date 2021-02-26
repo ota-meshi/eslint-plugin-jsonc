@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/object-curly-spacing"
 description: "enforce consistent spacing inside braces"
+since: "v0.1.0"
 ---
 # jsonc/object-curly-spacing
 
@@ -49,7 +50,11 @@ Same as [object-curly-spacing] rule option. See [here](https://eslint.org/docs/r
 
 [object-curly-spacing]: https://eslint.org/docs/rules/object-curly-spacing
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/object-curly-spacing.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/object-curly-spacing.js)

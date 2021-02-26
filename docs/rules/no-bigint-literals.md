@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-bigint-literals"
 description: "disallow BigInt literals"
+since: "v0.2.0"
 ---
 # jsonc/no-bigint-literals
 
@@ -37,7 +38,11 @@ JSON, JSONC and JSON5 do not allow BigInt literals.
 
 Nothing.
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.2.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-bigint-literals.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-bigint-literals.js)

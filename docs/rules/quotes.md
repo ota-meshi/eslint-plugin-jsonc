@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/quotes"
 description: "enforce use of double or single quotes"
+since: "v0.1.0"
 ---
 # jsonc/quotes
 
@@ -65,7 +66,11 @@ See [here](https://eslint.org/docs/rules/quotes#options) for details.
 
 [quotes]: https://eslint.org/docs/rules/quotes
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/quotes.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/quotes.js)

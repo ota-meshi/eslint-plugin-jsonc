@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-number-props"
 description: "disallow number property keys"
+since: "v0.2.0"
 ---
 # jsonc/no-number-props
 
@@ -42,7 +43,11 @@ JSON, JSONC and JSON5 do not allow number property keys.
 
 Nothing.
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.2.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-number-props.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-number-props.js)

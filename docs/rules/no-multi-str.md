@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-multi-str"
 description: "disallow multiline strings"
+since: "v0.1.0"
 ---
 # jsonc/no-multi-str
 
@@ -42,7 +43,11 @@ Nothing.
 
 [no-multi-str]: https://eslint.org/docs/rules/no-multi-str
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-multi-str.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-multi-str.js)

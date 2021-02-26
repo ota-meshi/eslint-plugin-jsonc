@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/comma-style"
 description: "enforce consistent comma style"
+since: "v0.1.0"
 ---
 # jsonc/comma-style
 
@@ -59,7 +60,11 @@ Same as [comma-style] rule option. See [here](https://eslint.org/docs/rules/comm
 
 [comma-style]: https://eslint.org/docs/rules/comma-style
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/comma-style.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/comma-style.js)

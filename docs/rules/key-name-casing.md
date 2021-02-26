@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/key-name-casing"
 description: "enforce naming convention to property key names"
+since: "v0.8.0"
 ---
 # jsonc/key-name-casing
 
@@ -58,7 +59,11 @@ Nothing.
 - `"snake_case"` ... if `true`, allows snake_case naming. default `false`
 - `"ignores"` ... you can specify the patterns to ignore in the array.
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.8.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/key-name-casing.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/key-name-casing.js)

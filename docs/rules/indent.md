@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/indent"
 description: "enforce consistent indentation"
+since: "v0.1.0"
 ---
 # jsonc/indent
 
@@ -59,7 +60,11 @@ Same as [indent] rule option. See [here](https://eslint.org/docs/rules/indent#op
 
 [indent]: https://eslint.org/docs/rules/indent
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/indent.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/indent.js)

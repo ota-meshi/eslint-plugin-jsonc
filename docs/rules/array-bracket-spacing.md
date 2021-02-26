@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/array-bracket-spacing"
 description: "disallow or enforce spaces inside of brackets"
+since: "v0.1.0"
 ---
 # jsonc/array-bracket-spacing
 
@@ -49,7 +50,11 @@ Same as [array-bracket-spacing] rule option. See [here](https://eslint.org/docs/
 
 [array-bracket-spacing]: https://eslint.org/docs/rules/array-bracket-spacing
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/array-bracket-spacing.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/array-bracket-spacing.js)

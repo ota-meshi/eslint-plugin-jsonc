@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-floating-decimal"
 description: "disallow leading or trailing decimal points in numeric literals"
+since: "v0.9.0"
 ---
 # jsonc/no-floating-decimal
 
@@ -42,7 +43,11 @@ Nothing.
 
 [no-floating-decimal]: https://eslint.org/docs/rules/no-floating-decimal
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.9.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-floating-decimal.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-floating-decimal.js)

@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/auto"
 description: "apply jsonc rules similar to your configured ESLint core rules"
+since: "v0.8.0"
 ---
 # jsonc/auto
 
@@ -23,7 +24,11 @@ The rules contained in the sharable configuration work as well. If you use the `
 
 Nothing.
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.8.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/auto.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/auto.js)

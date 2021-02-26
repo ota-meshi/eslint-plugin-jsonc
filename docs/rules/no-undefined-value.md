@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-undefined-value"
 description: "disallow `undefined`"
+since: "v0.2.0"
 ---
 # jsonc/no-undefined-value
 
@@ -34,7 +35,11 @@ JSON, JSONC and JSON5 do not allow `undefined`.
 
 Nothing.
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.2.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-undefined-value.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-undefined-value.js)

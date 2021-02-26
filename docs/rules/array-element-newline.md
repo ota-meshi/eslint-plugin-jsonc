@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/array-element-newline"
 description: "enforce line breaks between array elements"
+since: "v0.1.0"
 ---
 # jsonc/array-element-newline
 
@@ -51,7 +52,11 @@ Same as [array-element-newline] rule option. See [here](https://eslint.org/docs/
 
 [array-element-newline]: https://eslint.org/docs/rules/array-element-newline
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/array-element-newline.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/array-element-newline.js)

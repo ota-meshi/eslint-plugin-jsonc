@@ -3,6 +3,7 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-octal-escape"
 description: "disallow octal escape sequences in string literals"
+since: "v0.1.0"
 ---
 # jsonc/no-octal-escape
 
@@ -39,7 +40,11 @@ Nothing.
 
 [no-octal-escape]: https://eslint.org/docs/rules/no-octal-escape
 
-## Implementation
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v0.1.0
+
+## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-octal-escape.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-octal-escape.js)
