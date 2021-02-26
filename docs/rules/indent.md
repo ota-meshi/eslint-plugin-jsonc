@@ -67,6 +67,6 @@ This rule was introduced in eslint-plugin-jsonc v0.1.0
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/indent.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/indent.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/indent.ts)
 
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/indent)</sup>

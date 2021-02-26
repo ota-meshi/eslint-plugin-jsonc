@@ -47,6 +47,6 @@ This rule was introduced in eslint-plugin-jsonc v0.1.0
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-octal-escape.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-octal-escape.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-octal-escape.ts)
 
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/no-octal-escape)</sup>

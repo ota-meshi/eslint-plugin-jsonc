@@ -73,6 +73,6 @@ This rule was introduced in eslint-plugin-jsonc v0.1.0
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/quotes.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/quotes.js)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/quotes.ts)
 
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/quotes)</sup>
