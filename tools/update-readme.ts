@@ -48,7 +48,7 @@ fs.writeFileSync(
             "(.$1.md",
         )
         .replace(/\(https:\/\/ota-meshi.github.io\/eslint-plugin-jsonc/gu, "(.")
-        .replace(/\n\n\n+/gu, "\n\n"),
+        .replace(/\n{3,}/gu, "\n\n"),
     "utf8",
 )
 
