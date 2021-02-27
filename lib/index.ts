@@ -9,6 +9,7 @@ import prettier from "./configs/prettier"
 // backward compatibility
 import {
     parseForESLint,
+    parseJSON,
     traverseNodes,
     AST,
     getStaticJSONValue,
@@ -49,25 +50,4 @@ export {
     getStaticJSONValue,
     // types
     AST,
-}
-
-/**
- * Parse JSON source code
- */
-function parseJSON(code: string, options?: any): AST.JSONProgram {
-    const parserOptions = Object.assign(
-        { filePath: "<input>", ecmaVersion: 2019 },
-        options || {},
-        {
-            loc: true,
-            range: true,
-            raw: true,
-            tokens: true,
-            comment: true,
-            eslintVisitorKeys: true,
-            eslintScopeManager: true,
-        },
-    )
-
-    return parseForESLint(code, parserOptions).ast as never
 }
