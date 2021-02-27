@@ -37,11 +37,22 @@ declare module "eslint-utils" {
     export const isOpeningParenToken: unknown
     export const isParenthesized: unknown
     export const isSemicolonToken: unknown
-    export const PatternMatcher: unknown
     export const ReferenceTracker: {
         READ: never
         CALL: never
         CONSTRUCT: never
         new (): never
+    }
+    export class PatternMatcher {
+        public constructor(pattern: RegExp, options?: { escaped?: boolean })
+
+        public execAll(str: string): IterableIterator<RegExpExecArray>
+
+        public test(str: string): boolean
+
+        public [Symbol.replace](
+            str: string,
+            replacer: string | ((...ss: string[]) => string),
+        ): string
     }
 }

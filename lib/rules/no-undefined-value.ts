@@ -17,6 +17,9 @@ export default createRule("no-undefined-value", {
         type: "problem",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         return {
             JSONIdentifier(node: AST.JSONIdentifier) {
                 if (!isUndefinedIdentifier(node)) {

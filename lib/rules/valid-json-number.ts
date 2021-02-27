@@ -4,6 +4,8 @@ import { isNumberIdentifier } from "jsonc-eslint-parser"
 import type { RuleListener } from "../types"
 import { createRule } from "../utils"
 
+const nonDecimalNumericLiteralPattern = /^0[oOxXbB\d]/u
+
 /**
  * Checks if the given string is valid number as JSON.
  */
@@ -113,18 +115,15 @@ export default createRule("valid-json-number", {
                     })
                     return
                 }
-                if (
-                    text.startsWith("0x") ||
-                    text.startsWith("0o") ||
-                    text.startsWith("0b")
-                ) {
+                if (nonDecimalNumericLiteralPattern.test(text)) {
                     context.report({
                         loc: node.loc,
-                        messageId: text.startsWith("0x")
-                            ? "invalidHex"
-                            : text.startsWith("0o")
-                            ? "invalidOctal"
-                            : "invalidBinary",
+                        messageId:
+                            text[1].toLowerCase() === "x"
+                                ? "invalidHex"
+                                : text[1].toLowerCase() === "b"
+                                ? "invalidBinary"
+                                : "invalidOctal",
                         fix: buildFix(node),
                     })
                     return

@@ -16,12 +16,20 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/auto](./auto.md) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
 | [jsonc/key-name-casing](./key-name-casing.md) | enforce naming convention to property key names |  |  |  |  |
 | [jsonc/no-bigint-literals](./no-bigint-literals.md) | disallow BigInt literals |  | :star: | :star: | :star: |
+| [jsonc/no-binary-numeric-literals](./no-binary-numeric-literals.md) | disallow binary numeric literals | :wrench: |  |  |  |
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
+| [jsonc/no-escape-sequence-in-identifier](./no-escape-sequence-in-identifier.md) | disallow escape sequences in identifiers. | :wrench: |  |  |  |
+| [jsonc/no-hexadecimal-numeric-literals](./no-hexadecimal-numeric-literals.md) | disallow hexadecimal numeric literals | :wrench: |  |  |  |
+| [jsonc/no-infinity](./no-infinity.md) | disallow Infinity |  |  |  |  |
+| [jsonc/no-nan](./no-nan.md) | disallow NaN |  |  |  |  |
 | [jsonc/no-number-props](./no-number-props.md) | disallow number property keys | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-numeric-separators](./no-numeric-separators.md) | disallow numeric separators | :wrench: | :star: | :star: | :star: |
+| [jsonc/no-octal-numeric-literals](./no-octal-numeric-literals.md) | disallow octal numeric literals | :wrench: |  |  |  |
+| [jsonc/no-plus-sign](./no-plus-sign.md) | disallow plus sign | :wrench: |  |  |  |
 | [jsonc/no-regexp-literals](./no-regexp-literals.md) | disallow RegExp literals |  | :star: | :star: | :star: |
 | [jsonc/no-template-literals](./no-template-literals.md) | disallow template literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-undefined-value](./no-undefined-value.md) | disallow `undefined` |  | :star: | :star: | :star: |
+| [jsonc/no-unicode-codepoint-escapes](./no-unicode-codepoint-escapes.md) | disallow Unicode code point escape sequences. | :wrench: |  |  |  |
 | [jsonc/valid-json-number](./valid-json-number.md) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
 | [jsonc/vue-custom-block/no-parsing-error](./vue-custom-block/no-parsing-error.md) | disallow parsing errors in Vue custom blocks |  | :star: | :star: | :star: |
 
@@ -40,6 +48,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/no-floating-decimal](./no-floating-decimal.md) | disallow leading or trailing decimal points in numeric literals | :wrench: | :star: | :star: |  |
 | [jsonc/no-multi-str](./no-multi-str.md) | disallow multiline strings |  | :star: | :star: |  |
 | [jsonc/no-octal-escape](./no-octal-escape.md) | disallow octal escape sequences in string literals |  |  |  |  |
+| [jsonc/no-octal](./no-octal.md) | disallow legacy octal literals |  |  |  |  |
 | [jsonc/no-sparse-arrays](./no-sparse-arrays.md) | disallow sparse arrays |  | :star: | :star: | :star: |
 | [jsonc/no-useless-escape](./no-useless-escape.md) | disallow unnecessary escape usage |  | :star: | :star: | :star: |
 | [jsonc/object-curly-newline](./object-curly-newline.md) | enforce consistent line breaks inside braces | :wrench: |  |  |  |

@@ -42,8 +42,10 @@ Nothing.
 ## :couple: Related rules
 
 - [space-unary-ops]
+- [jsonc/valid-json-number]
 
 [space-unary-ops]: https://eslint.org/docs/rules/space-unary-ops
+[jsonc/valid-json-number]: ./valid-json-number.md
 
 ## :rocket: Version
 

@@ -17,6 +17,9 @@ export default createRule("no-number-props", {
         type: "problem",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         return {
             JSONProperty(node: AST.JSONProperty) {
                 if (node.key.type !== "JSONLiteral") {

@@ -16,6 +16,8 @@ since: "v0.9.0"
 
 This rule is aimed at eliminating floating decimal points and will warn whenever a numeric value has a decimal point but is missing a number either before or after it.
 
+Cannot use floating decimal points when in JSON and JSONC.
+
 <eslint-code-block fix>
 
 <!-- eslint-skip -->
@@ -40,8 +42,10 @@ Nothing.
 ## :couple: Related rules
 
 - [no-floating-decimal]
+- [jsonc/valid-json-number]
 
 [no-floating-decimal]: https://eslint.org/docs/rules/no-floating-decimal
+[jsonc/valid-json-number]: ./valid-json-number.md
 
 ## :rocket: Version
 

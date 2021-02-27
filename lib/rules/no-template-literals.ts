@@ -17,6 +17,9 @@ export default createRule("no-template-literals", {
         type: "problem",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         return {
             JSONTemplateLiteral(node: AST.JSONTemplateLiteral) {
                 context.report({
