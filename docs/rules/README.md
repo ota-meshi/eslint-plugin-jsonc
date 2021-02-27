@@ -20,6 +20,8 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
 | [jsonc/no-escape-sequence-in-identifier](./no-escape-sequence-in-identifier.md) | disallow escape sequences in identifiers. | :wrench: |  |  |  |
 | [jsonc/no-hexadecimal-numeric-literals](./no-hexadecimal-numeric-literals.md) | disallow hexadecimal numeric literals | :wrench: |  |  |  |
+| [jsonc/no-infinity](./no-infinity.md) | disallow Infinity |  |  |  |  |
+| [jsonc/no-nan](./no-nan.md) | disallow NaN |  |  |  |  |
 | [jsonc/no-number-props](./no-number-props.md) | disallow number property keys | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-numeric-separators](./no-numeric-separators.md) | disallow numeric separators | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-octal-numeric-literals](./no-octal-numeric-literals.md) | disallow octal numeric literals | :wrench: |  |  |  |
