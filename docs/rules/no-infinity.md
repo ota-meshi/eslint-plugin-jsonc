@@ -14,6 +14,8 @@ description: "disallow Infinity"
 
 This rule reports the use of Infinity.
 
+Cannot use Infinity when in JSON and JSONC.
+
 <eslint-code-block>
 
 <!-- eslint-skip -->
@@ -34,6 +36,12 @@ This rule reports the use of Infinity.
 ## :wrench: Options
 
 Nothing.
+
+## :couple: Related rules
+
+- [jsonc/valid-json-number]
+
+[jsonc/valid-json-number]: ./valid-json-number.md
 
 ## :mag: Implementation
 

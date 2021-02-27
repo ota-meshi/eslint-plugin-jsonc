@@ -16,6 +16,9 @@ export default createRule("no-bigint-literals", {
         type: "problem",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         return {
             JSONLiteral(node: AST.JSONLiteral) {
                 if (node.bigint != null) {

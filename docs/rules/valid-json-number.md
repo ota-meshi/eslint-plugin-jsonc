@@ -37,6 +37,30 @@ This rule reports numbers that cannot be parsed with JSON.
 
 Nothing.
 
+## :couple: Related rules
+
+- [jsonc/no-binary-numeric-literals]
+- [jsonc/no-floating-decimal]
+- [jsonc/no-hexadecimal-numeric-literals]
+- [jsonc/no-infinity]
+- [jsonc/no-nan]
+- [jsonc/no-numeric-separators]
+- [jsonc/no-octal-numeric-literals]
+- [jsonc/no-octal]
+- [jsonc/no-plus-sign]
+- [jsonc/space-unary-ops]
+
+[jsonc/no-binary-numeric-literals]: ./no-binary-numeric-literals.md
+[jsonc/no-floating-decimal]: ./no-floating-decimal.md
+[jsonc/no-hexadecimal-numeric-literals]: ./no-hexadecimal-numeric-literals.md
+[jsonc/no-infinity]: ./no-infinity.md
+[jsonc/no-nan]: ./no-nan.md
+[jsonc/no-numeric-separators]: ./no-numeric-separators.md
+[jsonc/no-octal-numeric-literals]: ./no-octal-numeric-literals.md
+[jsonc/no-octal]: ./no-octal.md
+[jsonc/no-plus-sign]: ./no-plus-sign.md
+[jsonc/space-unary-ops]: ./space-unary-ops.md
+
 ## :rocket: Version
 
 This rule was introduced in eslint-plugin-jsonc v0.1.0

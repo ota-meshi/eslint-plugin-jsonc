@@ -19,6 +19,9 @@ export default createRule("no-escape-sequence-in-identifier", {
         type: "problem",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         const sourceCode = context.getSourceCode()
         return {
             JSONIdentifier(node: AST.JSONIdentifier) {

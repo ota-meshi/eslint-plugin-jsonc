@@ -36,6 +36,12 @@ This rule disallow octal numeric literals.
 
 Nothing.
 
+## :couple: Related rules
+
+- [jsonc/valid-json-number]
+
+[jsonc/valid-json-number]: ./valid-json-number.md
+
 ## :mag: Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-octal-numeric-literals.ts)

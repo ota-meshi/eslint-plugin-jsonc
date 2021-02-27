@@ -1,4 +1,3 @@
-
 import type { RuleModule } from "../types"
 import arrayBracketNewline from "../rules/array-bracket-newline"
 import arrayBracketSpacing from "../rules/array-bracket-spacing"
@@ -24,6 +23,7 @@ import noNumericSeparators from "../rules/no-numeric-separators"
 import noOctalEscape from "../rules/no-octal-escape"
 import noOctalNumericLiterals from "../rules/no-octal-numeric-literals"
 import noOctal from "../rules/no-octal"
+import noPlusSign from "../rules/no-plus-sign"
 import noRegexpLiterals from "../rules/no-regexp-literals"
 import noSparseArrays from "../rules/no-sparse-arrays"
 import noTemplateLiterals from "../rules/no-template-literals"
@@ -41,5 +41,44 @@ import validJsonNumber from "../rules/valid-json-number"
 import vueCustomBlockNoParsingError from "../rules/vue-custom-block/no-parsing-error"
 
 export const rules = [
-    arrayBracketNewline,arrayBracketSpacing,arrayElementNewline,auto,commaDangle,commaStyle,indent,keyNameCasing,keySpacing,noBigintLiterals,noBinaryNumericLiterals,noComments,noDupeKeys,noEscapeSequenceInIdentifier,noFloatingDecimal,noHexadecimalNumericLiterals,noInfinity,noMultiStr,noNan,noNumberProps,noNumericSeparators,noOctalEscape,noOctalNumericLiterals,noOctal,noRegexpLiterals,noSparseArrays,noTemplateLiterals,noUndefinedValue,noUnicodeCodepointEscapes,noUselessEscape,objectCurlyNewline,objectCurlySpacing,objectPropertyNewline,quoteProps,quotes,sortKeys,spaceUnaryOps,validJsonNumber,vueCustomBlockNoParsingError
+    arrayBracketNewline,
+    arrayBracketSpacing,
+    arrayElementNewline,
+    auto,
+    commaDangle,
+    commaStyle,
+    indent,
+    keyNameCasing,
+    keySpacing,
+    noBigintLiterals,
+    noBinaryNumericLiterals,
+    noComments,
+    noDupeKeys,
+    noEscapeSequenceInIdentifier,
+    noFloatingDecimal,
+    noHexadecimalNumericLiterals,
+    noInfinity,
+    noMultiStr,
+    noNan,
+    noNumberProps,
+    noNumericSeparators,
+    noOctalEscape,
+    noOctalNumericLiterals,
+    noOctal,
+    noPlusSign,
+    noRegexpLiterals,
+    noSparseArrays,
+    noTemplateLiterals,
+    noUndefinedValue,
+    noUnicodeCodepointEscapes,
+    noUselessEscape,
+    objectCurlyNewline,
+    objectCurlySpacing,
+    objectPropertyNewline,
+    quoteProps,
+    quotes,
+    sortKeys,
+    spaceUnaryOps,
+    validJsonNumber,
+    vueCustomBlockNoParsingError,
 ] as RuleModule[]

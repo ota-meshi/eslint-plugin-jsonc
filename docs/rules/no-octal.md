@@ -12,7 +12,7 @@ description: "disallow legacy octal literals"
 
 ## :book: Rule Details
 
-The rule disallows octal literals.
+The rule disallows legacy octal literals.
 
 <eslint-code-block>
 
@@ -38,8 +38,10 @@ Nothing.
 ## :couple: Related rules
 
 - [no-octal]
+- [jsonc/valid-json-number]
 
 [no-octal]: https://eslint.org/docs/rules/no-octal
+[jsonc/valid-json-number]: ./valid-json-number.md
 
 ## :mag: Implementation
 

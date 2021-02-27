@@ -20,6 +20,9 @@ export default createRule("no-binary-numeric-literals", {
         type: "problem",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         return {
             JSONLiteral(node: AST.JSONLiteral) {
                 if (

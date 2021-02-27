@@ -37,6 +37,12 @@ This rule reports the use of numeric separators.
 
 Nothing.
 
+## :couple: Related rules
+
+- [jsonc/valid-json-number]
+
+[jsonc/valid-json-number]: ./valid-json-number.md
+
 ## :rocket: Version
 
 This rule was introduced in eslint-plugin-jsonc v0.6.0

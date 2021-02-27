@@ -88,6 +88,9 @@ export default createRule("sort-keys", {
         type: "suggestion",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         // Parse options.
         const order: Option = context.options[0] || "asc"
         const options = context.options[1]

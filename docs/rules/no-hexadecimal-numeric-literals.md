@@ -15,6 +15,8 @@ description: "disallow hexadecimal numeric literals"
 
 This rule disallow hexadecimal numeric literals.
 
+Cannot use hexadecimal numeric literals when in JSON and JSONC.
+
 <eslint-code-block fix>
 
 <!-- eslint-skip -->
@@ -35,6 +37,12 @@ This rule disallow hexadecimal numeric literals.
 ## :wrench: Options
 
 Nothing.
+
+## :couple: Related rules
+
+- [jsonc/valid-json-number]
+
+[jsonc/valid-json-number]: ./valid-json-number.md
 
 ## :mag: Implementation
 

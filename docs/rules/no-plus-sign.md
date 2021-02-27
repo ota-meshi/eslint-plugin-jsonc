@@ -1,32 +1,34 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "jsonc/no-binary-numeric-literals"
-description: "disallow binary numeric literals"
+title: "jsonc/no-plus-sign"
+description: "disallow plus sign"
 ---
-# jsonc/no-binary-numeric-literals
+# jsonc/no-plus-sign
 
-> disallow binary numeric literals
+> disallow plus sign
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
 
-This rule disallow binary numeric literals
+This rule disallow plus sign.
+
+Cannot use plus sign when in JSON and JSONC.
 
 <eslint-code-block fix>
 
 <!-- eslint-skip -->
 
 ```json5
-/* eslint jsonc/no-binary-numeric-literals: 'error' */
+/* eslint jsonc/no-plus-sign: 'error' */
 {
     /* ✓ GOOD */
-    "GOOD": 10,
+    "GOOD": 42,
 
     /* ✗ BAD */
-    "BAD": 0b1010
+    "BAD": +42
 }
 ```
 
@@ -44,5 +46,5 @@ Nothing.
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-binary-numeric-literals.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-binary-numeric-literals.ts)
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-plus-sign.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-plus-sign.ts)

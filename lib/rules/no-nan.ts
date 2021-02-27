@@ -18,6 +18,9 @@ export default createRule("no-nan", {
         type: "problem",
     },
     create(context) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         return {
             JSONIdentifier(node: AST.JSONIdentifier) {
                 if (!isNumberIdentifier(node)) {

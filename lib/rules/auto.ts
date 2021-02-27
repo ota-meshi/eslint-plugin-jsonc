@@ -17,6 +17,9 @@ export default createRule("auto", {
         type: "suggestion",
     },
     create(context, params) {
+        if (!context.parserServices.isJSON) {
+            return {}
+        }
         const autoConfig = getAutoConfig(context.getFilename())
 
         const visitor: RuleListener = {}

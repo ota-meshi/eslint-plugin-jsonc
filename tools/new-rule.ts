@@ -39,6 +39,9 @@ export default createRule("${ruleId}", {
         type: coreRule.meta!.type!,
     },
     create(context) {
+        // if (!context.parserServices.isJSON) {
+        //     return {}
+        // }
         return defineWrapperListener(coreRule, context, context.options)
     },
 })
