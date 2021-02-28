@@ -3,12 +3,11 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-octal"
 description: "disallow legacy octal literals"
+since: "v1.1.0"
 ---
 # jsonc/no-octal
 
 > disallow legacy octal literals
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
 
 ## :book: Rule Details
 
@@ -42,6 +41,10 @@ Nothing.
 
 [no-octal]: https://eslint.org/docs/rules/no-octal
 [jsonc/valid-json-number]: ./valid-json-number.md
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v1.1.0
 
 ## :mag: Implementation
 

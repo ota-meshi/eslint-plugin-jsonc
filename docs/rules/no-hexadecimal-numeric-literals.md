@@ -3,12 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-hexadecimal-numeric-literals"
 description: "disallow hexadecimal numeric literals"
+since: "v1.1.0"
 ---
 # jsonc/no-hexadecimal-numeric-literals
 
 > disallow hexadecimal numeric literals
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -43,6 +43,10 @@ Nothing.
 - [jsonc/valid-json-number]
 
 [jsonc/valid-json-number]: ./valid-json-number.md
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v1.1.0
 
 ## :mag: Implementation
 

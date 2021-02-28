@@ -3,12 +3,11 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-infinity"
 description: "disallow Infinity"
+since: "v1.1.0"
 ---
 # jsonc/no-infinity
 
 > disallow Infinity
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
 
 ## :book: Rule Details
 
@@ -42,6 +41,10 @@ Nothing.
 - [jsonc/valid-json-number]
 
 [jsonc/valid-json-number]: ./valid-json-number.md
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v1.1.0
 
 ## :mag: Implementation
 
