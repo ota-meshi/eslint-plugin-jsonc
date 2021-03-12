@@ -59,6 +59,9 @@
         "jsonc-eslint-parser": "^1.0.0",
         "natural-compare": "^1.4.0"
     },
+    "peerDependencies": {
+        "eslint": "^5.0.0 || >=6.0.0"
+    },
     "devDependencies": {
         "@ota-meshi/eslint-plugin": "^0.2.0",
         "@types/eslint": "^7.2.0",
@@ -99,8 +102,5 @@
         "vue-eslint-editor": "^1.1.0",
         "vue-eslint-parser": "^7.3.0",
         "vuepress": "^1.5.2"
-    },
-    "peerDependencies": {
-        "eslint": "^5.0.0 || >=6.0.0"
     }
 }
