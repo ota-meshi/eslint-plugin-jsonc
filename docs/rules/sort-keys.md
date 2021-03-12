@@ -13,7 +13,7 @@ since: "v0.1.0"
 
 ## :book: Rule Details
 
-This rule checks all property definitions of object expressions and verifies that all variables are sorted alphabetically.
+This rule checks all property definitions of object and verifies that all properties are sorted alphabetically or specified order.
 
 <eslint-code-block fix>
 
@@ -34,7 +34,82 @@ This rule checks all property definitions of object expressions and verifies tha
 
 ## :wrench: Options
 
-Same as [sort-keys] rule option. See [here](https://eslint.org/docs/rules/sort-keys#options) for details. 
+```json5
+{
+    "jsonc/sort-keys": ["error",
+        // For example, a definition for package.json
+        {
+            "pathPattern": "^$", // Hits the root properties
+            "order": [
+                "name",
+                "version",
+                "private",
+                "publishConfig"
+                // ...
+            ]
+        },
+        {
+            "pathPattern": "^(?:dev|peer)?[Dd]ependencies$",
+            "order": { "type": "asc" }
+        }
+        // ...
+    ]
+}
+```
+
+```json5
+{
+    "jsonc/sort-keys": ["error",
+        // For example, a definition for JSON Schema
+        {
+            "pathPattern": ".*", // Hits the all properties
+            "hasProperties": ["type"],
+            "order": [
+                "type",
+                "properties",
+                "items",
+                "required",
+                "minItems",
+                "additionalProperties",
+                "additionalItems"
+                // ...
+            ]
+        }
+        // ...
+    ]
+}
+```
+
+The option receives multiple objects with the following properties:
+
+- `pathPattern` (Required) ... Defines the regular expression pattern of paths to which you want to enforce the order. If you want to apply to the top level, define `"^$"`.
+- `hasProperties` ... Defines an array of property names. Checks only objects that have the defined properties.
+- `order` (Required) ... Defines how to enforce the order. You can use an object or an array.
+  - Array ... Defines an array of properties to enforce the order.
+  - Object ... The object has the following properties:
+    - `type`:
+      - `"asc"` ... Enforce properties to be in ascending order. This is default.
+      - `"desc"` ... Enforce properties to be in descending order.
+    - `caseSensitive` ... If `true`, enforce properties to be in case-sensitive order. Default is `true`.
+    - `natural` ... If `true`, enforce properties to be in natural order. Default is `false`.
+- `minKeys` ... Specifies the minimum number of keys that an object should have in order for the object's unsorted keys to produce an error. Default is `2`, which means by default all objects with unsorted keys will result in lint errors.
+
+You can also define options in the same format as the [sort-keys] rule.
+
+```json5
+{
+    "jsonc/sort-keys": ["error",
+        "asc",
+        {
+            "caseSensitive": true,
+            "natural": false,
+            "minKeys": 2
+        }
+    ]
+}
+```
+
+See [here](https://eslint.org/docs/rules/sort-keys#options) for details.
 
 ## :couple: Related rules
 

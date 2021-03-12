@@ -1,9 +1,51 @@
+import fs from "fs"
 import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/sort-keys"
 
 const tester = new RuleTester({
     parser: require.resolve("jsonc-eslint-parser"),
 })
+
+const OPTIONS_FOR_PACKAGE_JSON = [
+    {
+        pathPattern: "^$",
+        order: [
+            "name",
+            "version",
+            "dependencies",
+            "devDependencies",
+            "peerDependencies",
+            "optionalDependencies",
+            "bundledDependencies",
+        ],
+    },
+    {
+        pathPattern: "^(?:dev|peer|optional|bundled)?[Dd]ependencies$",
+        order: {
+            type: "asc",
+        },
+    },
+    {
+        pathPattern: "^eslintConfig$",
+        order: ["root", "plugins", "extends"],
+    },
+]
+
+const OPTIONS_FOR_JSON_SCHEMA = [
+    {
+        pathPattern: ".*",
+        hasProperties: ["type"],
+        order: [
+            "type",
+            "properties",
+            "items",
+            "required",
+            "minItems",
+            "additionalProperties",
+            "additionalItems",
+        ],
+    },
+]
 
 tester.run("sort-keys", rule as any, {
     valid: [
@@ -21,6 +63,21 @@ tester.run("sort-keys", rule as any, {
         {
             code: '{"c": 1, "b": 2, "a": 3}',
             options: ["desc"],
+        },
+
+        // package.json
+        {
+            code: fs.readFileSync(
+                require.resolve("../../../package.json"),
+                "utf-8",
+            ),
+            options: OPTIONS_FOR_PACKAGE_JSON,
+        },
+
+        // JSON Schema
+        {
+            code: JSON.stringify(rule.meta.schema),
+            options: OPTIONS_FOR_JSON_SCHEMA,
         },
     ],
     invalid: [
@@ -100,6 +157,102 @@ tester.run("sort-keys", rule as any, {
             parser: require.resolve("vue-eslint-parser"),
             errors: [
                 "Expected object keys to be in ascending order. 'A' should be before 'a'.",
+            ],
+        },
+        // package.json
+        {
+            code: `
+            {
+                "version": "0.0.0",
+                "name": "test",
+                "eslintConfig": {
+                    "root": true,
+                    "extends": [],
+                    "plugins": [],
+                },
+                "dependencies": {
+                    "b": "0.0.1",
+                    "a": "0.0.1"
+                }
+            }`,
+            output: `
+            {
+                "name": "test",
+                "version": "0.0.0",
+                "eslintConfig": {
+                    "root": true,
+                    "plugins": [],
+                    "extends": [],
+                },
+                "dependencies": {
+                    "a": "0.0.1",
+                    "b": "0.0.1"
+                }
+            }`,
+            options: OPTIONS_FOR_PACKAGE_JSON,
+            errors: [
+                "Expected object keys to be in specified order. 'name' should be before 'version'.",
+                "Expected object keys to be in specified order. 'plugins' should be before 'extends'.",
+                "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+            ],
+        },
+
+        // JSON Schema
+        {
+            code: `
+            {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "foo": {
+                        "minItems": 2,
+                        "type": "array"
+                    }
+                }
+            }`,
+            output: `
+            {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "minItems": 2,
+                        "type": "array"
+                    }
+                },
+                "additionalProperties": false
+            }`,
+            options: OPTIONS_FOR_JSON_SCHEMA,
+            errors: [
+                "Expected object keys to be in specified order. 'properties' should be before 'additionalProperties'.",
+                "Expected object keys to be in specified order. 'type' should be before 'minItems'.",
+            ],
+        },
+        {
+            code: `
+            {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "minItems": 2,
+                        "type": "array"
+                    }
+                },
+                "additionalProperties": false
+            }`,
+            output: `
+            {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "type": "array",
+                        "minItems": 2
+                    }
+                },
+                "additionalProperties": false
+            }`,
+            options: OPTIONS_FOR_JSON_SCHEMA,
+            errors: [
+                "Expected object keys to be in specified order. 'type' should be before 'minItems'.",
             ],
         },
     ],
