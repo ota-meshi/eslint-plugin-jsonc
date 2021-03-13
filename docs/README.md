@@ -59,7 +59,7 @@ e.g. [eslint-plugin-json-files](https://www.npmjs.com/package/eslint-plugin-json
 
 These plugins use the same AST as JavaScript for linting.
 
-Since the plugin uses the same AST as JavaScript, it may not report syntax that is not available in JSON (e.g. `1 + 1`). Also, ESLint core rules and other plugin rules can false positives (e.g. [quote-props](https://eslint.org/docs/rules/quote-props) rule reports quote on keys), which can complicate the your configuration.
+Since the plugin uses the same AST as JavaScript, it may not report syntax that is not available in JSON (e.g. `1 + 1`, `(42)`). Also, ESLint core rules and other plugin rules can false positives (e.g. [quote-props](https://eslint.org/docs/rules/quote-props) rule reports quote on keys), which can complicate the your configuration.
 
 The AST used by **eslint-plugin-jsonc** is similar to JavaScript AST, but with a different node name. This will prevent false positives. This means that it can be easily used in combination with other plugins.
 
