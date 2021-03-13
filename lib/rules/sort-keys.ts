@@ -176,7 +176,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
             while (p) {
                 if (p.type === "JSONProperty") {
                     const name = getPropertyName(p)
-                    if (/^[a-z$_][\w$]*$/iu.test(name)) {
+                    if (/^[$_a-z][\w$]*$/iu.test(name)) {
                         path = `.${name}${path}`
                     } else {
                         path = `[${name}]${path}`
