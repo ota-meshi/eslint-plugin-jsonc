@@ -30,7 +30,7 @@ function capitalize(str: string) {
  * @param {string} str
  */
 function hasSymbols(str: string) {
-    return /[!"#%&'()*+,./:;<=>?@[\\\]^`{|}]/u.test(str) // without " ", "$", "-" and "_"
+    return /[!-#%-,./:-@[-^`{-}]/u.test(str) // without " ", "$", "-" and "_"
 }
 
 /**
@@ -150,7 +150,7 @@ export function isCamelCase(str: string): boolean {
     if (
         hasSymbols(str) ||
         /^[A-Z]/u.test(str) ||
-        /-|_|\s/u.test(str) // kebab or snake or space
+        /[\s\-_]/u.test(str) // kebab or snake or space
     ) {
         return false
     }
@@ -174,7 +174,7 @@ export function isPascalCase(str: string): boolean {
     if (
         hasSymbols(str) ||
         /^[a-z]/u.test(str) ||
-        /-|_|\s/u.test(str) // kebab or snake or space
+        /[\s\-_]/u.test(str) // kebab or snake or space
     ) {
         return false
     }

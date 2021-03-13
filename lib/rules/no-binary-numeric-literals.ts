@@ -1,7 +1,7 @@
 import type { AST } from "jsonc-eslint-parser"
 import { createRule } from "../utils"
 
-const binaryNumericLiteralPattern = /^0[bB]/u
+const binaryNumericLiteralPattern = /^0[Bb]/u
 
 export default createRule("no-binary-numeric-literals", {
     meta: {
