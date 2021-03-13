@@ -49,7 +49,7 @@ This rule checks all property definitions of object and verifies that all proper
             ]
         },
         {
-            "pathPattern": "^(?:dev|peer)?[Dd]ependencies$",
+            "pathPattern": "^(?:dev|peer|optional|bundled)?[Dd]ependencies$",
             "order": { "type": "asc" }
         }
         // ...
