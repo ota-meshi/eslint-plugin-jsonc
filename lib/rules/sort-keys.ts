@@ -179,7 +179,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
                     if (/^[$_a-z][\w$]*$/iu.test(name)) {
                         path = `.${name}${path}`
                     } else {
-                        path = `[${name}]${path}`
+                        path = `[${JSON.stringify(name)}]${path}`
                     }
                 } else if (p.type === "JSONArrayExpression") {
                     const index = p.elements.indexOf(curr as never)

@@ -255,5 +255,57 @@ tester.run("sort-keys", rule as any, {
                 "Expected object keys to be in specified order. 'type' should be before 'minItems'.",
             ],
         },
+
+        // Other
+        {
+            code: `
+            {
+                "\t": {
+                    "b": 42,
+                    "a": 42,
+                },
+                "arr": [
+                    {
+                        "d": 42,
+                        "c": 42,
+                    },
+                    {
+                        "f": 42,
+                        "e": 42,
+                    },
+                ]
+            }`,
+            output: `
+            {
+                "\t": {
+                    "a": 42,
+                    "b": 42,
+                },
+                "arr": [
+                    {
+                        "d": 42,
+                        "c": 42,
+                    },
+                    {
+                        "e": 42,
+                        "f": 42,
+                    },
+                ]
+            }`,
+            options: [
+                {
+                    pathPattern: '^\\["\\\\t"\\]$',
+                    order: { type: "asc" },
+                },
+                {
+                    pathPattern: "^arr\\[1\\]$",
+                    order: { type: "asc" },
+                },
+            ],
+            errors: [
+                "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+                "Expected object keys to be in ascending order. 'e' should be before 'f'.",
+            ],
+        },
     ],
 })
