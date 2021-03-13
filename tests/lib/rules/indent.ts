@@ -57,10 +57,10 @@ function loadPatterns(
             }[] = output.split("\n").map((text: string, number: number) => ({
                 number,
                 text,
-                indentSize: (/^[ \t]+/u.exec(text) || [""])[0].length,
+                indentSize: (/^[\t ]+/u.exec(text) || [""])[0].length,
             }))
             const code = lines
-                .map((line) => line.text.replace(/^[ \t]+/u, ""))
+                .map((line) => line.text.replace(/^[\t ]+/u, ""))
                 .join("\n")
             const errors = lines
                 .map((line) =>

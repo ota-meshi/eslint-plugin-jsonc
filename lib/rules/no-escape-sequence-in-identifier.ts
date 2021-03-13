@@ -34,7 +34,7 @@ export default createRule("no-escape-sequence-in-identifier", {
          */
         function verify(node: AST.JSONNode) {
             const escapeMatcher = new PatternMatcher(
-                /\\u\{[\da-fA-F]+\}|\\u\d{4}/gu,
+                /\\u\{[\dA-Fa-f]+\}|\\u\d{4}/gu,
             )
             const text = sourceCode.text.slice(...node.range)
             for (const match of escapeMatcher.execAll(text)) {

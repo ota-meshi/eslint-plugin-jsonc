@@ -22,7 +22,7 @@ describe("auto rule", () => {
             fixtures[filename] = code
             const invalidCode = code
                 .split("\n")
-                .map((line) => line.replace(/^[ \t]+/u, ""))
+                .map((line) => line.replace(/^[\t ]+/u, ""))
                 .join("\n")
             fs.writeFileSync(
                 path.join(FIXTURE_ROOT, filename),

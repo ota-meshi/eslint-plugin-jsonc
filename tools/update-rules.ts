@@ -9,7 +9,7 @@ const isWin = os.platform().startsWith("win")
  * Convert text to camelCase
  */
 function camelCase(str: string) {
-    return str.replace(/[-_/](\w)/gu, (_, c) => (c ? c.toUpperCase() : ""))
+    return str.replace(/[-/_](\w)/gu, (_, c) => (c ? c.toUpperCase() : ""))
 }
 
 let content = `

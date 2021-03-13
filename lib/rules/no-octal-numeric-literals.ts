@@ -1,7 +1,7 @@
 import type { AST } from "jsonc-eslint-parser"
 import { createRule } from "../utils"
 
-const octalNumericLiteralPattern = /^0[oO]/u
+const octalNumericLiteralPattern = /^0[Oo]/u
 
 export default createRule("no-octal-numeric-literals", {
     meta: {

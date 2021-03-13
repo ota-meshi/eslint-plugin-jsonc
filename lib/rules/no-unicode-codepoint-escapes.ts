@@ -42,7 +42,7 @@ export default createRule("no-unicode-codepoint-escapes", {
          */
         function verify(node: AST.JSONNode) {
             const codePointEscapeMatcher = new PatternMatcher(
-                /\\u\{[\da-fA-F]+\}/gu,
+                /\\u\{[\dA-Fa-f]+\}/gu,
             )
             const text = sourceCode.text.slice(...node.range)
             for (const match of codePointEscapeMatcher.execAll(text)) {

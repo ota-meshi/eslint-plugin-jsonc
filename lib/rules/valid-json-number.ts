@@ -4,7 +4,7 @@ import { isNumberIdentifier } from "jsonc-eslint-parser"
 import type { RuleListener } from "../types"
 import { createRule } from "../utils"
 
-const nonDecimalNumericLiteralPattern = /^0[oOxXbB\d]/u
+const nonDecimalNumericLiteralPattern = /^0[\dBOXbox]/u
 
 /**
  * Checks if the given string is valid number as JSON.
