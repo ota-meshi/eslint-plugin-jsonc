@@ -54,6 +54,11 @@
         "url": "https://github.com/ota-meshi/eslint-plugin-jsonc/issues"
     },
     "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
+    "dependencies": {
+        "eslint-utils": "^2.1.0",
+        "jsonc-eslint-parser": "^1.0.0",
+        "natural-compare": "^1.4.0"
+    },
     "peerDependencies": {
         "eslint": "^5.0.0 || >=6.0.0"
     },
@@ -97,10 +102,5 @@
         "vue-eslint-editor": "^1.1.0",
         "vue-eslint-parser": "^7.3.0",
         "vuepress": "^1.5.2"
-    },
-    "dependencies": {
-        "eslint-utils": "^2.1.0",
-        "jsonc-eslint-parser": "^1.0.0",
-        "natural-compare": "^1.4.0"
     }
 }

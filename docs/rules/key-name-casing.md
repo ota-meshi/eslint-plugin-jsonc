@@ -35,8 +35,6 @@ This rule enforces a naming convention to property key names.
 
 ## :wrench: Options
 
-Nothing.
-
 ```json5
 {
     "jsonc/key-name-casing": ["error",
