@@ -6,8 +6,7 @@ export default createRule("no-unicode-codepoint-escapes", {
     meta: {
         docs: {
             description: "disallow Unicode code point escape sequences.",
-            // TODO major version recommended: ["json","jsonc","json5"],
-            recommended: null,
+            recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
             layout: false,
         },

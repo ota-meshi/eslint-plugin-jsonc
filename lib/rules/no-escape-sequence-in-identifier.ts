@@ -6,8 +6,7 @@ export default createRule("no-escape-sequence-in-identifier", {
     meta: {
         docs: {
             description: "disallow escape sequences in identifiers.",
-            // TODO major version recommended: ["json","jsonc","json5"],
-            recommended: null,
+            recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
             layout: false,
         },

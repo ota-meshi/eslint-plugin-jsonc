@@ -7,8 +7,7 @@ export default createRule("no-binary-numeric-literals", {
     meta: {
         docs: {
             description: "disallow binary numeric literals",
-            // TODO major version recommended: ["json","jsonc","json5"],
-            recommended: null,
+            recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
             layout: false,
         },
