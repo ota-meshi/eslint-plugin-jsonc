@@ -180,7 +180,7 @@ ${
     public adjustCodeBlocks() {
         // Adjust the necessary blank lines before and after the code block so that GitHub can recognize `.md`.
         this.content = this.content.replace(
-            /(<eslint-code-block([\s\S]*?)>)\n+```/gmu,
+            /(<eslint-code-block[\s\S]*?>)\n+```/gmu,
             "$1\n\n```",
         )
         this.content = this.content.replace(
