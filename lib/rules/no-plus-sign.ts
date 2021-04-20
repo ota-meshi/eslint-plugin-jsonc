@@ -35,7 +35,9 @@ export default createRule("no-plus-sign", {
                         loc: operator?.loc || node.loc,
                         messageId: "disallow",
                         fix(fixer) {
-                            return operator ? fixer.remove(operator) : null
+                            return operator
+                                ? fixer.removeRange(operator.range!)
+                                : null
                         },
                     })
                 }
