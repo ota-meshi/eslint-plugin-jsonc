@@ -377,13 +377,13 @@ export default createRule("sort-keys", {
                                 node as never,
                             )!
                             const hasAfterComma = isCommaToken(afterToken)
-                            const codeStart = beforeToken.range[1] // to include comments
+                            const codeStart = beforeToken.range![1] // to include comments
                             const codeEnd = hasAfterComma
-                                ? afterToken.range[1] // |/**/ key: value,|
+                                ? afterToken.range![1] // |/**/ key: value,|
                                 : node.range[1] // |/**/ key: value|
                             const removeStart = hasAfterComma
                                 ? codeStart // |/**/ key: value,|
-                                : beforeToken.range[0] // |,/**/ key: value|
+                                : beforeToken.range![0] // |,/**/ key: value|
 
                             const insertCode =
                                 sourceCode.text.slice(codeStart, codeEnd) +
@@ -393,7 +393,7 @@ export default createRule("sort-keys", {
                                 moveTarget as never,
                             )!
                             yield fixer.insertTextAfterRange(
-                                insertTarget.range,
+                                insertTarget.range!,
                                 insertCode,
                             )
 

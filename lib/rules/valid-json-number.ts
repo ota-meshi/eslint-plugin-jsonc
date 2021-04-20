@@ -64,22 +64,24 @@ export default createRule("valid-json-number", {
                         loc: operator?.loc || node.loc,
                         messageId: "invalidPlus",
                         fix(fixer) {
-                            return operator ? fixer.remove(operator) : null
+                            return operator
+                                ? fixer.removeRange(operator.range!)
+                                : null
                         },
                     })
                 } else if (
                     operator &&
-                    operator.range[1] < node.argument.range[0]
+                    operator.range![1] < node.argument.range[0]
                 ) {
                     context.report({
                         loc: {
-                            start: operator.loc.end,
+                            start: operator.loc!.end,
                             end: node.argument.loc.start,
                         },
                         messageId: "invalidSpace",
                         fix(fixer) {
                             return fixer.removeRange([
-                                operator.range[1],
+                                operator.range![1],
                                 node.argument.range[0],
                             ])
                         },
