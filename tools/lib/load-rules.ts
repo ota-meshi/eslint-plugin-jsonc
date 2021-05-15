@@ -29,8 +29,10 @@ function readRules() {
         const ruleName = `vue-custom-block/${name.replace(/\.ts$/u, "")}`
         const ruleId = `jsonc/${ruleName}`
         // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- tool
-        const rule = require(path.join(vueCustomBlockRulesLibRoot, name))
-            .default
+        const rule = require(path.join(
+            vueCustomBlockRulesLibRoot,
+            name,
+        )).default
 
         rule.meta.docs.ruleName = ruleName
         rule.meta.docs.ruleId = ruleId
