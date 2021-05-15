@@ -71,9 +71,9 @@ function getJsoncRule(rule: string) {
  * Get additional jsonc rules config from fileName
  * @param filename
  */
-export function getAutoConfig(
-    filename: string,
-): { [name: string]: Linter.RuleEntry } {
+export function getAutoConfig(filename: string): {
+    [name: string]: Linter.RuleEntry
+} {
     const autoConfig: { [name: string]: Linter.RuleEntry } = {}
 
     const config = getConfig(filename)
