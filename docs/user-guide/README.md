@@ -27,13 +27,13 @@ module.exports = {
   extends: [
     // add more generic rulesets here, such as:
     // 'eslint:recommended',
-    'plugin:jsonc/recommended-with-jsonc'
+    "plugin:jsonc/recommended-with-jsonc",
   ],
   rules: {
     // override/add rules settings here, such as:
     // 'jsonc/rule-name': 'error'
-  }
-}
+  },
+};
 ```
 
 This plugin provides configs:
@@ -45,6 +45,29 @@ This plugin provides configs:
 - `plugin:jsonc/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
 
 See [the rule list](../rules/README.md) to get the `rules` that this plugin provides.
+
+#### Parser Configuration
+
+If you have specified a parser, you need to configure a parser for `.json`.
+
+For example, if you are using the `"@babel/eslint-parser"`, configure it as follows:
+
+```js
+module.exports = {
+  // ...
+  extends: ["plugin:jsonc/recommended-with-jsonc"],
+  // ...
+  parser: "@babel/eslint-parser",
+  // Add an `overrides` section to add a parser configuration for json.
+  overrides: [
+    {
+      files: ["*.json", "*.json5"],
+      parser: "jsonc-eslint-parser",
+    },
+  ],
+  // ...
+};
+```
 
 ### Running ESLint from the command line
 
@@ -69,13 +92,7 @@ Example **.vscode/settings.json**:
 
 ```json
 {
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "json",
-        "jsonc",
-        "json5"
-    ]
+  "eslint.validate": ["javascript", "javascriptreact", "json", "jsonc", "json5"]
 }
 ```
 

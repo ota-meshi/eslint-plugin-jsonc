@@ -30,7 +30,7 @@ You can check on the [Online DEMO](./playground/).
 
 ESLint is a great linter for JavaScript.  
 Since [JSON] is a subset of JavaScript, the same parser and rules can be applied to [JSON].  
-Also, [JSONC] and [JSON5], which are variants of [JSON], are more similar to JavaScript than [JSON]. Applying a JavaScript linter to [JSON] is more rational than creating a JSON-specific linter.  
+Also, [JSONC] and [JSON5], which are variants of [JSON], are more similar to JavaScript than [JSON]. Applying a JavaScript linter to [JSON] is more rational than creating a JSON-specific linter.
 
 ### How does `eslint-plugin-jsonc` work?
 
@@ -94,10 +94,10 @@ You can verify the message files by checking and installing [@intlify/eslint-plu
 
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 
-[JSON]: https://json.org/
-[JSONC]: https://github.com/microsoft/node-jsonc-parser
-[JSON5]: https://json5.org/
+[json]: https://json.org/
+[jsonc]: https://github.com/microsoft/node-jsonc-parser
+[json5]: https://json5.org/
 [jsonc-eslint-parser]: https://github.com/ota-meshi/jsonc-eslint-parser
 [eslint-plugin-json-schema-validator]: https://github.com/ota-meshi/eslint-plugin-json-schema-validator
 [@intlify/eslint-plugin-vue-i18n]: https://github.com/intlify/eslint-plugin-vue-i18n
-[Vue I18n]: https://github.com/intlify/vue-i18n-next
+[vue i18n]: https://github.com/intlify/vue-i18n-next
