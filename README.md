@@ -30,7 +30,7 @@ You can check on the [Online DEMO](https://ota-meshi.github.io/eslint-plugin-jso
 
 ESLint is a great linter for JavaScript.  
 Since [JSON] is a subset of JavaScript, the same parser and rules can be applied to [JSON].  
-Also, [JSONC] and [JSON5], which are variants of [JSON], are more similar to JavaScript than [JSON]. Applying a JavaScript linter to [JSON] is more rational than creating a JSON-specific linter.  
+Also, [JSONC] and [JSON5], which are variants of [JSON], are more similar to JavaScript than [JSON]. Applying a JavaScript linter to [JSON] is more rational than creating a JSON-specific linter.
 
 ### How does `eslint-plugin-jsonc` work?
 
@@ -98,13 +98,13 @@ module.exports = {
   extends: [
     // add more generic rulesets here, such as:
     // 'eslint:recommended',
-    'plugin:jsonc/recommended-with-jsonc'
+    "plugin:jsonc/recommended-with-jsonc",
   ],
   rules: {
     // override/add rules settings here, such as:
     // 'jsonc/rule-name': 'error'
-  }
-}
+  },
+};
 ```
 
 This plugin provides configs:
@@ -116,6 +116,29 @@ This plugin provides configs:
 - `plugin:jsonc/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
 
 See [the rule list](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/) to get the `rules` that this plugin provides.
+
+#### Parser Configuration
+
+If you have specified a parser, you need to configure a parser for `.json`.
+
+For example, if you are using the `"@babel/eslint-parser"`, configure it as follows:
+
+```js
+module.exports = {
+  // ...
+  extends: ["plugin:jsonc/recommended-with-jsonc"],
+  // ...
+  parser: "@babel/eslint-parser",
+  // Add an `overrides` section to add a parser configuration for json.
+  overrides: [
+    {
+      files: ["*.json", "*.json5"],
+      parser: "jsonc-eslint-parser",
+    },
+  ],
+  // ...
+};
+```
 
 ### Running ESLint from the command line
 
@@ -140,13 +163,7 @@ Example **.vscode/settings.json**:
 
 ```json
 {
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "json",
-        "jsonc",
-        "json5"
-    ]
+  "eslint.validate": ["javascript", "javascriptreact", "json", "jsonc", "json5"]
 }
 ```
 
@@ -239,8 +256,8 @@ Please use GitHub's Issues/PRs.
 
 ### Development Tools
 
-- `npm test` runs tests and measures coverage.  
-- `npm run update` runs in order to update readme and recommended configuration.  
+- `npm test` runs tests and measures coverage.
+- `npm run update` runs in order to update readme and recommended configuration.
 
 <!--DOCS_IGNORE_END-->
 
@@ -257,10 +274,10 @@ Please use GitHub's Issues/PRs.
 
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 
-[JSON]: https://json.org/
-[JSONC]: https://github.com/microsoft/node-jsonc-parser
-[JSON5]: https://json5.org/
+[json]: https://json.org/
+[jsonc]: https://github.com/microsoft/node-jsonc-parser
+[json5]: https://json5.org/
 [jsonc-eslint-parser]: https://github.com/ota-meshi/jsonc-eslint-parser
 [eslint-plugin-json-schema-validator]: https://github.com/ota-meshi/eslint-plugin-json-schema-validator
 [@intlify/eslint-plugin-vue-i18n]: https://github.com/intlify/eslint-plugin-vue-i18n
-[Vue I18n]: https://github.com/intlify/vue-i18n-next
+[vue i18n]: https://github.com/intlify/vue-i18n-next
