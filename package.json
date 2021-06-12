@@ -9,7 +9,8 @@
     "types": "index.d.ts",
     "files": [
         "dist",
-        "index.d.ts"
+        "index.d.ts",
+        "files"
     ],
     "scripts": {
         "prebuild": "npm run -s clean",

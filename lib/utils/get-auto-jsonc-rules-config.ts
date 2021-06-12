@@ -1,22 +1,57 @@
-import type { Linter, CLIEngine } from "eslint"
+import type { Linter } from "eslint"
 import { existsSync, statSync } from "fs"
-import { dirname } from "path"
+import { dirname, resolve } from "path"
 import type { RuleModule } from "../types"
 
-let engine: CLIEngine, ruleNames: Set<string>
+let configResolver: (filePath: string) => Linter.Config, ruleNames: Set<string>
 
 /**
- * Get CLIEngine instance
+ * Get config resolver
  */
-function getCLIEngine() {
-    if (engine) {
-        return engine
+function getConfigResolver(): (filePath: string) => Linter.Config {
+    if (configResolver) {
+        return configResolver
     }
+
     // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
-    engine = new (require("eslint").CLIEngine)({})
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
-    engine.addPlugin("eslint-plugin-jsonc", require(".."))
-    return engine
+    const plugin = require("..")
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
+        const eslintrc = require("@eslint/eslintrc")
+        const configArrayFactory =
+            new eslintrc.Legacy.CascadingConfigArrayFactory({
+                additionalPluginPool: new Map([
+                    ["eslint-plugin-jsonc", plugin],
+                ]),
+                eslintRecommendedPath: require.resolve(
+                    "../../files/empty.json",
+                ),
+                eslintAllPath: require.resolve("../../files/empty.json"),
+            })
+
+        return (configResolver = (filePath: string) => {
+            const absolutePath = resolve(process.cwd(), filePath)
+            return configArrayFactory
+                .getConfigArrayForFile(absolutePath)
+                .extractConfig(absolutePath)
+                .toCompatibleObjectAsConfigFileContent()
+        })
+    } catch {
+        // ignore
+    }
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
+        const eslint = require("eslint")
+        const engine = new eslint.CLIEngine({})
+        engine.addPlugin("eslint-plugin-jsonc", plugin)
+        return (configResolver = (filePath) => {
+            return engine.getConfigForFile(filePath)
+        })
+    } catch {
+        // ignore
+    }
+
+    return () => ({})
 }
 
 /**
@@ -47,7 +82,7 @@ function getConfig(filename: string): Linter.Config {
         // eslint-disable-next-line no-param-reassign -- ignore
         filename = dir
     }
-    return getCLIEngine().getConfigForFile(filename)
+    return getConfigResolver()(filename)
 }
 
 /**
