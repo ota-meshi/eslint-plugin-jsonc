@@ -24,9 +24,9 @@ function getConfigResolver(): (filePath: string) => Linter.Config {
                     ["eslint-plugin-jsonc", plugin],
                 ]),
                 eslintRecommendedPath: require.resolve(
-                    "../../files/empty.json",
+                    "../../conf/eslint-recommended.js",
                 ),
-                eslintAllPath: require.resolve("../../files/empty.json"),
+                eslintAllPath: require.resolve("../../conf/eslint-all.js"),
             })
 
         return (configResolver = (filePath: string) => {

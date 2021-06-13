@@ -94,5 +94,25 @@ tester.run("auto", rule as any, {
                 "[jsonc/object-curly-spacing] There should be no space before '}'.",
             ],
         },
+        {
+            filename: path.join(ROOT_DIR, "test02", "sfc.vue"),
+            code: `
+<i18n>
+{
+"foo": "bar"
+    }
+</i18n>`,
+            output: `
+<i18n>
+{
+    "foo": "bar"
+}
+</i18n>`,
+            parser: require.resolve("vue-eslint-parser"),
+            errors: [
+                "[jsonc/indent] Expected indentation of 4 spaces but found 0.",
+                "[jsonc/indent] Expected indentation of 0 spaces but found 4.",
+            ],
+        },
     ],
 })

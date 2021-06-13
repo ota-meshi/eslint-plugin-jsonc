@@ -10,7 +10,7 @@
     "files": [
         "dist",
         "index.d.ts",
-        "files"
+        "conf"
     ],
     "scripts": {
         "prebuild": "npm run -s clean",
