@@ -5,8 +5,7 @@ export default createRule("no-octal", {
     meta: {
         docs: {
             description: "disallow legacy octal literals",
-            // TODO major version recommended: ["json","jsonc","json5"],
-            recommended: null,
+            recommended: ["json", "jsonc", "json5"],
             extensionRule: true,
             layout: false,
         },

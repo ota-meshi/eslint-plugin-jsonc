@@ -7,8 +7,7 @@ export default createRule("no-octal-numeric-literals", {
     meta: {
         docs: {
             description: "disallow octal numeric literals",
-            // TODO major version recommended: ["json","jsonc","json5"],
-            recommended: null,
+            recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
             layout: false,
         },

@@ -6,8 +6,7 @@ export default createRule("no-nan", {
     meta: {
         docs: {
             description: "disallow NaN",
-            // TODO major version recommended: ["json","jsonc"],
-            recommended: null,
+            recommended: ["json", "jsonc"],
             extensionRule: false,
             layout: false,
         },

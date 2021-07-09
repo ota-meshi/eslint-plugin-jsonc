@@ -5,8 +5,7 @@ export default createRule("no-plus-sign", {
     meta: {
         docs: {
             description: "disallow plus sign",
-            // TODO major version recommended: ["json","jsonc"],
-            recommended: null,
+            recommended: ["json", "jsonc"],
             extensionRule: false,
             layout: false,
         },

@@ -7,8 +7,7 @@ export default createRule("no-hexadecimal-numeric-literals", {
     meta: {
         docs: {
             description: "disallow hexadecimal numeric literals",
-            // TODO major version recommended: ["json","jsonc"],
-            recommended: null,
+            recommended: ["json", "jsonc"],
             extensionRule: false,
             layout: false,
         },

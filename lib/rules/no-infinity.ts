@@ -6,8 +6,7 @@ export default createRule("no-infinity", {
     meta: {
         docs: {
             description: "disallow Infinity",
-            // TODO major version recommended: ["json","jsonc"],
-            recommended: null,
+            recommended: ["json", "jsonc"],
             extensionRule: false,
             layout: false,
         },
