@@ -1,6 +1,6 @@
 import path from "path"
 import assert from "assert"
-import { CLIEngine } from "eslint"
+import { ESLint } from "../../tools/lib/eslint-compat"
 import plugin from "../../lib/index"
 
 // -----------------------------------------------------------------------------
@@ -10,14 +10,19 @@ import plugin from "../../lib/index"
 const TEST_CWD = path.join(__dirname, "../fixtures/integrations/eslint-plugin")
 
 describe("Integration with eslint-plugin-jsonc", () => {
-    it("should lint without errors", () => {
-        const engine = new CLIEngine({
+    it("should lint without errors", async () => {
+        const engine = new ESLint({
             cwd: TEST_CWD,
             extensions: [".js", ".json"],
+            plugins: {
+                "eslint-plugin-jsonc": plugin,
+            },
         })
-        engine.addPlugin("eslint-plugin-jsonc", plugin)
-        const r = engine.executeOnFiles(["test01/src"])
-        assert.strictEqual(r.results.length, 2)
-        assert.strictEqual(r.errorCount, 0)
+        const results = await engine.lintFiles(["test01/src"])
+        assert.strictEqual(results.length, 2)
+        assert.strictEqual(
+            results.reduce((s, m) => s + m.errorCount, 0),
+            0,
+        )
     })
 })

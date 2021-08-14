@@ -33,7 +33,7 @@ export default createRule("${ruleId}", {
             description: "...",
             recommended: true,
         },
-        fixable: coreRule.meta!.fixable,
+        fixable: coreRule.meta?.fixable,hasSuggestions: (coreRule as any).hasSuggestions,
         schema: coreRule.meta!.schema!,
         messages: coreRule.meta!.messages!,
         type: coreRule.meta!.type!,
