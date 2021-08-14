@@ -1,7 +1,7 @@
 import path from "path"
 import fs from "fs"
 import assert from "assert"
-import { CLIEngine } from "eslint"
+import { ESLint } from "../../tools/lib/eslint-compat"
 import plugin from "../../lib/index"
 
 // -----------------------------------------------------------------------------
@@ -12,7 +12,7 @@ const TEST_CWD = path.join(__dirname, "../fixtures/integrations/eslint-plugin")
 const FIXTURE_ROOT = path.join(TEST_CWD, "./test-auto-rule01/src")
 
 describe("auto rule", () => {
-    it("should auto rule enable", () => {
+    it("should auto rule enable", async () => {
         const fixtures: { [name: string]: string } = {}
         for (const filename of fs.readdirSync(FIXTURE_ROOT)) {
             const code = fs.readFileSync(
@@ -31,25 +31,35 @@ describe("auto rule", () => {
             )
         }
 
-        const engine = new CLIEngine({
+        const engine = new ESLint({
             cwd: TEST_CWD,
             extensions: [".js", ".json"],
+            plugins: {
+                "eslint-plugin-jsonc": plugin,
+            },
         })
-        const fixEngine = new CLIEngine({
+        const fixEngine = new ESLint({
             cwd: TEST_CWD,
             extensions: [".js", ".json"],
+            plugins: {
+                "eslint-plugin-jsonc": plugin,
+            },
             fix: true,
         })
-        engine.addPlugin("eslint-plugin-jsonc", plugin)
-        fixEngine.addPlugin("eslint-plugin-jsonc", plugin)
-        const resultFixBefore = engine.executeOnFiles(["test-auto-rule01/src"])
-        assert.strictEqual(resultFixBefore.errorCount, 2)
+        const resultFixBefore = await engine.lintFiles(["test-auto-rule01/src"])
+        assert.strictEqual(
+            resultFixBefore.reduce((s, m) => s + m.errorCount, 0),
+            2,
+        )
 
-        const resultFixAfter = fixEngine.executeOnFiles([
+        const resultFixAfter = await fixEngine.lintFiles([
             "test-auto-rule01/src",
         ])
-        assert.strictEqual(resultFixAfter.errorCount, 0)
-        CLIEngine.outputFixes(resultFixAfter)
+        assert.strictEqual(
+            resultFixAfter.reduce((s, m) => s + m.errorCount, 0),
+            0,
+        )
+        await ESLint.outputFixes(resultFixAfter)
 
         for (const filename of Object.keys(fixtures)) {
             const code = fs.readFileSync(

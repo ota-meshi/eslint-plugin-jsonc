@@ -39,8 +39,3 @@ if (isWin) {
 
 // Update file.
 fs.writeFileSync(filePath, content)
-
-// Format files.
-// const linter = new eslint.CLIEngine({ fix: true })
-// const report = linter.executeOnFiles([filePath])
-// eslint.CLIEngine.outputFixes(report)

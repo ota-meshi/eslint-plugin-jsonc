@@ -10,6 +10,7 @@ export default createRule("quotes", {
             layout: true,
         },
         fixable: coreRule.meta?.fixable,
+        hasSuggestions: (coreRule as any).hasSuggestions,
         schema: coreRule.meta!.schema!,
         messages: coreRule.meta!.messages!,
         type: coreRule.meta!.type!,
