@@ -30,7 +30,9 @@ function capitalize(str: string) {
  * @param {string} str
  */
 function hasSymbols(str: string) {
-    return /[!-#%-,./:-@[-^`{-}]/u.test(str) // without " ", "$", "-" and "_"
+    return /[\u0021-\u0023\u0025-\u002c./\u003a-\u0040\u005b-\u005e`\u007b-\u007d]/u.test(
+        str,
+    ) // without " ", "$", "-" and "_"
 }
 
 /**
