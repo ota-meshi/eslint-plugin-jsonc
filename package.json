@@ -12,6 +12,9 @@
         "index.d.ts",
         "conf"
     ],
+    "engines": {
+        "node": ">=8.10.0"
+    },
     "scripts": {
         "prebuild": "npm run -s clean",
         "build": "npm run build:ts && npm run build:dts",
@@ -56,8 +59,8 @@
     },
     "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
     "dependencies": {
-        "eslint-utils": "^3.0.0",
-        "jsonc-eslint-parser": "^1.1.0",
+        "eslint-utils": "^2.1.0 || ^3.0.0",
+        "jsonc-eslint-parser": "^1.2.0",
         "natural-compare": "^1.4.0"
     },
     "peerDependencies": {
@@ -85,6 +88,7 @@
         "eslint-plugin-jsonc": "^1.0.0",
         "eslint-plugin-markdown": "^2.0.0-0",
         "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-node-dependencies": "^0.5.0",
         "eslint-plugin-prettier": "^3.1.4",
         "eslint-plugin-regexp": "^1.0.0",
         "eslint-plugin-vue": "^7.0.0-0",
