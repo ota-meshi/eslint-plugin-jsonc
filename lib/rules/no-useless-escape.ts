@@ -10,7 +10,7 @@ export default createRule("no-useless-escape", {
             layout: false,
         },
         fixable: coreRule.meta?.fixable,
-        hasSuggestions: (coreRule as any).meta.hasSuggestions,
+        hasSuggestions: (coreRule.meta as any).hasSuggestions,
         schema: coreRule.meta!.schema!,
         messages: coreRule.meta!.messages!,
         type: coreRule.meta!.type!,
