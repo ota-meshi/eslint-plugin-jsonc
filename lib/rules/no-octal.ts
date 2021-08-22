@@ -11,7 +11,7 @@ export default createRule("no-octal", {
             layout: false,
         },
         fixable: coreRule.meta?.fixable,
-        hasSuggestions: (coreRule as any).hasSuggestions,
+        hasSuggestions: (coreRule.meta as any).hasSuggestions,
         schema: coreRule.meta!.schema!,
         messages: coreRule.meta!.messages!,
         type: coreRule.meta!.type!,

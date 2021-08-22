@@ -10,7 +10,7 @@ export default createRule("object-curly-newline", {
             layout: true,
         },
         fixable: coreRule.meta?.fixable,
-        hasSuggestions: (coreRule as any).hasSuggestions,
+        hasSuggestions: (coreRule.meta as any).hasSuggestions,
         schema: coreRule.meta!.schema!,
         messages: coreRule.meta!.messages!,
         type: coreRule.meta!.type!,
