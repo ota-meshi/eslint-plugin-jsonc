@@ -10,7 +10,7 @@ export default createRule("no-sparse-arrays", {
             layout: false,
         },
         fixable: coreRule.meta?.fixable,
-        hasSuggestions: (coreRule as any).hasSuggestions,
+        hasSuggestions: (coreRule as any).meta.hasSuggestions,
         schema: coreRule.meta!.schema!,
         messages: coreRule.meta!.messages!,
         type: coreRule.meta!.type!,
