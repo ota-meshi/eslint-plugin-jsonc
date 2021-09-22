@@ -31,7 +31,7 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
             parser: require.resolve("vue-eslint-parser"),
             errors: [
                 {
-                    message: 'Unexpected token "value"',
+                    message: `Unexpected token '"value"'.`,
                     line: 1,
                     column: 14,
                 },
@@ -43,7 +43,7 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
             parser: require.resolve("vue-eslint-parser"),
             errors: [
                 {
-                    message: "Unexpected end of expression.",
+                    message: "Expected to be an expression, but got empty.",
                     line: 1,
                     column: 7,
                 },
