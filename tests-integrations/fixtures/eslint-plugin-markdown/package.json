@@ -10,7 +10,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7.17.0",
+    "eslint": "^8.0.0",
     "eslint-plugin-markdown": "^2.0.0-0",
     "eslint-plugin-jsonc": "file:../../../"
   }
