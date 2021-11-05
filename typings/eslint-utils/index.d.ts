@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair -- ignore
 /* eslint-disable one-var, @typescript-eslint/naming-convention -- ignore */
 import type { Comment } from "estree"
-import type { AST } from "eslint"
+import type { AST, SourceCode } from "eslint"
 
 declare module "eslint-utils" {
     export const findVariable: unknown
@@ -35,7 +35,12 @@ declare module "eslint-utils" {
     export const isOpeningBraceToken: unknown
     export const isOpeningBracketToken: unknown
     export const isOpeningParenToken: unknown
-    export const isParenthesized: unknown
+    export function isParenthesized(node: any, sourceCode: SourceCode): boolean
+    export function isParenthesized(
+        times: number,
+        node: any,
+        sourceCode: SourceCode,
+    ): boolean
     export const isSemicolonToken: unknown
     export const ReferenceTracker: {
         READ: never

@@ -25,6 +25,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/no-number-props](./no-number-props.md) | disallow number property keys | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-numeric-separators](./no-numeric-separators.md) | disallow numeric separators | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-octal-numeric-literals](./no-octal-numeric-literals.md) | disallow octal numeric literals | :wrench: |  |  |  |
+| [jsonc/no-parenthesized](./no-parenthesized.md) | disallow parentheses around the expression | :wrench: |  |  |  |
 | [jsonc/no-plus-sign](./no-plus-sign.md) | disallow plus sign | :wrench: |  |  |  |
 | [jsonc/no-regexp-literals](./no-regexp-literals.md) | disallow RegExp literals |  | :star: | :star: | :star: |
 | [jsonc/no-template-literals](./no-template-literals.md) | disallow template literals | :wrench: | :star: | :star: | :star: |

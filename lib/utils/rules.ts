@@ -23,6 +23,7 @@ import noNumericSeparators from "../rules/no-numeric-separators"
 import noOctalEscape from "../rules/no-octal-escape"
 import noOctalNumericLiterals from "../rules/no-octal-numeric-literals"
 import noOctal from "../rules/no-octal"
+import noParenthesized from "../rules/no-parenthesized"
 import noPlusSign from "../rules/no-plus-sign"
 import noRegexpLiterals from "../rules/no-regexp-literals"
 import noSparseArrays from "../rules/no-sparse-arrays"
@@ -65,6 +66,7 @@ export const rules = [
     noOctalEscape,
     noOctalNumericLiterals,
     noOctal,
+    noParenthesized,
     noPlusSign,
     noRegexpLiterals,
     noSparseArrays,
