@@ -195,6 +195,7 @@ The rules with the following star :star: are included in the config.
 | [jsonc/no-number-props](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-number-props.html) | disallow number property keys | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-numeric-separators](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-numeric-separators.html) | disallow numeric separators | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-octal-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-numeric-literals.html) | disallow octal numeric literals | :wrench: |  |  |  |
+| [jsonc/no-parenthesized](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-parenthesized.html) | disallow parentheses around the expression | :wrench: |  |  |  |
 | [jsonc/no-plus-sign](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-plus-sign.html) | disallow plus sign | :wrench: |  |  |  |
 | [jsonc/no-regexp-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-regexp-literals.html) | disallow RegExp literals |  | :star: | :star: | :star: |
 | [jsonc/no-template-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-template-literals.html) | disallow template literals | :wrench: | :star: | :star: | :star: |
