@@ -9,6 +9,7 @@ import indent from "../rules/indent"
 import keyNameCasing from "../rules/key-name-casing"
 import keySpacing from "../rules/key-spacing"
 import noBigintLiterals from "../rules/no-bigint-literals"
+import noBinaryExpression from "../rules/no-binary-expression"
 import noBinaryNumericLiterals from "../rules/no-binary-numeric-literals"
 import noComments from "../rules/no-comments"
 import noDupeKeys from "../rules/no-dupe-keys"
@@ -52,6 +53,7 @@ export const rules = [
     keyNameCasing,
     keySpacing,
     noBigintLiterals,
+    noBinaryExpression,
     noBinaryNumericLiterals,
     noComments,
     noDupeKeys,

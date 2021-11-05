@@ -16,6 +16,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/auto](./auto.md) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
 | [jsonc/key-name-casing](./key-name-casing.md) | enforce naming convention to property key names |  |  |  |  |
 | [jsonc/no-bigint-literals](./no-bigint-literals.md) | disallow BigInt literals |  | :star: | :star: | :star: |
+| [jsonc/no-binary-expression](./no-binary-expression.md) | disallow binary expression | :wrench: |  |  |  |
 | [jsonc/no-binary-numeric-literals](./no-binary-numeric-literals.md) | disallow binary numeric literals | :wrench: |  |  |  |
 | [jsonc/no-comments](./no-comments.md) | disallow comments |  | :star: |  |  |
 | [jsonc/no-escape-sequence-in-identifier](./no-escape-sequence-in-identifier.md) | disallow escape sequences in identifiers. | :wrench: |  |  |  |
