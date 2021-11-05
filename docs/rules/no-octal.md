@@ -9,6 +9,8 @@ since: "v1.1.0"
 
 > disallow legacy octal literals
 
+- :gear: This rule is included in all of `"plugin:jsonc/recommended-with-json"`, `"plugin:jsonc/recommended-with-json5"` and `"plugin:jsonc/recommended-with-jsonc"`.
+
 ## :book: Rule Details
 
 The rule disallows legacy octal literals.

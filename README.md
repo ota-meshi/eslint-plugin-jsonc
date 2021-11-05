@@ -187,22 +187,22 @@ The rules with the following star :star: are included in the config.
 | [jsonc/auto](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
 | [jsonc/key-name-casing](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-name-casing.html) | enforce naming convention to property key names |  |  |  |  |
 | [jsonc/no-bigint-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-bigint-literals.html) | disallow BigInt literals |  | :star: | :star: | :star: |
-| [jsonc/no-binary-expression](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-expression.html) | disallow binary expression | :wrench: |  |  |  |
-| [jsonc/no-binary-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-numeric-literals.html) | disallow binary numeric literals | :wrench: |  |  |  |
+| [jsonc/no-binary-expression](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-expression.html) | disallow binary expression | :wrench: | :star: | :star: | :star: |
+| [jsonc/no-binary-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-numeric-literals.html) | disallow binary numeric literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-comments](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-comments.html) | disallow comments |  | :star: |  |  |
-| [jsonc/no-escape-sequence-in-identifier](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-escape-sequence-in-identifier.html) | disallow escape sequences in identifiers. | :wrench: |  |  |  |
-| [jsonc/no-hexadecimal-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-hexadecimal-numeric-literals.html) | disallow hexadecimal numeric literals | :wrench: |  |  |  |
-| [jsonc/no-infinity](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-infinity.html) | disallow Infinity |  |  |  |  |
-| [jsonc/no-nan](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-nan.html) | disallow NaN |  |  |  |  |
+| [jsonc/no-escape-sequence-in-identifier](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-escape-sequence-in-identifier.html) | disallow escape sequences in identifiers. | :wrench: | :star: | :star: | :star: |
+| [jsonc/no-hexadecimal-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-hexadecimal-numeric-literals.html) | disallow hexadecimal numeric literals | :wrench: | :star: | :star: |  |
+| [jsonc/no-infinity](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-infinity.html) | disallow Infinity |  | :star: | :star: |  |
+| [jsonc/no-nan](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-nan.html) | disallow NaN |  | :star: | :star: |  |
 | [jsonc/no-number-props](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-number-props.html) | disallow number property keys | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-numeric-separators](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-numeric-separators.html) | disallow numeric separators | :wrench: | :star: | :star: | :star: |
-| [jsonc/no-octal-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-numeric-literals.html) | disallow octal numeric literals | :wrench: |  |  |  |
-| [jsonc/no-parenthesized](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-parenthesized.html) | disallow parentheses around the expression | :wrench: |  |  |  |
-| [jsonc/no-plus-sign](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-plus-sign.html) | disallow plus sign | :wrench: |  |  |  |
+| [jsonc/no-octal-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-numeric-literals.html) | disallow octal numeric literals | :wrench: | :star: | :star: | :star: |
+| [jsonc/no-parenthesized](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-parenthesized.html) | disallow parentheses around the expression | :wrench: | :star: | :star: | :star: |
+| [jsonc/no-plus-sign](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-plus-sign.html) | disallow plus sign | :wrench: | :star: | :star: |  |
 | [jsonc/no-regexp-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-regexp-literals.html) | disallow RegExp literals |  | :star: | :star: | :star: |
 | [jsonc/no-template-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-template-literals.html) | disallow template literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-undefined-value](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-undefined-value.html) | disallow `undefined` |  | :star: | :star: | :star: |
-| [jsonc/no-unicode-codepoint-escapes](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-unicode-codepoint-escapes.html) | disallow Unicode code point escape sequences. | :wrench: |  |  |  |
+| [jsonc/no-unicode-codepoint-escapes](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-unicode-codepoint-escapes.html) | disallow Unicode code point escape sequences. | :wrench: | :star: | :star: | :star: |
 | [jsonc/valid-json-number](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/valid-json-number.html) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
 | [jsonc/vue-custom-block/no-parsing-error](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/vue-custom-block/no-parsing-error.html) | disallow parsing errors in Vue custom blocks |  | :star: | :star: | :star: |
 
@@ -221,7 +221,7 @@ The rules with the following star :star: are included in the config.
 | [jsonc/no-floating-decimal](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-floating-decimal.html) | disallow leading or trailing decimal points in numeric literals | :wrench: | :star: | :star: |  |
 | [jsonc/no-multi-str](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-multi-str.html) | disallow multiline strings |  | :star: | :star: |  |
 | [jsonc/no-octal-escape](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-escape.html) | disallow octal escape sequences in string literals |  |  |  |  |
-| [jsonc/no-octal](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal.html) | disallow legacy octal literals |  |  |  |  |
+| [jsonc/no-octal](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal.html) | disallow legacy octal literals |  | :star: | :star: | :star: |
 | [jsonc/no-sparse-arrays](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-sparse-arrays.html) | disallow sparse arrays |  | :star: | :star: | :star: |
 | [jsonc/no-useless-escape](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-useless-escape.html) | disallow unnecessary escape usage |  | :star: | :star: | :star: |
 | [jsonc/object-curly-newline](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/object-curly-newline.html) | enforce consistent line breaks inside braces | :wrench: |  |  |  |

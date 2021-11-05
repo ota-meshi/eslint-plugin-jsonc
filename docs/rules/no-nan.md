@@ -9,6 +9,8 @@ since: "v1.1.0"
 
 > disallow NaN
 
+- :gear: This rule is included in `"plugin:jsonc/recommended-with-json"` and `"plugin:jsonc/recommended-with-jsonc"`.
+
 ## :book: Rule Details
 
 This rule reports the use of NaN.

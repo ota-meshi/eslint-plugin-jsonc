@@ -6,9 +6,7 @@ export default createRule("no-binary-expression", {
     meta: {
         docs: {
             description: "disallow binary expression",
-            // TODO major version recommended: ["json","jsonc","json5"],
-            recommended: null,
-            // recommended: ["json", "jsonc", "json5"],
+            recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
             layout: false,
         },
