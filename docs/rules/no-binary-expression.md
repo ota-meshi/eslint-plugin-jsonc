@@ -1,32 +1,32 @@
 ---
 pageClass: "rule-details"
 sidebarDepth: 0
-title: "jsonc/no-parenthesized"
-description: "disallow parentheses around the expression"
+title: "jsonc/no-binary-expression"
+description: "disallow binary expression"
 ---
-# jsonc/no-parenthesized
+# jsonc/no-binary-expression
 
-> disallow parentheses around the expression
+> disallow binary expression
 
 - :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
 
-This rule always disallow parentheses around the expression.
+This rule disallow binary expressions.
 
 <eslint-code-block fix>
 
 <!-- eslint-skip -->
 
 ```json5
-/* eslint jsonc/no-parenthesized: 'error' */
+/* eslint jsonc/no-binary-expression: 'error' */
 {
     /* ✓ GOOD */
-    "GOOD": "foo",
+    "GOOD": 86400,
 
     /* ✗ BAD */
-    "BAD": ("bar")
+    "BAD": 60 * 60 * 24
 }
 ```
 
@@ -38,5 +38,5 @@ Nothing.
 
 ## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-parenthesized.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-parenthesized.ts)
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/no-binary-expression.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/no-binary-expression.ts)

@@ -186,6 +186,7 @@ The rules with the following star :star: are included in the config.
 | [jsonc/auto](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/auto.html) | apply jsonc rules similar to your configured ESLint core rules | :wrench: |  |  |  |
 | [jsonc/key-name-casing](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-name-casing.html) | enforce naming convention to property key names |  |  |  |  |
 | [jsonc/no-bigint-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-bigint-literals.html) | disallow BigInt literals |  | :star: | :star: | :star: |
+| [jsonc/no-binary-expression](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-expression.html) | disallow binary expression | :wrench: |  |  |  |
 | [jsonc/no-binary-numeric-literals](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-binary-numeric-literals.html) | disallow binary numeric literals | :wrench: |  |  |  |
 | [jsonc/no-comments](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-comments.html) | disallow comments |  | :star: |  |  |
 | [jsonc/no-escape-sequence-in-identifier](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-escape-sequence-in-identifier.html) | disallow escape sequences in identifiers. | :wrench: |  |  |  |
