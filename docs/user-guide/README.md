@@ -61,7 +61,7 @@ module.exports = {
   // Add an `overrides` section to add a parser configuration for json.
   overrides: [
     {
-      files: ["*.json", "*.json5"],
+      files: ["*.json", "*.json5", "*.jsonc"],
       parser: "jsonc-eslint-parser",
     },
   ],
