@@ -13,7 +13,7 @@
         "conf"
     ],
     "engines": {
-        "node": ">=8.10.0"
+        "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
     },
     "scripts": {
         "prebuild": "npm run -s clean",
@@ -59,12 +59,12 @@
     },
     "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
     "dependencies": {
-        "eslint-utils": "^2.1.0 || ^3.0.0",
+        "eslint-utils": "^3.0.0",
         "jsonc-eslint-parser": "^1.4.1",
         "natural-compare": "^1.4.0"
     },
     "peerDependencies": {
-        "eslint": ">=5.0.0"
+        "eslint": ">=6.0.0"
     },
     "devDependencies": {
         "@ota-meshi/eslint-plugin": "^0.10.0",
