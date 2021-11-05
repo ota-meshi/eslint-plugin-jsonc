@@ -6,6 +6,8 @@ import recommendedWithJson from "./configs/recommended-with-json"
 import recommendedWithJsonc from "./configs/recommended-with-jsonc"
 import recommendedWithJson5 from "./configs/recommended-with-json5"
 import prettier from "./configs/prettier"
+import all from "./configs/all"
+
 // backward compatibility
 import {
     parseForESLint,
@@ -22,6 +24,7 @@ const configs = {
     "recommended-with-jsonc": recommendedWithJsonc,
     "recommended-with-json5": recommendedWithJson5,
     prettier,
+    all,
 }
 
 const rules = ruleList.reduce((obj, r) => {
