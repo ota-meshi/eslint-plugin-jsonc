@@ -114,6 +114,7 @@ This plugin provides configs:
 - `plugin:jsonc/recommended-with-jsonc` ... Recommended configuration for JSONC.
 - `plugin:jsonc/recommended-with-json5` ... Recommended configuration for JSON5.
 - `plugin:jsonc/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
+- `plugin:jsonc/all` ... Enables all rules. It's meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
 
 See [the rule list](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/) to get the `rules` that this plugin provides.
 
