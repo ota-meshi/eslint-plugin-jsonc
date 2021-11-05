@@ -8,9 +8,7 @@ export default createRule("no-parenthesized", {
     meta: {
         docs: {
             description: "disallow parentheses around the expression",
-            // TODO major version recommended: ["json","jsonc","json5"],
-            recommended: null,
-            // recommended: ["json", "jsonc", "json5"],
+            recommended: ["json", "jsonc", "json5"],
             extensionRule: false,
             layout: false,
         },
