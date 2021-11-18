@@ -1,6 +1,8 @@
 // @ts-check
 import * as eslint from "eslint"
 
+type ESLintCLIEngine = any
+
 // eslint-disable-next-line @typescript-eslint/no-namespace -- ignore
 export namespace ESLint {
     export type LintResult = eslint.ESLint.LintResult
@@ -12,9 +14,9 @@ export const ESLint = eslint.ESLint || getESLintClassForV6()
 /** Build the ESLint class that ESLint v6 compatible. */
 function getESLintClassForV6(): typeof eslint.ESLint {
     // eslint-disable-next-line @typescript-eslint/naming-convention -- ignore
-    const CLIEngine = eslint.CLIEngine
+    const CLIEngine = (eslint as any).CLIEngine
     class ESLintForV6 {
-        private readonly engine: eslint.CLIEngine
+        private readonly engine: ESLintCLIEngine
 
         public static get version() {
             return CLIEngine.version
@@ -37,7 +39,7 @@ function getESLintClassForV6(): typeof eslint.ESLint {
                 plugins: pluginsMap,
                 ...otherOptions
             } = options || {}
-            const newOptions: eslint.CLIEngine.Options = {
+            const newOptions: ESLintCLIEngine["Options"] = {
                 fix: Boolean(fix),
                 reportUnusedDisableDirectives: reportUnusedDisableDirectives
                     ? reportUnusedDisableDirectives !== "off"
@@ -54,7 +56,7 @@ function getESLintClassForV6(): typeof eslint.ESLint {
                               o[ruleId] = opt
                           }
                           return o
-                      }, {} as NonNullable<eslint.CLIEngine.Options["rules"]>)
+                      }, {} as NonNullable<ESLintCLIEngine["Options"]["rules"]>)
                     : undefined,
                 ...overrideConfig,
             }

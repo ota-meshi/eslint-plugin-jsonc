@@ -60,7 +60,7 @@
     "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
     "dependencies": {
         "eslint-utils": "^3.0.0",
-        "jsonc-eslint-parser": "^2.0.1",
+        "jsonc-eslint-parser": "^2.0.4",
         "natural-compare": "^1.4.0"
     },
     "peerDependencies": {
@@ -68,7 +68,7 @@
     },
     "devDependencies": {
         "@ota-meshi/eslint-plugin": "^0.10.0",
-        "@types/eslint": "^7.28.0",
+        "@types/eslint": "^8.0.0",
         "@types/eslint-scope": "^3.7.0",
         "@types/eslint-visitor-keys": "^1.0.0",
         "@types/mocha": "^9.0.0",
