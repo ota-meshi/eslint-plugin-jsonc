@@ -1,7 +1,7 @@
 <template>
     <eslint-plugin-editor
         ref="editor"
-        :code="code"
+        v-model="code"
         :style="{ height }"
         :rules="rules"
         dark
@@ -41,16 +41,16 @@ export default {
             default: undefined,
         },
     },
-
-    computed: {
-        code() {
-            return `${this.computeCodeFromSlot(this.$slots.default).trim()}\n`
-        },
-
-        height() {
-            const lines = this.code.split("\n").length
-            return `${Math.max(120, 20 * (1 + lines))}px`
-        },
+    data() {
+        return {
+            code: "",
+            height: "",
+        }
+    },
+    mounted() {
+        this.code = `${this.computeCodeFromSlot(this.$slots.default).trim()}\n`
+        const lines = this.code.split("\n").length
+        this.height = `${Math.max(120, 20 * (1 + lines))}px`
     },
 
     methods: {

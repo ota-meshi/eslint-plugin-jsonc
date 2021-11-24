@@ -17,6 +17,7 @@
 
 <script>
 import EslintEditor from "vue-eslint-editor"
+import { Linter } from "eslint/lib/linter"
 import plugin from "../../../.."
 
 export default {
@@ -58,7 +59,6 @@ export default {
 
     data() {
         return {
-            eslint4b: null,
             jsoncESLintParser: null,
             vueESLintParser: null,
             format: {
@@ -105,15 +105,9 @@ export default {
             }
         },
         linter() {
-            if (
-                !this.eslint4b ||
-                !this.jsoncESLintParser ||
-                !this.vueESLintParser
-            ) {
+            if (!this.jsoncESLintParser || !this.vueESLintParser) {
                 return null
             }
-            const Linter = this.eslint4b
-
             const linter = new Linter()
             linter.defineParser("jsonc-eslint-parser", this.jsoncESLintParser)
             linter.defineParser("vue-eslint-parser", this.vueESLintParser)
@@ -128,14 +122,11 @@ export default {
     },
 
     async mounted() {
-        // Load linter asynchronously.
-        const [{ default: eslint4b }, jsoncESLintParser, vueESLintParser] =
-            await Promise.all([
-                import("eslint4b"),
-                import("espree").then(() => import("jsonc-eslint-parser")),
-                import("espree").then(() => import("vue-eslint-parser")),
-            ])
-        this.eslint4b = eslint4b
+        // Load parser asynchronously.
+        const [jsoncESLintParser, vueESLintParser] = await Promise.all([
+            import("espree").then(() => import("jsonc-eslint-parser")),
+            import("espree").then(() => import("vue-eslint-parser")),
+        ])
         this.jsoncESLintParser = jsoncESLintParser
         this.vueESLintParser = vueESLintParser
 

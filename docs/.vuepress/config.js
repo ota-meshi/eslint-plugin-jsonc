@@ -20,7 +20,15 @@ module.exports = {
             resolve: {
                 alias: {
                     module: require.resolve("./shim/module"),
-                    eslint: path.resolve(__dirname, "./shim/eslint"),
+                    eslint$: path.resolve(__dirname, "./shim/eslint"),
+                    esquery: path.resolve(
+                        __dirname,
+                        "../../node_modules/esquery/dist/esquery.min.js",
+                    ),
+                    "@eslint/eslintrc/universal": path.resolve(
+                        __dirname,
+                        "../../node_modules/@eslint/eslintrc/dist/eslintrc-universal.cjs",
+                    ),
                 },
             },
         }

@@ -3,5 +3,6 @@ module.exports = {
     rules: {
         "no-descending-specificity": null,
         indentation: null,
+        "selector-class-pattern": null,
     },
 }
