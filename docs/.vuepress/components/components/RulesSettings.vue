@@ -314,7 +314,7 @@ a {
     color: #8080f2;
 }
 
-.eslint-plugin-regexp-rule a > svg {
+.eslint-plugin-jsonc-rule a > svg {
     color: #f8c555;
 }
 </style>
