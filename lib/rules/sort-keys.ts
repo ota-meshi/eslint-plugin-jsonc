@@ -29,13 +29,20 @@ type PatternOption = {
     pathPattern: string
     hasProperties: string[]
     order:
-        | {
-              type?: OrderTypeOption
-              caseSensitive?: boolean
-              natural?: boolean
-          }
-        | string[]
+        | OrderObject
+        | (
+              | string
+              | {
+                    keyPattern?: string
+                    order?: OrderObject
+                }
+          )[]
     minKeys?: number
+}
+type OrderObject = {
+    type?: OrderTypeOption
+    caseSensitive?: boolean
+    natural?: boolean
 }
 type ParsedOption = {
     isTargetObject: (node: AST.JSONObjectExpression) => boolean
@@ -147,13 +154,53 @@ function parseOptions(options: UserOptions): ParsedOption[] {
                 }${type}ending`,
             }
         }
+        const parsedOrder: {
+            test: (s: string) => boolean
+            isValidNestOrder: Validator
+        }[] = []
+        for (const o of order) {
+            if (typeof o === "string") {
+                parsedOrder.push({
+                    test: (s) => s === o,
+                    isValidNestOrder: () => true,
+                })
+            } else {
+                const keyPattern = o.keyPattern
+                    ? new RegExp(o.keyPattern)
+                    : null
+                const nestOrder = o.order ?? {}
+                const type: OrderTypeOption = nestOrder.type ?? "asc"
+                const insensitive = nestOrder.caseSensitive === false
+                const natural = Boolean(nestOrder.natural)
+                parsedOrder.push({
+                    test: (s) => (keyPattern ? keyPattern.test(s) : true),
+                    isValidNestOrder: buildValidatorFromType(
+                        type,
+                        insensitive,
+                        natural,
+                    ),
+                })
+            }
+        }
         return {
             isTargetObject,
-            ignore: (s) => !order.includes(s),
+            ignore: (s) => parsedOrder.every((p) => !p.test(s)),
             isValidOrder(a, b) {
-                const aIndex = order.indexOf(a)
-                const bIndex = order.indexOf(b)
-                return aIndex <= bIndex
+                for (const p of parsedOrder) {
+                    const matchA = p.test(a)
+                    const matchB = p.test(b)
+                    if (!matchA || !matchB) {
+                        if (matchA) {
+                            return true
+                        }
+                        if (matchB) {
+                            return false
+                        }
+                        continue
+                    }
+                    return p.isValidNestOrder(a, b)
+                }
+                return false
             },
             minKeys,
             orderText: "specified",
@@ -196,7 +243,22 @@ function parseOptions(options: UserOptions): ParsedOption[] {
     })
 }
 
-const allowOrderTypes: OrderTypeOption[] = ["asc", "desc"]
+const ALLOW_ORDER_TYPES: OrderTypeOption[] = ["asc", "desc"]
+const ORDER_OBJECT_SCHEMA = {
+    type: "object",
+    properties: {
+        type: {
+            enum: ALLOW_ORDER_TYPES,
+        },
+        caseSensitive: {
+            type: "boolean",
+        },
+        natural: {
+            type: "boolean",
+        },
+    },
+    additionalProperties: false,
+} as const
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -227,24 +289,24 @@ export default createRule("sort-keys", {
                                 oneOf: [
                                     {
                                         type: "array",
-                                        items: { type: "string" },
+                                        items: {
+                                            anyOf: [
+                                                { type: "string" },
+                                                {
+                                                    type: "object",
+                                                    properties: {
+                                                        keyPattern: {
+                                                            type: "string",
+                                                        },
+                                                        order: ORDER_OBJECT_SCHEMA,
+                                                    },
+                                                    additionalProperties: false,
+                                                },
+                                            ],
+                                        },
                                         uniqueItems: true,
                                     },
-                                    {
-                                        type: "object",
-                                        properties: {
-                                            type: {
-                                                enum: allowOrderTypes,
-                                            },
-                                            caseSensitive: {
-                                                type: "boolean",
-                                            },
-                                            natural: {
-                                                type: "boolean",
-                                            },
-                                        },
-                                        additionalProperties: false,
-                                    },
+                                    ORDER_OBJECT_SCHEMA,
                                 ],
                             },
                             minKeys: {
@@ -262,7 +324,7 @@ export default createRule("sort-keys", {
                     type: "array",
                     items: [
                         {
-                            enum: allowOrderTypes,
+                            enum: ALLOW_ORDER_TYPES,
                         },
                         {
                             type: "object",
