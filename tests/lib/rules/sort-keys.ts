@@ -79,6 +79,67 @@ tester.run("sort-keys", rule as any, {
             code: JSON.stringify(rule.meta.schema),
             options: OPTIONS_FOR_JSON_SCHEMA,
         },
+
+        // nest
+        {
+            code: `
+            {
+                "a":1,
+                "b":2,
+                "c":3,
+                "d":4,
+                "e":5,
+                "f":6,
+                "g":7,
+                "z":26
+            }
+            `,
+            options: [
+                {
+                    pathPattern: "^$",
+                    order: [
+                        "a",
+                        "b",
+                        {
+                            keyPattern: "[cd]",
+                            order: { type: "asc" },
+                        },
+                        {
+                            keyPattern: "[e-g]",
+                            order: { type: "asc" },
+                        },
+                        "z",
+                    ],
+                },
+            ],
+        },
+        {
+            code: `
+            {
+                "a":1,
+                "b":2,
+                "c":3,
+                "d":4,
+                "e":5,
+                "f":6,
+                "g":7,
+                "z":26
+            }
+            `,
+            options: [
+                {
+                    pathPattern: "^$",
+                    order: [
+                        "a",
+                        "b",
+                        {
+                            order: { type: "asc" },
+                        },
+                        "z",
+                    ],
+                },
+            ],
+        },
     ],
     invalid: [
         {
@@ -305,6 +366,150 @@ tester.run("sort-keys", rule as any, {
             errors: [
                 "Expected object keys to be in ascending order. 'a' should be before 'b'.",
                 "Expected object keys to be in ascending order. 'e' should be before 'f'.",
+            ],
+        },
+
+        // nest
+        {
+            code: `
+            {
+                "a":1,
+                "b":2,
+                "d":4,
+                "c":3,
+                "e":5,
+                "g":7,
+                "f":6,
+                "z":26
+            }
+            `,
+            output: `
+            {
+                "a":1,
+                "b":2,
+                "c":3,
+                "d":4,
+                "e":5,
+                "f":6,
+                "g":7,
+                "z":26
+            }
+            `,
+            options: [
+                {
+                    pathPattern: "^$",
+                    order: [
+                        "a",
+                        "b",
+                        {
+                            keyPattern: "[cd]",
+                            order: { type: "asc" },
+                        },
+                        {
+                            keyPattern: "[e-g]",
+                            order: { type: "asc" },
+                        },
+                        "z",
+                    ],
+                },
+            ],
+            errors: [
+                "Expected object keys to be in specified order. 'c' should be before 'd'.",
+                "Expected object keys to be in specified order. 'f' should be before 'g'.",
+            ],
+        },
+        {
+            code: `
+            {
+                "a":1,
+                "b":2,
+                "z":26,
+                "c":3,
+                "d":4,
+                "e":5,
+                "f":6,
+                "g":7
+            }
+            `,
+            output: `
+            {
+                "a":1,
+                "b":2,
+                "c":3,
+                "z":26,
+                "d":4,
+                "e":5,
+                "f":6,
+                "g":7
+            }
+            `,
+            options: [
+                {
+                    pathPattern: "^$",
+                    order: [
+                        "a",
+                        "b",
+                        {
+                            keyPattern: "[cd]",
+                            order: { type: "asc" },
+                        },
+                        {
+                            keyPattern: "[e-g]",
+                            order: { type: "asc" },
+                        },
+                        "z",
+                    ],
+                },
+            ],
+            errors: [
+                "Expected object keys to be in specified order. 'c' should be before 'z'.",
+            ],
+        },
+        {
+            code: `
+            {
+                "a":1,
+                "b":2,
+                "c":3,
+                "d":4,
+                "z":26,
+                "e":5,
+                "f":6,
+                "g":7
+            }
+            `,
+            output: `
+            {
+                "a":1,
+                "b":2,
+                "c":3,
+                "d":4,
+                "e":5,
+                "z":26,
+                "f":6,
+                "g":7
+            }
+            `,
+            options: [
+                {
+                    pathPattern: "^$",
+                    order: [
+                        "a",
+                        "b",
+                        {
+                            keyPattern: "[cd]",
+                            order: { type: "asc" },
+                        },
+                        {
+                            keyPattern: "[e-g]",
+                            order: { type: "asc" },
+                        },
+                        "z",
+                    ],
+                },
+            ],
+            errors: [
+                "Expected object keys to be in specified order. 'e' should be before 'z'.",
             ],
         },
     ],

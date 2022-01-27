@@ -86,6 +86,15 @@ The option receives multiple objects with the following properties:
 - `hasProperties` ... Defines an array of property names. Checks only objects that have the defined properties.
 - `order` (Required) ... Defines how to enforce the order. You can use an object or an array.
   - Array ... Defines an array of properties to enforce the order.
+    - String ... Defines the property name.
+    - Object ... The object has the following properties:
+      - `keyPattern` ... Defines a pattern to match the property name. Default is to match all.
+      - `order` ... The object has the following properties:
+        - `type`:
+          - `"asc"` ... Enforce properties to be in ascending order. This is default.
+          - `"desc"` ... Enforce properties to be in descending order.
+        - `caseSensitive` ... If `true`, enforce properties to be in case-sensitive order. Default is `true`.
+        - `natural` ... If `true`, enforce properties to be in natural order. Default is `false`.
   - Object ... The object has the following properties:
     - `type`:
       - `"asc"` ... Enforce properties to be in ascending order. This is default.
