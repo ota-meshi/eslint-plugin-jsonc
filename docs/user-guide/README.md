@@ -101,9 +101,9 @@ Example **.vscode/settings.json**:
 
 ## :question: FAQ
 
-### How to parse files other than `.json` and `.json5`?
+### How to parse files other than `.json`, `.jsonc` and `.json5`?
 
-This plugin will parse `.json` and `.json5` using the configuration provided by the plugin.
+This plugin will parse `.json`, `.jsonc` and `.json5` using the configuration provided by the plugin.
 To parse other extensions, you need to add a setting to your configuration.
 
 Example **.eslintrc.js**:
