@@ -45,11 +45,13 @@ This plugin provides configs:
 - `plugin:jsonc/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
 - `plugin:jsonc/all` ... Enables all rules. It's meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
 
+This plugin will parse `.json`, `.jsonc` and `.json5` by default using the configuration provided by the plugin (unless you already have a parser configured - see below).
+
 See [the rule list](../rules/README.md) to get the `rules` that this plugin provides.
 
 #### Parser Configuration
 
-If you have specified a parser, you need to configure a parser for `.json`.
+If you have already specified a parser in your `.eslintrc`, you will also need to manually configure the parser for JSON files (your parser config takes priority over that defined by `extends` shared configs).
 
 For example, if you are using the `"@babel/eslint-parser"`, configure it as follows:
 
@@ -68,17 +70,6 @@ module.exports = {
   ],
   // ...
 };
-```
-
-### Running ESLint from the command line
-
-If you want to run `eslint` from the command line, make sure you include the `.json` extension using [the `--ext` option](https://eslint.org/docs/user-guide/configuring#specifying-file-extensions-to-lint) or a glob pattern, because ESLint targets only `.js` files by default.
-
-Examples:
-
-```bash
-eslint --ext .js,.json src
-eslint "src/**/*.{js,json}"
 ```
 
 ## :computer: Editor Integrations
