@@ -37,6 +37,7 @@ import objectCurlySpacing from "../rules/object-curly-spacing"
 import objectPropertyNewline from "../rules/object-property-newline"
 import quoteProps from "../rules/quote-props"
 import quotes from "../rules/quotes"
+import sortArrayValues from "../rules/sort-array-values"
 import sortKeys from "../rules/sort-keys"
 import spaceUnaryOps from "../rules/space-unary-ops"
 import validJsonNumber from "../rules/valid-json-number"
@@ -81,6 +82,7 @@ export const rules = [
     objectPropertyNewline,
     quoteProps,
     quotes,
+    sortArrayValues,
     sortKeys,
     spaceUnaryOps,
     validJsonNumber,
