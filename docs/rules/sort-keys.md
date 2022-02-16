@@ -13,7 +13,7 @@ since: "v0.1.0"
 
 ## :book: Rule Details
 
-This rule checks all property definitions of object and verifies that all properties are sorted alphabetically or specified order.
+This rule checks property definitions of object and verifies that all properties are sorted alphabetically or specified order.
 
 <eslint-code-block fix>
 

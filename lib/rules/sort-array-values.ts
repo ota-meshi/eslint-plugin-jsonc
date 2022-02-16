@@ -1,40 +1,135 @@
 import naturalCompare from "natural-compare"
+import { createRule } from "../utils"
+import { isCommaToken } from "eslint-utils"
 import type { AST } from "jsonc-eslint-parser"
 import { getStaticJSONValue } from "jsonc-eslint-parser"
-import { createRule } from "../utils"
+import type { SourceCode, AST as ESLintAST } from "eslint"
+
+type JSONValue = ReturnType<typeof getStaticJSONValue>
+
+//------------------------------------------------------------------------------
+// Helpers
+//------------------------------------------------------------------------------
 
 type UserOptions = PatternOption[]
 type OrderTypeOption = "asc" | "desc"
 type PatternOption = {
     pathPattern: string
-    hasProperties: string[]
     order:
-        | {
-              type?: OrderTypeOption
-              caseSensitive?: boolean
-              natural?: boolean
-          }
-        | string[]
-    minKeys?: number
+        | OrderObject
+        | (
+              | string
+              | {
+                    valuePattern?: string
+                    order?: OrderObject
+                }
+          )[]
+    minValues?: number
+}
+type OrderObject = {
+    type?: OrderTypeOption
+    caseSensitive?: boolean
+    natural?: boolean
 }
 type ParsedOption = {
-    isTargetObject: (node: AST.JSONObjectExpression) => boolean
-    ignore: (s: string) => boolean
+    isTargetArray: (node: JSONArrayData) => boolean
+    ignore: (data: JSONElementData) => boolean
     isValidOrder: Validator
-    minKeys: number
-    orderText: string
+    orderText: (data: JSONElementData) => string
 }
-type Validator = (a: string, b: string) => boolean
+type Validator = (a: JSONElementData, b: JSONElementData) => boolean
 
-/**
- * Gets the property name of the given `Property` node.
- */
-function getPropertyName(node: AST.JSONProperty): string {
-    const prop = node.key
-    if (prop.type === "JSONIdentifier") {
-        return prop.name
+type JSONElement = AST.JSONArrayExpression["elements"][number]
+type AroundTokens = { before: ESLintAST.Token; after: ESLintAST.Token }
+class JSONElementData {
+    public readonly array: JSONArrayData
+
+    public readonly node: JSONElement
+
+    public readonly index: number
+
+    private cached: { value: JSONValue } | null = null
+
+    private cachedRange: [number, number] | null = null
+
+    private cachedAroundTokens: AroundTokens | null = null
+
+    public get reportLoc() {
+        if (this.node) {
+            return this.node.loc
+        }
+        const aroundTokens = this.aroundTokens
+        return {
+            start: aroundTokens.before.loc.end,
+            end: aroundTokens.after.loc.start,
+        }
     }
-    return String(getStaticJSONValue(prop))
+
+    public get range(): [number, number] {
+        if (this.node) {
+            return this.node.range
+        }
+        if (this.cachedRange) {
+            return this.cachedRange
+        }
+        const aroundTokens = this.aroundTokens
+        return (this.cachedRange = [
+            aroundTokens.before.range[1],
+            aroundTokens.after.range[0],
+        ])
+    }
+
+    public get aroundTokens(): AroundTokens {
+        if (this.cachedAroundTokens) {
+            return this.cachedAroundTokens
+        }
+        const sourceCode = this.array.sourceCode
+        if (this.node) {
+            return (this.cachedAroundTokens = {
+                before: sourceCode.getTokenBefore(this.node as never)!,
+                after: sourceCode.getTokenAfter(this.node as never)!,
+            })
+        }
+        const before =
+            this.index > 0
+                ? this.array.elements[this.index - 1].aroundTokens.after
+                : sourceCode.getFirstToken(this.array.node as never)!
+        const after = sourceCode.getTokenAfter(before)!
+        return (this.cachedAroundTokens = { before, after })
+    }
+
+    public constructor(array: JSONArrayData, node: JSONElement, index: number) {
+        this.array = array
+        this.node = node
+        this.index = index
+    }
+
+    public get value() {
+        return (
+            this.cached ??
+            (this.cached = {
+                value: this.node == null ? null : getStaticJSONValue(this.node),
+            })
+        ).value
+    }
+}
+class JSONArrayData {
+    public readonly node: AST.JSONArrayExpression
+
+    public readonly sourceCode: SourceCode
+
+    private cachedElements: JSONElementData[] | null = null
+
+    public constructor(node: AST.JSONArrayExpression, sourceCode: SourceCode) {
+        this.node = node
+        this.sourceCode = sourceCode
+    }
+
+    public get elements() {
+        return (this.cachedElements ??= this.node.elements.map(
+            (e, index) => new JSONElementData(this, e, index),
+        ))
+    }
 }
 
 /**
@@ -45,19 +140,35 @@ function buildValidatorFromType(
     insensitive: boolean,
     natural: boolean,
 ): Validator {
-    let compare = natural
-        ? ([a, b]: string[]) => naturalCompare(a, b) <= 0
-        : ([a, b]: string[]) => a <= b
+    type Compare<T> = ([a, b]: T[]) => boolean
+    // eslint-disable-next-line func-style -- ignore
+    let compareValue: Compare<any> = ([a, b]) => a <= b
+    let compareText: Compare<string> = compareValue
+
+    if (natural) {
+        compareText = ([a, b]) => naturalCompare(a, b) <= 0
+    }
     if (insensitive) {
-        const baseCompare = compare
-        compare = ([a, b]: string[]) =>
-            baseCompare([a.toLowerCase(), b.toLowerCase()])
+        const baseCompareText = compareText
+        compareText = ([a, b]: string[]) =>
+            baseCompareText([a.toLowerCase(), b.toLowerCase()])
     }
     if (order === "desc") {
-        const baseCompare = compare
-        compare = (args: string[]) => baseCompare(args.reverse())
+        const baseCompareText = compareText
+        compareText = (args: string[]) => baseCompareText(args.reverse())
+        const baseCompareValue = compareValue
+        compareValue = (args) => baseCompareValue(args.reverse())
     }
-    return (a: string, b: string) => compare([a, b])
+    return (a: JSONElementData, b: JSONElementData) => {
+        if (typeof a.value === "string" && typeof b.value === "string") {
+            return compareText([a.value, b.value])
+        }
+        if (getJSONPrimitiveType(a.value) === getJSONPrimitiveType(b.value)) {
+            return compareValue([a.value, b.value])
+        }
+        // Unknown
+        return true
+    }
 }
 
 /**
@@ -67,52 +178,97 @@ function parseOptions(options: UserOptions): ParsedOption[] {
     return options.map((opt) => {
         const order = opt.order
         const pathPattern = new RegExp(opt.pathPattern)
-        const hasProperties = opt.hasProperties ?? []
-        const minKeys: number = opt.minKeys ?? 2
+        const minValues: number = opt.minValues ?? 2
         if (!Array.isArray(order)) {
             const type: OrderTypeOption = order.type ?? "asc"
             const insensitive = order.caseSensitive === false
             const natural = Boolean(order.natural)
 
             return {
-                isTargetObject,
+                isTargetArray,
                 ignore: () => false,
                 isValidOrder: buildValidatorFromType(
                     type,
                     insensitive,
                     natural,
                 ),
-                minKeys,
-                orderText: `${natural ? "natural " : ""}${
-                    insensitive ? "insensitive " : ""
-                }${type}ending`,
+                orderText(data) {
+                    if (typeof data.value === "string") {
+                        return `${natural ? "natural " : ""}${
+                            insensitive ? "insensitive " : ""
+                        }${type}ending`
+                    }
+                    return `${type}ending`
+                },
             }
         }
+        const parsedOrder: {
+            test: (v: JSONElementData) => boolean
+            isValidNestOrder: Validator
+        }[] = []
+        for (const o of order) {
+            if (typeof o === "string") {
+                parsedOrder.push({
+                    test: (v) => v.value === o,
+                    isValidNestOrder: () => true,
+                })
+            } else {
+                const valuePattern = o.valuePattern
+                    ? new RegExp(o.valuePattern)
+                    : null
+                const nestOrder = o.order ?? {}
+                const type: OrderTypeOption = nestOrder.type ?? "asc"
+                const insensitive = nestOrder.caseSensitive === false
+                const natural = Boolean(nestOrder.natural)
+                parsedOrder.push({
+                    test: (v) =>
+                        valuePattern
+                            ? Boolean(getJSONPrimitiveType(v.value)) &&
+                              valuePattern.test(String(v.value))
+                            : true,
+                    isValidNestOrder: buildValidatorFromType(
+                        type,
+                        insensitive,
+                        natural,
+                    ),
+                })
+            }
+        }
+
         return {
-            isTargetObject,
-            ignore: (s) => !order.includes(s),
+            isTargetArray,
+            ignore: (v) => parsedOrder.every((p) => !p.test(v)),
             isValidOrder(a, b) {
-                const aIndex = order.indexOf(a)
-                const bIndex = order.indexOf(b)
-                return aIndex <= bIndex
+                for (const p of parsedOrder) {
+                    const matchA = p.test(a)
+                    const matchB = p.test(b)
+                    if (!matchA || !matchB) {
+                        if (matchA) {
+                            return true
+                        }
+                        if (matchB) {
+                            return false
+                        }
+                        continue
+                    }
+                    return p.isValidNestOrder(a, b)
+                }
+                return false
             },
-            minKeys,
-            orderText: "specified",
+            orderText: () => "specified",
         }
 
         /**
-         * Checks whether given node is verify target
+         * Checks whether given node data is verify target
          */
-        function isTargetObject(node: AST.JSONObjectExpression) {
-            if (hasProperties.length > 0) {
-                const names = new Set(node.properties.map(getPropertyName))
-                if (!hasProperties.every((name) => names.has(name))) {
-                    return false
-                }
+        function isTargetArray(data: JSONArrayData) {
+            if (data.node.elements.length < minValues) {
+                return false
             }
 
+            // Check whether the path is match or not.
             let path = ""
-            let curr: AST.JSONNode = node
+            let curr: AST.JSONNode = data.node
             let p: AST.JSONNode | null = curr.parent
             while (p) {
                 if (p.type === "JSONProperty") {
@@ -135,9 +291,59 @@ function parseOptions(options: UserOptions): ParsedOption[] {
             return pathPattern.test(path)
         }
     })
+
+    /**
+     * Gets the property name of the given `Property` node.
+     */
+    function getPropertyName(node: AST.JSONProperty): string {
+        const prop = node.key
+        if (prop.type === "JSONIdentifier") {
+            return prop.name
+        }
+        return String(getStaticJSONValue(prop))
+    }
 }
 
-const allowOrderTypes: OrderTypeOption[] = ["asc", "desc"]
+/**
+ * Get the type name from given value when value is primitive like value
+ */
+function getJSONPrimitiveType(val: JSONValue) {
+    const t = typeof val
+    if (t === "string" || t === "number" || t === "boolean" || t === "bigint") {
+        return t
+    }
+    if (val === null) {
+        return "null"
+    }
+    if (val === undefined) {
+        return "undefined"
+    }
+    if (val instanceof RegExp) {
+        return "regexp"
+    }
+    return null
+}
+
+const ALLOW_ORDER_TYPES: OrderTypeOption[] = ["asc", "desc"]
+const ORDER_OBJECT_SCHEMA = {
+    type: "object",
+    properties: {
+        type: {
+            enum: ALLOW_ORDER_TYPES,
+        },
+        caseSensitive: {
+            type: "boolean",
+        },
+        natural: {
+            type: "boolean",
+        },
+    },
+    additionalProperties: false,
+} as const
+
+//------------------------------------------------------------------------------
+// Rule Definition
+//------------------------------------------------------------------------------
 
 export default createRule("sort-array-values", {
     meta: {
@@ -148,55 +354,50 @@ export default createRule("sort-array-values", {
             layout: false,
         },
         fixable: "code",
-        schema: [
-            {
-                type: "array",
-                items: {
-                    type: "object",
-                    properties: {
-                        pathPattern: { type: "string" },
-                        hasProperties: {
-                            type: "array",
-                            items: { type: "string" },
-                        },
-                        order: {
-                            oneOf: [
-                                {
-                                    type: "array",
-                                    items: { type: "string" },
-                                    uniqueItems: true,
+        schema: {
+            type: "array",
+            items: {
+                type: "object",
+                properties: {
+                    pathPattern: { type: "string" },
+                    order: {
+                        oneOf: [
+                            {
+                                type: "array",
+                                items: {
+                                    anyOf: [
+                                        { type: "string" },
+                                        {
+                                            type: "object",
+                                            properties: {
+                                                valuePattern: {
+                                                    type: "string",
+                                                },
+                                                order: ORDER_OBJECT_SCHEMA,
+                                            },
+                                            additionalProperties: false,
+                                        },
+                                    ],
                                 },
-                                {
-                                    type: "object",
-                                    properties: {
-                                        type: {
-                                            enum: allowOrderTypes,
-                                        },
-                                        caseSensitive: {
-                                            type: "boolean",
-                                        },
-                                        natural: {
-                                            type: "boolean",
-                                        },
-                                    },
-                                    additionalProperties: false,
-                                },
-                            ],
-                        },
-                        minKeys: {
-                            type: "integer",
-                            minimum: 2,
-                        },
+                                uniqueItems: true,
+                            },
+                            ORDER_OBJECT_SCHEMA,
+                        ],
                     },
-                    required: ["pathPattern", "order"],
-                    additionalProperties: false,
+                    minValues: {
+                        type: "integer",
+                        minimum: 2,
+                    },
                 },
-                minItems: 1,
+                required: ["pathPattern", "order"],
+                additionalProperties: false,
             },
-        ],
+            minItems: 1,
+        },
+
         messages: {
-            sortKeys:
-                "Expected array values to be in {{orderText}} order. '{{thisName}}' should be before '{{prevName}}'.",
+            sortValues:
+                "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be before '{{prevValue}}'.",
         },
         type: "suggestion",
     },
@@ -206,108 +407,94 @@ export default createRule("sort-array-values", {
         }
         // Parse options.
         const parsedOptions = parseOptions(context.options)
-        type Stack = {
-            upper: Stack | null
-            prevList: { name: string; node: AST.JSONProperty }[]
-            numKeys: number
-            option: ParsedOption | null
+
+        const sourceCode = context.getSourceCode()
+
+        /**
+         * Verify for array element
+         */
+        function verifyArrayElement(
+            data: JSONElementData,
+            option: ParsedOption,
+        ) {
+            if (option.ignore(data)) {
+                return
+            }
+            const prevList = data.array.elements
+                .slice(0, data.index)
+                .reverse()
+                .filter((d) => !option.ignore(d))
+
+            if (prevList.length === 0) {
+                return
+            }
+            const prev = prevList[0]
+            if (!option.isValidOrder(prev, data)) {
+                const reportLoc = data.reportLoc
+                context.report({
+                    loc: reportLoc,
+                    messageId: "sortValues",
+                    data: {
+                        thisValue: toText(data),
+                        prevValue: toText(prev),
+                        orderText: option.orderText(data),
+                    },
+                    *fix(fixer) {
+                        let moveTarget = prevList[0]
+                        for (const prev of prevList) {
+                            if (option.isValidOrder(prev, data)) {
+                                break
+                            } else {
+                                moveTarget = prev
+                            }
+                        }
+
+                        const beforeToken = data.aroundTokens.before
+                        const afterToken = data.aroundTokens.after
+                        const hasAfterComma = isCommaToken(afterToken)
+                        const codeStart = beforeToken.range[1] // to include comments
+                        const codeEnd = hasAfterComma
+                            ? afterToken.range[1] // |/**/ value,|
+                            : data.range[1] // |/**/ value|
+                        const removeStart = hasAfterComma
+                            ? codeStart // |/**/ value,|
+                            : beforeToken.range[0] // |,/**/ value|
+
+                        const insertCode =
+                            sourceCode.text.slice(codeStart, codeEnd) +
+                            (hasAfterComma ? "" : ",")
+
+                        const insertTarget = moveTarget.aroundTokens.before
+                        yield fixer.insertTextAfterRange(
+                            insertTarget.range,
+                            insertCode,
+                        )
+
+                        yield fixer.removeRange([removeStart, codeEnd])
+                    },
+                })
+            }
         }
-        let stack: Stack = {
-            upper: null,
-            prevList: [],
-            numKeys: 0,
-            option: null,
+
+        /**
+         * Convert to display text.
+         */
+        function toText(data: JSONElementData) {
+            if (getJSONPrimitiveType(data.value)) {
+                return String(data.value)
+            }
+            return sourceCode.getText(data.node! as never)
         }
 
         return {
-            JSONObjectExpression(node: AST.JSONObjectExpression) {
-                stack = {
-                    upper: stack,
-                    prevList: [],
-                    numKeys: node.properties.length,
-                    option:
-                        parsedOptions.find((o) => o.isTargetObject(node)) ||
-                        null,
-                }
-            },
-
-            "JSONObjectExpression:exit"() {
-                stack = stack.upper!
-            },
-
-            JSONProperty(node: AST.JSONProperty) {
-                const option = stack.option
+            JSONArrayExpression(node: AST.JSONArrayExpression) {
+                const data = new JSONArrayData(node, sourceCode)
+                const option = parsedOptions.find((o) => o.isTargetArray(data))
                 if (!option) {
                     return
                 }
-                const thisName = getPropertyName(node)
-                if (option.ignore(thisName)) {
-                    return
-                }
-                const prevList = stack.prevList
-                const numKeys = stack.numKeys
-
-                stack.prevList = [
-                    {
-                        name: thisName,
-                        node,
-                    },
-                    ...prevList,
-                ]
-                if (prevList.length === 0 || numKeys < option.minKeys) {
-                    return
-                }
-                const prevName = prevList[0].name
-                if (!option.isValidOrder(prevName, thisName)) {
-                    context.report({
-                        loc: node.key.loc,
-                        messageId: "sortKeys",
-                        data: {
-                            thisName,
-                            prevName,
-                            orderText: option.orderText,
-                        },
-                        *fix(fixer) {
-                            const sourceCode = context.getSourceCode()
-                            let moveTarget = prevList[0].node
-                            for (const prev of prevList) {
-                                if (option.isValidOrder(prev.name, thisName)) {
-                                    break
-                                } else {
-                                    moveTarget = prev.node
-                                }
-                            }
-
-                            const beforeToken = sourceCode.getTokenBefore(
-                                node as never,
-                            )!
-                            const afterToken = sourceCode.getTokenAfter(
-                                node as never,
-                            )!
-                            const hasAfterComma = isCommaToken(afterToken)
-                            const codeStart = beforeToken.range[1] // to include comments
-                            const codeEnd = hasAfterComma
-                                ? afterToken.range[1] // |/**/ key: value,|
-                                : node.range[1] // |/**/ key: value|
-                            const removeStart = hasAfterComma
-                                ? codeStart // |/**/ key: value,|
-                                : beforeToken.range[0] // |,/**/ key: value|
-
-                            const insertCode =
-                                sourceCode.text.slice(codeStart, codeEnd) +
-                                (hasAfterComma ? "" : ",")
-
-                            const insertTarget = sourceCode.getTokenBefore(
-                                moveTarget as never,
-                            )!
-                            yield fixer.insertTextAfterRange(
-                                insertTarget.range,
-                                insertCode,
-                            )
-
-                            yield fixer.removeRange([removeStart, codeEnd])
-                        },
-                    })
+                for (const element of data.elements) {
+                    verifyArrayElement(element, option)
                 }
             },
         }
