@@ -3,12 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/sort-array-values"
 description: "require array values to be sorted"
+since: "v2.2.0"
 ---
 # jsonc/sort-array-values
 
 > require array values to be sorted
 
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> ***This rule has not been released yet.*** </badge>
 - :wrench: The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
 
 ## :book: Rule Details
@@ -84,6 +84,10 @@ The option receives multiple objects with the following properties:
 - [jsonc/sort-keys]
 
 [jsonc/sort-keys]: ./sort-keys.md
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v2.2.0
 
 ## :mag: Implementation
 
