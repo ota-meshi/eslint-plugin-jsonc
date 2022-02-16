@@ -1,6 +1,3 @@
-/**
- *  Taken with https://github.com/eslint/eslint/blob/master/lib/rules/sort-keys.js
- */
 import naturalCompare from "natural-compare"
 import { createRule } from "../utils"
 import { isCommaToken } from "eslint-utils"
@@ -45,13 +42,12 @@ type OrderObject = {
     natural?: boolean
 }
 type ParsedOption = {
-    isTargetObject: (node: AST.JSONObjectExpression) => boolean
-    ignore: (s: string) => boolean
+    isTargetObject: (node: JSONObjectData) => boolean
+    ignore: (data: JSONPropertyData) => boolean
     isValidOrder: Validator
-    minKeys: number
     orderText: string
 }
-type Validator = (a: string, b: string) => boolean
+type Validator = (a: JSONPropertyData, b: JSONPropertyData) => boolean
 
 /**
  * Gets the property name of the given `Property` node.
@@ -62,6 +58,49 @@ function getPropertyName(node: AST.JSONProperty): string {
         return prop.name
     }
     return String(getStaticJSONValue(prop))
+}
+
+class JSONPropertyData {
+    public readonly object: JSONObjectData
+
+    public readonly node: AST.JSONProperty
+
+    public readonly index: number
+
+    private cachedName: string | null = null
+
+    public get reportLoc() {
+        return this.node.key.loc
+    }
+
+    public constructor(
+        object: JSONObjectData,
+        node: AST.JSONProperty,
+        index: number,
+    ) {
+        this.object = object
+        this.node = node
+        this.index = index
+    }
+
+    public get name() {
+        return (this.cachedName ??= getPropertyName(this.node))
+    }
+}
+class JSONObjectData {
+    public readonly node: AST.JSONObjectExpression
+
+    private cachedProperties: JSONPropertyData[] | null = null
+
+    public constructor(node: AST.JSONObjectExpression) {
+        this.node = node
+    }
+
+    public get properties() {
+        return (this.cachedProperties ??= this.node.properties.map(
+            (e, index) => new JSONPropertyData(this, e, index),
+        ))
+    }
 }
 
 /**
@@ -100,7 +139,8 @@ function buildValidatorFromType(
         const baseCompare = compare
         compare = (args: string[]) => baseCompare(args.reverse())
     }
-    return (a: string, b: string) => compare([a, b])
+    return (a: JSONPropertyData, b: JSONPropertyData) =>
+        compare([a.name, b.name])
 }
 
 /**
@@ -115,14 +155,13 @@ function parseOptions(options: UserOptions): ParsedOption[] {
         const minKeys: number = obj.minKeys ?? 2
         return [
             {
-                isTargetObject: () => true, // all
+                isTargetObject: (node) => node.properties.length >= minKeys,
                 ignore: () => false,
                 isValidOrder: buildValidatorFromType(
                     type,
                     insensitive,
                     natural,
                 ),
-                minKeys,
                 orderText: `${natural ? "natural " : ""}${
                     insensitive ? "insensitive " : ""
                 }${type}ending`,
@@ -148,20 +187,19 @@ function parseOptions(options: UserOptions): ParsedOption[] {
                     insensitive,
                     natural,
                 ),
-                minKeys,
                 orderText: `${natural ? "natural " : ""}${
                     insensitive ? "insensitive " : ""
                 }${type}ending`,
             }
         }
         const parsedOrder: {
-            test: (s: string) => boolean
+            test: (data: JSONPropertyData) => boolean
             isValidNestOrder: Validator
         }[] = []
         for (const o of order) {
             if (typeof o === "string") {
                 parsedOrder.push({
-                    test: (s) => s === o,
+                    test: (data) => data.name === o,
                     isValidNestOrder: () => true,
                 })
             } else {
@@ -173,7 +211,8 @@ function parseOptions(options: UserOptions): ParsedOption[] {
                 const insensitive = nestOrder.caseSensitive === false
                 const natural = Boolean(nestOrder.natural)
                 parsedOrder.push({
-                    test: (s) => (keyPattern ? keyPattern.test(s) : true),
+                    test: (data) =>
+                        keyPattern ? keyPattern.test(data.name) : true,
                     isValidNestOrder: buildValidatorFromType(
                         type,
                         insensitive,
@@ -184,7 +223,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
         }
         return {
             isTargetObject,
-            ignore: (s) => parsedOrder.every((p) => !p.test(s)),
+            ignore: (data) => parsedOrder.every((p) => !p.test(data)),
             isValidOrder(a, b) {
                 for (const p of parsedOrder) {
                     const matchA = p.test(a)
@@ -202,23 +241,25 @@ function parseOptions(options: UserOptions): ParsedOption[] {
                 }
                 return false
             },
-            minKeys,
             orderText: "specified",
         }
 
         /**
          * Checks whether given node is verify target
          */
-        function isTargetObject(node: AST.JSONObjectExpression) {
+        function isTargetObject(data: JSONObjectData) {
+            if (data.node.properties.length < minKeys) {
+                return false
+            }
             if (hasProperties.length > 0) {
-                const names = new Set(node.properties.map(getPropertyName))
+                const names = new Set(data.properties.map((p) => p.name))
                 if (!hasProperties.every((name) => names.has(name))) {
                     return false
                 }
             }
 
             let path = ""
-            let curr: AST.JSONNode = node
+            let curr: AST.JSONNode = data.node
             let p: AST.JSONNode | null = curr.parent
             while (p) {
                 if (p.type === "JSONProperty") {
@@ -269,7 +310,7 @@ export default createRule("sort-keys", {
         docs: {
             description: "require object keys to be sorted",
             recommended: null,
-            extensionRule: true,
+            extensionRule: false,
             layout: false,
         },
         fixable: "code",
@@ -360,108 +401,85 @@ export default createRule("sort-keys", {
         }
         // Parse options.
         const parsedOptions = parseOptions(context.options)
-        type Stack = {
-            upper: Stack | null
-            prevList: { name: string; node: AST.JSONProperty }[]
-            numKeys: number
-            option: ParsedOption | null
-        }
-        let stack: Stack = {
-            upper: null,
-            prevList: [],
-            numKeys: 0,
-            option: null,
+
+        /**
+         * Verify for property
+         */
+        function verifyProperty(data: JSONPropertyData, option: ParsedOption) {
+            if (option.ignore(data)) {
+                return
+            }
+            const prevList = data.object.properties
+                .slice(0, data.index)
+                .reverse()
+                .filter((d) => !option.ignore(d))
+
+            if (prevList.length === 0) {
+                return
+            }
+            const prev = prevList[0]
+            if (!option.isValidOrder(prev, data)) {
+                context.report({
+                    loc: data.reportLoc,
+                    messageId: "sortKeys",
+                    data: {
+                        thisName: data.name,
+                        prevName: prev.name,
+                        orderText: option.orderText,
+                    },
+                    *fix(fixer) {
+                        const sourceCode = context.getSourceCode()
+                        let moveTarget = prevList[0]
+                        for (const prev of prevList) {
+                            if (option.isValidOrder(prev, data)) {
+                                break
+                            } else {
+                                moveTarget = prev
+                            }
+                        }
+
+                        const beforeToken = sourceCode.getTokenBefore(
+                            data.node as never,
+                        )!
+                        const afterToken = sourceCode.getTokenAfter(
+                            data.node as never,
+                        )!
+                        const hasAfterComma = isCommaToken(afterToken)
+                        const codeStart = beforeToken.range[1] // to include comments
+                        const codeEnd = hasAfterComma
+                            ? afterToken.range[1] // |/**/ key: value,|
+                            : data.node.range[1] // |/**/ key: value|
+                        const removeStart = hasAfterComma
+                            ? codeStart // |/**/ key: value,|
+                            : beforeToken.range[0] // |,/**/ key: value|
+
+                        const insertCode =
+                            sourceCode.text.slice(codeStart, codeEnd) +
+                            (hasAfterComma ? "" : ",")
+
+                        const insertTarget = sourceCode.getTokenBefore(
+                            moveTarget.node as never,
+                        )!
+                        yield fixer.insertTextAfterRange(
+                            insertTarget.range,
+                            insertCode,
+                        )
+
+                        yield fixer.removeRange([removeStart, codeEnd])
+                    },
+                })
+            }
         }
 
         return {
             JSONObjectExpression(node: AST.JSONObjectExpression) {
-                stack = {
-                    upper: stack,
-                    prevList: [],
-                    numKeys: node.properties.length,
-                    option:
-                        parsedOptions.find((o) => o.isTargetObject(node)) ||
-                        null,
-                }
-            },
-
-            "JSONObjectExpression:exit"() {
-                stack = stack.upper!
-            },
-
-            JSONProperty(node: AST.JSONProperty) {
-                const option = stack.option
+                const data = new JSONObjectData(node)
+                const option = parsedOptions.find((o) => o.isTargetObject(data))
                 if (!option) {
                     return
                 }
-                const thisName = getPropertyName(node)
-                if (option.ignore(thisName)) {
-                    return
-                }
-                const prevList = stack.prevList
-                const numKeys = stack.numKeys
-
-                stack.prevList = [
-                    {
-                        name: thisName,
-                        node,
-                    },
-                    ...prevList,
-                ]
-                if (prevList.length === 0 || numKeys < option.minKeys) {
-                    return
-                }
-                const prevName = prevList[0].name
-                if (!option.isValidOrder(prevName, thisName)) {
-                    context.report({
-                        loc: node.key.loc,
-                        messageId: "sortKeys",
-                        data: {
-                            thisName,
-                            prevName,
-                            orderText: option.orderText,
-                        },
-                        *fix(fixer) {
-                            const sourceCode = context.getSourceCode()
-                            let moveTarget = prevList[0].node
-                            for (const prev of prevList) {
-                                if (option.isValidOrder(prev.name, thisName)) {
-                                    break
-                                } else {
-                                    moveTarget = prev.node
-                                }
-                            }
-
-                            const beforeToken = sourceCode.getTokenBefore(
-                                node as never,
-                            )!
-                            const afterToken = sourceCode.getTokenAfter(
-                                node as never,
-                            )!
-                            const hasAfterComma = isCommaToken(afterToken)
-                            const codeStart = beforeToken.range[1] // to include comments
-                            const codeEnd = hasAfterComma
-                                ? afterToken.range[1] // |/**/ key: value,|
-                                : node.range[1] // |/**/ key: value|
-                            const removeStart = hasAfterComma
-                                ? codeStart // |/**/ key: value,|
-                                : beforeToken.range[0] // |,/**/ key: value|
-
-                            const insertCode =
-                                sourceCode.text.slice(codeStart, codeEnd) +
-                                (hasAfterComma ? "" : ",")
-
-                            const insertTarget = sourceCode.getTokenBefore(
-                                moveTarget as never,
-                            )!
-                            yield fixer.insertTextAfterRange(
-                                insertTarget.range,
-                                insertCode,
-                            )
-
-                            yield fixer.removeRange([removeStart, codeEnd])
-                        },
-                    })
+                for (const prop of data.properties) {
+                    verifyProperty(prop, option)
                 }
             },
         }
