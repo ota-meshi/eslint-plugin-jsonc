@@ -134,5 +134,3 @@ This rule was introduced in eslint-plugin-jsonc v0.1.0
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/sort-keys.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/sort-keys.ts)
-
-<sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/sort-keys)</sup>

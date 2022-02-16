@@ -32,6 +32,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/no-template-literals](./no-template-literals.md) | disallow template literals | :wrench: | :star: | :star: | :star: |
 | [jsonc/no-undefined-value](./no-undefined-value.md) | disallow `undefined` |  | :star: | :star: | :star: |
 | [jsonc/no-unicode-codepoint-escapes](./no-unicode-codepoint-escapes.md) | disallow Unicode code point escape sequences. | :wrench: | :star: | :star: | :star: |
+| [jsonc/sort-keys](./sort-keys.md) | require object keys to be sorted | :wrench: |  |  |  |
 | [jsonc/valid-json-number](./valid-json-number.md) | disallow invalid number for JSON | :wrench: | :star: | :star: |  |
 | [jsonc/vue-custom-block/no-parsing-error](./vue-custom-block/no-parsing-error.md) | disallow parsing errors in Vue custom blocks |  | :star: | :star: | :star: |
 
@@ -58,5 +59,4 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/object-property-newline](./object-property-newline.md) | enforce placing object properties on separate lines | :wrench: |  |  |  |
 | [jsonc/quote-props](./quote-props.md) | require quotes around object literal property names | :wrench: | :star: | :star: |  |
 | [jsonc/quotes](./quotes.md) | enforce use of double or single quotes | :wrench: | :star: | :star: |  |
-| [jsonc/sort-keys](./sort-keys.md) | require object keys to be sorted | :wrench: |  |  |  |
 | [jsonc/space-unary-ops](./space-unary-ops.md) | disallow spaces after unary operators | :wrench: | :star: | :star: | :star: |
