@@ -163,7 +163,8 @@ function buildValidatorFromType(
         if (typeof a.value === "string" && typeof b.value === "string") {
             return compareText([a.value, b.value])
         }
-        if (getJSONPrimitiveType(a.value) === getJSONPrimitiveType(b.value)) {
+        const type = getJSONPrimitiveType(a.value)
+        if (type && type === getJSONPrimitiveType(b.value)) {
             return compareValue([a.value, b.value])
         }
         // Unknown
