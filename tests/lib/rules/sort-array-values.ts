@@ -48,6 +48,10 @@ tester.run("sort-array-values", rule as any, {
                 },
             ],
         },
+        {
+            code: '{"key": [["b"], ["a"], "c"] }',
+            options: [{ pathPattern: "^key$", order: { type: "asc" } }],
+        },
     ],
     invalid: [
         {
