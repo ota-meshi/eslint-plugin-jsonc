@@ -23,6 +23,15 @@ function getConfigResolver(): (filePath: string) => Linter.Config {
                 additionalPluginPool: new Map([
                     ["eslint-plugin-jsonc", plugin],
                 ]),
+                getEslintRecommendedConfig() {
+                    // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
+                    return require("../../conf/eslint-recommended.js")
+                },
+                getEslintAllConfig() {
+                    // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
+                    return require("../../conf/eslint-all.js")
+                },
+                // for v1.1.0
                 eslintRecommendedPath: require.resolve(
                     "../../conf/eslint-recommended.js",
                 ),
