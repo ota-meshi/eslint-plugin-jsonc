@@ -58,11 +58,16 @@ module.exports = {
             },
         },
         {
-            files: ["scripts/**/*.ts", "tests/**/*.ts"],
+            files: [
+                "scripts/**/*.ts",
+                "tests/**/*.ts",
+                "tests-integrations/**/*.ts",
+            ],
             rules: {
                 "require-jsdoc": "off",
                 "no-console": "off",
                 "@typescript-eslint/ban-ts-comment": "off",
+                "@typescript-eslint/no-misused-promises": "off",
             },
         },
     ],
