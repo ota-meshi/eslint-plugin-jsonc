@@ -24,13 +24,13 @@ describe("Integration with vue-eslint-parser with option", () => {
     })
 
     it("should lint errors", async () => {
-        /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- test */
+        /* eslint-disable  @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- test */
         // @ts-ignore
         const eslint = require(ESLINT)
         if (!eslint.ESLint) {
             return
         }
-        /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- test */
+        /* eslint-enable  @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- test */
         const engine = new eslint.ESLint({
             cwd: TEST_CWD,
             extensions: [".js", ".json", ".yaml"],
