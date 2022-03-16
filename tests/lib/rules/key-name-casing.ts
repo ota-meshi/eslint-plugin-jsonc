@@ -72,11 +72,8 @@ tester.run("key-name-casing", rule as any, {
                 {
                     camelCase: true,
                     "kebab-case": true,
-                    // eslint-disable-next-line @typescript-eslint/naming-convention -- test
                     PascalCase: true,
-                    // eslint-disable-next-line @typescript-eslint/naming-convention -- test
                     snake_case: true,
-                    // eslint-disable-next-line @typescript-eslint/naming-convention -- test
                     SCREAMING_SNAKE_CASE: true,
                 },
             ],

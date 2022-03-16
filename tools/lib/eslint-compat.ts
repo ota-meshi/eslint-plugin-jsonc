@@ -7,13 +7,12 @@ type ESLintCLIEngine = any
 export namespace ESLint {
     export type LintResult = eslint.ESLint.LintResult
 }
-// eslint-disable-next-line @typescript-eslint/naming-convention -- ignore
+
 export const ESLint = eslint.ESLint || getESLintClassForV6()
 // export const ESLint = getESLintClassForV6()
 
 /** Build the ESLint class that ESLint v6 compatible. */
 function getESLintClassForV6(): typeof eslint.ESLint {
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- ignore
     const CLIEngine = (eslint as any).CLIEngine
     class ESLintForV6 {
         private readonly engine: ESLintCLIEngine

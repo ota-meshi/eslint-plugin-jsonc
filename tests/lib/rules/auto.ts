@@ -1,6 +1,7 @@
 import path from "path"
-import { RuleTester } from "eslint"
+import { RuleTester, Linter } from "eslint"
 import rule from "../../../lib/rules/auto"
+import semver from "semver"
 
 const tester = new RuleTester({
     parser: require.resolve("jsonc-eslint-parser"),
@@ -62,7 +63,7 @@ tester.run("auto", rule as any, {
 </block>
 <block lang="json">
 {"a": 1,
-    "b": 2}
+    "b": 2${semver.gte(Linter.version, "8.11.0") ? "," : ""}}
 </block>
 <block lang="json">
 {"foo": 1,
