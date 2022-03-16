@@ -27,29 +27,7 @@ module.exports = {
         {
             files: ["*.ts"],
             rules: {
-                "@typescript-eslint/naming-convention": [
-                    "error",
-                    {
-                        selector: "default",
-                        format: ["camelCase"],
-                        leadingUnderscore: "allow",
-                        trailingUnderscore: "allow",
-                    },
-                    {
-                        selector: "variable",
-                        format: ["camelCase", "UPPER_CASE"],
-                        leadingUnderscore: "allow",
-                        trailingUnderscore: "allow",
-                    },
-                    {
-                        selector: "typeLike",
-                        format: ["PascalCase"],
-                    },
-                    {
-                        selector: "method",
-                        format: ["camelCase", "UPPER_CASE", "PascalCase"],
-                    },
-                ],
+                "@typescript-eslint/naming-convention": "off",
             },
             parser: "@typescript-eslint/parser",
             parserOptions: {
