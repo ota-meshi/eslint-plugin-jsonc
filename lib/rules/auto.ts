@@ -30,7 +30,6 @@ export default createRule("auto", {
                 "",
             )}`).default
             const subContext: any = {
-                // eslint-disable-next-line @typescript-eslint/naming-convention -- special
                 __proto__: context,
                 options: getRuleOptions(autoConfig[ruleId]),
                 report(options: any) {

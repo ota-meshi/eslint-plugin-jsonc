@@ -70,7 +70,6 @@ export function defineWrapperListener(
     const listener = coreRule.create({
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
         // @ts-expect-error
-        // eslint-disable-next-line @typescript-eslint/naming-convention -- special
         __proto__: context,
         options,
     }) as RuleListener

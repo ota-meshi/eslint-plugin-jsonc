@@ -33,7 +33,6 @@ export default createRule("no-parenthesized", {
         }
 
         const handlers: ExpressionHandler = {
-            /* eslint-disable @typescript-eslint/naming-convention -- ignore */
             JSONArrayExpression: handler,
             JSONBinaryExpression: handler,
             JSONIdentifier: handler,
@@ -41,7 +40,6 @@ export default createRule("no-parenthesized", {
             JSONObjectExpression: handler,
             JSONTemplateLiteral: handler,
             JSONUnaryExpression: handler,
-            /* eslint-enable @typescript-eslint/naming-convention -- ignore */
         }
 
         return handlers

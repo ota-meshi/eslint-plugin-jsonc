@@ -185,23 +185,17 @@ export function isPascalCase(str: string): boolean {
 
 const convertersMap = {
     "kebab-case": kebabCase,
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- case prop
     snake_case: snakeCase,
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- case prop
     SCREAMING_SNAKE_CASE: screamingSnakeCase,
     camelCase,
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- case prop
     PascalCase: pascalCase,
 }
 
 const checkersMap = {
     "kebab-case": isKebabCase,
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- case prop
     snake_case: isSnakeCase,
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- case prop
     SCREAMING_SNAKE_CASE: isScreamingSnakeCase,
     camelCase: isCamelCase,
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- case prop
     PascalCase: isPascalCase,
 }
 

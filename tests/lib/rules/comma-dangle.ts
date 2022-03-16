@@ -1,5 +1,6 @@
-import { RuleTester } from "eslint"
+import { RuleTester, Linter } from "eslint"
 import rule from "../../../lib/rules/comma-dangle"
+import semver from "semver"
 
 const tester = new RuleTester({
     parser: require.resolve("jsonc-eslint-parser"),
@@ -15,7 +16,9 @@ tester.run("comma-dangle", rule as any, {
         },
         {
             code: '{"key": [1,2],}',
-            output: '{"key": [1,2,]}',
+            output: semver.gte(Linter.version, "8.11.0")
+                ? '{"key": [1,2,],}'
+                : '{"key": [1,2,]}',
             options: [{ arrays: "always", objects: "never" }],
             errors: ["Missing trailing comma.", "Unexpected trailing comma."],
         },
