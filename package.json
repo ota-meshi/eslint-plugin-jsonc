@@ -94,7 +94,7 @@
         "eslint-plugin-regexp": "^1.0.0",
         "eslint-plugin-vue": "^8.0.0",
         "eslint-plugin-yml": "^0.14.0",
-        "mocha": "^9.0.0",
+        "mocha": "^10.0.0",
         "nyc": "^15.1.0",
         "prettier": "^2.0.5",
         "raw-loader": "^4.0.1",
