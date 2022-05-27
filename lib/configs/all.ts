@@ -6,6 +6,7 @@ const baseExtend =
 
 const all: Record<string, string> = {}
 for (const rule of rules) {
+    if (rule.meta.docs.ruleId === "jsonc/sort-array-values") continue
     all[rule.meta.docs.ruleId] = "error"
 }
 
