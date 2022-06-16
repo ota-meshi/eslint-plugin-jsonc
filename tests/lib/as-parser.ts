@@ -15,7 +15,7 @@ describe("eslint-plugin-jsonc as parser", () => {
             cwd: TEST_CWD,
             extensions: [".js", ".json6"],
             plugins: {
-                "eslint-plugin-jsonc": plugin,
+                "eslint-plugin-jsonc": plugin as never,
             },
         })
         const results = await engine.lintFiles(["test-as-parser01/src"])

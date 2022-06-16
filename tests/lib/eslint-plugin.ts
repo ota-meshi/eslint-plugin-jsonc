@@ -15,7 +15,7 @@ describe("Integration with eslint-plugin-jsonc", () => {
             cwd: TEST_CWD,
             extensions: [".js", ".json"],
             plugins: {
-                "eslint-plugin-jsonc": plugin,
+                "eslint-plugin-jsonc": plugin as never,
             },
         })
         const results = await engine.lintFiles(["test01/src"])

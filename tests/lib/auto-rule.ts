@@ -35,14 +35,14 @@ describe("auto rule", () => {
             cwd: TEST_CWD,
             extensions: [".js", ".json"],
             plugins: {
-                "eslint-plugin-jsonc": plugin,
+                "eslint-plugin-jsonc": plugin as never,
             },
         })
         const fixEngine = new ESLint({
             cwd: TEST_CWD,
             extensions: [".js", ".json"],
             plugins: {
-                "eslint-plugin-jsonc": plugin,
+                "eslint-plugin-jsonc": plugin as never,
             },
             fix: true,
         })
