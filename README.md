@@ -98,12 +98,26 @@ module.exports = {
   extends: [
     // add more generic rulesets here, such as:
     // 'eslint:recommended',
-    "plugin:jsonc/recommended-with-jsonc",
+    "plugin:jsonc/prettier",
   ],
   rules: {
     // override/add rules settings here, such as:
     // 'jsonc/rule-name': 'error'
   },
+  overrides: [
+    {
+      files: ["*.json"],
+      extends: ["plugin:jsonc/recommended-with-json"],
+    },
+    {
+      files: ["*.jsonc"],
+      extends: ["plugin:jsonc/recommended-with-jsonc"],
+    },
+    {
+      files: ["*.json5"],
+      extends: ["plugin:jsonc/recommended-with-json5"],
+    },
+  ],
 };
 ```
 
