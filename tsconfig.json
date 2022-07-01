@@ -1,30 +1,30 @@
 {
-    "compilerOptions": {
-        "target": "es2015",
-        "module": "commonjs",
-        "lib": ["es2020"],
-        "allowJs": true,
-        "checkJs": true,
-        "outDir": "./dist",
-        "strict": true,
-        "noImplicitAny": true,
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "lib": ["es2020"],
+    "allowJs": true,
+    "checkJs": true,
+    "outDir": "./dist",
+    "strict": true,
+    "noImplicitAny": true,
 
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "baseUrl": ".",
-        "paths": {
-            "*": ["typings/*"]
-        },
-        "esModuleInterop": true
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["typings/*"]
     },
-    "include": [
-        "lib/**/*",
-        "tests/lib/**/*",
-        "tests-integrations/lib/**/*",
-        "tools/**/*",
-        "typings/**/*"
-    ],
-    "exclude": ["dist/**/*"]
+    "esModuleInterop": true
+  },
+  "include": [
+    "lib/**/*",
+    "tests/lib/**/*",
+    "tests-integrations/lib/**/*",
+    "tools/**/*",
+    "typings/**/*"
+  ],
+  "exclude": ["dist/**/*"]
 }

@@ -1,12 +1,12 @@
 {
-    "extends": "./tsconfig.json",
-    "exclude": [
-        "tests/**/*",
-        "tests-integrations/lib/**/*",
-        "tools/**/*",
-        "typings/**/*"
-    ],
-    "compilerOptions": {
-        "removeComments": true /* Do not emit comments to output. */
-    }
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "tests/**/*",
+    "tests-integrations/lib/**/*",
+    "tools/**/*",
+    "typings/**/*"
+  ],
+  "compilerOptions": {
+    "removeComments": true /* Do not emit comments to output. */
+  }
 }
