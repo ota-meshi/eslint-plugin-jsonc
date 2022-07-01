@@ -1,3 +1,3 @@
 module.exports = {
-    createRequire: () => () => null,
-}
+  createRequire: () => () => null,
+};

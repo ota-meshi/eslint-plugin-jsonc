@@ -1,13 +1,13 @@
 // @ts-nocheck
-const getCoreRules = require("./rules")
+const getCoreRules = require("./rules");
 
-const rules = {}
+const rules = {};
 
 for (const [ruleId, rule] of getCoreRules()) {
-    if (rule.meta.docs.recommended && !rule.meta.deprecated) {
-        rules[ruleId] = "error"
-    }
+  if (rule.meta.docs.recommended && !rule.meta.deprecated) {
+    rules[ruleId] = "error";
+  }
 }
 module.exports = {
-    rules,
-}
+  rules,
+};
