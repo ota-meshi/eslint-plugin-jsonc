@@ -1,6 +1,6 @@
 import type { Linter } from "eslint"
 import { existsSync, statSync } from "fs"
-import { dirname, resolve } from "path"
+import { dirname, extname, resolve } from "path"
 import type { RuleModule } from "../types"
 
 let configResolver: (filePath: string) => Linter.Config, ruleNames: Set<string>
@@ -37,7 +37,6 @@ function getConfigResolver(): (filePath: string) => Linter.Config {
                 ),
                 eslintAllPath: require.resolve("../../conf/eslint-all.js"),
             })
-
         return (configResolver = (filePath: string) => {
             const absolutePath = resolve(process.cwd(), filePath)
             return configArrayFactory
@@ -49,12 +48,29 @@ function getConfigResolver(): (filePath: string) => Linter.Config {
         // ignore
     }
     try {
+        // For ESLint v6
+
         // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
         const eslint = require("eslint")
         const engine = new eslint.CLIEngine({})
         engine.addPlugin("eslint-plugin-jsonc", plugin)
         return (configResolver = (filePath) => {
-            return engine.getConfigForFile(filePath)
+            // Adjust the file name to avoid a crash.
+            // https://github.com/ota-meshi/eslint-plugin-jsonc/issues/28
+            let targetFilePath = filePath
+            const ext = extname(filePath)
+            while (!isValidFilename(targetFilePath)) {
+                const dir = dirname(targetFilePath)
+                if (dir === targetFilePath) {
+                    return {}
+                }
+                targetFilePath = dir
+                if (ext && extname(targetFilePath) !== ext) {
+                    targetFilePath += ext
+                }
+            }
+
+            return engine.getConfigForFile(targetFilePath)
         })
     } catch {
         // ignore
@@ -64,7 +80,7 @@ function getConfigResolver(): (filePath: string) => Linter.Config {
 }
 
 /**
- * Checks if the given file name can get the configuration.
+ * Checks if the given file name can get the configuration (for ESLint v6).
  */
 function isValidFilename(filename: string) {
     const dir = dirname(filename)
@@ -83,14 +99,6 @@ function isValidFilename(filename: string) {
  * @param filename
  */
 function getConfig(filename: string): Linter.Config {
-    while (!isValidFilename(filename)) {
-        const dir = dirname(filename)
-        if (dir === filename) {
-            return {}
-        }
-        // eslint-disable-next-line no-param-reassign -- ignore
-        filename = dir
-    }
     return getConfigResolver()(filename)
 }
 
