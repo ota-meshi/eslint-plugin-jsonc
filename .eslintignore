@@ -11,6 +11,7 @@
 /tests-integrations/fixtures/eslint-plugin-markdown/test.md
 /tests-integrations/fixtures/vue-eslint-parser-option/test.json
 /tests-integrations/fixtures/eslint-plugin-markdown-nest/test.md
+/tests-integrations/fixtures/eslint-plugin-markdown-nest-for-v6/test.md
 /assets
 /index.d.ts
 !/.github
