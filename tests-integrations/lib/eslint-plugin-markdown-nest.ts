@@ -16,11 +16,6 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
 
     before(() => {
         originalCwd = process.cwd()
-        // To test ESLint v6, remove `@eslint/eslintrc` module in the root.
-        cp.execSync(`npx rimraf node_modules/@eslint/eslintrc`, {
-            stdio: "inherit",
-        })
-
         process.chdir(TEST_CWD)
         cp.execSync(`npm i -D ../../../eslint-plugin-jsonc-${version}.tgz`, {
             stdio: "inherit",
@@ -28,14 +23,9 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
     })
     after(() => {
         process.chdir(originalCwd)
-
-        // `npm install` to get the removed module back.
-        cp.execSync(`npm i`, {
-            stdio: "inherit",
-        })
     })
 
-    for (const eslintVersion of [6, 7, 8]) {
+    for (const eslintVersion of [7, 8]) {
         it(`should lint errors with ESLint v${eslintVersion}`, () => {
             cp.execSync(`npm i -D eslint@${eslintVersion}`, {
                 stdio: "inherit",
@@ -53,11 +43,18 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
                     results[0].messages.map((message) => ({
                         message: message.message,
                         ruleId: message.ruleId,
+                        line: message.line,
                     })),
                     [
                         {
                             message: "Strings must use doublequote.",
                             ruleId: "jsonc/quotes",
+                            line: 3,
+                        },
+                        {
+                            message: "Strings must use doublequote.",
+                            ruleId: "jsonc/quotes",
+                            line: 10,
                         },
                     ],
                 )
