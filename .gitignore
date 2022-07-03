@@ -106,6 +106,7 @@ dist
 /typings/eslint/lib
 /dist-ts
 /index.d.ts
+/tests-integrations/fixtures/**/package-lock.json
 
 # docs
 /404.html

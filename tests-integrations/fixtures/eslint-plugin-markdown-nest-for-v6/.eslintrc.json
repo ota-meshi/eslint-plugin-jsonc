@@ -1,0 +1,22 @@
+{
+  "root": true,
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2015
+  },
+  "extends": [
+    "plugin:markdown/recommended"
+  ],
+  "rules": {
+    "quotes": ["error", "single"]
+  },
+  "overrides": [
+    {
+      "files": ["*.json"],
+      "extends": [
+        "plugin:jsonc/recommended-with-json"
+      ],
+      "rules": { "jsonc/auto": "error" }
+    }
+  ]
+}
