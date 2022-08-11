@@ -101,7 +101,7 @@
     "semver": "^7.3.2",
     "stylelint": "^14.9.1",
     "stylelint-config-recommended-vue": "^1.0.0",
-    "stylelint-config-standard": "^26.0.0",
+    "stylelint-config-standard": "^27.0.0",
     "stylelint-stylus": "^0.16.1",
     "ts-node": "^10.0.0",
     "typescript": "^4.0.0",
