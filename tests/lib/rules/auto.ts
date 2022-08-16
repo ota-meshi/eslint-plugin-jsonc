@@ -24,6 +24,12 @@ tester.run("auto", rule as any, {
 </i18n>`,
             parser: require.resolve("vue-eslint-parser"),
         },
+        {
+            filename: path.join(ROOT_DIR, "test03", "test.json"),
+            code: `{
+                "foo": "bar"
+            }`,
+        },
     ],
     invalid: [
         {
