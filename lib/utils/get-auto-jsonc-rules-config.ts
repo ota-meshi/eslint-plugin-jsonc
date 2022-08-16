@@ -134,8 +134,11 @@ export function getAutoConfig(filename: string): {
             const jsoncName = getJsoncRule(ruleName)
             if (jsoncName && !config.rules[jsoncName]) {
                 const entry = config.rules[ruleName]
-                if (entry && entry !== "off") {
-                    autoConfig[jsoncName] = entry
+                if (entry) {
+                    const severity = Array.isArray(entry) ? entry[0] : entry
+                    if (severity !== "off" && severity !== 0) {
+                        autoConfig[jsoncName] = entry
+                    }
                 }
             }
         }
