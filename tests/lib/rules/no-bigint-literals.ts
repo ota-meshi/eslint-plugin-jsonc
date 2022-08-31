@@ -1,32 +1,32 @@
-import { RuleTester } from "eslint"
-import rule from "../../../lib/rules/no-bigint-literals"
+import { RuleTester } from "eslint";
+import rule from "../../../lib/rules/no-bigint-literals";
 
 const tester = new RuleTester({
-    parser: require.resolve("jsonc-eslint-parser"),
-    parserOptions: {
-        ecmaVersion: 2020,
-    },
-})
+  parser: require.resolve("jsonc-eslint-parser"),
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
+});
 
 tester.run("no-bigint-literals", rule as any, {
-    valid: ['{"key": "value"}', '"string"', '["element"]'],
-    invalid: [
-        {
-            code: "42n",
-            errors: ["BigInt literals are not allowed."],
-        },
-        {
-            code: "[1n, {'2n': 3n}]",
-            errors: [
-                "BigInt literals are not allowed.",
-                "BigInt literals are not allowed.",
-            ],
-        },
-        {
-            filename: "test.vue",
-            code: `<custom-block lang="json">42n</custom-block>`,
-            parser: require.resolve("vue-eslint-parser"),
-            errors: ["BigInt literals are not allowed."],
-        },
-    ],
-})
+  valid: ['{"key": "value"}', '"string"', '["element"]'],
+  invalid: [
+    {
+      code: "42n",
+      errors: ["BigInt literals are not allowed."],
+    },
+    {
+      code: "[1n, {'2n': 3n}]",
+      errors: [
+        "BigInt literals are not allowed.",
+        "BigInt literals are not allowed.",
+      ],
+    },
+    {
+      filename: "test.vue",
+      code: `<custom-block lang="json">42n</custom-block>`,
+      parser: require.resolve("vue-eslint-parser"),
+      errors: ["BigInt literals are not allowed."],
+    },
+  ],
+});

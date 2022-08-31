@@ -1,28 +1,28 @@
-import path from "path"
-import fs from "fs"
-import cp from "child_process"
-const logger = console
+import path from "path";
+import fs from "fs";
+import cp from "child_process";
+const logger = console;
 
 // main
-;((ruleId) => {
-    if (ruleId == null) {
-        logger.error("Usage: npm run new <RuleID>")
-        process.exitCode = 1
-        return
-    }
-    if (!/^[\w\-/]+$/u.test(ruleId)) {
-        logger.error("Invalid RuleID '%s'.", ruleId)
-        process.exitCode = 1
-        return
-    }
+((ruleId) => {
+  if (ruleId == null) {
+    logger.error("Usage: npm run new <RuleID>");
+    process.exitCode = 1;
+    return;
+  }
+  if (!/^[\w\-/]+$/u.test(ruleId)) {
+    logger.error("Invalid RuleID '%s'.", ruleId);
+    process.exitCode = 1;
+    return;
+  }
 
-    const ruleFile = path.resolve(__dirname, `../lib/rules/${ruleId}.ts`)
-    const testFile = path.resolve(__dirname, `../tests/lib/rules/${ruleId}.ts`)
-    const docFile = path.resolve(__dirname, `../docs/rules/${ruleId}.md`)
+  const ruleFile = path.resolve(__dirname, `../lib/rules/${ruleId}.ts`);
+  const testFile = path.resolve(__dirname, `../tests/lib/rules/${ruleId}.ts`);
+  const docFile = path.resolve(__dirname, `../docs/rules/${ruleId}.md`);
 
-    fs.writeFileSync(
-        ruleFile,
-        `
+  fs.writeFileSync(
+    ruleFile,
+    `
 import type { AST } from "jsonc-eslint-parser"
 import { createRule, defineWrapperListener, getCoreRule } from "../utils"
 const coreRule = getCoreRule("${ruleId}")
@@ -46,11 +46,11 @@ export default createRule("${ruleId}", {
         return defineWrapperListener(coreRule, context, context.options)
     },
 })
-`,
-    )
-    fs.writeFileSync(
-        testFile,
-        `import { RuleTester } from "eslint"
+`
+  );
+  fs.writeFileSync(
+    testFile,
+    `import { RuleTester } from "eslint"
 import rule from "../../../lib/rules/${ruleId}"
 
 const tester = new RuleTester({
@@ -73,11 +73,11 @@ tester.run("${ruleId}", rule as any, {
         },
     ],
 })
-`,
-    )
-    fs.writeFileSync(
-        docFile,
-        `#  (jsonc/${ruleId})
+`
+  );
+  fs.writeFileSync(
+    docFile,
+    `#  (jsonc/${ruleId})
 
 > description
 
@@ -129,10 +129,10 @@ Same as [${ruleId}] rule option. See [here](https://eslint.org/docs/rules/${rule
 
 [${ruleId}]: https://eslint.org/docs/rules/${ruleId}
 
-`,
-    )
+`
+  );
 
-    cp.execSync(`code "${ruleFile}"`)
-    cp.execSync(`code "${testFile}"`)
-    cp.execSync(`code "${docFile}"`)
-})(process.argv[2])
+  cp.execSync(`code "${ruleFile}"`);
+  cp.execSync(`code "${testFile}"`);
+  cp.execSync(`code "${docFile}"`);
+})(process.argv[2]);

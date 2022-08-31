@@ -1,13 +1,13 @@
-import { RuleTester } from "eslint"
-import rule from "../../../lib/rules/comma-style"
+import { RuleTester } from "eslint";
+import rule from "../../../lib/rules/comma-style";
 
 const tester = new RuleTester({
-    parser: require.resolve("jsonc-eslint-parser"),
-})
+  parser: require.resolve("jsonc-eslint-parser"),
+});
 
 tester.run("comma-style", rule as any, {
-    valid: [
-        `{
+  valid: [
+    `{
             "GOOD": ["apples",
                 "oranges"],
             "GOOD": {
@@ -15,10 +15,10 @@ tester.run("comma-style", rule as any, {
                 "b": 2
             }
         }`,
-    ],
-    invalid: [
-        {
-            code: `{
+  ],
+  invalid: [
+    {
+      code: `{
                 "BAD": ["apples"
                     , "oranges"],
                 "BAD": {
@@ -26,7 +26,7 @@ tester.run("comma-style", rule as any, {
                     , "b": 2
                 }
             }`,
-            output: `{
+      output: `{
                 "BAD": ["apples",
                      "oranges"],
                 "BAD": {
@@ -34,14 +34,11 @@ tester.run("comma-style", rule as any, {
                      "b": 2
                 }
             }`,
-            errors: [
-                "',' should be placed last.",
-                "',' should be placed last.",
-            ],
-        },
-        {
-            filename: "test.vue",
-            code: `<i18n>{
+      errors: ["',' should be placed last.", "',' should be placed last."],
+    },
+    {
+      filename: "test.vue",
+      code: `<i18n>{
                 "BAD": ["apples"
                     , "oranges"],
                 "BAD": {
@@ -57,7 +54,7 @@ tester.run("comma-style", rule as any, {
                     , "b": 2
                 }
             }</custom-block>`,
-            output: `<i18n>{
+      output: `<i18n>{
                 "BAD": ["apples",
                      "oranges"],
                 "BAD": {
@@ -73,11 +70,8 @@ tester.run("comma-style", rule as any, {
                     , "b": 2
                 }
             }</custom-block>`,
-            parser: require.resolve("vue-eslint-parser"),
-            errors: [
-                "',' should be placed last.",
-                "',' should be placed last.",
-            ],
-        },
-    ],
-})
+      parser: require.resolve("vue-eslint-parser"),
+      errors: ["',' should be placed last.", "',' should be placed last."],
+    },
+  ],
+});

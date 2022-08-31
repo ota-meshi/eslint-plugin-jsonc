@@ -3,26 +3,26 @@
 // ------------------------------------------------------------------------------
 
 export type CasingKind =
-    | "camelCase"
-    | "kebab-case"
-    | "PascalCase"
-    | "snake_case"
-    | "SCREAMING_SNAKE_CASE"
+  | "camelCase"
+  | "kebab-case"
+  | "PascalCase"
+  | "snake_case"
+  | "SCREAMING_SNAKE_CASE";
 
 export const allowedCaseOptions: CasingKind[] = [
-    "camelCase",
-    "kebab-case",
-    "PascalCase",
-    "snake_case",
-    "SCREAMING_SNAKE_CASE",
-]
+  "camelCase",
+  "kebab-case",
+  "PascalCase",
+  "snake_case",
+  "SCREAMING_SNAKE_CASE",
+];
 
 /**
  * Capitalize a string.
  * @param {string} str
  */
 function capitalize(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1)
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /**
@@ -30,9 +30,9 @@ function capitalize(str: string) {
  * @param {string} str
  */
 function hasSymbols(str: string) {
-    return /[\u0021-\u0023\u0025-\u002c./\u003a-\u0040\u005b-\u005e`\u007b-\u007d]/u.test(
-        str,
-    ) // without " ", "$", "-" and "_"
+  return /[\u0021-\u0023\u0025-\u002c./\u003a-\u0040\u005b-\u005e`\u007b-\u007d]/u.test(
+    str
+  ); // without " ", "$", "-" and "_"
 }
 
 /**
@@ -40,7 +40,7 @@ function hasSymbols(str: string) {
  * @param {string} str
  */
 function hasUpper(str: string) {
-    return /[A-Z]/u.test(str)
+  return /[A-Z]/u.test(str);
 }
 
 /**
@@ -48,7 +48,7 @@ function hasUpper(str: string) {
  * @param {string} str
  */
 function hasLower(str: string) {
-    return /[a-z]/u.test(str)
+  return /[a-z]/u.test(str);
 }
 
 /**
@@ -57,11 +57,11 @@ function hasLower(str: string) {
  * @return {string}
  */
 export function kebabCase(str: string): string {
-    let res = str.replace(/_/gu, "-")
-    if (hasLower(res)) {
-        res = res.replace(/\B([A-Z])/gu, "-$1")
-    }
-    return res.toLowerCase()
+  let res = str.replace(/_/gu, "-");
+  if (hasLower(res)) {
+    res = res.replace(/\B([A-Z])/gu, "-$1");
+  }
+  return res.toLowerCase();
 }
 
 /**
@@ -69,15 +69,15 @@ export function kebabCase(str: string): string {
  * @param {string} str
  */
 export function isKebabCase(str: string): boolean {
-    if (
-        hasUpper(str) ||
-        hasSymbols(str) ||
-        str.startsWith("-") || // starts with hyphen is not kebab-case
-        /_|--|\s/u.test(str)
-    ) {
-        return false
-    }
-    return true
+  if (
+    hasUpper(str) ||
+    hasSymbols(str) ||
+    str.startsWith("-") || // starts with hyphen is not kebab-case
+    /_|--|\s/u.test(str)
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -86,11 +86,11 @@ export function isKebabCase(str: string): boolean {
  * @return {string}
  */
 export function snakeCase(str: string): string {
-    let res = str.replace(/-/gu, "_")
-    if (hasLower(res)) {
-        res = res.replace(/\B([A-Z])/gu, "_$1")
-    }
-    return res.toLowerCase()
+  let res = str.replace(/-/gu, "_");
+  if (hasLower(res)) {
+    res = res.replace(/\B([A-Z])/gu, "_$1");
+  }
+  return res.toLowerCase();
 }
 
 /**
@@ -98,10 +98,10 @@ export function snakeCase(str: string): string {
  * @param {string} str
  */
 export function isSnakeCase(str: string): boolean {
-    if (hasUpper(str) || hasSymbols(str) || /-|__|\s/u.test(str)) {
-        return false
-    }
-    return true
+  if (hasUpper(str) || hasSymbols(str) || /-|__|\s/u.test(str)) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -110,11 +110,11 @@ export function isSnakeCase(str: string): boolean {
  * @return {string}
  */
 export function screamingSnakeCase(str: string): string {
-    let res = str.replace(/-/gu, "_")
-    if (hasLower(res)) {
-        res = res.replace(/\B([A-Z])/gu, "_$1")
-    }
-    return res.toUpperCase()
+  let res = str.replace(/-/gu, "_");
+  if (hasLower(res)) {
+    res = res.replace(/\B([A-Z])/gu, "_$1");
+  }
+  return res.toUpperCase();
 }
 
 /**
@@ -122,10 +122,10 @@ export function screamingSnakeCase(str: string): string {
  * @param {string} str
  */
 export function isScreamingSnakeCase(str: string): boolean {
-    if (hasLower(str) || hasSymbols(str) || /-|__|\s/u.test(str)) {
-        return false
-    }
-    return true
+  if (hasLower(str) || hasSymbols(str) || /-|__|\s/u.test(str)) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -134,14 +134,14 @@ export function isScreamingSnakeCase(str: string): boolean {
  * @return {string} Converted string
  */
 export function camelCase(str: string): string {
-    if (isPascalCase(str)) {
-        return str.charAt(0).toLowerCase() + str.slice(1)
-    }
-    let s = str
-    if (!hasLower(s)) {
-        s = s.toLowerCase()
-    }
-    return s.replace(/[-_](\w)/gu, (_, c) => (c ? c.toUpperCase() : ""))
+  if (isPascalCase(str)) {
+    return str.charAt(0).toLowerCase() + str.slice(1);
+  }
+  let s = str;
+  if (!hasLower(s)) {
+    s = s.toLowerCase();
+  }
+  return s.replace(/[-_](\w)/gu, (_, c) => (c ? c.toUpperCase() : ""));
 }
 
 /**
@@ -149,14 +149,14 @@ export function camelCase(str: string): string {
  * @param {string} str
  */
 export function isCamelCase(str: string): boolean {
-    if (
-        hasSymbols(str) ||
-        /^[A-Z]/u.test(str) ||
-        /[\s\-_]/u.test(str) // kebab or snake or space
-    ) {
-        return false
-    }
-    return true
+  if (
+    hasSymbols(str) ||
+    /^[A-Z]/u.test(str) ||
+    /[\s\-_]/u.test(str) // kebab or snake or space
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -165,7 +165,7 @@ export function isCamelCase(str: string): boolean {
  * @return {string} Converted string
  */
 export function pascalCase(str: string): string {
-    return capitalize(camelCase(str))
+  return capitalize(camelCase(str));
 }
 
 /**
@@ -173,38 +173,38 @@ export function pascalCase(str: string): string {
  * @param {string} str
  */
 export function isPascalCase(str: string): boolean {
-    if (
-        hasSymbols(str) ||
-        /^[a-z]/u.test(str) ||
-        /[\s\-_]/u.test(str) // kebab or snake or space
-    ) {
-        return false
-    }
-    return true
+  if (
+    hasSymbols(str) ||
+    /^[a-z]/u.test(str) ||
+    /[\s\-_]/u.test(str) // kebab or snake or space
+  ) {
+    return false;
+  }
+  return true;
 }
 
 const convertersMap = {
-    "kebab-case": kebabCase,
-    snake_case: snakeCase,
-    SCREAMING_SNAKE_CASE: screamingSnakeCase,
-    camelCase,
-    PascalCase: pascalCase,
-}
+  "kebab-case": kebabCase,
+  snake_case: snakeCase,
+  SCREAMING_SNAKE_CASE: screamingSnakeCase,
+  camelCase,
+  PascalCase: pascalCase,
+};
 
 const checkersMap = {
-    "kebab-case": isKebabCase,
-    snake_case: isSnakeCase,
-    SCREAMING_SNAKE_CASE: isScreamingSnakeCase,
-    camelCase: isCamelCase,
-    PascalCase: isPascalCase,
-}
+  "kebab-case": isKebabCase,
+  snake_case: isSnakeCase,
+  SCREAMING_SNAKE_CASE: isScreamingSnakeCase,
+  camelCase: isCamelCase,
+  PascalCase: isPascalCase,
+};
 
 /**
  * Return case checker
  * @param name type of checker to return ('camelCase', 'kebab-case', 'PascalCase')
  */
 export function getChecker(name: CasingKind): (str: string) => boolean {
-    return checkersMap[name] || isPascalCase
+  return checkersMap[name] || isPascalCase;
 }
 
 /**
@@ -212,7 +212,7 @@ export function getChecker(name: CasingKind): (str: string) => boolean {
  * @param name type of converter to return
  */
 export function getConverter(name: CasingKind): (str: string) => string {
-    return convertersMap[name] || pascalCase
+  return convertersMap[name] || pascalCase;
 }
 
 /**
@@ -221,10 +221,10 @@ export function getConverter(name: CasingKind): (str: string) => string {
  * @param name type of converter to return ('camelCase', 'kebab-case', 'PascalCase')
  */
 export function getExactConverter(name: CasingKind): (str: string) => string {
-    const converter = getConverter(name)
-    const checker = getChecker(name)
-    return (str: string) => {
-        const result = converter(str)
-        return checker(result) ? result : str /* cannot convert */
-    }
+  const converter = getConverter(name);
+  const checker = getChecker(name);
+  return (str: string) => {
+    const result = converter(str);
+    return checker(result) ? result : str; /* cannot convert */
+  };
 }

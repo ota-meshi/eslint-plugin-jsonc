@@ -1,3 +1,3 @@
-import type { Program } from "estree"
+import type { Program } from "estree";
 
-export function parse(text: string, options?: any): Program
+export function parse(text: string, options?: any): Program;
