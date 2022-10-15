@@ -74,7 +74,7 @@
     "@types/eslint-visitor-keys": "^1.0.0",
     "@types/mocha": "^10.0.0",
     "@types/natural-compare": "^1.4.0",
-    "@types/node": "^16.11.3",
+    "@types/node": "^18.0.0",
     "@types/semver": "^7.3.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
