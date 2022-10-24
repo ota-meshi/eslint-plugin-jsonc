@@ -81,7 +81,7 @@ class DocFile {
     if (deprecated) {
       if (replacedBy) {
         const replacedRules = replacedBy.map(
-          (name) => `[svelte/${name}](${name}.md) rule`
+          (name) => `[jsonc/${name}](${name}.md) rule`
         );
         notes.push(
           `- :warning: This rule was **deprecated** and replaced by ${formatItems(
