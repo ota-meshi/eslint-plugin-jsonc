@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "jsonc/no-irregular-whitespace"
 description: "disallow irregular whitespace"
+since: "v2.5.0"
 ---
 
 # jsonc/no-irregular-whitespace
 
 > disallow irregular whitespace
-
-- :exclamation: <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## :book: Rule Details
 
@@ -67,6 +66,10 @@ Same as [no-irregular-whitespace] rule option. See [here](https://eslint.org/doc
 - [no-irregular-whitespace]
 
 [no-irregular-whitespace]: https://eslint.org/docs/rules/no-irregular-whitespace
+
+## :rocket: Version
+
+This rule was introduced in eslint-plugin-jsonc v2.5.0
 
 ## :mag: Implementation
 
