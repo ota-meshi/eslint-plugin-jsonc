@@ -5,6 +5,7 @@ title: "jsonc/no-bigint-literals"
 description: "disallow BigInt literals"
 since: "v0.2.0"
 ---
+
 # jsonc/no-bigint-literals
 
 > disallow BigInt literals

@@ -5,6 +5,7 @@ title: "jsonc/no-octal-numeric-literals"
 description: "disallow octal numeric literals"
 since: "v1.1.0"
 ---
+
 # jsonc/no-octal-numeric-literals
 
 > disallow octal numeric literals

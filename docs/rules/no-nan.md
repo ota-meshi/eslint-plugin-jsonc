@@ -5,6 +5,7 @@ title: "jsonc/no-nan"
 description: "disallow NaN"
 since: "v1.1.0"
 ---
+
 # jsonc/no-nan
 
 > disallow NaN

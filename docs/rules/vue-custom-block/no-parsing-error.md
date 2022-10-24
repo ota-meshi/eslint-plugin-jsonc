@@ -5,6 +5,7 @@ title: "jsonc/vue-custom-block/no-parsing-error"
 description: "disallow parsing errors in Vue custom blocks"
 since: "v0.8.0"
 ---
+
 # jsonc/vue-custom-block/no-parsing-error
 
 > disallow parsing errors in Vue custom blocks

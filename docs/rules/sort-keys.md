@@ -5,6 +5,7 @@ title: "jsonc/sort-keys"
 description: "require object keys to be sorted"
 since: "v0.1.0"
 ---
+
 # jsonc/sort-keys
 
 > require object keys to be sorted

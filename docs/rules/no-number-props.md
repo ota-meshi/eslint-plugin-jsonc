@@ -5,6 +5,7 @@ title: "jsonc/no-number-props"
 description: "disallow number property keys"
 since: "v0.2.0"
 ---
+
 # jsonc/no-number-props
 
 > disallow number property keys

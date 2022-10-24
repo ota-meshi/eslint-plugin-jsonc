@@ -5,6 +5,7 @@ title: "jsonc/no-octal"
 description: "disallow legacy octal literals"
 since: "v1.1.0"
 ---
+
 # jsonc/no-octal
 
 > disallow legacy octal literals

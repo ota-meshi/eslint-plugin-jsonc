@@ -5,6 +5,7 @@ title: "jsonc/indent"
 description: "enforce consistent indentation"
 since: "v0.1.0"
 ---
+
 # jsonc/indent
 
 > enforce consistent indentation

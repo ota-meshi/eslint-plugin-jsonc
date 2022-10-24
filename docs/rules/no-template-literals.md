@@ -5,6 +5,7 @@ title: "jsonc/no-template-literals"
 description: "disallow template literals"
 since: "v0.2.0"
 ---
+
 # jsonc/no-template-literals
 
 > disallow template literals

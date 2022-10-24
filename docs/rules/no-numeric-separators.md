@@ -5,6 +5,7 @@ title: "jsonc/no-numeric-separators"
 description: "disallow numeric separators"
 since: "v0.6.0"
 ---
+
 # jsonc/no-numeric-separators
 
 > disallow numeric separators

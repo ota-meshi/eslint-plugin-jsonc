@@ -5,6 +5,7 @@ title: "jsonc/array-element-newline"
 description: "enforce line breaks between array elements"
 since: "v0.1.0"
 ---
+
 # jsonc/array-element-newline
 
 > enforce line breaks between array elements

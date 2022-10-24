@@ -5,6 +5,7 @@ title: "jsonc/no-binary-expression"
 description: "disallow binary expression"
 since: "v2.0.0"
 ---
+
 # jsonc/no-binary-expression
 
 > disallow binary expression

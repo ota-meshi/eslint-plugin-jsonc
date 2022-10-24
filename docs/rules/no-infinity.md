@@ -5,6 +5,7 @@ title: "jsonc/no-infinity"
 description: "disallow Infinity"
 since: "v1.1.0"
 ---
+
 # jsonc/no-infinity
 
 > disallow Infinity

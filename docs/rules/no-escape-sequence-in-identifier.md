@@ -5,6 +5,7 @@ title: "jsonc/no-escape-sequence-in-identifier"
 description: "disallow escape sequences in identifiers."
 since: "v1.1.0"
 ---
+
 # jsonc/no-escape-sequence-in-identifier
 
 > disallow escape sequences in identifiers.

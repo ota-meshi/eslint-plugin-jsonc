@@ -5,6 +5,7 @@ title: "jsonc/object-curly-spacing"
 description: "enforce consistent spacing inside braces"
 since: "v0.1.0"
 ---
+
 # jsonc/object-curly-spacing
 
 > enforce consistent spacing inside braces

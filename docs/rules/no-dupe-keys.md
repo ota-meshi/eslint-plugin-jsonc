@@ -5,6 +5,7 @@ title: "jsonc/no-dupe-keys"
 description: "disallow duplicate keys in object literals"
 since: "v0.1.0"
 ---
+
 # jsonc/no-dupe-keys
 
 > disallow duplicate keys in object literals

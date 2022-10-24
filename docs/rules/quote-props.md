@@ -5,6 +5,7 @@ title: "jsonc/quote-props"
 description: "require quotes around object literal property names"
 since: "v0.1.0"
 ---
+
 # jsonc/quote-props
 
 > require quotes around object literal property names

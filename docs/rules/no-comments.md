@@ -5,6 +5,7 @@ title: "jsonc/no-comments"
 description: "disallow comments"
 since: "v0.1.0"
 ---
+
 # jsonc/no-comments
 
 > disallow comments

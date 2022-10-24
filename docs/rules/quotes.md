@@ -5,6 +5,7 @@ title: "jsonc/quotes"
 description: "enforce use of double or single quotes"
 since: "v0.1.0"
 ---
+
 # jsonc/quotes
 
 > enforce use of double or single quotes

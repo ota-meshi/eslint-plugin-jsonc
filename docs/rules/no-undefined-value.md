@@ -5,6 +5,7 @@ title: "jsonc/no-undefined-value"
 description: "disallow `undefined`"
 since: "v0.2.0"
 ---
+
 # jsonc/no-undefined-value
 
 > disallow `undefined`

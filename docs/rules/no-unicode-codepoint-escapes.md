@@ -5,6 +5,7 @@ title: "jsonc/no-unicode-codepoint-escapes"
 description: "disallow Unicode code point escape sequences."
 since: "v1.1.0"
 ---
+
 # jsonc/no-unicode-codepoint-escapes
 
 > disallow Unicode code point escape sequences.

@@ -5,11 +5,13 @@ title: "jsonc/no-useless-escape"
 description: "disallow unnecessary escape usage"
 since: "v0.1.0"
 ---
+
 # jsonc/no-useless-escape
 
 > disallow unnecessary escape usage
 
 - :gear: This rule is included in all of `"plugin:jsonc/recommended-with-json"`, `"plugin:jsonc/recommended-with-json5"` and `"plugin:jsonc/recommended-with-jsonc"`.
+- :bulb: Some problems reported by this rule are manually fixable by editor [suggestions](https://eslint.org/docs/developer-guide/working-with-rules#providing-suggestions).
 
 ## :book: Rule Details
 

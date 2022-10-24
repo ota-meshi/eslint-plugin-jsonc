@@ -5,6 +5,7 @@ title: "jsonc/space-unary-ops"
 description: "disallow spaces after unary operators"
 since: "v0.2.0"
 ---
+
 # jsonc/space-unary-ops
 
 > disallow spaces after unary operators
