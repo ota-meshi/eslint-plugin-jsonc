@@ -5,6 +5,7 @@ title: "jsonc/key-spacing"
 description: "enforce consistent spacing between keys and values in object literal properties"
 since: "v0.1.0"
 ---
+
 # jsonc/key-spacing
 
 > enforce consistent spacing between keys and values in object literal properties

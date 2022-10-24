@@ -5,6 +5,7 @@ title: "jsonc/no-multi-str"
 description: "disallow multiline strings"
 since: "v0.1.0"
 ---
+
 # jsonc/no-multi-str
 
 > disallow multiline strings

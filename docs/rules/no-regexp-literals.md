@@ -5,6 +5,7 @@ title: "jsonc/no-regexp-literals"
 description: "disallow RegExp literals"
 since: "v0.2.0"
 ---
+
 # jsonc/no-regexp-literals
 
 > disallow RegExp literals

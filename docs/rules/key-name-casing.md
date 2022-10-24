@@ -5,6 +5,7 @@ title: "jsonc/key-name-casing"
 description: "enforce naming convention to property key names"
 since: "v0.8.0"
 ---
+
 # jsonc/key-name-casing
 
 > enforce naming convention to property key names

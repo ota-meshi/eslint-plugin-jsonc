@@ -5,6 +5,7 @@ title: "jsonc/sort-array-values"
 description: "require array values to be sorted"
 since: "v2.2.0"
 ---
+
 # jsonc/sort-array-values
 
 > require array values to be sorted

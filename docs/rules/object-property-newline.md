@@ -5,6 +5,7 @@ title: "jsonc/object-property-newline"
 description: "enforce placing object properties on separate lines"
 since: "v0.1.0"
 ---
+
 # jsonc/object-property-newline
 
 > enforce placing object properties on separate lines

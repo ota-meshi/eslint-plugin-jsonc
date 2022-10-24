@@ -5,6 +5,7 @@ title: "jsonc/no-hexadecimal-numeric-literals"
 description: "disallow hexadecimal numeric literals"
 since: "v1.1.0"
 ---
+
 # jsonc/no-hexadecimal-numeric-literals
 
 > disallow hexadecimal numeric literals

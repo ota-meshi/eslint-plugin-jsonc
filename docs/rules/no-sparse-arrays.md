@@ -5,6 +5,7 @@ title: "jsonc/no-sparse-arrays"
 description: "disallow sparse arrays"
 since: "v0.2.0"
 ---
+
 # jsonc/no-sparse-arrays
 
 > disallow sparse arrays

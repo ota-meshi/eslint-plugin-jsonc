@@ -5,6 +5,7 @@ title: "jsonc/valid-json-number"
 description: "disallow invalid number for JSON"
 since: "v0.1.0"
 ---
+
 # jsonc/valid-json-number
 
 > disallow invalid number for JSON

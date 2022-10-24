@@ -5,6 +5,7 @@ title: "jsonc/comma-dangle"
 description: "require or disallow trailing commas"
 since: "v0.1.0"
 ---
+
 # jsonc/comma-dangle
 
 > require or disallow trailing commas

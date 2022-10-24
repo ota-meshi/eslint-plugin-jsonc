@@ -5,6 +5,7 @@ title: "jsonc/no-plus-sign"
 description: "disallow plus sign"
 since: "v1.1.0"
 ---
+
 # jsonc/no-plus-sign
 
 > disallow plus sign

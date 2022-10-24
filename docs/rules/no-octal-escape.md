@@ -5,6 +5,7 @@ title: "jsonc/no-octal-escape"
 description: "disallow octal escape sequences in string literals"
 since: "v0.1.0"
 ---
+
 # jsonc/no-octal-escape
 
 > disallow octal escape sequences in string literals

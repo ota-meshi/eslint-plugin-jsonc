@@ -5,6 +5,7 @@ title: "jsonc/object-curly-newline"
 description: "enforce consistent line breaks inside braces"
 since: "v0.1.0"
 ---
+
 # jsonc/object-curly-newline
 
 > enforce consistent line breaks inside braces

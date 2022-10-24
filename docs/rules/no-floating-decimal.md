@@ -5,6 +5,7 @@ title: "jsonc/no-floating-decimal"
 description: "disallow leading or trailing decimal points in numeric literals"
 since: "v0.9.0"
 ---
+
 # jsonc/no-floating-decimal
 
 > disallow leading or trailing decimal points in numeric literals

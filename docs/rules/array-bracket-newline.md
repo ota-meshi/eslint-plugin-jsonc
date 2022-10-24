@@ -5,6 +5,7 @@ title: "jsonc/array-bracket-newline"
 description: "enforce line breaks after opening and before closing array brackets"
 since: "v0.1.0"
 ---
+
 # jsonc/array-bracket-newline
 
 > enforce line breaks after opening and before closing array brackets

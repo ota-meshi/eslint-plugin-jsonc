@@ -5,6 +5,7 @@ title: "jsonc/no-parenthesized"
 description: "disallow parentheses around the expression"
 since: "v2.0.0"
 ---
+
 # jsonc/no-parenthesized
 
 > disallow parentheses around the expression

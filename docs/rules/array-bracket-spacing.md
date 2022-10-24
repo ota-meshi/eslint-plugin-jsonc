@@ -5,6 +5,7 @@ title: "jsonc/array-bracket-spacing"
 description: "disallow or enforce spaces inside of brackets"
 since: "v0.1.0"
 ---
+
 # jsonc/array-bracket-spacing
 
 > disallow or enforce spaces inside of brackets

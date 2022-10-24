@@ -17,9 +17,14 @@ export interface RuleMetaData {
     url: string;
     ruleId: string;
     ruleName: string;
-    replacedBy?: [];
     default?: "error" | "warn";
-    extensionRule: boolean;
+    extensionRule:
+      | boolean
+      | string
+      | {
+          plugin: string;
+          url: string;
+        };
     layout: boolean;
   };
   messages: { [messageId: string]: string };
@@ -27,6 +32,7 @@ export interface RuleMetaData {
   hasSuggestions?: boolean;
   schema: JSONSchema4 | JSONSchema4[];
   deprecated?: boolean;
+  replacedBy?: [];
   type: "problem" | "suggestion" | "layout";
 }
 
@@ -42,9 +48,14 @@ export interface PartialRuleMetaData {
   docs: {
     description: string;
     recommended: ("json" | "jsonc" | "json5")[] | null;
-    replacedBy?: [];
     default?: "error" | "warn";
-    extensionRule: boolean;
+    extensionRule:
+      | boolean
+      | string
+      | {
+          plugin: string;
+          url: string;
+        };
     layout: boolean;
   };
   messages: { [messageId: string]: string };
@@ -52,5 +63,6 @@ export interface PartialRuleMetaData {
   hasSuggestions?: boolean;
   schema: JSONSchema4 | JSONSchema4[];
   deprecated?: boolean;
+  replacedBy?: [];
   type: "problem" | "suggestion" | "layout";
 }

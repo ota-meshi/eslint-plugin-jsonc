@@ -37,8 +37,11 @@
     "predocs:watch": "npm run build:ts",
     "docs:watch": "vuepress dev --debug docs",
     "docs:build": "npm run build:ts && vuepress build docs --no-cache",
+    "prerelease": "npm run test && npm run build",
+    "release": "changeset publish",
     "preversion": "npm test && git add .",
-    "version": "env-cmd -e version npm run update && git add ."
+    "version": "env-cmd -e version npm run update && git add .",
+    "version:ci": "env-cmd -e version-ci npm run  update && changeset version"
   },
   "repository": {
     "type": "git",
@@ -68,6 +71,8 @@
     "eslint": ">=6.0.0"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.6",
+    "@changesets/cli": "^2.24.2",
     "@ota-meshi/eslint-plugin": "^0.13.0",
     "@types/eslint": "^8.0.0",
     "@types/eslint-scope": "^3.7.0",
@@ -108,5 +113,8 @@
     "vue-eslint-editor": "^1.1.0",
     "vue-eslint-parser": "^9.0.0",
     "vuepress": "^1.8.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

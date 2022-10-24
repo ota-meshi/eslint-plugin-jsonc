@@ -5,6 +5,7 @@ title: "jsonc/comma-style"
 description: "enforce consistent comma style"
 since: "v0.1.0"
 ---
+
 # jsonc/comma-style
 
 > enforce consistent comma style

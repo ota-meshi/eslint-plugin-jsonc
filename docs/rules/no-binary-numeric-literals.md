@@ -5,6 +5,7 @@ title: "jsonc/no-binary-numeric-literals"
 description: "disallow binary numeric literals"
 since: "v1.1.0"
 ---
+
 # jsonc/no-binary-numeric-literals
 
 > disallow binary numeric literals

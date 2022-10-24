@@ -5,6 +5,7 @@ title: "jsonc/auto"
 description: "apply jsonc rules similar to your configured ESLint core rules"
 since: "v0.8.0"
 ---
+
 # jsonc/auto
 
 > apply jsonc rules similar to your configured ESLint core rules
