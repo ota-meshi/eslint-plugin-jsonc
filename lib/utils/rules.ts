@@ -17,6 +17,7 @@ import noEscapeSequenceInIdentifier from "../rules/no-escape-sequence-in-identif
 import noFloatingDecimal from "../rules/no-floating-decimal";
 import noHexadecimalNumericLiterals from "../rules/no-hexadecimal-numeric-literals";
 import noInfinity from "../rules/no-infinity";
+import noIrregularWhitespace from "../rules/no-irregular-whitespace";
 import noMultiStr from "../rules/no-multi-str";
 import noNan from "../rules/no-nan";
 import noNumberProps from "../rules/no-number-props";
@@ -62,6 +63,7 @@ export const rules = [
   noFloatingDecimal,
   noHexadecimalNumericLiterals,
   noInfinity,
+  noIrregularWhitespace,
   noMultiStr,
   noNan,
   noNumberProps,
