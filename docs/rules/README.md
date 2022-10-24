@@ -50,6 +50,7 @@ The rules with the following star :star: are included in the `plugin:jsonc/recom
 | [jsonc/key-spacing](./key-spacing.md) | enforce consistent spacing between keys and values in object literal properties | :wrench: |  |  |  |
 | [jsonc/no-dupe-keys](./no-dupe-keys.md) | disallow duplicate keys in object literals |  | :star: | :star: | :star: |
 | [jsonc/no-floating-decimal](./no-floating-decimal.md) | disallow leading or trailing decimal points in numeric literals | :wrench: | :star: | :star: |  |
+| [jsonc/no-irregular-whitespace](./no-irregular-whitespace.md) | disallow irregular whitespace |  |  |  |  |
 | [jsonc/no-multi-str](./no-multi-str.md) | disallow multiline strings |  | :star: | :star: |  |
 | [jsonc/no-octal-escape](./no-octal-escape.md) | disallow octal escape sequences in string literals |  |  |  |  |
 | [jsonc/no-octal](./no-octal.md) | disallow legacy octal literals |  | :star: | :star: | :star: |

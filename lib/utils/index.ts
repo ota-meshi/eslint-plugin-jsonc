@@ -81,7 +81,7 @@ export function defineWrapperListener(
       continue;
     }
     const jsonKey = key.replace(
-      /(?:^|\b)(ExpressionStatement|ArrayExpression|ObjectExpression|Property|Identifier|Literal|UnaryExpression)(?:\b|$)/gu,
+      /(?:^|\b)(ExpressionStatement|(?:Template)?Literal|(?:Array|Object|Unary)Expression|Property|Identifier|TemplateElement)(?:\b|$)/gu,
       "JSON$1"
     );
     jsonListener[jsonKey] = function (node: AST.JSONNode, ...args) {

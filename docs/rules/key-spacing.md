@@ -47,7 +47,7 @@ This rule enforces consistent spacing between keys and values in object literal 
 }
 ```
 
-Same as [key-spacing] rule option. See [here](https://eslint.org/docs/rules/key-spacing#options) for details. 
+Same as [key-spacing] rule option. See [here](https://eslint.org/docs/rules/key-spacing#options) for details.
 
 ## :couple: Related rules
 

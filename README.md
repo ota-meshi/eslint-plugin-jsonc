@@ -212,6 +212,7 @@ The rules with the following star :star: are included in the config.
 | [jsonc/key-spacing](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/key-spacing.html) | enforce consistent spacing between keys and values in object literal properties | :wrench: |  |  |  |
 | [jsonc/no-dupe-keys](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-dupe-keys.html) | disallow duplicate keys in object literals |  | :star: | :star: | :star: |
 | [jsonc/no-floating-decimal](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-floating-decimal.html) | disallow leading or trailing decimal points in numeric literals | :wrench: | :star: | :star: |  |
+| [jsonc/no-irregular-whitespace](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-irregular-whitespace.html) | disallow irregular whitespace |  |  |  |  |
 | [jsonc/no-multi-str](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-multi-str.html) | disallow multiline strings |  | :star: | :star: |  |
 | [jsonc/no-octal-escape](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal-escape.html) | disallow octal escape sequences in string literals |  |  |  |  |
 | [jsonc/no-octal](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/no-octal.html) | disallow legacy octal literals |  | :star: | :star: | :star: |
