@@ -41,7 +41,8 @@
     "release": "changeset publish",
     "preversion": "npm test && git add .",
     "version": "env-cmd -e version npm run update && git add .",
-    "version:ci": "env-cmd -e version-ci npm run  update && changeset version"
+    "preversion:ci": "npm run build",
+    "version:ci": "env-cmd -e version-ci npm run update && changeset version"
   },
   "repository": {
     "type": "git",
