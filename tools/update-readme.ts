@@ -43,6 +43,10 @@ fs.writeFileSync(
       /\(https:\/\/ota-meshi.github.io\/eslint-plugin-jsonc([^\n\r]*?).html/gu,
       "(.$1.md"
     )
+    .replace(
+      /\[LICENSE\]\(LICENSE\)/u,
+      "[LICENSE](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/LICENSE)"
+    )
     .replace(/\(https:\/\/ota-meshi.github.io\/eslint-plugin-jsonc/gu, "(.")
     .replace(/\n{3,}/gu, "\n\n"),
   "utf8"
