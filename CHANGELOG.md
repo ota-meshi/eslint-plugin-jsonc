@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.6.0
+
+### Minor Changes
+
+- [#205](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/205) [`05be0a9`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/05be0a9a4ef1b277f681109bb85ca35cd166ca7d) Thanks [@danielrentz](https://github.com/danielrentz)! - disable `no-unused-vars` in base config
+
 ## 2.5.0
 
 ### Minor Changes
