@@ -8,6 +8,7 @@ export = {
         // ESLint core rules known to cause problems with JSON.
         strict: "off",
         "no-unused-expressions": "off",
+        "no-unused-vars": "off",
       },
     },
   ],
