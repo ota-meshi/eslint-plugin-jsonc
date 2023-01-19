@@ -81,8 +81,8 @@ function getESLintClassForV6(): typeof eslint.ESLint {
 
     // eslint-disable-next-line @typescript-eslint/require-await -- ignore
     public static async outputFixes(
-      ...params: Parameters<typeof eslint.ESLint["outputFixes"]>
-    ): ReturnType<typeof eslint.ESLint["outputFixes"]> {
+      ...params: Parameters<(typeof eslint.ESLint)["outputFixes"]>
+    ): ReturnType<(typeof eslint.ESLint)["outputFixes"]> {
       return CLIEngine.outputFixes({
         results: params[0],
       } as any);
