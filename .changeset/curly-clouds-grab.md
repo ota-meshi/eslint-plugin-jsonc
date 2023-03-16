@@ -1,5 +1,5 @@
 ---
-"eslint-plugin-jsonc": patch
+"eslint-plugin-jsonc": minor
 ---
 
 feat: use `@eslint-community` packages
