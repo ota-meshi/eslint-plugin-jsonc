@@ -1,6 +1,6 @@
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { PatternMatcher } from "eslint-utils";
+import { PatternMatcher } from "@eslint-community/eslint-utils";
 
 export default createRule("no-escape-sequence-in-identifier", {
   meta: {
