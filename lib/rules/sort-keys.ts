@@ -1,6 +1,6 @@
 import naturalCompare from "natural-compare";
 import { createRule } from "../utils";
-import { isCommaToken } from "eslint-utils";
+import { isCommaToken } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 

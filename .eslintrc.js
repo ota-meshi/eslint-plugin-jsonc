@@ -22,6 +22,22 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-shadow": "off",
+    // Repo rule
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          {
+            group: ["/regexpp", "/regexpp/*"],
+            message: "Please use `@eslint-community/regexpp` instead.",
+          },
+          {
+            group: ["/eslint-utils", "/eslint-utils/*"],
+            message: "Please use `@eslint-community/eslint-utils` instead.",
+          },
+        ],
+      },
+    ],
   },
   overrides: [
     {

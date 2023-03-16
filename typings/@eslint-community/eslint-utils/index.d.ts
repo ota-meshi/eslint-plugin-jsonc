@@ -3,7 +3,7 @@
 import type { Comment } from "estree";
 import type { AST, SourceCode } from "eslint";
 
-declare module "eslint-utils" {
+declare module "@eslint-community/eslint-utils" {
   export const findVariable: unknown;
   export const getFunctionHeadLocation: unknown;
   export const getFunctionNameWithKind: unknown;
