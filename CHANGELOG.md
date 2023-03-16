@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.7.0
+
+### Minor Changes
+
+- [#221](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/221) [`0e46152`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/0e461529ff756775f4bb2d2b9548385f8418bcaa) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: use `@eslint-community` packages
+
 ## 2.6.0
 
 ### Minor Changes
