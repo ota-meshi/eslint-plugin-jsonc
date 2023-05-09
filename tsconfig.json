@@ -18,7 +18,9 @@
       "*": ["typings/*"]
     },
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+
+    "skipLibCheck": true
   },
   "include": [
     "lib/**/*",

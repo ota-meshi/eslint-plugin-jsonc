@@ -17,7 +17,8 @@
   },
   "scripts": {
     "prebuild": "npm run -s clean",
-    "build": "npm run build:ts && npm run build:dts",
+    "build": "npm run build:meta && npm run build:ts && npm run build:dts",
+    "build:meta": "ts-node --transpile-only ./tools/update-meta.ts",
     "build:ts": "tsc --project ./tsconfig.build.json",
     "build:dts": "npm run build:dts-step1 && npm run build:dts-step2",
     "build:dts-step1": "tsc --declaration --outDir dist-ts --project ./tsconfig.build.json",
