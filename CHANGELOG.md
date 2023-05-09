@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.8.0
+
+### Minor Changes
+
+- [#234](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/234) [`70c558e`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/70c558e35b05ee1bd81a2c723d1c35b090409d2b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: export meta object
+
 ## 2.7.0
 
 ### Minor Changes
