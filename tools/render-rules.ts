@@ -42,7 +42,7 @@ export default function renderRulesTableContent(
     const link = `[${rule.meta.docs.ruleId}](${buildRulePath(
       rule.meta.docs.ruleName || ""
     )})`;
-    const replacedRules = rule.meta.docs.replacedBy || [];
+    const replacedRules = rule.meta.replacedBy || [];
     const replacedBy = replacedRules
       .map((name) => `[jsonc/${name}](${buildRulePath(name)}.md)`)
       .join(", ");

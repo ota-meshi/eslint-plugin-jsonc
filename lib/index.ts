@@ -7,6 +7,7 @@ import recommendedWithJsonc from "./configs/recommended-with-jsonc";
 import recommendedWithJson5 from "./configs/recommended-with-json5";
 import prettier from "./configs/prettier";
 import all from "./configs/all";
+import * as meta from "./meta";
 
 // backward compatibility
 import {
@@ -33,6 +34,7 @@ const rules = ruleList.reduce((obj, r) => {
 }, {} as { [key: string]: RuleModule });
 
 export default {
+  meta,
   configs,
   rules,
   // as parser
@@ -43,6 +45,7 @@ export default {
   getStaticJSONValue,
 };
 export {
+  meta,
   configs,
   rules,
   // as parser
