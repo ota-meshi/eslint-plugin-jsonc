@@ -53,6 +53,7 @@
     "eslint",
     "eslintplugin",
     "eslint-plugin",
+    "lint",
     "jsonc",
     "json5",
     "json"
