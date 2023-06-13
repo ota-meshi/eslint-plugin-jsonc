@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.9.0
+
+### Minor Changes
+
+- [#243](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/243) [`48d3669`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/48d3669a7b20a47070514ea463dd63688b086052) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add new `allowLineSeparatedGroups` option to the `jsonc/sort-keys` rule
+
 ## 2.8.0
 
 ### Minor Changes
