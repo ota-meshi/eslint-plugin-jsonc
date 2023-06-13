@@ -137,6 +137,144 @@ tester.run("sort-keys", rule as any, {
         },
       ],
     },
+
+    // allowLineSeparatedGroups option
+    {
+      code: `
+      {
+        "e": 1,
+        "f": 2,
+        "g": 3,
+
+        "a": 4,
+        "b": 5,
+        "c": 6
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "b": 1,
+
+        // comment
+        "a": 2,
+        "c": 3
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "b": 1
+
+        ,
+
+        // comment
+        "a": 2,
+        "c": 3
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "c": 1,
+        "d": 2,
+
+        "b": {
+        },
+        "e": 4
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "c": 1,
+        "d": 2,
+        // comment
+
+        // comment
+        "b": {
+        },
+        "e": 4
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "c": 1,
+        "d": 2,
+
+        "a": {
+
+        },
+
+        // abce
+        "f": 3,
+
+        /*
+
+        */
+        "ab": 1,
+        "cc": 1,
+        "e": 2
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "b": "/*",
+
+        "a": "*/",
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "b": 42,
+        /*
+        */ //
+
+        "a": 42
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "b": 42,
+
+        /*
+        */ //
+        "a": 42
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+        "b": 1
+
+        ,"a": 2
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
+    {
+      code: `
+      {
+          "b": 1
+      // comment before comma
+
+      ,
+      "a": 2
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+    },
   ],
   invalid: [
     {
@@ -507,6 +645,323 @@ tester.run("sort-keys", rule as any, {
       ],
       errors: [
         "Expected object keys to be in specified order. 'e' should be before 'z'.",
+      ],
+    },
+
+    // When allowLineSeparatedGroups option is false
+    {
+      code: `
+      {
+          "b": 1,
+          "c": 2,
+          "a": 3
+      }`,
+      output: `
+      {
+          "a": 3,
+          "b": 1,
+          "c": 2
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: false }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'c'.",
+          line: 5,
+          column: 11,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "b": 42
+
+        ,"a": 42
+      }`,
+      output: `
+      {"a": 42,
+        "b": 42
+
+        
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: false }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+          line: 5,
+          column: 10,
+        },
+      ],
+    },
+
+    // When allowLineSeparatedGroups option is true
+    {
+      code: `
+      {
+        "b": 1,
+        "c": {
+
+        },
+        "a": 3
+      }`,
+      output: `
+      {
+        "a": 3,
+        "b": 1,
+        "c": {
+
+        }
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'c'.",
+          line: 7,
+          column: 9,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "a": 1,
+        "b": 2,
+
+        "z": {
+
+        },
+        "y": 3
+      }`,
+      output: `
+      {
+        "a": 1,
+        "b": 2,
+
+        "y": 3,
+        "z": {
+
+        }
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'y' should be before 'z'.",
+          line: 9,
+          column: 9,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "b": 1,
+        "c": {
+        },
+        // comment
+        "a": 3
+      }`,
+      output: `
+      {
+        // comment
+        "a": 3,
+        "b": 1,
+        "c": {
+        }
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'c'.",
+          line: 7,
+          column: 9,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "b": 42,
+        "ab": 1,
+        "a": 42 // sort-keys: 'a' should be before 'b'
+      }`,
+      output: `
+      {
+        "ab": 1,
+        "b": 42,
+        "a": 42 // sort-keys: 'a' should be before 'b'
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'ab' should be before 'b'.",
+          line: 4,
+          column: 9,
+        },
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'ab'.",
+          line: 5,
+          column: 9,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "c": 1,
+        "d": 2,
+        // comment
+        // comment
+        "b": {
+        },
+        "e": 4
+      }`,
+      output: `
+      {
+        // comment
+        // comment
+        "b": {
+        },
+        "c": 1,
+        "d": 2,
+        "e": 4
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'b' should be before 'd'.",
+          line: 7,
+          column: 9,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "c": 1,
+        "d": 2,
+
+        "z": {
+
+        },
+        "f": 3,
+        /*
+
+        */
+        "ab": 1,
+        "b": 1,
+        "e": 2
+      }`,
+      output: `
+      {
+        "c": 1,
+        "d": 2,
+
+        "f": 3,
+        "z": {
+
+        },
+        /*
+
+        */
+        "ab": 1,
+        "b": 1,
+        "e": 2
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'f' should be before 'z'.",
+          line: 9,
+          column: 9,
+        },
+        {
+          message:
+            "Expected object keys to be in ascending order. 'ab' should be before 'f'.",
+          line: 13,
+          column: 9,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "b": "/*",
+        "a": "*/",
+      }`,
+      output: `
+      {
+        "a": "*/",
+        "b": "/*",
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+          line: 4,
+          column: 9,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "b": 1
+        // comment before comma
+        , "a": 2
+      }`,
+      output: `
+      { "a": 2,
+        "b": 1
+        // comment before comma
+        
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+          line: 5,
+          column: 11,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "b": 42,
+        "foo": [
+        // ↓ this blank is inside a property and therefore should not count
+
+        ],
+        "a": 42
+      }`,
+      output: `
+      {
+        "a": 42,
+        "b": 42,
+        "foo": [
+        // ↓ this blank is inside a property and therefore should not count
+
+        ]
+      }`,
+      options: ["asc", { allowLineSeparatedGroups: true }],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'a' should be before 'foo'.",
+          line: 8,
+          column: 9,
+        },
       ],
     },
   ],
