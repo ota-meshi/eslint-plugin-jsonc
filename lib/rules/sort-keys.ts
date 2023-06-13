@@ -20,6 +20,7 @@ type CompatibleWithESLintOptions =
         caseSensitive?: boolean;
         natural?: boolean;
         minKeys?: number;
+        allowLineSeparatedGroups?: boolean;
       }
     ];
 type PatternOption = {
@@ -35,6 +36,7 @@ type PatternOption = {
           }
       )[];
   minKeys?: number;
+  allowLineSeparatedGroups?: boolean;
 };
 type OrderObject = {
   type?: OrderTypeOption;
@@ -45,6 +47,7 @@ type ParsedOption = {
   isTargetObject: (node: JSONObjectData) => boolean;
   ignore: (data: JSONPropertyData) => boolean;
   isValidOrder: Validator;
+  allowLineSeparatedGroups: boolean;
   orderText: string;
 };
 type Validator = (a: JSONPropertyData, b: JSONPropertyData) => boolean;
@@ -86,6 +89,11 @@ class JSONPropertyData {
   public get name() {
     return (this.cachedName ??= getPropertyName(this.node));
   }
+
+  public getPrev(): JSONPropertyData | null {
+    const prevIndex = this.index - 1;
+    return prevIndex >= 0 ? this.object.properties[prevIndex] : null;
+  }
 }
 class JSONObjectData {
   public readonly node: AST.JSONObjectExpression;
@@ -100,6 +108,36 @@ class JSONObjectData {
     return (this.cachedProperties ??= this.node.properties.map(
       (e, index) => new JSONPropertyData(this, e, index)
     ));
+  }
+
+  public getPath(): string {
+    let path = "";
+    let curr: AST.JSONExpression = this.node;
+    let p: AST.JSONNode | null = curr.parent;
+    while (p) {
+      if (p.type === "JSONProperty") {
+        const name = getPropertyName(p);
+        if (/^[$_a-z][\w$]*$/iu.test(name)) {
+          path = `.${name}${path}`;
+        } else {
+          path = `[${JSON.stringify(name)}]${path}`;
+        }
+        curr = p.parent;
+      } else if (p.type === "JSONArrayExpression") {
+        const index = p.elements.indexOf(curr);
+        path = `[${index}]${path}`;
+        curr = p;
+      } else if (p.type === "JSONExpressionStatement") {
+        break;
+      } else {
+        curr = p;
+      }
+      p = curr.parent;
+    }
+    if (path.startsWith(".")) {
+      path = path.slice(1);
+    }
+    return path;
   }
 }
 
@@ -153,6 +191,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
     const insensitive = obj.caseSensitive === false;
     const natural = Boolean(obj.natural);
     const minKeys: number = obj.minKeys ?? 2;
+    const allowLineSeparatedGroups = obj.allowLineSeparatedGroups || false;
     return [
       {
         isTargetObject: (node) => node.properties.length >= minKeys,
@@ -161,6 +200,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
         orderText: `${natural ? "natural " : ""}${
           insensitive ? "insensitive " : ""
         }${type}ending`,
+        allowLineSeparatedGroups,
       },
     ];
   }
@@ -170,6 +210,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
     const pathPattern = new RegExp(opt.pathPattern);
     const hasProperties = opt.hasProperties ?? [];
     const minKeys: number = opt.minKeys ?? 2;
+    const allowLineSeparatedGroups = opt.allowLineSeparatedGroups || false;
     if (!Array.isArray(order)) {
       const type: OrderTypeOption = order.type ?? "asc";
       const insensitive = order.caseSensitive === false;
@@ -182,6 +223,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
         orderText: `${natural ? "natural " : ""}${
           insensitive ? "insensitive " : ""
         }${type}ending`,
+        allowLineSeparatedGroups,
       };
     }
     const parsedOrder: {
@@ -227,6 +269,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
         return false;
       },
       orderText: "specified",
+      allowLineSeparatedGroups,
     };
 
     /**
@@ -242,29 +285,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
           return false;
         }
       }
-
-      let path = "";
-      let curr: AST.JSONNode = data.node;
-      let p: AST.JSONNode | null = curr.parent;
-      while (p) {
-        if (p.type === "JSONProperty") {
-          const name = getPropertyName(p);
-          if (/^[$_a-z][\w$]*$/iu.test(name)) {
-            path = `.${name}${path}`;
-          } else {
-            path = `[${JSON.stringify(name)}]${path}`;
-          }
-        } else if (p.type === "JSONArrayExpression") {
-          const index = p.elements.indexOf(curr as never);
-          path = `[${index}]${path}`;
-        }
-        curr = p;
-        p = curr.parent;
-      }
-      if (path.startsWith(".")) {
-        path = path.slice(1);
-      }
-      return pathPattern.test(path);
+      return pathPattern.test(data.getPath());
     }
   });
 }
@@ -339,6 +360,9 @@ export default createRule("sort-keys", {
                 type: "integer",
                 minimum: 2,
               },
+              allowLineSeparatedGroups: {
+                type: "boolean",
+              },
             },
             required: ["pathPattern", "order"],
             additionalProperties: false,
@@ -365,6 +389,9 @@ export default createRule("sort-keys", {
                   type: "integer",
                   minimum: 2,
                 },
+                allowLineSeparatedGroups: {
+                  type: "boolean",
+                },
               },
               additionalProperties: false,
             },
@@ -387,6 +414,8 @@ export default createRule("sort-keys", {
     // Parse options.
     const parsedOptions = parseOptions(context.options);
 
+    const sourceCode = context.getSourceCode();
+
     /**
      * Verify for property
      */
@@ -394,10 +423,21 @@ export default createRule("sort-keys", {
       if (option.ignore(data)) {
         return;
       }
-      const prevList = data.object.properties
-        .slice(0, data.index)
-        .reverse()
-        .filter((d) => !option.ignore(d));
+      const prevList: JSONPropertyData[] = [];
+      let currTarget = data;
+      let prevTarget;
+      while ((prevTarget = currTarget.getPrev())) {
+        if (option.allowLineSeparatedGroups) {
+          if (hasBlankLine(prevTarget, currTarget)) {
+            break;
+          }
+        }
+
+        if (!option.ignore(prevTarget)) {
+          prevList.push(prevTarget);
+        }
+        currTarget = prevTarget;
+      }
 
       if (prevList.length === 0) {
         return;
@@ -413,7 +453,6 @@ export default createRule("sort-keys", {
             orderText: option.orderText,
           },
           *fix(fixer) {
-            const sourceCode = context.getSourceCode();
             let moveTarget = prevList[0];
             for (const prev of prevList) {
               if (option.isValidOrder(prev, data)) {
@@ -441,12 +480,44 @@ export default createRule("sort-keys", {
             const insertTarget = sourceCode.getTokenBefore(
               moveTarget.node as never
             )!;
-            yield fixer.insertTextAfterRange(insertTarget.range, insertCode);
+            let insertRange = insertTarget.range;
+            const insertNext = sourceCode.getTokenAfter(insertTarget, {
+              includeComments: true,
+            })!;
+            if (insertNext.loc!.start.line - insertTarget.loc.end.line > 1) {
+              const offset = sourceCode.getIndexFromLoc({
+                line: insertNext.loc!.start.line - 1,
+                column: 0,
+              });
+              insertRange = [offset, offset];
+            }
+            yield fixer.insertTextAfterRange(insertRange, insertCode);
 
             yield fixer.removeRange([removeStart, codeEnd]);
           },
         });
       }
+    }
+
+    /**
+     * Checks whether the given two properties have a blank line between them.
+     */
+    function hasBlankLine(prev: JSONPropertyData, next: JSONPropertyData) {
+      const tokenOrNodes = [
+        ...sourceCode.getTokensBetween(prev.node as never, next.node as never, {
+          includeComments: true,
+        }),
+        next.node,
+      ];
+      let prevLoc = prev.node.loc;
+      for (const t of tokenOrNodes) {
+        const loc = t.loc!;
+        if (loc.start.line - prevLoc.end.line > 1) {
+          return true;
+        }
+        prevLoc = loc;
+      }
+      return false;
     }
 
     return {

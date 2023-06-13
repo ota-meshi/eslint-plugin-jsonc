@@ -103,6 +103,7 @@ The option receives multiple objects with the following properties:
     - `caseSensitive` ... If `true`, enforce properties to be in case-sensitive order. Default is `true`.
     - `natural` ... If `true`, enforce properties to be in natural order. Default is `false`.
 - `minKeys` ... Specifies the minimum number of keys that an object should have in order for the object's unsorted keys to produce an error. Default is `2`, which means by default all objects with unsorted keys will result in lint errors.
+- `allowLineSeparatedGroups` ... If `true`, the rule allows to group object keys through line breaks. In other words, a blank line after a property will reset the sorting of keys. Default is `false`.
 
 You can also define options in the same format as the [sort-keys] rule.
 
@@ -113,7 +114,8 @@ You can also define options in the same format as the [sort-keys] rule.
         {
             "caseSensitive": true,
             "natural": false,
-            "minKeys": 2
+            "minKeys": 2,
+            "allowLineSeparatedGroups": false
         }
     ]
 }
