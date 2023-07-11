@@ -56,7 +56,7 @@ for (const k of Object.keys(coreRules)) {
 }
 
 allRules.sort((a, b) =>
-  a.ruleId > b.ruleId ? 1 : a.ruleId < b.ruleId ? -1 : 0
+  a.ruleId > b.ruleId ? 1 : a.ruleId < b.ruleId ? -1 : 0,
 );
 
 export const categories = [];
@@ -85,7 +85,7 @@ categories.sort((a, b) =>
     ? 1
     : a.title < b.title
     ? -1
-    : 0
+    : 0,
 );
 
 export const DEFAULT_RULES_CONFIG = allRules.reduce((c, r) => {

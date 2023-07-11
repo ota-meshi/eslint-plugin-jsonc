@@ -55,7 +55,7 @@ export default createRule("no-escape-sequence-in-identifier", {
             const codePoint = Number(`0x${codePointStr}`);
             return fixer.replaceTextRange(
               range,
-              String.fromCodePoint(codePoint)
+              String.fromCodePoint(codePoint),
             );
           },
         });

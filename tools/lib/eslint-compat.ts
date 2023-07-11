@@ -45,12 +45,15 @@ function getESLintClassForV6(): typeof eslint.ESLint {
           : undefined,
         plugins: plugins || [],
         rules: rules
-          ? Object.entries(rules).reduce((o, [ruleId, opt]) => {
-              if (opt) {
-                o[ruleId] = opt;
-              }
-              return o;
-            }, {} as NonNullable<ESLintCLIEngine["Options"]["rules"]>)
+          ? Object.entries(rules).reduce(
+              (o, [ruleId, opt]) => {
+                if (opt) {
+                  o[ruleId] = opt;
+                }
+                return o;
+              },
+              {} as NonNullable<ESLintCLIEngine["Options"]["rules"]>,
+            )
           : undefined,
         ...overrideConfig,
       };
@@ -74,7 +77,7 @@ function getESLintClassForV6(): typeof eslint.ESLint {
       ...params: Parameters<eslint.ESLint["lintFiles"]>
     ): ReturnType<eslint.ESLint["lintFiles"]> {
       const result = this.engine.executeOnFiles(
-        Array.isArray(params[0]) ? params[0] : [params[0]]
+        Array.isArray(params[0]) ? params[0] : [params[0]],
       );
       return result.results;
     }

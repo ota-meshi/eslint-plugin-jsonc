@@ -46,7 +46,7 @@ export default createRule("${ruleId}", {
         return defineWrapperListener(coreRule, context, context.options)
     },
 })
-`
+`,
   );
   fs.writeFileSync(
     testFile,
@@ -73,7 +73,7 @@ tester.run("${ruleId}", rule as any, {
         },
     ],
 })
-`
+`,
   );
   fs.writeFileSync(
     docFile,
@@ -129,7 +129,7 @@ Same as [${ruleId}] rule option. See [here](https://eslint.org/docs/rules/${rule
 
 [${ruleId}]: https://eslint.org/docs/rules/${ruleId}
 
-`
+`,
   );
 
   cp.execSync(`code "${ruleFile}"`);

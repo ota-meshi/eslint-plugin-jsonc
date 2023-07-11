@@ -14,16 +14,16 @@
         <input
           :checked="
             categories.every((category) =>
-              category.rules.every((rule) => isErrorState(rule.ruleId))
+              category.rules.every((rule) => isErrorState(rule.ruleId)),
             )
           "
           type="checkbox"
           :indeterminate.prop="
             categories.some((category) =>
-              category.rules.some((rule) => isErrorState(rule.ruleId))
+              category.rules.some((rule) => isErrorState(rule.ruleId)),
             ) &&
             categories.some((category) =>
-              category.rules.some((rule) => !isErrorState(rule.ruleId))
+              category.rules.some((rule) => !isErrorState(rule.ruleId)),
             )
           "
           @input="onAllClick($event)"
@@ -139,7 +139,7 @@ export default {
               close: true,
             },
           ];
-        })
+        }),
       ),
       filterValue: "",
     };
@@ -159,7 +159,7 @@ export default {
       let filteredRules = rules;
       if (this.filterValue) {
         filteredRules = filteredRules.filter((r) =>
-          r.ruleId.includes(this.filterValue)
+          r.ruleId.includes(this.filterValue),
         );
       }
       return filteredRules;

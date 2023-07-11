@@ -18,7 +18,7 @@ declare module "@eslint-community/eslint-utils" {
   export const isClosingParenToken: unknown;
   export const isColonToken: unknown;
   export const isCommaToken: (
-    token: AST.Token | Comment
+    token: AST.Token | Comment,
   ) => token is AST.Token & { type: "Punctuator"; value: "," };
   export const isCommentToken: unknown;
   export const isNotArrowToken: unknown;
@@ -39,7 +39,7 @@ declare module "@eslint-community/eslint-utils" {
   export function isParenthesized(
     times: number,
     node: any,
-    sourceCode: SourceCode
+    sourceCode: SourceCode,
   ): boolean;
   export const isSemicolonToken: unknown;
   export const ReferenceTracker: {
@@ -57,7 +57,7 @@ declare module "@eslint-community/eslint-utils" {
 
     public [Symbol.replace](
       str: string,
-      replacer: string | ((...ss: string[]) => string)
+      replacer: string | ((...ss: string[]) => string),
     ): string;
   }
 }

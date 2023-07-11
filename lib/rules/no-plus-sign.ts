@@ -27,7 +27,7 @@ export default createRule("no-plus-sign", {
           const operator = sourceCode.getFirstToken(
             node as any,
             (token) =>
-              token.type === "Punctuator" && token.value === node.operator
+              token.type === "Punctuator" && token.value === node.operator,
           );
           context.report({
             loc: operator?.loc || node.loc,

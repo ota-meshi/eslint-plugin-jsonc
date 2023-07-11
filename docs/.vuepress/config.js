@@ -23,15 +23,15 @@ module.exports = {
           eslint$: path.resolve(__dirname, "./shim/eslint"),
           "eslint-visitor-keys$": path.resolve(
             __dirname,
-            "./shim/eslint-visitor-keys"
+            "./shim/eslint-visitor-keys",
           ),
           esquery: path.resolve(
             __dirname,
-            "../../node_modules/esquery/dist/esquery.min.js"
+            "../../node_modules/esquery/dist/esquery.min.js",
           ),
           "@eslint/eslintrc/universal": path.resolve(
             __dirname,
-            "../../node_modules/@eslint/eslintrc/dist/eslintrc-universal.cjs"
+            "../../node_modules/@eslint/eslintrc/dist/eslintrc-universal.cjs",
           ),
         },
       },
@@ -66,7 +66,7 @@ module.exports = {
           collapsable: false,
           children: rules
             .filter(
-              (rule) => !rule.meta.docs.extensionRule && !rule.meta.deprecated
+              (rule) => !rule.meta.docs.extensionRule && !rule.meta.deprecated,
             )
             .map(ruleToLink),
         },
@@ -75,7 +75,7 @@ module.exports = {
           collapsable: false,
           children: rules
             .filter(
-              (rule) => rule.meta.docs.extensionRule && !rule.meta.deprecated
+              (rule) => rule.meta.docs.extensionRule && !rule.meta.deprecated,
             )
             .map(ruleToLink),
         },

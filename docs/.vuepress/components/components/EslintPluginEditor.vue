@@ -145,14 +145,14 @@ export default {
     editor.$watch("codeEditor", () => {
       if (editor.codeEditor) {
         editor.codeEditor.onDidChangeModelDecorations(() =>
-          this.onDidChangeModelDecorations(editor.codeEditor)
+          this.onDidChangeModelDecorations(editor.codeEditor),
         );
       }
     });
     editor.$watch("fixedCodeEditor", () => {
       if (editor.fixedCodeEditor) {
         editor.fixedCodeEditor.onDidChangeModelDecorations(() =>
-          this.onDidChangeModelDecorations(editor.fixedCodeEditor)
+          this.onDidChangeModelDecorations(editor.fixedCodeEditor),
         );
       }
     });

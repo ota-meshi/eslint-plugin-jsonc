@@ -30,7 +30,7 @@ function getConfigResolver(): (filePath: string) => Linter.Config {
       },
       // for v1.1.0
       eslintRecommendedPath: require.resolve(
-        "../../conf/eslint-recommended.js"
+        "../../conf/eslint-recommended.js",
       ),
       eslintAllPath: require.resolve("../../conf/eslint-all.js"),
     });
@@ -109,8 +109,8 @@ function getJsoncRule(rule: string) {
     new Set(
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
       (require("./rules").rules as RuleModule[]).map(
-        (r) => r.meta.docs.ruleName
-      )
+        (r) => r.meta.docs.ruleName,
+      ),
     );
 
   return ruleNames.has(rule) ? `jsonc/${rule}` : null;

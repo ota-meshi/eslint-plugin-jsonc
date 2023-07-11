@@ -42,13 +42,13 @@ describe("auto rule", () => {
     const resultFixBefore = await engine.lintFiles(["test-auto-rule01/src"]);
     assert.strictEqual(
       resultFixBefore.reduce((s, m) => s + m.errorCount, 0),
-      2
+      2,
     );
 
     const resultFixAfter = await fixEngine.lintFiles(["test-auto-rule01/src"]);
     assert.strictEqual(
       resultFixAfter.reduce((s, m) => s + m.errorCount, 0),
-      0
+      0,
     );
     await ESLint.outputFixes(resultFixAfter);
 

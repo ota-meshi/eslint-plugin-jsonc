@@ -70,7 +70,7 @@ export default createRule("no-unicode-codepoint-escapes", {
             }
             return fixer.replaceTextRange(
               [range[0] + 2, range[1]],
-              replacement
+              replacement,
             );
           },
         });

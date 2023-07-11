@@ -27,7 +27,7 @@ export default createRule("auto", {
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special rule
       const rule: RuleModule = require(`./${ruleId.replace(
         /^jsonc\//u,
-        ""
+        "",
       )}`).default;
       const subContext: any = {
         __proto__: context,

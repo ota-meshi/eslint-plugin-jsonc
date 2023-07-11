@@ -6,7 +6,8 @@ const isWin = os.platform().startsWith("win");
 
 let insertText = `\n${renderRulesTableContent(
   2,
-  (name) => `https://ota-meshi.github.io/eslint-plugin-jsonc/rules/${name}.html`
+  (name) =>
+    `https://ota-meshi.github.io/eslint-plugin-jsonc/rules/${name}.html`,
 )}\n`;
 if (isWin) {
   insertText = insertText
@@ -20,7 +21,7 @@ const newReadme = fs
   .readFileSync(readmeFilePath, "utf8")
   .replace(
     /<!--RULES_TABLE_START-->[\s\S]*<!--RULES_TABLE_END-->/u,
-    `<!--RULES_TABLE_START-->${insertText}<!--RULES_TABLE_END-->`
+    `<!--RULES_TABLE_START-->${insertText}<!--RULES_TABLE_END-->`,
   );
 fs.writeFileSync(readmeFilePath, newReadme, "utf8");
 
@@ -32,29 +33,29 @@ fs.writeFileSync(
     .replace("# eslint-plugin-jsonc\n", "# Introduction\n")
     .replace(
       /<!--RULES_SECTION_START-->[\s\S]*<!--RULES_SECTION_END-->/u,
-      "See [Available Rules](./rules/README.md)."
+      "See [Available Rules](./rules/README.md).",
     )
     .replace(
       /<!--USAGE_SECTION_START-->[\s\S]*<!--USAGE_SECTION_END-->/u,
-      "See [User Guide](./user-guide/README.md)."
+      "See [User Guide](./user-guide/README.md).",
     )
     .replace(/<!--DOCS_IGNORE_START-->[\s\S]*?<!--DOCS_IGNORE_END-->/gu, "")
     .replace(
       /\(https:\/\/ota-meshi.github.io\/eslint-plugin-jsonc([^\n\r]*?).html/gu,
-      "(.$1.md"
+      "(.$1.md",
     )
     .replace(
       /\[LICENSE\]\(LICENSE\)/u,
-      "[LICENSE](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/LICENSE)"
+      "[LICENSE](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/LICENSE)",
     )
     .replace(/\(https:\/\/ota-meshi.github.io\/eslint-plugin-jsonc/gu, "(.")
     .replace(/\n{3,}/gu, "\n\n"),
-  "utf8"
+  "utf8",
 );
 
 const docsUserGuideFilePath = path.resolve(
   __dirname,
-  "../docs/user-guide/README.md"
+  "../docs/user-guide/README.md",
 );
 const docsUserGuide = fs.readFileSync(docsUserGuideFilePath, "utf8");
 
@@ -64,12 +65,12 @@ fs.writeFileSync(
     .replace(
       /<!--USAGE_GUIDE_START-->[\s\S]*<!--USAGE_GUIDE_END-->/u,
       /<!--USAGE_GUIDE_START-->[\s\S]*<!--USAGE_GUIDE_END-->/u.exec(
-        newReadme
-      )![0]
+        newReadme,
+      )![0],
     )
     .replace(
       /\(https:\/\/ota-meshi.github.io\/eslint-plugin-jsonc(.*?)\)/gu,
-      (_s, c: string) => `(..${c.endsWith("/") ? `${c}README.md` : c})`
+      (_s, c: string) => `(..${c.endsWith("/") ? `${c}README.md` : c})`,
     ),
-  "utf8"
+  "utf8",
 );

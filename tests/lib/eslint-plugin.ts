@@ -22,7 +22,7 @@ describe("Integration with eslint-plugin-jsonc", () => {
     assert.strictEqual(results.length, 2);
     assert.strictEqual(
       results.reduce((s, m) => s + m.errorCount, 0),
-      0
+      0,
     );
   });
 });

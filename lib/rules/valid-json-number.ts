@@ -56,7 +56,7 @@ export default createRule("valid-json-number", {
         const operator = sourceCode.getFirstToken(
           node as any,
           (token) =>
-            token.type === "Punctuator" && token.value === node.operator
+            token.type === "Punctuator" && token.value === node.operator,
         );
         if (node.operator === "+") {
           context.report({
@@ -147,7 +147,7 @@ export default createRule("valid-json-number", {
      * Build fixer for number
      */
     function buildFix(
-      node: AST.JSONLiteral
+      node: AST.JSONLiteral,
     ): (fixer: Rule.RuleFixer) => Rule.Fix {
       return (fixer) => {
         return fixer.replaceTextRange(node.range, `${node.value}`);

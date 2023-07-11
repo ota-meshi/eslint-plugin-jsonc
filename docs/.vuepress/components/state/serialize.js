@@ -39,7 +39,7 @@ export function serializeState(state) {
     `The compress rate of serialized string: ${(
       (100 * base64.length) /
       jsonString.length
-    ).toFixed(1)}% (${jsonString.length}B → ${base64.length}B)`
+    ).toFixed(1)}% (${jsonString.length}B → ${base64.length}B)`,
   );
 
   return base64;
