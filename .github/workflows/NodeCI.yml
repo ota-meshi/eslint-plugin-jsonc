@@ -102,9 +102,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Target Packages
         run: |+
-          npm i -D eslint@7
+          npm i -D eslint@7 --legacy-peer-deps
           npx rimraf node_modules
-          npm install
+          npm install --legacy-peer-deps
       - name: Test
         run: npm test
   test-and-coverage:
