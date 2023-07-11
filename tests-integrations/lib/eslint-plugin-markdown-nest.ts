@@ -10,7 +10,7 @@ import type { ESLint } from "eslint";
 
 const TEST_CWD = path.join(
   __dirname,
-  "../fixtures/eslint-plugin-markdown-nest"
+  "../fixtures/eslint-plugin-markdown-nest",
 );
 const ESLINT = path.join(TEST_CWD, `./node_modules/.bin/eslint`);
 
@@ -37,7 +37,7 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
 
       try {
         const res = cp.execSync(
-          `${ESLINT} "./test.md" --format json --ext .md,.json`
+          `${ESLINT} "./test.md" --format json --ext .md,.json`,
         );
         console.log(`${res}`);
       } catch (e: any) {
@@ -59,7 +59,7 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
               ruleId: "jsonc/quotes",
               line: 10,
             },
-          ]
+          ],
         );
         return;
       }

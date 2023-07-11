@@ -36,7 +36,7 @@ describe("Integration with vue-eslint-parser with option", () => {
       assert.strictEqual(results[0].messages.length, 1);
       assert.strictEqual(
         results[0].messages[0].message,
-        "Expected indentation of 4 spaces but found 0."
+        "Expected indentation of 4 spaces but found 0.",
       );
       return;
     }

@@ -40,7 +40,7 @@ export interface PartialRuleModule {
   meta: PartialRuleMetaData;
   create(
     context: Rule.RuleContext,
-    params: { customBlock: boolean }
+    params: { customBlock: boolean },
   ): RuleListener;
 }
 

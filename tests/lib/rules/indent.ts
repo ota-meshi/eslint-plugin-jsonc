@@ -23,7 +23,7 @@ const FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/indent/");
  */
 function loadPatterns(
   additionalValid: RuleTester.ValidTestCase[],
-  additionalInvalid: RuleTester.InvalidTestCase[]
+  additionalInvalid: RuleTester.InvalidTestCase[],
 ) {
   const valid = fs.readdirSync(FIXTURE_ROOT).map((filename) => {
     const code0 = fs.readFileSync(path.join(FIXTURE_ROOT, filename), "utf8");
@@ -31,14 +31,14 @@ function loadPatterns(
       .replace(/^\/\*(.+?)\*\//u, `/*${filename}*/`)
       .replace(/^<!--(.+?)-->/u, `<!--${filename}-->`);
     const baseObj = JSON.parse(
-      /^(?:\/\*|<!--)(.+?)(?:\*\/|-->)/u.exec(code0)![1]
+      /^(?:\/\*|<!--)(.+?)(?:\*\/|-->)/u.exec(code0)![1],
     );
     if ("parser" in baseObj) {
       baseObj.parser = require.resolve(baseObj.parser);
     }
     if ("parserOptions" in baseObj && "parser" in baseObj.parserOptions) {
       baseObj.parserOptions.parser = require.resolve(
-        baseObj.parserOptions.parser
+        baseObj.parserOptions.parser,
       );
     }
     return Object.assign(baseObj, { code, filename });
@@ -69,7 +69,7 @@ function loadPatterns(
                   line.indentSize === 1 ? "" : "s"
                 } but found 0.`,
                 line: line.number + 1,
-              }
+              },
         )
         .filter(Boolean);
 
@@ -123,6 +123,6 @@ tester.run(
                 `,
       },
     ],
-    []
-  )
+    [],
+  ),
 );

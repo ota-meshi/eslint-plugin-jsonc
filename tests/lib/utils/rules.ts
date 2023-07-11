@@ -25,7 +25,7 @@ function getDirRules() {
 
   const vueCustomBlockRulesLibRoot = path.resolve(
     __dirname,
-    "../../../lib/rules/vue-custom-block"
+    "../../../lib/rules/vue-custom-block",
   );
   for (const filename of fs.readdirSync(vueCustomBlockRulesLibRoot)) {
     const ruleName = `vue-custom-block/${filename.replace(/\.ts$/u, "")}`;
@@ -34,7 +34,7 @@ function getDirRules() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- for test
     const rule = require(path.join(
       vueCustomBlockRulesLibRoot,
-      filename
+      filename,
     )).default;
     rules[ruleId] = rule;
   }
@@ -58,7 +58,7 @@ describe("Check if the strict of all rules is correct", () => {
       allRules.length === Object.keys(dirRules).length,
       `Did not equal the number of rules. expect:${
         Object.keys(dirRules).length
-      } actual:${allRules.length}`
+      } actual:${allRules.length}`,
     );
   });
 
@@ -79,7 +79,7 @@ describe("Check if the strict of all rules is correct", () => {
             const message = rule.meta.messages[messageId];
             assert.ok(
               message.endsWith(".") || message.endsWith("}}"),
-              "Doesn't end with a dot."
+              "Doesn't end with a dot.",
             );
           });
         }

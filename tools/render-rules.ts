@@ -4,13 +4,13 @@ import { rules } from "../lib/utils/rules";
 //eslint-disable-next-line require-jsdoc, @typescript-eslint/explicit-module-boundary-types -- tools
 export default function renderRulesTableContent(
   categoryLevel: number,
-  buildRulePath = (ruleName: string) => `./${ruleName}.md`
+  buildRulePath = (ruleName: string) => `./${ruleName}.md`,
 ) {
   const pluginRules = rules.filter(
-    (rule) => !rule.meta.deprecated && !rule.meta.docs.extensionRule
+    (rule) => !rule.meta.deprecated && !rule.meta.docs.extensionRule,
   );
   const extensionRules = rules.filter(
-    (rule) => !rule.meta.deprecated && rule.meta.docs.extensionRule
+    (rule) => !rule.meta.deprecated && rule.meta.docs.extensionRule,
   );
 
   const deprecatedRules = rules.filter((rule) => rule.meta.deprecated);
@@ -30,7 +30,7 @@ export default function renderRulesTableContent(
       ? ":star:"
       : "";
     const link = `[${rule.meta.docs.ruleId}](${buildRulePath(
-      rule.meta.docs.ruleName || ""
+      rule.meta.docs.ruleName || "",
     )})`;
     const description = rule.meta.docs.description || "(no description)";
 
@@ -40,7 +40,7 @@ export default function renderRulesTableContent(
   //eslint-disable-next-line require-jsdoc -- tools
   function toDeprecatedRuleRow(rule: RuleModule) {
     const link = `[${rule.meta.docs.ruleId}](${buildRulePath(
-      rule.meta.docs.ruleName || ""
+      rule.meta.docs.ruleName || "",
     )})`;
     const replacedRules = rule.meta.replacedBy || [];
     const replacedBy = replacedRules

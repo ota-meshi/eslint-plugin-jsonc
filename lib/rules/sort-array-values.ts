@@ -127,7 +127,7 @@ class JSONArrayData {
 
   public get elements() {
     return (this.cachedElements ??= this.node.elements.map(
-      (e, index) => new JSONElementData(this, e, index)
+      (e, index) => new JSONElementData(this, e, index),
     ));
   }
 }
@@ -138,7 +138,7 @@ class JSONArrayData {
 function buildValidatorFromType(
   order: OrderTypeOption,
   insensitive: boolean,
-  natural: boolean
+  natural: boolean,
 ): Validator {
   type Compare<T> = ([a, b]: T[]) => boolean;
   // eslint-disable-next-line func-style -- ignore

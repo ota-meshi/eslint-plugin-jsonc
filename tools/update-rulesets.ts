@@ -83,7 +83,7 @@ export = {
 
   const filePath = path.resolve(
     __dirname,
-    `../lib/configs/${CONFIGS[rec].config}.ts`
+    `../lib/configs/${CONFIGS[rec].config}.ts`,
   );
 
   if (isWin) {

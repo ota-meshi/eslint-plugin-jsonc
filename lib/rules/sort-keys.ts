@@ -21,7 +21,7 @@ type CompatibleWithESLintOptions =
         natural?: boolean;
         minKeys?: number;
         allowLineSeparatedGroups?: boolean;
-      }
+      },
     ];
 type PatternOption = {
   pathPattern: string;
@@ -79,7 +79,7 @@ class JSONPropertyData {
   public constructor(
     object: JSONObjectData,
     node: AST.JSONProperty,
-    index: number
+    index: number,
   ) {
     this.object = object;
     this.node = node;
@@ -106,7 +106,7 @@ class JSONObjectData {
 
   public get properties() {
     return (this.cachedProperties ??= this.node.properties.map(
-      (e, index) => new JSONPropertyData(this, e, index)
+      (e, index) => new JSONPropertyData(this, e, index),
     ));
   }
 
@@ -145,7 +145,7 @@ class JSONObjectData {
  * Check if given options are CompatibleWithESLintOptions
  */
 function isCompatibleWithESLintOptions(
-  options: UserOptions
+  options: UserOptions,
 ): options is CompatibleWithESLintOptions {
   if (options.length === 0) {
     return true;
@@ -163,7 +163,7 @@ function isCompatibleWithESLintOptions(
 function buildValidatorFromType(
   order: OrderTypeOption,
   insensitive: boolean,
-  natural: boolean
+  natural: boolean,
 ): Validator {
   let compare = natural
     ? ([a, b]: string[]) => naturalCompare(a, b) <= 0
@@ -478,7 +478,7 @@ export default createRule("sort-keys", {
               (hasAfterComma ? "" : ",");
 
             const insertTarget = sourceCode.getTokenBefore(
-              moveTarget.node as never
+              moveTarget.node as never,
             )!;
             let insertRange = insertTarget.range;
             const insertNext = sourceCode.getTokenAfter(insertTarget, {

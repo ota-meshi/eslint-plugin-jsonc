@@ -23,7 +23,7 @@ async function main() {
 export const name = ${JSON.stringify(name)} as const;
 export const version = ${JSON.stringify(await getVersion())} as const;
 `,
-    { filePath: META_PATH }
+    { filePath: META_PATH },
   );
   fs.writeFileSync(META_PATH, result.output!);
 }

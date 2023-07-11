@@ -22,7 +22,7 @@ describe("getConverter()", () => {
     assert.strictEqual(converter("ÊtreSîne"), "êtreSîne");
     assert.strictEqual(
       converter("    foo       Bar   "),
-      "    foo       Bar   "
+      "    foo       Bar   ",
     );
   });
 
@@ -46,7 +46,7 @@ describe("getConverter()", () => {
     assert.strictEqual(converter("ÊtreSîne"), "ÊtreSîne");
     assert.strictEqual(
       converter("    foo       Bar   "),
-      "    foo       Bar   "
+      "    foo       Bar   ",
     );
   });
 
@@ -64,7 +64,7 @@ describe("getConverter()", () => {
     assert.strictEqual(converter("foo1b_a_z"), "foo1b-a-z");
     assert.strictEqual(
       converter("SCREAMING_SNAKE_CASE"),
-      "screaming-snake-case"
+      "screaming-snake-case",
     );
     assert.strictEqual(converter("darИībaÊÊw"), "darиībaêêw");
     assert.strictEqual(converter("klâwen-ûf"), "klâwen-ûf");
@@ -73,7 +73,7 @@ describe("getConverter()", () => {
     assert.strictEqual(converter("ÊtreSîne"), "être-sîne");
     assert.strictEqual(
       converter("    foo       Bar   "),
-      "    foo       bar   "
+      "    foo       bar   ",
     );
   });
 
@@ -90,7 +90,7 @@ describe("getConverter()", () => {
     assert.strictEqual(converter("foo1b_a_z"), "foo1b_a_z");
     assert.strictEqual(
       converter("SCREAMING_SNAKE_CASE"),
-      "screaming_snake_case"
+      "screaming_snake_case",
     );
     assert.strictEqual(converter("darИībaÊÊw"), "darиībaêêw");
     assert.strictEqual(converter("klâwen-ûf"), "klâwen_ûf");
@@ -99,7 +99,7 @@ describe("getConverter()", () => {
     assert.strictEqual(converter("ÊtreSîne"), "être_sîne");
     assert.strictEqual(
       converter("    foo       Bar   "),
-      "    foo       bar   "
+      "    foo       bar   ",
     );
   });
 
@@ -117,7 +117,7 @@ describe("getConverter()", () => {
     assert.strictEqual(converter("snake_case"), "SNAKE_CASE");
     assert.strictEqual(
       converter("    foo       Bar   "),
-      "    FOO       BAR   "
+      "    FOO       BAR   ",
     );
   });
 });

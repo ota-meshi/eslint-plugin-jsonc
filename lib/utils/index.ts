@@ -12,7 +12,7 @@ import path from "path";
  */
 export function createRule(
   ruleName: string,
-  rule: PartialRuleModule
+  rule: PartialRuleModule,
 ): RuleModule {
   return {
     meta: {
@@ -46,7 +46,7 @@ export function createRule(
                 customBlock: true,
               });
             },
-          }
+          },
         );
       }
       return rule.create(context, {
@@ -62,7 +62,7 @@ export function createRule(
 export function defineWrapperListener(
   coreRule: Rule.RuleModule,
   context: Rule.RuleContext,
-  options: any[]
+  options: any[],
 ): RuleListener {
   if (!context.parserServices.isJSON) {
     return {};
@@ -82,7 +82,7 @@ export function defineWrapperListener(
     }
     const jsonKey = key.replace(
       /(?:^|\b)(ExpressionStatement|(?:Template)?Literal|(?:Array|Object|Unary)Expression|Property|Identifier|TemplateElement)(?:\b|$)/gu,
-      "JSON$1"
+      "JSON$1",
     );
     jsonListener[jsonKey] = function (node: AST.JSONNode, ...args) {
       original.call(this, getProxyNode(node) as never, ...args);
@@ -120,7 +120,7 @@ export function defineWrapperListener(
         }
         if (Array.isArray(data)) {
           return (cache[key] = data.map((e) =>
-            isNode(e) ? getProxyNode(e) : e
+            isNode(e) ? getProxyNode(e) : e,
           ));
         }
         return data;

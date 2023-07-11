@@ -74,7 +74,7 @@ export default createRule("key-name-casing", {
       : [];
     const formats = Object.keys(option)
       .filter((key): key is CasingKind =>
-        allowedCaseOptions.includes(key as CasingKind)
+        allowedCaseOptions.includes(key as CasingKind),
       )
       .filter((key) => option[key]);
 

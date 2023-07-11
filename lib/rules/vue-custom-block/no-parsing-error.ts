@@ -52,7 +52,7 @@ export default createRule("vue-custom-block/no-parsing-error", {
  */
 function errorReportVisitor(
   context: Rule.RuleContext,
-  error: any
+  error: any,
 ): RuleListener {
   let loc: AST.Position | undefined = undefined;
   if ("column" in error && "lineNumber" in error) {
@@ -78,7 +78,7 @@ function errorReportVisitor(
 function getLang(customBlock: VElement) {
   return (
     customBlock.startTag.attributes.find(
-      (attr): attr is VAttribute => !attr.directive && attr.key.name === "lang"
+      (attr): attr is VAttribute => !attr.directive && attr.key.name === "lang",
     )?.value?.value || null
   );
 }

@@ -28,7 +28,7 @@ export default createRule("no-parenthesized", {
 
     type ExpressionHandler = {
       [key in AST.JSONExpression["type"]]: (
-        node: AST.JSONExpression & { type: key }
+        node: AST.JSONExpression & { type: key },
       ) => void;
     };
 

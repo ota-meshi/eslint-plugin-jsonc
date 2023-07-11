@@ -36,7 +36,7 @@ describe("Integration with eslint-plugin-markdown", () => {
       assert.strictEqual(results[0].messages.length, 1);
       assert.strictEqual(
         results[0].messages[0].message,
-        "[jsonc/array-bracket-newline] There should be no linebreak before ']'."
+        "[jsonc/array-bracket-newline] There should be no linebreak before ']'.",
       );
       return;
     }
