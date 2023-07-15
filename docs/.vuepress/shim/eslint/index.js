@@ -1,5 +1,4 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair -- DEMO
-/* eslint-disable n/no-unsupported-features/es-syntax -- DEMO */
+// eslint-disable-next-line n/no-missing-import -- ignore
 import { Linter } from "eslint/lib/linter";
 class CLIEngine {}
 
