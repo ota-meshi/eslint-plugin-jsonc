@@ -94,7 +94,6 @@ class DocFile {
     } else {
       if (recommended) {
         const presets = [];
-        // eslint-disable-next-line @typescript-eslint/require-array-sort-compare -- tools
         for (const rec of recommended.sort()) {
           presets.push(`\`"plugin:jsonc/recommended-with-${rec}"\``);
         }
