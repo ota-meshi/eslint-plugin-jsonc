@@ -32,10 +32,9 @@ function getDirRules() {
     const ruleId = `jsonc/${ruleName}`;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- for test
-    const rule = require(path.join(
-      vueCustomBlockRulesLibRoot,
-      filename,
-    )).default;
+    const rule = require(
+      path.join(vueCustomBlockRulesLibRoot, filename),
+    ).default;
     rules[ruleId] = rule;
   }
   return rules;

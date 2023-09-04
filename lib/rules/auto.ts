@@ -25,10 +25,9 @@ export default createRule("auto", {
     const visitor: RuleListener = {};
     for (const ruleId of Object.keys(autoConfig)) {
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special rule
-      const rule: RuleModule = require(`./${ruleId.replace(
-        /^jsonc\//u,
-        "",
-      )}`).default;
+      const rule: RuleModule = require(
+        `./${ruleId.replace(/^jsonc\//u, "")}`,
+      ).default;
       const subContext: any = {
         __proto__: context,
         options: getRuleOptions(autoConfig[ruleId]),
