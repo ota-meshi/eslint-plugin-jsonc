@@ -16,6 +16,9 @@ since: "v0.1.0"
 
 This rule checks property definitions of object and verifies that all properties are sorted alphabetically or specified order.
 
+ℹ️ To fully sort long files, you may need to run ESLint's `--fix` option multiple times.
+The rule sorts keys incrementally, and ESLint limits the number of fixes to 10 per run.
+
 <eslint-code-block fix>
 
 <!-- eslint-skip -->
