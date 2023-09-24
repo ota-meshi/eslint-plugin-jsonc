@@ -2,10 +2,6 @@
 /coverage
 /dist
 /dist-ts
-/docs/.vuepress/dist
-/docs/.vuepress/components/demo/demo-code.js
-/docs/.vitepress/cache
-/docs/.vitepress/build-system/shim
 /node_modules
 /tests/fixtures/integrations
 /tests/fixtures/**/*.vue
@@ -20,3 +16,8 @@
 !/.vscode
 !/docs/.vuepress
 !/docs/.vitepress
+/docs/.vuepress/dist
+/docs/.vuepress/components/demo/demo-code.js
+/docs/.vitepress/cache
+/docs/.vitepress/build-system/shim
+/docs/.vitepress/dist
