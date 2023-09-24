@@ -3,12 +3,12 @@ a > img {
 }
 
 /* Playground */
-.playground :deep(.VPDoc.has-aside .content-container),
-.playground :deep(.VPDoc:not(.has-sidebar) .content),
-.playground :deep(.VPDoc:not(.has-sidebar) .container) {
+.playground .VPDoc.has-aside .content-container,
+.playground .VPDoc:not(.has-sidebar) .content,
+.playground .VPDoc:not(.has-sidebar) .container {
   max-width: none;
 }
 
-.playground :deep(.aside) {
+.playground .VPDoc.has-aside .aside {
   display: none;
 }
