@@ -16,12 +16,12 @@ export function deserializeState(serializedString) {
   }
 
   try {
-    // For backward compatibility, it can address non-compressed data.
-    const compressed = !serializedString.startsWith("eyJj");
-    const decodedText = window.atob(serializedString);
-    const jsonText = compressed
-      ? pako.inflate(decodedText, { to: "string" })
-      : decodedText;
+    const compressedString = window.atob(serializedString);
+    const uint8Arr = pako.inflate(
+      Uint8Array.from(compressedString, (c) => c.charCodeAt(0)),
+    );
+
+    const jsonText = new TextDecoder().decode(uint8Arr);
     const json = JSON.parse(jsonText);
 
     if (typeof json === "object" && json != null) {
