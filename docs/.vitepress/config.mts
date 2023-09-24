@@ -32,8 +32,7 @@ export default async (): Promise<UserConfig<DefaultTheme.Config>> => {
     base: "/eslint-plugin-jsonc/",
     title: "eslint-plugin-jsonc",
     outDir: path.join(dirname, "./dist/eslint-plugin-jsonc"),
-    description:
-      "ESLint plugin for finding RegExp mistakes and RegExp style guide violations.",
+    description: "ESLint plugin for JSON, JSONC and JSON5 files.",
     head: [
       [
         "link",
