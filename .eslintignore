@@ -4,6 +4,8 @@
 /dist-ts
 /docs/.vuepress/dist
 /docs/.vuepress/components/demo/demo-code.js
+/docs/.vitepress/cache
+/docs/.vitepress/build-system/shim
 /node_modules
 /tests/fixtures/integrations
 /tests/fixtures/**/*.vue
@@ -17,3 +19,4 @@
 !/.github
 !/.vscode
 !/docs/.vuepress
+!/docs/.vitepress

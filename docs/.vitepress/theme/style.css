@@ -1,0 +1,14 @@
+a > img {
+  display: inline-block;
+}
+
+/* Playground */
+.playground :deep(.VPDoc.has-aside .content-container),
+.playground :deep(.VPDoc:not(.has-sidebar) .content),
+.playground :deep(.VPDoc:not(.has-sidebar) .container) {
+  max-width: none;
+}
+
+.playground :deep(.aside) {
+  display: none;
+}

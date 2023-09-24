@@ -8,7 +8,7 @@ module.exports = {
     "plugin:@ota-meshi/+node",
     "plugin:@ota-meshi/+typescript",
     "plugin:@ota-meshi/+eslint-plugin",
-    "plugin:@ota-meshi/+vue2",
+    "plugin:@ota-meshi/+vue3",
     "plugin:@ota-meshi/+json",
     "plugin:@ota-meshi/+package-json",
     "plugin:@ota-meshi/+yaml",
@@ -41,7 +41,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["*.ts"],
+      files: ["*.ts", "*.mts"],
       rules: {
         "@typescript-eslint/naming-convention": "off",
       },

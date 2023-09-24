@@ -115,3 +115,5 @@ dist
 /playground
 /rules
 /user-guide
+/docs/.vitepress/cache
+/docs/.vitepress/build-system/shim
