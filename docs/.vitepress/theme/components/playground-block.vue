@@ -49,12 +49,9 @@ export default {
   name: "PlaygroundBlock",
   components: { PgEditor, RulesSettings, SnsBar },
   data() {
-    const serializedString =
-      (typeof window !== "undefined" && window.location.hash.slice(1)) || "";
-    const state = deserializeState(serializedString);
     return {
-      code: state.code || DEFAULT_CODE,
-      rules: state.rules || Object.assign({}, DEFAULT_RULES_CONFIG),
+      code: DEFAULT_CODE,
+      rules: Object.assign({}, DEFAULT_RULES_CONFIG),
       messages: [],
     };
   },
@@ -75,12 +72,16 @@ export default {
   },
   watch: {
     serializedString(serializedString) {
-      if (typeof window !== "undefined") {
+      if (
+        typeof window !== "undefined" &&
+        serializedString !== window.location.hash.slice(1)
+      ) {
         window.location.replace(`#${serializedString}`);
       }
     },
   },
   mounted() {
+    this.onUrlHashChange();
     if (typeof window !== "undefined") {
       window.addEventListener("hashchange", this.onUrlHashChange);
     }
@@ -104,7 +105,6 @@ export default {
         const state = deserializeState(serializedString);
         this.code = state.code || DEFAULT_CODE;
         this.rules = state.rules || Object.assign({}, DEFAULT_RULES_CONFIG);
-        this.script = state.script;
       }
     },
   },
