@@ -4,6 +4,7 @@ import { createRule } from "../../utils";
 import type { RuleListener } from "../../types";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { Rule } from "eslint";
+import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("vue-custom-block/no-parsing-error", {
   meta: {
@@ -21,15 +22,17 @@ export default createRule("vue-custom-block/no-parsing-error", {
     if (!customBlock) {
       return {};
     }
-    const parseError = context.parserServices.parseError;
+    const sourceCode = getSourceCode(context);
+    // eslint-disable-next-line no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1
+    const parserServices = context.parserServices ?? sourceCode.parserServices;
+    const parseError = parserServices.parseError;
     if (parseError) {
       return errorReportVisitor(context, parseError);
     }
     const parseCustomBlockElement:
       | ((parser: any, options: any) => any)
-      | undefined = context.parserServices.parseCustomBlockElement;
-    const customBlockElement: VElement | undefined =
-      context.parserServices.customBlock;
+      | undefined = parserServices.parseCustomBlockElement;
+    const customBlockElement: VElement | undefined = parserServices.customBlock;
 
     if (customBlockElement && parseCustomBlockElement) {
       let lang = getLang(customBlockElement);

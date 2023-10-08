@@ -1,5 +1,6 @@
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
+import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("no-plus-sign", {
   meta: {
@@ -17,10 +18,10 @@ export default createRule("no-plus-sign", {
     type: "problem",
   },
   create(context) {
-    if (!context.parserServices.isJSON) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
-    const sourceCode = context.getSourceCode();
     return {
       JSONUnaryExpression(node: AST.JSONUnaryExpression) {
         if (node.operator === "+") {

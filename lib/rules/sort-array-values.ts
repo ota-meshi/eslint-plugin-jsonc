@@ -4,6 +4,7 @@ import { isCommaToken } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import type { SourceCode, AST as ESLintAST } from "eslint";
+import { getSourceCode } from "eslint-compat-utils";
 
 type JSONValue = ReturnType<typeof getStaticJSONValue>;
 
@@ -393,13 +394,12 @@ export default createRule("sort-array-values", {
     type: "suggestion",
   },
   create(context) {
-    if (!context.parserServices.isJSON) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     // Parse options.
     const parsedOptions = parseOptions(context.options);
-
-    const sourceCode = context.getSourceCode();
 
     /**
      * Verify for array element

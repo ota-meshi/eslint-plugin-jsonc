@@ -38,6 +38,14 @@ module.exports = {
         ],
       },
     ],
+    "no-restricted-properties": [
+      "error",
+      { object: "context", property: "getSourceCode" },
+      { object: "context", property: "getFilename" },
+      { object: "context", property: "getCwd" },
+      { object: "context", property: "getScope" },
+      { object: "context", property: "parserServices" },
+    ],
   },
   overrides: [
     {

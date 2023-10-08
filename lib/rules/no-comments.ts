@@ -1,4 +1,4 @@
-import type { RuleListener } from "../types";
+import { getSourceCode } from "eslint-compat-utils";
 import { createRule } from "../utils";
 
 export default createRule("no-comments", {
@@ -16,10 +16,10 @@ export default createRule("no-comments", {
     type: "problem",
   },
   create(context) {
-    if (!context.parserServices.isJSON) {
-      return {} as RuleListener;
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
     }
-    const sourceCode = context.getSourceCode();
     return {
       Program() {
         for (const comment of sourceCode.getAllComments()) {
