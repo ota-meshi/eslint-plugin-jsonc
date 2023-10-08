@@ -1,6 +1,6 @@
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import type { RuleListener } from "../types";
+import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("no-numeric-separators", {
   meta: {
@@ -18,10 +18,10 @@ export default createRule("no-numeric-separators", {
     type: "problem",
   },
   create(context) {
-    if (!context.parserServices.isJSON) {
-      return {} as RuleListener;
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
     }
-    const sourceCode = context.getSourceCode();
     return {
       JSONLiteral(node: AST.JSONLiteral) {
         if (typeof node.value !== "number") {

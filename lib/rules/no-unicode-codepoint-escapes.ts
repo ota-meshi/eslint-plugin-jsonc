@@ -1,6 +1,7 @@
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import { PatternMatcher } from "@eslint-community/eslint-utils";
+import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("no-unicode-codepoint-escapes", {
   meta: {
@@ -18,10 +19,10 @@ export default createRule("no-unicode-codepoint-escapes", {
     type: "problem",
   },
   create(context) {
-    if (!context.parserServices.isJSON) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
-    const sourceCode = context.getSourceCode();
     return {
       JSONIdentifier(node: AST.JSONIdentifier) {
         verify(node);

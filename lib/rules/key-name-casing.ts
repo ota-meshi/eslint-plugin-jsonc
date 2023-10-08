@@ -1,8 +1,8 @@
 import type { AST } from "jsonc-eslint-parser";
-import type { RuleListener } from "../types";
 import { createRule } from "../utils";
 import type { CasingKind } from "../utils/casing";
 import { getChecker, allowedCaseOptions } from "../utils/casing";
+import { getSourceCode } from "eslint-compat-utils";
 
 type Option = {
   [key in CasingKind]?: boolean;
@@ -61,10 +61,10 @@ export default createRule("key-name-casing", {
     type: "suggestion",
   },
   create(context) {
-    if (!context.parserServices.isJSON) {
-      return {} as RuleListener;
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
     }
-    const sourceCode = context.getSourceCode();
     const option: Option = { ...context.options[0] };
     if (option.camelCase !== false) {
       option.camelCase = true;

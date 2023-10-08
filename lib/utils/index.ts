@@ -4,6 +4,7 @@ import type { AST } from "jsonc-eslint-parser";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
+import { getFilename, getSourceCode } from "eslint-compat-utils";
 
 /**
  * Define the rule.
@@ -26,12 +27,13 @@ export function createRule(
     },
     jsoncDefineRule: rule,
     create(context: Rule.RuleContext): any {
+      const sourceCode = getSourceCode(context);
       if (
-        typeof context.parserServices.defineCustomBlocksVisitor ===
+        typeof sourceCode.parserServices.defineCustomBlocksVisitor ===
           "function" &&
-        path.extname(context.getFilename()) === ".vue"
+        path.extname(getFilename(context)) === ".vue"
       ) {
-        return context.parserServices.defineCustomBlocksVisitor(
+        return sourceCode.parserServices.defineCustomBlocksVisitor(
           context,
           jsoncESLintParser,
           {
@@ -64,7 +66,8 @@ export function defineWrapperListener(
   context: Rule.RuleContext,
   options: any[],
 ): RuleListener {
-  if (!context.parserServices.isJSON) {
+  const sourceCode = getSourceCode(context);
+  if (!sourceCode.parserServices.isJSON) {
     return {};
   }
   const listener = coreRule.create({
