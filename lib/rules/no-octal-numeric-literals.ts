@@ -2,7 +2,7 @@ import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
 
-const octalNumericLiteralPattern = /^0[Oo]/u;
+const octalNumericLiteralPattern = /^0o/iu;
 
 export default createRule("no-octal-numeric-literals", {
   meta: {

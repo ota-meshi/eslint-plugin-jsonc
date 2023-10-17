@@ -2,7 +2,7 @@ import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
 
-const hexadecimalNumericLiteralPattern = /^0[Xx]/u;
+const hexadecimalNumericLiteralPattern = /^0x/iu;
 
 export default createRule("no-hexadecimal-numeric-literals", {
   meta: {
