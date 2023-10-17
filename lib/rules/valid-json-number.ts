@@ -5,7 +5,7 @@ import type { RuleListener } from "../types";
 import { createRule } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
 
-const nonDecimalNumericLiteralPattern = /^0[\dBOXbox]/u;
+const nonDecimalNumericLiteralPattern = /^0[\dbox]/iu;
 
 /**
  * Checks if the given string is valid number as JSON.
