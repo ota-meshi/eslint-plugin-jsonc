@@ -521,7 +521,7 @@ export default createRule("sort-keys", {
     }
 
     return {
-      JSONObjectExpression(node: AST.JSONObjectExpression) {
+      JSONObjectExpression(node) {
         const data = new JSONObjectData(node);
         const option = parsedOptions.find((o) => o.isTargetObject(data));
         if (!option) {

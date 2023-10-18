@@ -1,4 +1,3 @@
-import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import type { CasingKind } from "../utils/casing";
 import { getChecker, allowedCaseOptions } from "../utils/casing";
@@ -91,7 +90,7 @@ export default createRule("key-name-casing", {
     }
 
     return {
-      JSONProperty(node: AST.JSONProperty) {
+      JSONProperty(node) {
         const name =
           node.key.type === "JSONLiteral" && typeof node.key.value === "string"
             ? node.key.value

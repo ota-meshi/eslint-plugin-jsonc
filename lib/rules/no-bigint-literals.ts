@@ -1,4 +1,3 @@
-import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
 
@@ -22,7 +21,7 @@ export default createRule("no-bigint-literals", {
       return {};
     }
     return {
-      JSONLiteral(node: AST.JSONLiteral) {
+      JSONLiteral(node) {
         if (node.bigint != null) {
           context.report({
             loc: node.loc,

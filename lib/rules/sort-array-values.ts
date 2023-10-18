@@ -472,7 +472,7 @@ export default createRule("sort-array-values", {
     }
 
     return {
-      JSONArrayExpression(node: AST.JSONArrayExpression) {
+      JSONArrayExpression(node) {
         const data = new JSONArrayData(node, sourceCode);
         const option = parsedOptions.find((o) => o.isTargetArray(data));
         if (!option) {

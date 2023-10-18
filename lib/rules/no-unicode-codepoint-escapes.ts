@@ -24,15 +24,15 @@ export default createRule("no-unicode-codepoint-escapes", {
       return {};
     }
     return {
-      JSONIdentifier(node: AST.JSONIdentifier) {
+      JSONIdentifier(node) {
         verify(node);
       },
-      JSONLiteral(node: AST.JSONLiteral) {
+      JSONLiteral(node) {
         if (typeof node.value === "string") {
           verify(node);
         }
       },
-      JSONTemplateElement(node: AST.JSONTemplateElement) {
+      JSONTemplateElement(node) {
         verify(node);
       },
     };
