@@ -1,4 +1,3 @@
-import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
@@ -26,7 +25,7 @@ export default createRule("no-binary-expression", {
     }
 
     return {
-      JSONBinaryExpression(node: AST.JSONBinaryExpression) {
+      JSONBinaryExpression(node) {
         context.report({
           loc: node.loc,
           messageId: "disallow",

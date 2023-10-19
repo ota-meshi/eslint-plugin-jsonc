@@ -1,4 +1,3 @@
-import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
 
@@ -23,7 +22,7 @@ export default createRule("no-numeric-separators", {
       return {};
     }
     return {
-      JSONLiteral(node: AST.JSONLiteral) {
+      JSONLiteral(node) {
         if (typeof node.value !== "number") {
           return;
         }

@@ -24,7 +24,7 @@ export default createRule("no-escape-sequence-in-identifier", {
       return {};
     }
     return {
-      JSONIdentifier(node: AST.JSONIdentifier) {
+      JSONIdentifier(node) {
         verify(node);
       },
     };
@@ -32,7 +32,7 @@ export default createRule("no-escape-sequence-in-identifier", {
     /**
      * verify
      */
-    function verify(node: AST.JSONNode) {
+    function verify(node: AST.JSONIdentifier) {
       const escapeMatcher = new PatternMatcher(/\\u\{[\dA-Fa-f]+\}|\\u\d{4}/gu);
       const text = sourceCode.text.slice(...node.range);
       for (const match of escapeMatcher.execAll(text)) {

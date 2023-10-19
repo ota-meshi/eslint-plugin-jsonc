@@ -50,7 +50,7 @@ export default createRule("valid-json-number", {
       return {} as RuleListener;
     }
     return {
-      JSONUnaryExpression(node: AST.JSONUnaryExpression) {
+      JSONUnaryExpression(node) {
         if (node.argument.type === "JSONIdentifier") {
           return;
         }
@@ -83,7 +83,7 @@ export default createRule("valid-json-number", {
           });
         }
       },
-      JSONLiteral(node: AST.JSONLiteral) {
+      JSONLiteral(node) {
         if (typeof node.value !== "number") {
           return;
         }
@@ -130,7 +130,7 @@ export default createRule("valid-json-number", {
           });
         }
       },
-      JSONIdentifier(node: AST.JSONIdentifier) {
+      JSONIdentifier(node) {
         if (!isNumberIdentifier(node)) {
           return;
         }

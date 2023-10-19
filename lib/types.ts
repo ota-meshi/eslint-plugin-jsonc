@@ -1,7 +1,23 @@
 import type { JSONSchema4 } from "json-schema";
 import type { Rule } from "eslint";
-export interface RuleListener {
-  [key: string]: ((node: never) => void) | undefined;
+import type { AST } from "jsonc-eslint-parser";
+
+export type RuleFunction<Node extends AST.JSONNode = never> = (
+  node: Node,
+) => void;
+
+export type BuiltInRuleListeners = {
+  [Node in AST.JSONNode as Node["type"]]?: RuleFunction<Node>;
+};
+
+export type BuiltInRuleListenerExits = {
+  [Node in AST.JSONNode as `${Node["type"]}:exit`]?: RuleFunction<Node>;
+};
+
+export interface RuleListener
+  extends BuiltInRuleListeners,
+    BuiltInRuleListenerExits {
+  [key: string]: RuleFunction | undefined;
 }
 
 export interface RuleModule {

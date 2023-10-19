@@ -1,4 +1,3 @@
-import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
 
@@ -23,7 +22,7 @@ export default createRule("no-plus-sign", {
       return {};
     }
     return {
-      JSONUnaryExpression(node: AST.JSONUnaryExpression) {
+      JSONUnaryExpression(node) {
         if (node.operator === "+") {
           const operator = sourceCode.getFirstToken(
             node as any,

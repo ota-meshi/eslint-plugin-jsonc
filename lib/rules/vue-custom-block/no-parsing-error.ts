@@ -67,7 +67,8 @@ function errorReportVisitor(
   return {
     Program(node) {
       context.report({
-        node,
+        // JSONC AST nodes aren't assignable to ESTree AST nodes
+        node: node as never,
         loc,
         message: error.message,
       });
