@@ -16,6 +16,7 @@
 !/.vscode
 !/docs/.vuepress
 !/docs/.vitepress
+!/.devcontainer
 /docs/.vuepress/dist
 /docs/.vuepress/components/demo/demo-code.js
 /docs/.vitepress/cache
