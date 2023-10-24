@@ -26,7 +26,7 @@ export function createRule(
       },
     },
     jsoncDefineRule: rule,
-    create(context: Rule.RuleContext): any {
+    create(context: Rule.RuleContext) {
       const sourceCode = getSourceCode(context);
       if (
         typeof sourceCode.parserServices.defineCustomBlocksVisitor ===
