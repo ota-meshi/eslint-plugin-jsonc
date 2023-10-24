@@ -74,21 +74,31 @@ export default {
     serializedString(serializedString) {
       if (
         typeof window !== "undefined" &&
-        serializedString !== window.location.hash.slice(1)
+        serializedString !== window.location.hash.slice(1) &&
+        !this._initializing
       ) {
         window.location.replace(`#${serializedString}`);
       }
     },
   },
   mounted() {
-    this.onUrlHashChange();
     if (typeof window !== "undefined") {
-      window.addEventListener("hashchange", this.onUrlHashChange);
+      window.addEventListener("hashchange", this.processUrlHashChange);
+    }
+    const serializedString =
+      (typeof window !== "undefined" && window.location.hash.slice(1)) || "";
+    if (serializedString) {
+      this._initializing = true;
+      this.rules = {};
+      this.$nextTick().then(() => {
+        this._initializing = false;
+        this.processUrlHashChange();
+      });
     }
   },
-  beforeDestroey() {
+  beforeUnmount() {
     if (typeof window !== "undefined") {
-      window.removeEventListener("hashchange", this.onUrlHashChange);
+      window.removeEventListener("hashchange", this.processUrlHashChange);
     }
   },
   methods: {
@@ -98,14 +108,16 @@ export default {
     getRule(ruleId) {
       return getRule(ruleId);
     },
-    onUrlHashChange() {
+    processUrlHashChange() {
       const serializedString =
         (typeof window !== "undefined" && window.location.hash.slice(1)) || "";
       if (serializedString !== this.serializedString) {
         const state = deserializeState(serializedString);
         this.code = state.code || DEFAULT_CODE;
         this.rules = state.rules || Object.assign({}, DEFAULT_RULES_CONFIG);
+        return true;
       }
+      return false;
     },
   },
 };
