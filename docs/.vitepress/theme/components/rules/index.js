@@ -77,12 +77,12 @@ categories.sort((a, b) =>
   a.categoryOrder > b.categoryOrder
     ? 1
     : a.categoryOrder < b.categoryOrder
-    ? -1
-    : a.title > b.title
-    ? 1
-    : a.title < b.title
-    ? -1
-    : 0,
+      ? -1
+      : a.title > b.title
+        ? 1
+        : a.title < b.title
+          ? -1
+          : 0,
 );
 
 export const DEFAULT_RULES_CONFIG = allRules.reduce((c, r) => {
