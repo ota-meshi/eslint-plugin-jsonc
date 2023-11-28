@@ -1,6 +1,5 @@
 import type { DefaultTheme, UserConfig } from "vitepress";
 import { defineConfig } from "vitepress";
-import { BUNDLED_LANGUAGES } from "shiki";
 import path from "path";
 import { fileURLToPath } from "url";
 import eslint4b from "vite-plugin-eslint4b";
@@ -9,10 +8,6 @@ import { viteCommonjs, vitePluginAutoRule } from "./vite-plugin.mjs";
 
 import "./build-system/build.js";
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// Include `json5` as alias for jsonc
-const jsonc = BUNDLED_LANGUAGES.find((lang) => lang.id === "jsonc");
-if (jsonc) jsonc.aliases = [...(jsonc?.aliases ?? []), "json5"];
 
 function ruleToSidebarItem({
   meta: {
@@ -60,7 +55,7 @@ export default async (): Promise<UserConfig<DefaultTheme.Config>> => {
         "process.env.NODE_DEBUG": "false",
       },
       optimizeDeps: {
-        // exclude: ["vue-eslint-parser"],
+        exclude: ["eslint-compat-utils"],
       },
     },
 
