@@ -161,10 +161,10 @@ ${
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/${ruleName})</sup>
 `
       : typeof extensionRule === "string"
-      ? `
+        ? `
 <sup>Taken with ❤️ [from ESLint core](https://eslint.org/docs/rules/${extensionRule})</sup>
 `
-      : `
+        : `
 <sup>Taken with ❤️ [from ${extensionRule.plugin}](${extensionRule.url})</sup>
 `
     : ""

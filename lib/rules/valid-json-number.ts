@@ -116,8 +116,8 @@ export default createRule("valid-json-number", {
               text[1].toLowerCase() === "x"
                 ? "invalidHex"
                 : text[1].toLowerCase() === "b"
-                ? "invalidBinary"
-                : "invalidOctal",
+                  ? "invalidBinary"
+                  : "invalidOctal",
             fix: buildFix(node),
           });
           return;
