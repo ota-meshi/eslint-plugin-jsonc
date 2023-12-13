@@ -202,7 +202,7 @@ export default createRule("object-curly-spacing", {
             isClosingBraceToken(penultimate));
         const penultimateType =
           shouldCheckPenultimate &&
-          sourceCode.getNodeByRangeIndex(penultimate.range![0])!.type;
+          sourceCode.getNodeByRangeIndex(penultimate.range[0])!.type;
 
         const closingCurlyBraceMustBeSpaced =
           (options.arraysInObjectsException &&
