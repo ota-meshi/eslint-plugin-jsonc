@@ -53,8 +53,11 @@ export default createRule("comma-style", {
     },
   },
   create(context) {
-    const style = context.options[0] || "last";
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
+    const style = context.options[0] || "last";
     const exceptions = {} as Record<AST.JSONNode["type"], boolean>;
 
     if (

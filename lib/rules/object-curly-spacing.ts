@@ -49,8 +49,11 @@ export default createRule("object-curly-spacing", {
     },
   },
   create(context) {
-    const spaced = context.options[0] === "always";
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
+    const spaced = context.options[0] === "always";
 
     /**
      * Determines whether an option is set, relative to the spacing option.

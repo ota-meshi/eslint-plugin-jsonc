@@ -593,6 +593,10 @@ export default createRule("indent", {
     },
   },
   create(context) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
     const DEFAULT_VARIABLE_INDENT = 1;
     const DEFAULT_PARAMETER_INDENT = 1;
     const DEFAULT_FUNCTION_BODY_INDENT = 1;
@@ -657,7 +661,6 @@ export default createRule("indent", {
       }
     }
 
-    const sourceCode = getSourceCode(context);
     const tokenInfo = new TokenInfo(sourceCode);
     const offsets = new OffsetStorage(
       tokenInfo,

@@ -84,6 +84,9 @@ export default createRule("array-element-newline", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
 
     /**
      * Normalizes a given option value.

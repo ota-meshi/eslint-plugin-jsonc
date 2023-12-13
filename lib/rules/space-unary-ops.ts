@@ -48,9 +48,11 @@ export default createRule("space-unary-ops", {
     },
   },
   create(context) {
-    const options = context.options[0] || { words: true, nonwords: false };
-
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
+    const options = context.options[0] || { words: true, nonwords: false };
 
     /**
      * Checks if an override exists for a given operator.

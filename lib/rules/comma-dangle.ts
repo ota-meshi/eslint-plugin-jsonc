@@ -96,9 +96,11 @@ export default createRule("comma-dangle", {
     },
   },
   create(context) {
-    const options = normalizeOptions(context.options[0] || "never");
-
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
+    const options = normalizeOptions(context.options[0] || "never");
 
     /**
      * Gets the last item of the given node.

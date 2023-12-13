@@ -112,6 +112,10 @@ export default createRule("quotes", {
     },
   },
   create(context) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
     let quoteOption = context.options[0] as "double" | "single";
     if ((quoteOption as string) === "backtick") {
       quoteOption = "double";
@@ -122,7 +126,6 @@ export default createRule("quotes", {
       options &&
       typeof options === "object" &&
       options.allowTemplateLiterals === true;
-    const sourceCode = getSourceCode(context);
     let avoidEscape =
       options && typeof options === "object" && options.avoidEscape === true;
 

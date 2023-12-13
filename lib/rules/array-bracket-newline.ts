@@ -58,6 +58,9 @@ export default createRule("array-bracket-newline", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
 
     /**
      * Normalizes a given option value.

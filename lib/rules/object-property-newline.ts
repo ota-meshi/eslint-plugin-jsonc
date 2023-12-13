@@ -40,6 +40,10 @@ export default createRule("object-property-newline", {
     },
   },
   create(context) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
     const allowSameLine =
       context.options[0] &&
       (context.options[0].allowAllPropertiesOnSameLine ||
@@ -47,8 +51,6 @@ export default createRule("object-property-newline", {
     const messageId = allowSameLine
       ? "propertiesOnNewlineAll"
       : "propertiesOnNewline";
-
-    const sourceCode = getSourceCode(context);
 
     return {
       JSONObjectExpression(node) {

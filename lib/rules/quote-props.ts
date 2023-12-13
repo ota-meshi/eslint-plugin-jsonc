@@ -86,6 +86,10 @@ export default createRule("quote-props", {
     },
   },
   create(context) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
     const MODE =
       (context.options[0] as
         | "always"
@@ -96,8 +100,6 @@ export default createRule("quote-props", {
     const CHECK_UNNECESSARY =
       !context.options[1] || context.options[1].unnecessary !== false;
     const NUMBERS = (context.options[1] && context.options[1].numbers)!;
-
-    const sourceCode = getSourceCode(context);
 
     /**
      * Checks whether a certain string constitutes an ES3 token

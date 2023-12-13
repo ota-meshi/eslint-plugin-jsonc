@@ -177,6 +177,9 @@ export default createRule("object-curly-newline", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
     const normalizedOptions = normalizeOptions(context.options[0]);
 
     /**

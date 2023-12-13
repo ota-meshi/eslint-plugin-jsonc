@@ -49,8 +49,11 @@ export default createRule("array-bracket-spacing", {
     },
   },
   create(context) {
-    const spaced = context.options[0] === "always";
     const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
+    const spaced = context.options[0] === "always";
     interface Schema1 {
       singleValue?: boolean;
       objectsInArrays?: boolean;

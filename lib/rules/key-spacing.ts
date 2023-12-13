@@ -330,6 +330,10 @@ export default createRule("key-spacing", {
     },
   },
   create(context) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
+      return {};
+    }
     /**
      * OPTIONS
      * "key-spacing": [2, {
@@ -343,8 +347,6 @@ export default createRule("key-spacing", {
     const multiLineOptions = ruleOptions.multiLine;
     const singleLineOptions = ruleOptions.singleLine;
     const alignmentOptions = ruleOptions.align || null;
-
-    const sourceCode = getSourceCode(context);
 
     /**
      * Determines if the given property is key-value property.
