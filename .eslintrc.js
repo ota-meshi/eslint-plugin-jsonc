@@ -22,6 +22,9 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-shadow": "off",
+    complexity: "off",
+    "one-var": "off",
+    "no-invalid-this": "off",
     // Repo rule
     "no-restricted-imports": [
       "error",
@@ -44,13 +47,13 @@ module.exports = {
         object: "context",
         property: "getSourceCode",
         message:
-          "Please use `eslint-compat-utils` module's `getSourceCode(context).getScope()` instead.",
+          "Please use `eslint-compat-utils` module's `getSourceCode(context)` instead.",
       },
       {
         object: "context",
         property: "sourceCode",
         message:
-          "Please use `eslint-compat-utils` module's `getSourceCode(context).getScope()` instead.",
+          "Please use `eslint-compat-utils` module's `getSourceCode(context)` instead.",
       },
       {
         object: "context",

@@ -139,13 +139,27 @@ let ruleMap: Map<string, Rule.RuleModule> | null = null;
 /**
  * Get the core rule implementation from the rule name
  */
-export function getCoreRule(name: string): Rule.RuleModule {
-  let map: Map<string, Rule.RuleModule>;
-  if (ruleMap) {
-    map = ruleMap;
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- load eslint
-    ruleMap = map = new (require("eslint").Linter)().getRules();
+export function getCoreRule(
+  name:
+    | "no-dupe-keys"
+    | "no-floating-decimal"
+    | "no-irregular-whitespace"
+    | "no-multi-str"
+    | "no-octal-escape"
+    | "no-octal"
+    | "no-sparse-arrays"
+    | "no-useless-escape",
+): Rule.RuleModule {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- load eslint
+  const eslint = require("eslint");
+  try {
+    const map = ruleMap || (ruleMap = new eslint.Linter().getRules());
+    return map.get(name) || null;
+  } catch {
+    // getRules() is no longer available in flat config.
   }
-  return map.get(name)!;
+
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- load eslint
+  const { builtinRules } = require("eslint/use-at-your-own-risk");
+  return /** @type {any} */ builtinRules.get(name) || null;
 }

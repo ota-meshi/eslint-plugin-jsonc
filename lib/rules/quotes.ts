@@ -1,5 +1,75 @@
-import { createRule, defineWrapperListener, getCoreRule } from "../utils";
-const coreRule = getCoreRule("quotes");
+// Most source code was copied from ESLint v8.
+// MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
+import type { AST } from "jsonc-eslint-parser";
+import { createRule } from "../utils";
+import { getSourceCode } from "eslint-compat-utils";
+import { LINEBREAKS, isSurroundedBy } from "../utils/eslint-ast-utils";
+
+/**
+ * Switches quoting of javascript string between ' " and `
+ * escaping and unescaping as necessary.
+ * Only escaping of the minimal set of characters is changed.
+ * Note: escaping of newlines when switching from backtick to other quotes is not handled.
+ * @param str A string to convert.
+ * @returns The string with changed quotes.
+ * @private
+ */
+function switchQuote(this: { quote: string }, str: string) {
+  const newQuote = this.quote;
+  const oldQuote = str[0];
+
+  if (newQuote === oldQuote) return str;
+
+  return (
+    newQuote +
+    str
+      .slice(1, -1)
+      .replace(
+        /\\(\$\{|\r\n?|\n|.)|["'`]|\$\{|(\r\n?|\n)/gu,
+        (match, escaped, newline) => {
+          if (escaped === oldQuote || (oldQuote === "`" && escaped === "${"))
+            return escaped; // unescape
+
+          if (match === newQuote || (newQuote === "`" && match === "${"))
+            return `\\${match}`; // escape
+
+          if (newline && oldQuote === "`") return "\\n"; // escape newlines
+
+          return match;
+        },
+      ) +
+    newQuote
+  );
+}
+
+const QUOTE_SETTINGS = {
+  double: {
+    quote: '"',
+    alternateQuote: "'",
+    description: "doublequote",
+    convert: switchQuote,
+  },
+  single: {
+    quote: "'",
+    alternateQuote: '"',
+    description: "singlequote",
+    convert: switchQuote,
+  },
+  backtick: {
+    quote: "`",
+    alternateQuote: '"',
+    description: "backtick",
+    convert: switchQuote,
+  },
+};
+
+// An unescaped newline is a newline preceded by an even number of backslashes.
+const UNESCAPED_LINEBREAK_PATTERN = new RegExp(
+  String.raw`(^|[^\\])(\\\\)*[${Array.from(LINEBREAKS).join("")}]`,
+  "u",
+);
+
+const AVOID_ESCAPE = "avoid-escape";
 
 export default createRule("quotes", {
   meta: {
@@ -9,17 +79,126 @@ export default createRule("quotes", {
       extensionRule: true,
       layout: true,
     },
-    fixable: coreRule.meta?.fixable,
-    hasSuggestions: (coreRule.meta as any).hasSuggestions,
-    schema: coreRule.meta!.schema!,
-    messages: coreRule.meta!.messages!,
-    type: coreRule.meta!.type!,
+    type: "layout",
+    fixable: "code",
+    schema: [
+      {
+        type: "string",
+        enum: ["single", "double", "backtick"],
+      },
+      {
+        anyOf: [
+          {
+            type: "string",
+            enum: ["avoid-escape"],
+          },
+          {
+            type: "object",
+            properties: {
+              avoidEscape: {
+                type: "boolean",
+              },
+              allowTemplateLiterals: {
+                type: "boolean",
+              },
+            },
+            additionalProperties: false,
+          },
+        ],
+      },
+    ],
+    messages: {
+      wrongQuotes: "Strings must use {{description}}.",
+    },
   },
   create(context) {
-    const options = [...context.options];
-    if (!options[0] || options[0] === "backtick") {
-      options[0] = "double";
+    let quoteOption = context.options[0] as "double" | "single";
+    if ((quoteOption as string) === "backtick") {
+      quoteOption = "double";
     }
-    return defineWrapperListener(coreRule, context, options);
+    const settings = QUOTE_SETTINGS[quoteOption || "double"];
+    const options = context.options[1];
+    const allowTemplateLiterals =
+      options &&
+      typeof options === "object" &&
+      options.allowTemplateLiterals === true;
+    const sourceCode = getSourceCode(context);
+    let avoidEscape =
+      options && typeof options === "object" && options.avoidEscape === true;
+
+    // deprecated
+    if (options === AVOID_ESCAPE) avoidEscape = true;
+
+    /**
+     * Checks whether or not a given TemplateLiteral node is actually using any of the special features provided by template literal strings.
+     * @param node A TemplateLiteral node to check.
+     * @returns Whether or not the TemplateLiteral node is using any of the special features provided by template literal strings.
+     * @private
+     */
+    function isUsingFeatureOfTemplateLiteral(node: AST.JSONTemplateLiteral) {
+      const hasStringInterpolation = node.expressions.length > 0;
+
+      if (hasStringInterpolation) return true;
+
+      const isMultilineString =
+        node.quasis.length >= 1 &&
+        UNESCAPED_LINEBREAK_PATTERN.test(node.quasis[0].value.raw);
+
+      if (isMultilineString) return true;
+
+      return false;
+    }
+
+    return {
+      JSONLiteral(node) {
+        const val = node.value;
+        const rawVal = node.raw;
+
+        if (settings && typeof val === "string") {
+          let isValid = isSurroundedBy(rawVal, settings.quote);
+
+          if (!isValid && avoidEscape)
+            isValid =
+              isSurroundedBy(rawVal, settings.alternateQuote) &&
+              rawVal.includes(settings.quote);
+
+          if (!isValid) {
+            context.report({
+              node: node as any,
+              messageId: "wrongQuotes",
+              data: {
+                description: settings.description,
+              },
+              fix(fixer) {
+                return fixer.replaceText(
+                  node as any,
+                  settings.convert(node.raw),
+                );
+              },
+            });
+          }
+        }
+      },
+
+      JSONTemplateLiteral(node) {
+        // Don't throw an error if backticks are expected or a template literal feature is in use.
+        if (allowTemplateLiterals || isUsingFeatureOfTemplateLiteral(node))
+          return;
+
+        context.report({
+          node: node as any,
+          messageId: "wrongQuotes",
+          data: {
+            description: settings.description,
+          },
+          fix(fixer) {
+            return fixer.replaceText(
+              node as any,
+              settings.convert(sourceCode.getText(node as any)),
+            );
+          },
+        });
+      },
+    };
   },
 });
