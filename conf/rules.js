@@ -3,8 +3,13 @@ let ruleMap;
 
 /** Get all rules */
 module.exports = function getCoreRules() {
-  if (ruleMap) {
-    return ruleMap;
+  const eslint = require("eslint");
+  try {
+    return ruleMap || (ruleMap = new eslint.Linter().getRules());
+  } catch {
+    // getRules() is no longer available in flat config.
   }
-  return (ruleMap = new (require("eslint").Linter)().getRules());
+
+  const { builtinRules } = require("eslint/use-at-your-own-risk");
+  return builtinRules;
 };

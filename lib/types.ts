@@ -1,6 +1,11 @@
 import type { JSONSchema4 } from "json-schema";
 import type { Rule } from "eslint";
 import type { RuleListener } from "jsonc-eslint-parser";
+import type { AST as ESLintAST } from "eslint";
+import type * as ESTree from "estree";
+
+export type Token = ESLintAST.Token;
+export type Comment = ESTree.Comment;
 
 export { RuleListener };
 

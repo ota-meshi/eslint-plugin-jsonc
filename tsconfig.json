@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
-    "lib": ["es2020"],
+    "lib": ["es2022"],
     "allowJs": true,
     "checkJs": true,
     "outDir": "./dist",
