@@ -74,6 +74,25 @@ export default createRule("object-curly-spacing", {
       spaced,
       arraysInObjectsException: isOptionSet("arraysInObjects"),
       objectsInObjectsException: isOptionSet("objectsInObjects"),
+      isOpeningCurlyBraceMustBeSpaced(_second: Token | Comment) {
+        return options.spaced;
+      },
+      isClosingCurlyBraceMustBeSpaced(penultimate: Token | Comment) {
+        const targetPenultimateType =
+          options.arraysInObjectsException && isClosingBracketToken(penultimate)
+            ? "JSONArrayExpression"
+            : options.objectsInObjectsException &&
+                isClosingBraceToken(penultimate)
+              ? "JSONObjectExpression"
+              : null;
+        const node = sourceCode.getNodeByRangeIndex(
+          penultimate.range![0],
+        ) as AST.JSONNode | null;
+
+        return targetPenultimateType && node?.type === targetPenultimateType
+          ? !options.spaced
+          : options.spaced;
+      },
     };
 
     /**
@@ -185,47 +204,25 @@ export default createRule("object-curly-spacing", {
       last: Token,
     ) {
       if (isTokenOnSameLine(first, second)) {
-        const firstSpaced = sourceCode.isSpaceBetweenTokens(
-          first,
-          second as Token,
-        );
+        const firstSpaced = sourceCode.isSpaceBetween(first, second as any);
 
-        if (options.spaced && !firstSpaced)
-          reportRequiredBeginningSpace(node, first);
-
-        if (!options.spaced && firstSpaced && second.type !== "Line")
-          reportNoBeginningSpace(node, first);
+        if (options.isOpeningCurlyBraceMustBeSpaced(second)) {
+          if (!firstSpaced) reportRequiredBeginningSpace(node, first);
+        } else {
+          if (firstSpaced && second.type !== "Line") {
+            reportNoBeginningSpace(node, first);
+          }
+        }
       }
 
       if (isTokenOnSameLine(penultimate, last)) {
-        const shouldCheckPenultimate =
-          (options.arraysInObjectsException &&
-            isClosingBracketToken(penultimate)) ||
-          (options.objectsInObjectsException &&
-            isClosingBraceToken(penultimate));
-        const penultimateType =
-          shouldCheckPenultimate &&
-          sourceCode.getNodeByRangeIndex(penultimate.range[0])!.type;
+        const lastSpaced = sourceCode.isSpaceBetween(penultimate as any, last);
 
-        const closingCurlyBraceMustBeSpaced =
-          (options.arraysInObjectsException &&
-            penultimateType === "ArrayExpression") ||
-          (options.objectsInObjectsException &&
-            (penultimateType === "ObjectExpression" ||
-              penultimateType === "ObjectPattern"))
-            ? !options.spaced
-            : options.spaced;
-
-        const lastSpaced = sourceCode.isSpaceBetweenTokens(
-          penultimate as Token,
-          last,
-        );
-
-        if (closingCurlyBraceMustBeSpaced && !lastSpaced)
-          reportRequiredEndingSpace(node, last);
-
-        if (!closingCurlyBraceMustBeSpaced && lastSpaced)
-          reportNoEndingSpace(node, last);
+        if (options.isClosingCurlyBraceMustBeSpaced(penultimate)) {
+          if (!lastSpaced) reportRequiredEndingSpace(node, last);
+        } else {
+          if (lastSpaced) reportNoEndingSpace(node, last);
+        }
       }
     }
 

@@ -22,7 +22,6 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-shadow": "off",
-    complexity: "off",
     "one-var": "off",
     "no-invalid-this": "off",
     // Repo rule

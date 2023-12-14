@@ -78,6 +78,28 @@ export default createRule("array-bracket-spacing", {
       singleElementException: isOptionSet("singleValue"),
       objectsInArraysException: isOptionSet("objectsInArrays"),
       arraysInArraysException: isOptionSet("arraysInArrays"),
+      isOpeningBracketMustBeSpaced(node: AST.JSONArrayExpression) {
+        if (options.singleElementException && node.elements.length === 1) {
+          return !options.spaced;
+        }
+        const firstElement = node.elements[0];
+        return firstElement &&
+          ((options.objectsInArraysException && isObjectType(firstElement)) ||
+            (options.arraysInArraysException && isArrayType(firstElement)))
+          ? !options.spaced
+          : options.spaced;
+      },
+      isClosingBracketMustBeSpaced(node: AST.JSONArrayExpression) {
+        if (options.singleElementException && node.elements.length === 1) {
+          return !options.spaced;
+        }
+        const lastElement = node.elements[node.elements.length - 1];
+        return lastElement &&
+          ((options.objectsInArraysException && isObjectType(lastElement)) ||
+            (options.arraysInArraysException && isArrayType(lastElement)))
+          ? !options.spaced
+          : options.spaced;
+      },
     };
 
     /**
@@ -189,57 +211,25 @@ export default createRule("array-bracket-spacing", {
       const second = sourceCode.getFirstToken(node as any, 1)!;
       const last = sourceCode.getLastToken(node as any)!;
       const penultimate = sourceCode.getTokenBefore(last)!;
-      const firstElement = node.elements[0];
-      const lastElement = node.elements[node.elements.length - 1];
-
-      const openingBracketMustBeSpaced =
-        (firstElement &&
-          options.objectsInArraysException &&
-          isObjectType(firstElement)) ||
-        (firstElement &&
-          options.arraysInArraysException &&
-          isArrayType(firstElement)) ||
-        (options.singleElementException && node.elements.length === 1)
-          ? !options.spaced
-          : options.spaced;
-
-      const closingBracketMustBeSpaced =
-        (lastElement &&
-          options.objectsInArraysException &&
-          isObjectType(lastElement)) ||
-        (lastElement &&
-          options.arraysInArraysException &&
-          isArrayType(lastElement)) ||
-        (options.singleElementException && node.elements.length === 1)
-          ? !options.spaced
-          : options.spaced;
 
       if (isTokenOnSameLine(first, second)) {
-        if (
-          openingBracketMustBeSpaced &&
-          !sourceCode.isSpaceBetweenTokens(first, second)
-        )
-          reportRequiredBeginningSpace(node, first);
-
-        if (
-          !openingBracketMustBeSpaced &&
-          sourceCode.isSpaceBetweenTokens(first, second)
-        )
-          reportNoBeginningSpace(node, first);
+        if (options.isOpeningBracketMustBeSpaced(node)) {
+          if (!sourceCode.isSpaceBetween(first, second))
+            reportRequiredBeginningSpace(node, first);
+        } else {
+          if (sourceCode.isSpaceBetween(first, second))
+            reportNoBeginningSpace(node, first);
+        }
       }
 
       if (first !== penultimate && isTokenOnSameLine(penultimate, last)) {
-        if (
-          closingBracketMustBeSpaced &&
-          !sourceCode.isSpaceBetweenTokens(penultimate, last)
-        )
-          reportRequiredEndingSpace(node, last);
-
-        if (
-          !closingBracketMustBeSpaced &&
-          sourceCode.isSpaceBetweenTokens(penultimate, last)
-        )
-          reportNoEndingSpace(node, last);
+        if (options.isClosingBracketMustBeSpaced(node)) {
+          if (!sourceCode.isSpaceBetween(penultimate, last))
+            reportRequiredEndingSpace(node, last);
+        } else {
+          if (sourceCode.isSpaceBetween(penultimate, last))
+            reportNoEndingSpace(node, last);
+        }
       }
     }
 
