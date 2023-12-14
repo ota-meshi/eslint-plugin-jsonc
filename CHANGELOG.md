@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.11.1
+
+### Patch Changes
+
+- [#283](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/283) [`994983b`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/994983bf3d267a5afe43d3e93729be1d188eb1c7) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: wrong report for object option in `jsonc/object-curly-spacing`
+
 ## 2.11.0
 
 ### Minor Changes
