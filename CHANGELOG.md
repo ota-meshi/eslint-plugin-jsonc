@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.11.2
+
+### Patch Changes
+
+- [`3291b57`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/3291b578e049bd39c4cc2da9cf07ef71b79c5147) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: add espree to dependencies
+
 ## 2.11.1
 
 ### Patch Changes
