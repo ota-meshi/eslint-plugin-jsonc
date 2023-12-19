@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-jsonc",
-  "version": "2.11.1",
+  "version": "2.11.2",
   "description": "ESLint plugin for JSON, JSONC and JSON5 files.",
   "main": "dist/index.js",
   "typescript": {
