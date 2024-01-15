@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/comma-style";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("comma-style", rule as any, {
@@ -70,8 +74,12 @@ tester.run("comma-style", rule as any, {
                     , "b": 2
                 }
             }</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["',' should be placed last.", "',' should be placed last."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

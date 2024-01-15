@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-dupe-keys";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("no-dupe-keys", rule as any, {
@@ -15,8 +19,12 @@ tester.run("no-dupe-keys", rule as any, {
     {
       filename: "test.vue",
       code: `<custom-block lang="json">{"key": "value", "key": "value"}</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Duplicate key 'key'."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

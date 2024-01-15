@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/object-property-newline";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("object-property-newline", rule as any, {
@@ -36,8 +40,12 @@ tester.run("object-property-newline", rule as any, {
       filename: "test.vue",
       code: `<custom-block lang="json">{ "foo": "foo", "bar": "bar" }</custom-block>`,
       output: `<custom-block lang="json">{ "foo": "foo",\n"bar": "bar" }</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Object properties must go on a new line."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

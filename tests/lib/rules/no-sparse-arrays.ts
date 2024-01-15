@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-sparse-arrays";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("no-sparse-arrays", rule as any, {
@@ -19,8 +23,12 @@ tester.run("no-sparse-arrays", rule as any, {
     {
       filename: "test.vue",
       code: `<custom-block lang="json">[,,]</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Unexpected comma in middle of array."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/array-element-newline";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("array-element-newline", rule as any, {
@@ -30,13 +34,17 @@ tester.run("array-element-newline", rule as any, {
 3]</i18n><custom-block lang="json5">[1,
 2,
 3]</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         "There should be a linebreak after this element.",
         "There should be a linebreak after this element.",
         "There should be a linebreak after this element.",
         "There should be a linebreak after this element.",
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

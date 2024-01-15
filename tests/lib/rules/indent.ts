@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
+import type { RuleTester as ESLintRuleTester } from "eslint";
 import rule from "../../../lib/rules/indent";
+import * as jsonParser from "jsonc-eslint-parser";
 
 // ------------------------------------------------------------------------------
 // Helpers
@@ -22,8 +24,8 @@ const FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/indent/");
  *
  */
 function loadPatterns(
-  additionalValid: RuleTester.ValidTestCase[],
-  additionalInvalid: RuleTester.InvalidTestCase[],
+  additionalValid: ESLintRuleTester.ValidTestCase[],
+  additionalInvalid: ESLintRuleTester.InvalidTestCase[],
 ) {
   const valid = fs.readdirSync(FIXTURE_ROOT).map((filename) => {
     const code0 = fs.readFileSync(path.join(FIXTURE_ROOT, filename), "utf8");
@@ -33,12 +35,18 @@ function loadPatterns(
     const baseObj = JSON.parse(
       /^(?:\/\*|<!--)(.+?)(?:\*\/|-->)/u.exec(code0)![1],
     );
-    if ("parser" in baseObj) {
-      baseObj.parser = require.resolve(baseObj.parser);
+    baseObj.languageOptions ??= {};
+    if ("parser" in baseObj.languageOptions) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
+      baseObj.languageOptions.parser = require(baseObj.languageOptions.parser);
     }
-    if ("parserOptions" in baseObj && "parser" in baseObj.parserOptions) {
-      baseObj.parserOptions.parser = require.resolve(
-        baseObj.parserOptions.parser,
+    if (
+      baseObj.languageOptions.parserOptions &&
+      "parser" in baseObj.languageOptions.parserOptions
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
+      baseObj.languageOptions.parserOptions.parser = require(
+        baseObj.languageOptions.parserOptions.parser,
       );
     }
     return Object.assign(baseObj, { code, filename });
@@ -104,7 +112,9 @@ function unIndent(strings: TemplateStringsArray) {
 }
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run(

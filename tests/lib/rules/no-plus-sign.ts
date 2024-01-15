@@ -1,9 +1,10 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-plus-sign";
+import * as jsonParser from "jsonc-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
-  parserOptions: {
+  languageOptions: {
+    parser: jsonParser,
     ecmaVersion: 2020,
   },
 });

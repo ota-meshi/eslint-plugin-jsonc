@@ -1,8 +1,8 @@
 import path from "path";
 import assert from "assert";
 import plugin from "../../lib/index";
-import { getESLint } from "eslint-compat-utils";
-const ESLint = getESLint();
+import { getLegacyESLint } from "eslint-compat-utils/eslint";
+const ESLint = getLegacyESLint();
 
 // -----------------------------------------------------------------------------
 // Tests

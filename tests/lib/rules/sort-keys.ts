@@ -1,9 +1,13 @@
 import fs from "fs";
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/sort-keys";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 const OPTIONS_FOR_PACKAGE_JSON = [
@@ -350,10 +354,14 @@ tester.run("sort-keys", rule as any, {
       filename: "test.vue",
       code: `<custom-block lang="json">{a:1, A: 2, B:3, b:4}</custom-block>`,
       output: `<custom-block lang="json">{ A: 2,a:1, B:3, b:4}</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         "Expected object keys to be in ascending order. 'A' should be before 'a'.",
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     // package.json
     {

@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/key-spacing";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("key-spacing", rule as any, {
@@ -20,11 +24,15 @@ tester.run("key-spacing", rule as any, {
       filename: "test.vue",
       code: `<custom-block lang="json">{"key" :"value"}</custom-block>`,
       output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         "Extra space after key 'key'.",
         "Missing space before value for key 'key'.",
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

@@ -1,15 +1,17 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-numeric-separators";
 import { Linter } from "eslint";
 import semver from "semver";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 if (!semver.gte(Linter.version, "7.3.0")) {
   // @ts-expect-error
   return;
 }
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
-  parserOptions: {
+  languageOptions: {
     ecmaVersion: 2021,
+    parser: jsonParser,
   },
 });
 
@@ -35,8 +37,12 @@ tester.run("no-numeric-separators", rule as any, {
       filename: "test.vue",
       code: `<custom-block lang="json">{"a": 1_23}</custom-block>`,
       output: `<custom-block lang="json">{"a": 123}</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Numeric separators are not allowed."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });
