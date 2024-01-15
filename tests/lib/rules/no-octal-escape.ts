@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-octal-escape";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("no-octal-escape", rule as any, {
@@ -11,12 +15,22 @@ tester.run("no-octal-escape", rule as any, {
     {
       code: '{"BAD": "Copyright \\251"}',
       errors: ["Don't use octal: '\\251'. Use '\\u....' instead."],
+      ...({
+        languageOptions: {
+          sourceType: "script",
+        },
+      } as any),
     },
     {
       filename: "test.vue",
       code: `<custom-block lang="json">{"BAD": "Copyright \\251"}</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Don't use octal: '\\251'. Use '\\u....' instead."],
+      ...({
+        languageOptions: {
+          sourceType: "script",
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

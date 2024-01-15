@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/comma-dangle";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("comma-dangle", rule as any, {
@@ -23,8 +27,12 @@ tester.run("comma-dangle", rule as any, {
       filename: "test.vue",
       code: `<i18n>{"key": "value",}</i18n><custom-block>{"key": "value",}</custom-block>`,
       output: `<i18n>{"key": "value"}</i18n><custom-block>{"key": "value",}</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Unexpected trailing comma."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

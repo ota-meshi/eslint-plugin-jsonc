@@ -1,9 +1,11 @@
-import { RuleTester } from "eslint";
 import rule from "../../../../lib/rules/vue-custom-block/no-parsing-error";
+import { RuleTester } from "../../test-lib/eslint-compat";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
-  parserOptions: {
+  languageOptions: {
+    parser: jsonParser,
     ecmaVersion: 2020,
   },
 });
@@ -16,19 +18,26 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
     {
       filename: "test.vue",
       code: `<i18n>{"key": "value"}</i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     {
       filename: "test.vue",
       code: `<i18n lang="json5">/**/123</i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
   invalid: [
     {
       filename: "test.vue",
       code: `<i18n>{"key" "value"}</i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         {
           message: `Unexpected token '"value"'.`,
@@ -36,11 +45,15 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
           column: 14,
         },
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     {
       filename: "test.vue",
       code: `<i18n></i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         {
           message: "Expected to be an expression, but got empty.",
@@ -48,11 +61,15 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
           column: 7,
         },
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     {
       filename: "test.vue",
       code: `<i18n>/**/123</i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         {
           message: "Unexpected comment.",
@@ -60,11 +77,15 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
           column: 7,
         },
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     {
       filename: "test.vue",
       code: `<i18n lang="json">/**/123</i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         {
           message: "Unexpected comment.",
@@ -72,6 +93,11 @@ tester.run("vue-custom-block/no-parsing-error", rule as any, {
           column: 19,
         },
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/array-bracket-spacing";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("array-bracket-spacing", rule as any, {
@@ -210,13 +214,17 @@ tester.run("array-bracket-spacing", rule as any, {
       filename: "test.vue",
       code: `<i18n>[ 1, 2 ]</i18n><custom-block lang="jsonc">[ 1 ]</custom-block>`,
       output: `<i18n>[1, 2]</i18n><custom-block lang="jsonc">[1]</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         "There should be no space after '['.",
         "There should be no space before ']'.",
         "There should be no space after '['.",
         "There should be no space before ']'.",
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     {
       code: "[ ]",

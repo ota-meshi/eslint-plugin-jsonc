@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-multi-str";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("no-multi-str", rule as any, {
@@ -20,8 +24,12 @@ tester.run("no-multi-str", rule as any, {
     {
       filename: "test.vue",
       code: `<custom-block lang="json">"Line 1 \\\nLine 2"</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
-      errors: 1, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
+      errors: 1,
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any), // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
     },
   ],
 });

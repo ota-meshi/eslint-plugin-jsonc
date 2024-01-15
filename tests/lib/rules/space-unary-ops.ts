@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/space-unary-ops";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("space-unary-ops", rule as any, {
@@ -42,8 +46,12 @@ tester.run("space-unary-ops", rule as any, {
       filename: "test.vue",
       code: `<custom-block lang="json">- 1</custom-block>`,
       output: `<custom-block lang="json">-1</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Unexpected space after unary operator '-'."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

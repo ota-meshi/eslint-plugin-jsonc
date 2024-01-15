@@ -1,10 +1,12 @@
 import path from "path";
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/auto";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
-  parserOptions: {
+  languageOptions: {
+    parser: jsonParser,
     ecmaVersion: 2020,
   },
 });
@@ -21,7 +23,11 @@ tester.run("auto", rule as any, {
     "foo": "bar"
 }
 </i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     {
       filename: path.join(ROOT_DIR, "test03", "test.json"),
@@ -75,7 +81,6 @@ tester.run("auto", rule as any, {
 "bar": 2,
 "foo": 3}
 </block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         "[jsonc/indent] Expected indentation of 4 spaces but found 0.",
         "[jsonc/indent] Expected indentation of 0 spaces but found 4.",
@@ -99,6 +104,11 @@ tester.run("auto", rule as any, {
         "[jsonc/no-dupe-keys] Duplicate key 'foo'.",
         "[jsonc/object-curly-spacing] There should be no space before '}'.",
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
     {
       filename: path.join(ROOT_DIR, "test02", "sfc.vue"),
@@ -114,11 +124,15 @@ tester.run("auto", rule as any, {
     "foo": "bar"
 }
 </i18n>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: [
         "[jsonc/indent] Expected indentation of 4 spaces but found 0.",
         "[jsonc/indent] Expected indentation of 0 spaces but found 4.",
       ],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

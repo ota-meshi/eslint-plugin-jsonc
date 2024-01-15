@@ -1,8 +1,12 @@
-import { RuleTester } from "eslint";
+import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-comments";
+import * as jsonParser from "jsonc-eslint-parser";
+import * as vueParser from "vue-eslint-parser";
 
 const tester = new RuleTester({
-  parser: require.resolve("jsonc-eslint-parser"),
+  languageOptions: {
+    parser: jsonParser,
+  },
 });
 
 tester.run("no-comments", rule as any, {
@@ -37,8 +41,12 @@ tester.run("no-comments", rule as any, {
       code: `<custom-block lang="json">
             // comment
             "a"</custom-block>`,
-      parser: require.resolve("vue-eslint-parser"),
       errors: ["Unexpected comment."],
+      ...({
+        languageOptions: {
+          parser: vueParser,
+        },
+      } as any),
     },
   ],
 });

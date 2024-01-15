@@ -52,14 +52,15 @@ export default createRule("${ruleId}", {
   );
   fs.writeFileSync(
     testFile,
-    `import { RuleTester } from "eslint"
+    `import { RuleTester } from "../test-lib/eslint-compat"
 import rule from "../../../lib/rules/${ruleId}"
+import * as jsonParser from "jsonc-eslint-parser";
 
 const tester = new RuleTester({
-    parser: require.resolve("jsonc-eslint-parser"),
-    parserOptions: {
-        ecmaVersion: 2020,
-    },
+  languageOptions: {
+    parser: jsonParser,
+    ecmaVersion: 2020,
+  },
 })
 
 tester.run("${ruleId}", rule as any, {

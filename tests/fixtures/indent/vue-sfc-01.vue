@@ -1,4 +1,4 @@
-<!-- {"parser": "vue-eslint-parser"} -->
+<!-- { "languageOptions": {"parser": "vue-eslint-parser"} } -->
 <i18n>
 {
     "key": "value"

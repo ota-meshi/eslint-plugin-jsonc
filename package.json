@@ -67,7 +67,7 @@
   "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
   "dependencies": {
     "@eslint-community/eslint-utils": "^4.2.0",
-    "eslint-compat-utils": "^0.1.2",
+    "eslint-compat-utils": "^0.2.0",
     "espree": "^9.6.1",
     "graphemer": "^1.4.0",
     "jsonc-eslint-parser": "^2.0.4",
