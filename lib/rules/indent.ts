@@ -835,7 +835,7 @@ export default createRule("indent", {
         } else {
           const previousElement = elements[index - 1]!;
           const firstTokenOfPreviousElement =
-            previousElement && getFirstToken(previousElement)!;
+            previousElement && getFirstToken(previousElement);
           const previousElementLastToken =
             previousElement && sourceCode.getLastToken(previousElement as any)!;
 
