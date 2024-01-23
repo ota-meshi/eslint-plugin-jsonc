@@ -2,6 +2,7 @@ let plugin;
 try {
   plugin = require("../../../../../lib/index");
 } catch (e) {
+  // @ts-ignore -- ignore
   plugin = require("../../../../../dist/index");
 }
 const parser = require("jsonc-eslint-parser");
