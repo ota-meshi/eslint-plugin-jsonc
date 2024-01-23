@@ -53,6 +53,7 @@ export default async (): Promise<UserConfig<DefaultTheme.Config>> => {
       },
       define: {
         "process.env.NODE_DEBUG": "false",
+        "process.env.ESLINT_USE_FLAT_CONFIG": "false",
       },
       optimizeDeps: {
         exclude: ["eslint-compat-utils"],
