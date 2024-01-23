@@ -41,9 +41,11 @@ function findUp(name: string, options: { cwd: string }) {
   // eslint-disable-next-line no-constant-condition -- ignore
   while (true) {
     const target = path.resolve(directory, name);
-    const stat = fs.statSync(target, {
-      throwIfNoEntry: false,
-    });
+    const stat = fs.existsSync(target)
+      ? fs.statSync(target, {
+          throwIfNoEntry: false,
+        })
+      : null;
     if (stat?.isFile()) {
       return target;
     }
