@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.13.0
+
+### Minor Changes
+
+- [#298](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/298) [`a40f021`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/a40f02114d455d0d7f3677b1d2e6a6522a8e72f4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: `jsonc/auto` rule works even in flat config
+
 ## 2.12.2
 
 ### Patch Changes
