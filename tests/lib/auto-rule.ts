@@ -64,7 +64,7 @@ describe("auto rule", () => {
 
 describe("auto rule with flat config", () => {
   const ESLint = getESLint();
-  if (semver.satisfies(ESLint.version, "<7.0.0")) return;
+  if (semver.satisfies(ESLint.version, "<8.0.0")) return;
   const TEST_CWD = path.join(
     __dirname,
     "../fixtures/integrations/eslint-plugin/test-auto-rule-with-flat-config01",
