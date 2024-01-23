@@ -71,7 +71,8 @@
     "espree": "^9.6.1",
     "graphemer": "^1.4.0",
     "jsonc-eslint-parser": "^2.0.4",
-    "natural-compare": "^1.4.0"
+    "natural-compare": "^1.4.0",
+    "synckit": "^0.7.0"
   },
   "peerDependencies": {
     "eslint": ">=6.0.0"
