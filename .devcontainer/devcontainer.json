@@ -17,9 +17,9 @@
   // Configure tool-specific properties.
   "customizations": {
     "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint"]
-    }
-  }
+      "extensions": ["dbaeumer.vscode-eslint"],
+    },
+  },
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"

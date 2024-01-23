@@ -22,3 +22,4 @@
 /docs/.vitepress/cache
 /docs/.vitepress/build-system/shim
 /docs/.vitepress/dist
+!/tests/fixtures/integrations/eslint-plugin/test-auto-rule-with-flat-config01/eslint.config.js

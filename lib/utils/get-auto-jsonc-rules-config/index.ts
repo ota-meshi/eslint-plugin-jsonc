@@ -1,20 +1,34 @@
 import type { Linter } from "eslint";
 import { existsSync, statSync } from "fs";
 import { dirname, extname, resolve } from "path";
-import type { RuleModule } from "../types";
+import type { RuleModule } from "../../types";
+import { shouldUseFlatConfig } from "./should-use-flat-config";
+import { calculateConfigForFile } from "./calculate-config-for-file";
 
-let configResolver: (filePath: string) => Linter.Config, ruleNames: Set<string>;
+const configResolvers: Record<
+  string,
+  undefined | ((filePath: string) => Pick<Linter.Config, "rules">)
+> = {};
+let ruleNames: Set<string>;
 
 /**
  * Get config resolver
  */
-function getConfigResolver(): (filePath: string) => Linter.Config {
+function getConfigResolver(
+  cwd: string,
+): (filePath: string) => Pick<Linter.Config, "rules"> {
+  const configResolver = configResolvers[cwd];
   if (configResolver) {
     return configResolver;
   }
 
+  if (shouldUseFlatConfig(cwd)) {
+    return (configResolvers[cwd] = (filePath: string) =>
+      calculateConfigForFile(cwd, filePath));
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
-  const plugin = require("..");
+  const plugin = require("../..");
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
     const eslintrc = require("@eslint/eslintrc");
@@ -22,36 +36,37 @@ function getConfigResolver(): (filePath: string) => Linter.Config {
       additionalPluginPool: new Map([["eslint-plugin-jsonc", plugin]]),
       getEslintRecommendedConfig() {
         // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
-        return require("../../conf/eslint-recommended.js");
+        return require("../../../conf/eslint-recommended.js");
       },
       getEslintAllConfig() {
         // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
-        return require("../../conf/eslint-all.js");
+        return require("../../../conf/eslint-all.js");
       },
       // for v1.1.0
       eslintRecommendedPath: require.resolve(
-        "../../conf/eslint-recommended.js",
+        "../../../conf/eslint-recommended.js",
       ),
-      eslintAllPath: require.resolve("../../conf/eslint-all.js"),
+      eslintAllPath: require.resolve("../../../conf/eslint-all.js"),
     });
-    return (configResolver = (filePath: string) => {
-      const absolutePath = resolve(process.cwd(), filePath);
+    return (configResolvers[cwd] = (filePath: string) => {
+      const absolutePath = resolve(cwd, filePath);
       return configArrayFactory
         .getConfigArrayForFile(absolutePath)
         .extractConfig(absolutePath)
         .toCompatibleObjectAsConfigFileContent();
     });
-  } catch {
+  } catch (_e) {
     // ignore
+    // console.log(_e);
   }
   try {
     // For ESLint v6
 
     // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
     const eslint = require("eslint");
-    const engine = new eslint.CLIEngine({});
+    const engine = new eslint.CLIEngine({ cwd });
     engine.addPlugin("eslint-plugin-jsonc", plugin);
-    return (configResolver = (filePath) => {
+    return (configResolvers[cwd] = (filePath) => {
       // Adjust the file name to avoid a crash.
       // https://github.com/ota-meshi/eslint-plugin-jsonc/issues/28
       let targetFilePath = filePath;
@@ -95,8 +110,11 @@ function isValidFilename(filename: string) {
  * Get config for the given filename
  * @param filename
  */
-function getConfig(filename: string): Linter.Config {
-  return getConfigResolver()(filename);
+function getConfig(
+  cwd: string,
+  filename: string,
+): Pick<Linter.Config, "rules"> {
+  return getConfigResolver(cwd)(filename);
 }
 
 /**
@@ -108,24 +126,31 @@ function getJsoncRule(rule: string) {
     ruleNames ||
     new Set(
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
-      (require("./rules").rules as RuleModule[]).map(
+      (require("../rules").rules as RuleModule[]).map(
         (r) => r.meta.docs.ruleName,
       ),
     );
 
-  return ruleNames.has(rule) ? `jsonc/${rule}` : null;
+  const ruleName = rule.startsWith("@stylistic/")
+    ? rule.split("/").pop() ?? rule
+    : rule;
+
+  return ruleNames.has(ruleName) ? `jsonc/${ruleName}` : null;
 }
 
 /**
  * Get additional jsonc rules config from fileName
  * @param filename
  */
-export function getAutoConfig(filename: string): {
+export function getAutoConfig(
+  cwd: string,
+  filename: string,
+): {
   [name: string]: Linter.RuleEntry;
 } {
   const autoConfig: { [name: string]: Linter.RuleEntry } = {};
 
-  const config = getConfig(filename);
+  const config = getConfig(cwd, filename);
   if (config.rules) {
     for (const ruleName of Object.keys(config.rules)) {
       const jsoncName = getJsoncRule(ruleName);
