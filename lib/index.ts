@@ -7,6 +7,12 @@ import recommendedWithJsonc from "./configs/recommended-with-jsonc";
 import recommendedWithJson5 from "./configs/recommended-with-json5";
 import prettier from "./configs/prettier";
 import all from "./configs/all";
+import flatBase from "./configs/base";
+import flatRecommendedWithJson from "./configs/flat/recommended-with-json";
+import flatRecommendedWithJsonc from "./configs/flat/recommended-with-jsonc";
+import flatRecommendedWithJson5 from "./configs/flat/recommended-with-json5";
+import flatPrettier from "./configs/flat/prettier";
+import flatAll from "./configs/all";
 import * as meta from "./meta";
 
 // backward compatibility
@@ -26,6 +32,12 @@ const configs = {
   "recommended-with-json5": recommendedWithJson5,
   prettier,
   all,
+  "flat/base": flatBase,
+  "flat/recommended-with-json": flatRecommendedWithJson,
+  "flat/recommended-with-jsonc": flatRecommendedWithJsonc,
+  "flat/recommended-with-json5": flatRecommendedWithJson5,
+  "flat/prettier": flatPrettier,
+  "flat/all": flatAll,
 };
 
 const rules = ruleList.reduce(

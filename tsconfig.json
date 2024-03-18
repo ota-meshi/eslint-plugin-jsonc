@@ -15,12 +15,12 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["typings/*"],
+      "*": ["typings/*"]
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
 
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "include": [
     "lib/**/*",
@@ -28,7 +28,7 @@
     "tests-integrations/lib/**/*",
     "tools/**/*",
     "typings/**/*",
-    "docs/.vitepress/**/*",
+    "docs/.vitepress/**/*"
   ],
-  "exclude": ["dist/**/*"],
+  "exclude": ["dist/**/*"]
 }

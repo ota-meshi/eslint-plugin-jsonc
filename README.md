@@ -89,7 +89,43 @@ npm install --save-dev eslint eslint-plugin-jsonc
 
 ### Configuration
 
-Use `.eslintrc.*` file to configure rules. See also: [https://eslint.org/docs/user-guide/configuring](https://eslint.org/docs/user-guide/configuring).
+#### New (ESLint>=v9) Config (Flat Config)
+
+Use `eslint.config.js` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/configuration-files-new>.
+
+Example **eslint.config.js**:
+
+```mjs
+import eslintPluginJsonc from 'eslint-plugin-jsonc';
+export default [
+  // add more generic rule sets here, such as:
+  // js.configs.recommended,
+  ...eslintPluginJsonc.configs['flat/recommended-with-jsonc'],
+  {
+    rules: {
+      // override/add rules settings here, such as:
+    // 'jsonc/rule-name': 'error'
+    }
+  }
+];
+```
+
+This plugin provides configs:
+
+- `*.configs['flat/base']` ... Configuration to enable correct JSON parsing.
+- `*.configs['flat/recommended-with-json']` ... Recommended configuration for JSON.
+- `*.configs['flat/recommended-with-jsonc']` ... Recommended configuration for JSONC.
+- `*.configs['flat/recommended-with-json5']` ... Recommended configuration for JSON5.
+- `*.configs['flat/prettier']` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
+- `*.configs['flat/all']` ... Enables all rules. It's meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
+
+This plugin will parse `.json`, `.jsonc` and `.json5` by default using the configuration provided by the plugin (unless you already have a parser configured - see below).
+
+See [the rule list](https://ota-meshi.github.io/eslint-plugin-jsonc/rules/) to get the `rules` that this plugin provides.
+
+#### Legacy Config (ESLint<v9)
+
+Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/>.
 
 Example **.eslintrc.js**:
 
