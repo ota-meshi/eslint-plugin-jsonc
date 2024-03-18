@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.14.0
+
+### Minor Changes
+
+- [#311](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/311) [`451db46`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/451db4646b5a714c8ded68b1c03286eb7f60b16a) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Add support for flat config
+
 ## 2.13.0
 
 ### Minor Changes
