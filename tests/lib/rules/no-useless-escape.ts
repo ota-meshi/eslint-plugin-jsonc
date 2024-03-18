@@ -15,17 +15,38 @@ tester.run("no-useless-escape", rule as any, {
     {
       filename: "test.json",
       code: '"hol\\a"',
-      errors: ["Unnecessary escape character: \\a."],
+      errors: [
+        {
+          message: "Unnecessary escape character: \\a.",
+          suggestions: [
+            { messageId: "removeEscape", output: `"hola"` },
+            { messageId: "escapeBackslash", output: String.raw`"hol\\a"` },
+          ],
+        },
+      ],
     },
     {
       filename: "test.vue",
       code: `<custom-block lang="json">"hol\\a"</custom-block>`,
-      errors: ["Unnecessary escape character: \\a."],
-      ...({
-        languageOptions: {
-          parser: vueParser,
+      errors: [
+        {
+          message: "Unnecessary escape character: \\a.",
+          suggestions: [
+            {
+              messageId: "removeEscape",
+              output: `<custom-block lang="json">"hola"</custom-block>`,
+            },
+            {
+              messageId: "escapeBackslash",
+              output: String.raw`<custom-block lang="json">"hol\\a"</custom-block>`,
+            },
+          ],
         },
-      } as any),
+      ],
+      // @ts-expect-error
+      languageOptions: {
+        parser: vueParser,
+      },
     },
   ],
 });
