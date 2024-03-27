@@ -12,6 +12,6 @@
   "devDependencies": {
     "eslint": "^8.0.0",
     "eslint-plugin-jsonc": "file:../../../eslint-plugin-jsonc-2.3.0.tgz",
-    "eslint-plugin-markdown": "^3.0.0"
+    "eslint-plugin-markdown": "^4.0.0"
   }
 }
