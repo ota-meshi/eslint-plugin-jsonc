@@ -18,7 +18,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 
 ### Configuration
 
-#### New (ESLint>=v9) Config (Flat Config)
+#### New Config (`eslint.config.js`)
 
 Use `eslint.config.js` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/configuration-files-new>.
 
@@ -52,7 +52,7 @@ This plugin will parse `.json`, `.jsonc` and `.json5` by default using the confi
 
 See [the rule list](../rules/index.md) to get the `rules` that this plugin provides.
 
-#### Legacy Config (ESLint<v9)
+#### Legacy Config (`.eslintrc`)
 
 Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/>.
 
