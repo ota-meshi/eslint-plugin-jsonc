@@ -1,4 +1,4 @@
-import type { ESLint } from "eslint";
+import type { ESLint, Linter } from "eslint";
 import * as parser from "jsonc-eslint-parser";
 export default [
   {
@@ -28,4 +28,4 @@ export default [
       "no-unused-vars": "off",
     },
   },
-];
+] satisfies Linter.FlatConfig[];
