@@ -68,7 +68,7 @@
   "dependencies": {
     "@eslint-community/eslint-utils": "^4.2.0",
     "eslint-compat-utils": "^0.5.0",
-    "espree": "^9.6.1",
+    "espree": "^10.0.0",
     "graphemer": "^1.4.0",
     "jsonc-eslint-parser": "^2.0.4",
     "natural-compare": "^1.4.0",
