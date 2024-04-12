@@ -3,7 +3,11 @@
 import path from "path";
 import fs from "fs";
 
-const FLAT_CONFIG_FILENAME = "eslint.config.js";
+const FLAT_CONFIG_FILENAMES = [
+  "eslint.config.js",
+  "eslint.config.mjs",
+  "eslint.config.cjs",
+];
 /**
  * Returns whether flat config should be used.
  * @returns {Promise<boolean>} Whether flat config should be used.
@@ -29,25 +33,26 @@ export function shouldUseFlatConfig(cwd: string): boolean {
  * @returns {string|undefined} The filename if found or `undefined` if not.
  */
 function findFlatConfigFile(cwd: string) {
-  return findUp(FLAT_CONFIG_FILENAME, { cwd });
+  return findUp(FLAT_CONFIG_FILENAMES, { cwd });
 }
 
 /** We used https://github.com/sindresorhus/find-up/blob/b733bb70d3aa21b22fa011be8089110d467c317f/index.js#L94 as a reference */
-function findUp(name: string, options: { cwd: string }) {
+function findUp(names: string[], options: { cwd: string }) {
   let directory = path.resolve(options.cwd);
   const { root } = path.parse(directory);
   const stopAt = path.resolve(directory, root);
-
   // eslint-disable-next-line no-constant-condition -- ignore
   while (true) {
-    const target = path.resolve(directory, name);
-    const stat = fs.existsSync(target)
-      ? fs.statSync(target, {
-          throwIfNoEntry: false,
-        })
-      : null;
-    if (stat?.isFile()) {
-      return target;
+    for (const name of names) {
+      const target = path.resolve(directory, name);
+      const stat = fs.existsSync(target)
+        ? fs.statSync(target, {
+            throwIfNoEntry: false,
+          })
+        : null;
+      if (stat?.isFile()) {
+        return target;
+      }
     }
 
     if (directory === stopAt) {
