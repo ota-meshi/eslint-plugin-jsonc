@@ -47,6 +47,8 @@ function getConfigResolver(
         "../../../conf/eslint-recommended.js",
       ),
       eslintAllPath: require.resolve("../../../conf/eslint-all.js"),
+      // other plugins should be resolved as siblings to this one
+      resolvePluginsRelativeTo: resolve(__dirname, "../../../../../"),
     });
     return (configResolvers[cwd] = (filePath: string) => {
       const absolutePath = resolve(cwd, filePath);
