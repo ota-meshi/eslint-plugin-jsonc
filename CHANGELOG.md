@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.16.0
+
+### Minor Changes
+
+- [#342](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/342) [`8cc5b7f`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/8cc5b7f247bef5d806695d149e3046f19b58d2a4) Thanks [@onlywei](https://github.com/onlywei)! - Resolve other plugins relative to this one (as siblings)
+
 ## 2.15.1
 
 ### Patch Changes
