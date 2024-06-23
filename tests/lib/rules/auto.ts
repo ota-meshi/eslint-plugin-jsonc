@@ -131,7 +131,8 @@ run({
       filename: path.join(ROOT_DIR, "test03", "test.json"),
       code: `{
                 "foo": "bar"
-            }`,
+            }
+`,
     },
   ],
   invalid: [
