@@ -38,6 +38,13 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
       try {
         const res = cp.execSync(
           `${ESLINT} "./test.md" --format json --ext .md,.json`,
+          {
+            env: {
+              // eslint-disable-next-line no-process-env -- Legacy Config test
+              ...process.env,
+              ESLINT_USE_FLAT_CONFIG: "false",
+            },
+          },
         );
         console.log(`${res}`);
       } catch (e: any) {

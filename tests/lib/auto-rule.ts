@@ -42,18 +42,25 @@ describe("auto rule", () => {
       },
       fix: true,
     });
-    const resultFixBefore = await engine.lintFiles(["src"]);
-    assert.strictEqual(
-      resultFixBefore.reduce((s, m) => s + m.errorCount, 0),
-      2,
-    );
+    // eslint-disable-next-line no-process-env -- Legacy config test
+    process.env.ESLINT_USE_FLAT_CONFIG = "false";
+    try {
+      const resultFixBefore = await engine.lintFiles(["src"]);
+      assert.strictEqual(
+        resultFixBefore.reduce((s, m) => s + m.errorCount, 0),
+        2,
+      );
 
-    const resultFixAfter = await fixEngine.lintFiles(["src"]);
-    assert.strictEqual(
-      resultFixAfter.reduce((s, m) => s + m.errorCount, 0),
-      0,
-    );
-    await ESLint.outputFixes(resultFixAfter);
+      const resultFixAfter = await fixEngine.lintFiles(["src"]);
+      assert.strictEqual(
+        resultFixAfter.reduce((s, m) => s + m.errorCount, 0),
+        0,
+      );
+      await ESLint.outputFixes(resultFixAfter);
+    } finally {
+      // eslint-disable-next-line no-process-env -- Legacy config test
+      delete process.env.ESLINT_USE_FLAT_CONFIG;
+    }
 
     for (const filename of Object.keys(fixtures)) {
       const code = fs.readFileSync(path.join(FIXTURE_ROOT, filename), "utf8");

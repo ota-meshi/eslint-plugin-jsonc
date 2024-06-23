@@ -1,7 +1,8 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { ESLint, RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/no-sparse-arrays";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
+import semver from "semver";
 
 const tester = new RuleTester({
   languageOptions: {
@@ -14,7 +15,12 @@ tester.run("no-sparse-arrays", rule as any, {
   invalid: [
     {
       code: "[1,,,4]",
-      errors: ["Unexpected comma in middle of array."],
+      errors: semver.gte(ESLint.version, "9.5.0")
+        ? [
+            "Unexpected comma in middle of array.",
+            "Unexpected comma in middle of array.",
+          ]
+        : ["Unexpected comma in middle of array."],
     },
     {
       code: "[,2,3,4]",
@@ -23,7 +29,12 @@ tester.run("no-sparse-arrays", rule as any, {
     {
       filename: "test.vue",
       code: `<custom-block lang="json">[,,]</custom-block>`,
-      errors: ["Unexpected comma in middle of array."],
+      errors: semver.gte(ESLint.version, "9.5.0")
+        ? [
+            "Unexpected comma in middle of array.",
+            "Unexpected comma in middle of array.",
+          ]
+        : ["Unexpected comma in middle of array."],
       ...({
         languageOptions: {
           parser: vueParser,

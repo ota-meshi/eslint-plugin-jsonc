@@ -1,19 +1,119 @@
+import assert from "assert";
 import path from "path";
-import { RuleTester } from "../test-lib/eslint-compat";
 import rule from "../../../lib/rules/auto";
-import * as jsonParser from "jsonc-eslint-parser";
-import * as vueParser from "vue-eslint-parser";
-
-const tester = new RuleTester({
-  languageOptions: {
-    parser: jsonParser,
-    ecmaVersion: 2020,
-  },
-});
+import { getLegacyESLint } from "eslint-compat-utils/eslint";
 
 const ROOT_DIR = path.join(__dirname, "../../fixtures/auto");
 
-tester.run("auto", rule as any, {
+function run(tests: {
+  valid: {
+    code: string;
+    filename: string;
+    languageOptions?: { parser: string };
+  }[];
+  invalid: {
+    code: string;
+    filename: string;
+    errors: string[];
+    output: string;
+    languageOptions: { parser: string };
+  }[];
+}) {
+  const ESLint = getLegacyESLint();
+  const plugin = { rules: { auto: rule } };
+  const config = {
+    plugins: ["jsonc"],
+    parser: "jsonc-eslint-parser",
+    rules: {
+      "jsonc/auto": "error",
+    } as const,
+  };
+
+  describe("auto", () => {
+    describe("valid", () => {
+      for (const test of tests.valid) {
+        it(`should pass ${test.filename}`, async () => {
+          const { messages, output } = await lint(
+            test.code,
+            test.filename,
+            test.languageOptions?.parser,
+          );
+          assert.deepStrictEqual(messages, []);
+          assert.strictEqual(output || "", "");
+        });
+      }
+    });
+    describe("invalid", () => {
+      for (const test of tests.invalid) {
+        it(`should fail ${test.filename}`, async () => {
+          const { messages, output } = await lint(
+            test.code,
+            test.filename,
+            test.languageOptions?.parser,
+          );
+          assert.deepStrictEqual(
+            messages.map((m) => m.message),
+            test.errors,
+          );
+          assert.strictEqual(output, test.output);
+        });
+      }
+    });
+  });
+
+  async function lint(
+    code: string,
+    filePath: string,
+    parser: string | undefined,
+  ) {
+    const engine = new ESLint({
+      cwd: path.dirname(filePath),
+      extensions: [".js", ".json"],
+      plugins: {
+        "eslint-plugin-jsonc": plugin as any,
+      },
+      overrideConfig: parser
+        ? {
+            ...config,
+            parser,
+          }
+        : config,
+    });
+    const fixEngine = new ESLint({
+      cwd: path.dirname(filePath),
+      extensions: [".js", ".json"],
+      plugins: {
+        "eslint-plugin-jsonc": plugin as any,
+      },
+      fix: true,
+      overrideConfig: parser
+        ? {
+            ...config,
+            parser,
+          }
+        : config,
+    });
+
+    // eslint-disable-next-line no-process-env -- Legacy config test
+    process.env.ESLINT_USE_FLAT_CONFIG = "false";
+    try {
+      const resultFixBefore = await engine.lintText(code, { filePath });
+      assert.strictEqual(resultFixBefore.length, 1);
+
+      const resultFixAfter = await fixEngine.lintText(code, { filePath });
+      assert.strictEqual(resultFixAfter.length, 1);
+      return {
+        messages: resultFixBefore[0].messages,
+        output: resultFixAfter[0].output,
+      };
+    } finally {
+      // eslint-disable-next-line no-process-env -- Legacy config test
+      delete process.env.ESLINT_USE_FLAT_CONFIG;
+    }
+  }
+}
+
+run({
   valid: [
     {
       filename: path.join(ROOT_DIR, "test01", "sfc.vue"),
@@ -23,17 +123,16 @@ tester.run("auto", rule as any, {
     "foo": "bar"
 }
 </i18n>`,
-      ...({
-        languageOptions: {
-          parser: vueParser,
-        },
-      } as any),
+      languageOptions: {
+        parser: "vue-eslint-parser",
+      },
     },
     {
       filename: path.join(ROOT_DIR, "test03", "test.json"),
       code: `{
                 "foo": "bar"
-            }`,
+            }
+`,
     },
   ],
   invalid: [
@@ -65,21 +164,22 @@ tester.run("auto", rule as any, {
 </i18n>
 <block lang="json">
 [
-1,
-[
     1,
-    2],
-2
+    [
+        1,
+        2
+    ],
+    2
 ]
 </block>
 <block lang="json">
 {"a": 1,
-    "b": 2,}
+    "b": 2}
 </block>
 <block lang="json">
-{"foo": 1,
-"bar": 2,
-"foo": 3}
+{"bar": 2,
+    "foo": 1,
+    "foo": 3}
 </block>`,
       errors: [
         "[jsonc/indent] Expected indentation of 4 spaces but found 0.",
@@ -104,11 +204,9 @@ tester.run("auto", rule as any, {
         "[jsonc/no-dupe-keys] Duplicate key 'foo'.",
         "[jsonc/object-curly-spacing] There should be no space before '}'.",
       ],
-      ...({
-        languageOptions: {
-          parser: vueParser,
-        },
-      } as any),
+      languageOptions: {
+        parser: "vue-eslint-parser",
+      },
     },
     {
       filename: path.join(ROOT_DIR, "test02", "sfc.vue"),
@@ -128,11 +226,9 @@ tester.run("auto", rule as any, {
         "[jsonc/indent] Expected indentation of 4 spaces but found 0.",
         "[jsonc/indent] Expected indentation of 0 spaces but found 4.",
       ],
-      ...({
-        languageOptions: {
-          parser: vueParser,
-        },
-      } as any),
+      languageOptions: {
+        parser: "vue-eslint-parser",
+      },
     },
   ],
 });

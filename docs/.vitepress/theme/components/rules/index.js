@@ -1,7 +1,5 @@
-import { Linter } from "eslint";
+import { builtinRules } from "eslint/use-at-your-own-risk";
 import { rules } from "../../../../../lib/utils/rules.ts";
-
-const coreRules = Object.fromEntries(new Linter().getRules());
 
 const CATEGORY_TITLES = {
   jsonc: "eslint-plugin-jsonc",
@@ -35,11 +33,12 @@ for (const k of Object.keys(rules)) {
     ruleId: rule.meta.docs.ruleId,
     url: rule.meta.docs.url,
     initChecked:
-      CATEGORY_INDEX.jsonc <= 3 && rule.meta.docs.ruleId !== "jsonc/auto",
+      CATEGORY_INDEX.jsonc <= 3 &&
+      rule.meta.docs.ruleId !== "jsonc/auto" &&
+      rule.meta.docs.ruleId !== "jsonc/sort-array-values",
   });
 }
-for (const k of Object.keys(coreRules)) {
-  const rule = coreRules[k];
+for (const [k, rule] of builtinRules.entries()) {
   if (rule.meta.deprecated) {
     continue;
   }

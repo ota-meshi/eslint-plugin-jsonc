@@ -41,7 +41,7 @@ function findUp(names: string[], options: { cwd: string }) {
   let directory = path.resolve(options.cwd);
   const { root } = path.parse(directory);
   const stopAt = path.resolve(directory, root);
-  // eslint-disable-next-line no-constant-condition -- ignore
+
   while (true) {
     for (const name of names) {
       const target = path.resolve(directory, name);

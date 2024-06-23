@@ -1,3 +1,4 @@
+import { getSourceCode } from "eslint-compat-utils";
 // eslint-disable-next-line n/no-missing-import -- The file path used is the actual rule path
 import { createRule } from "../utils";
 export default createRule("auto", {
@@ -15,11 +16,12 @@ export default createRule("auto", {
     type: "suggestion",
   },
   create(context) {
-    if (!context.parserServices.isJSON) {
+    const sourceCode = getSourceCode(context);
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     context.report({
-      node: context.getSourceCode().ast,
+      node: sourceCode.ast,
       loc: {
         line: 1,
         column: 0,
