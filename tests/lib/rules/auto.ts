@@ -32,7 +32,7 @@ function run(tests: {
   describe("auto", () => {
     describe("valid", () => {
       for (const test of tests.valid) {
-        it(`should pass ${path.basename(test.filename)}`, async () => {
+        it(`should pass ${test.filename}`, async () => {
           const { messages, output } = await lint(
             test.code,
             test.filename,
@@ -45,7 +45,7 @@ function run(tests: {
     });
     describe("invalid", () => {
       for (const test of tests.invalid) {
-        it(`should fail ${path.basename(test.filename)}`, async () => {
+        it(`should fail ${test.filename}`, async () => {
           const { messages, output } = await lint(
             test.code,
             test.filename,
