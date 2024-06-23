@@ -1,4 +1,6 @@
 // @ts-nocheck
+"use strict";
+
 const getCoreRules = require("./rules");
 
 const rules = {};

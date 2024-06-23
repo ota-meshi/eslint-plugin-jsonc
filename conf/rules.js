@@ -1,4 +1,6 @@
 // @ts-nocheck
+"use strict";
+
 let ruleMap;
 
 /** Get all rules */

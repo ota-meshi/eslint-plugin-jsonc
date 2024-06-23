@@ -65,7 +65,7 @@ function setup() {
     })(document, "script", "facebook-jssdk");
     (function (d, s, id) {
       const [fjs] = d.getElementsByTagName(s);
-      const p = /^http:/u.test(d.location) ? "http" : "https";
+      const p = `${d.location}`.startsWith("http:") ? "http" : "https";
       if (!d.getElementById(id)) {
         const js = d.createElement(s);
         js.id = id;

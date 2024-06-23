@@ -1,15 +1,15 @@
 {
-    "root": true,
-    "parserOptions": {
-        "sourceType": "module",
-        "ecmaVersion": 2015
-    },
-    "extends": [
-        "plugin:markdown/recommended",
-        "plugin:jsonc/recommended-with-json"
-    ],
-    "rules": {
-        "array-bracket-newline": "error",
-        "jsonc/auto": "error"
-    }
+  "root": true,
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2015
+  },
+  "extends": [
+    "plugin:markdown/recommended",
+    "plugin:jsonc/recommended-with-json"
+  ],
+  "rules": {
+    "array-bracket-newline": "error",
+    "jsonc/auto": "error"
+  }
 }
