@@ -86,7 +86,7 @@
     "@ota-meshi/site-kit-eslint-editor-vue": "^0.2.0",
     "@types/eslint": "^8.0.0",
     "@types/eslint-scope": "^3.7.0",
-    "@types/eslint-visitor-keys": "^1.0.0",
+    "@types/eslint-visitor-keys": "^3.0.0",
     "@types/mocha": "^10.0.0",
     "@types/natural-compare": "^1.4.0",
     "@types/node": "^20.0.0",
