@@ -46,7 +46,7 @@ export default [
       ecmaVersion: "latest",
       sourceType: "script",
       parserOptions: {
-        project: true,
+        projectService: true,
       },
     },
     rules: {

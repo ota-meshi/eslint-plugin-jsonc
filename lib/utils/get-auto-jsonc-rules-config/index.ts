@@ -57,7 +57,7 @@ function getConfigResolver(
         .extractConfig(absolutePath)
         .toCompatibleObjectAsConfigFileContent();
     });
-  } catch (_e) {
+  } catch {
     // ignore
     // console.log(_e);
   }
