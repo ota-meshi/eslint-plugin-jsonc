@@ -43,7 +43,6 @@ tester.run("no-useless-escape", rule as any, {
           ],
         },
       ],
-      // @ts-expect-error
       languageOptions: {
         parser: vueParser,
       },

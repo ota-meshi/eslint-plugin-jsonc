@@ -10,6 +10,7 @@ describe("`recommended-with-json` config", () => {
         svelte: plugin as never,
       },
       baseConfig: {
+        // @ts-expect-error -- old ESLint
         parserOptions: {
           ecmaVersion: 2020,
         },

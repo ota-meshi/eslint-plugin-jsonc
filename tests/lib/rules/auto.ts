@@ -72,6 +72,7 @@ function run(tests: {
       plugins: {
         "eslint-plugin-jsonc": plugin as any,
       },
+      // @ts-expect-error -- old ESLint
       overrideConfig: parser
         ? {
             ...config,
@@ -86,6 +87,7 @@ function run(tests: {
         "eslint-plugin-jsonc": plugin as any,
       },
       fix: true,
+      // @ts-expect-error -- old ESLint
       overrideConfig: parser
         ? {
             ...config,
