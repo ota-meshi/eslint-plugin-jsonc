@@ -134,7 +134,7 @@ function getJsoncRule(rule: string) {
     );
 
   const ruleName = rule.startsWith("@stylistic/")
-    ? rule.split("/").pop() ?? rule
+    ? (rule.split("/").pop() ?? rule)
     : rule;
 
   return ruleNames.has(ruleName) ? `jsonc/${ruleName}` : null;
