@@ -23,8 +23,10 @@ export default createRule("vue-custom-block/no-parsing-error", {
       return {};
     }
     const sourceCode = getSourceCode(context);
-    // eslint-disable-next-line no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1
+    /* eslint-disable no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1 */
+    // @ts-expect-error -- Workaround for bug in vue-eslint-parser v9.3.1
     const parserServices = context.parserServices ?? sourceCode.parserServices;
+    /* eslint-enable no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1 */
     const parseError = parserServices.parseError;
     if (parseError) {
       return errorReportVisitor(context, parseError);
