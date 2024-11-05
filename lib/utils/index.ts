@@ -72,17 +72,21 @@ export function isJson(context: Rule.RuleContext): boolean {
     return false;
   }
   const parser = context.languageOptions?.parser;
-  if (!parser) {
-    // If no parser is specified, it will parse the JSON according to the language configuration.
-    return true;
-  }
-  if ("parse" in parser && typeof parser?.parse === "function") {
-    try {
-      const ast = parser.parse("{}");
-      return (ast as any).type === "Document";
-    } catch {
-      return false;
+  if (parser) {
+    if ("parse" in parser && typeof parser?.parse === "function") {
+      try {
+        const ast = parser.parse("{}");
+        return (ast as any).type === "Document";
+      } catch {
+        return false;
+      }
     }
+  } else {
+    // If no parser is specified, it will parse according to the `language` config.
+
+    // If the root node of the AST of a source code class instance is `Document`,
+    // it is probably a node parsed by momoa.
+    return (sourceCode.ast.type as string) === "Document";
   }
   return false;
 }
