@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import type { RuleTester as ESLintRuleTester } from "eslint";
 import rule from "../../../lib/rules/indent";
 import * as jsonParser from "jsonc-eslint-parser";
