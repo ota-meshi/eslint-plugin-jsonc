@@ -2,7 +2,7 @@ import type { Rule } from "eslint";
 import type { AST } from "jsonc-eslint-parser";
 import { isNumberIdentifier } from "jsonc-eslint-parser";
 import type { RuleListener } from "../types";
-import { createRule } from "../utils";
+import { createRule, isJson } from "../utils";
 import { getSourceCode } from "eslint-compat-utils";
 
 const nonDecimalNumericLiteralPattern = /^0[\dbox]/iu;
@@ -46,7 +46,7 @@ export default createRule("valid-json-number", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {} as RuleListener;
     }
     return {

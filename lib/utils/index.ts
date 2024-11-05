@@ -59,6 +59,35 @@ export function createRule(
 }
 
 /**
+ * Checks the context and returns whether a JSON parser is being used or not.
+ */
+export function isJson(context: Rule.RuleContext): boolean {
+  const sourceCode = getSourceCode(context);
+  if (sourceCode.parserServices?.isJSON) {
+    return true;
+  }
+  // *** Check for momoa ***
+  if (context.parserPath) {
+    // Using a legacy configuration, so momoa is not used.
+    return false;
+  }
+  const parser = context.languageOptions?.parser;
+  if (!parser) {
+    // If no parser is specified, it will parse the JSON according to the language configuration.
+    return true;
+  }
+  if ("parse" in parser && typeof parser?.parse === "function") {
+    try {
+      const ast = parser.parse("{}");
+      return (ast as any).type === "Document";
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
+/**
  * Define the wrapped core rule.
  */
 export function defineWrapperListener(
