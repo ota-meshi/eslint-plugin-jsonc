@@ -144,6 +144,7 @@ tester.run("valid-json-number", rule as any, {
         "Plus signs are not allowed in JSON.",
         "Octal literals are not allowed in JSON.",
       ],
+      ignoreMomoa: true,
     },
     {
       code: "[0b1001,-0b1001,+0b1001]",
@@ -154,6 +155,7 @@ tester.run("valid-json-number", rule as any, {
         "Plus signs are not allowed in JSON.",
         "Binary literals are not allowed in JSON.",
       ],
+      ignoreMomoa: true,
     },
     {
       filename: "test.vue",
