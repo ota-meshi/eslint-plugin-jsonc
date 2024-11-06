@@ -1,13 +1,32 @@
 import type { JSONSchema4 } from "json-schema";
 import type { Rule } from "eslint";
-import type { RuleListener } from "jsonc-eslint-parser";
+import type {
+  BuiltInRuleListenerExits,
+  BuiltInRuleListeners,
+  RuleListener,
+} from "jsonc-eslint-parser";
 import type { AST as ESLintAST } from "eslint";
 import type * as ESTree from "estree";
+import type { AnyNode } from "@humanwhocodes/momoa";
 
 export type Token = ESLintAST.Token;
 export type Comment = ESTree.Comment;
 
 export { RuleListener };
+
+export type MomoaNode = AnyNode;
+type MomoaRuleFunction<Node extends MomoaNode = never> = (node: Node) => void;
+type MomoaBuiltInRuleListeners = {
+  [Node in MomoaNode as Node["type"]]?: MomoaRuleFunction<Node>;
+};
+type MomoaBuiltInRuleListenerExits = {
+  [Node in MomoaNode as `${Node["type"]}:exit`]?: MomoaRuleFunction<Node>;
+};
+export type MomoaRuleListener = MomoaBuiltInRuleListeners &
+  MomoaBuiltInRuleListenerExits;
+export type BaseRuleListener = MomoaRuleListener &
+  BuiltInRuleListeners &
+  BuiltInRuleListenerExits;
 
 export interface RuleModule {
   meta: RuleMetaData;
@@ -46,7 +65,7 @@ export interface PartialRuleModule {
   create(
     context: Rule.RuleContext,
     params: { customBlock: boolean },
-  ): RuleListener;
+  ): BaseRuleListener;
 }
 
 export interface PartialRuleMetaData {

@@ -1,8 +1,8 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST, RuleListener } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
+import { createRule, isJson } from "../utils";
+import { getSourceCode } from "../utils/compat-momoa";
 import {
   isCommaToken,
   isNotClosingParenToken,
@@ -54,7 +54,7 @@ export default createRule("comma-style", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
     const style = context.options[0] || "last";

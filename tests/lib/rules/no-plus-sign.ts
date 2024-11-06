@@ -21,6 +21,7 @@ tester.run("no-plus-sign", rule as any, {
       code: `+ 42`,
       output: ` 42`,
       errors: ["Plus sign should not be used."],
+      ignoreMomoa: true,
     },
   ],
 });

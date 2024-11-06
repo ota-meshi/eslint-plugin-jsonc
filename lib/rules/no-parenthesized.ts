@@ -2,8 +2,8 @@ import type { Rule } from "eslint";
 import { isParenthesized } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { isExpression } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
+import { createRule, isJson } from "../utils";
+import { getSourceCode } from "../utils/compat-momoa";
 
 export default createRule("no-parenthesized", {
   meta: {
@@ -23,7 +23,7 @@ export default createRule("no-parenthesized", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
 

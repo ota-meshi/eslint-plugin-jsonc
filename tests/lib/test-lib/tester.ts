@@ -10,28 +10,34 @@ export type ValidTestCase = eslint.RuleTester.ValidTestCase & {
 export type InvalidTestCase = eslint.RuleTester.InvalidTestCase & {
   ignoreMomoa?: boolean;
 };
+export type Options = eslint.Linter.Config & {
+  ignoreMomoa?: boolean;
+};
 
 class JSONRuleTester {
-  private readonly _testerOptions: eslint.Linter.Config | undefined;
+  private readonly _testerOptions: Options | undefined;
 
   private readonly testerForBase: eslint.RuleTester;
 
-  private readonly testerForMomoa: eslint.RuleTester;
+  private readonly testerForMomoa: eslint.RuleTester | null;
 
-  public constructor(options?: eslint.Linter.Config) {
+  public constructor(options?: Options) {
     this._testerOptions = options;
-    this.testerForBase = new RuleTester(options);
-    this.testerForMomoa = new RuleTester({
-      ...options,
-      plugins: {
-        json: jsonPlugin as any,
-      },
-      language: "json/json5",
-      languageOptions: {
-        ...options?.languageOptions,
-        parser: undefined,
-      },
-    });
+    const { ignoreMomoa, ...rest } = options || {};
+    this.testerForBase = new RuleTester(rest);
+    this.testerForMomoa = ignoreMomoa
+      ? null
+      : new RuleTester({
+          ...rest,
+          plugins: {
+            json: jsonPlugin as any,
+          },
+          language: "json/json5",
+          languageOptions: {
+            ...rest?.languageOptions,
+            parser: undefined,
+          },
+        });
   }
 
   public run(
@@ -42,7 +48,22 @@ class JSONRuleTester {
       invalid: InvalidTestCase[];
     },
   ): void {
-    this.testerForBase.run(name, rule, tests);
+    this.testerForBase.run(name, rule, {
+      ...tests,
+      valid: tests.valid.map((test) => {
+        if (typeof test === "string") {
+          return test;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- ignore properties
+        const { ignoreMomoa, ...rest } = test;
+        return rest;
+      }),
+      invalid: tests.invalid.map((test) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- ignore properties
+        const { ignoreMomoa, ...rest } = test;
+        return rest;
+      }),
+    });
 
     const valid = tests.valid.filter((test) => {
       if (typeof test !== "string" && test.ignoreMomoa) {
@@ -60,8 +81,10 @@ class JSONRuleTester {
     if (valid.length === 0 && invalid.length === 0) {
       return;
     }
+    const testerForMomoa = this.testerForMomoa;
+    if (!testerForMomoa) return;
     describe(`${name} with momoa`, () => {
-      this.testerForMomoa.run(name, rule, {
+      testerForMomoa.run(name, rule, {
         valid: valid.map((test) => {
           if (typeof test === "string") {
             return test;

@@ -7,6 +7,7 @@ const tester = new RuleTester({
     parser: jsonParser,
     ecmaVersion: 2020,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-parenthesized", rule as any, {

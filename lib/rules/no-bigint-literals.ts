@@ -1,5 +1,4 @@
-import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
+import { createRule, isJson } from "../utils";
 
 export default createRule("no-bigint-literals", {
   meta: {
@@ -16,8 +15,7 @@ export default createRule("no-bigint-literals", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
     return {

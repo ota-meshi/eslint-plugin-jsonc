@@ -220,6 +220,7 @@ tester.run("sort-array-values", rule as any, {
           column: 13,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: '{"key": ["b", "a", "c", 2, 1] }',

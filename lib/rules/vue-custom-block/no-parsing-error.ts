@@ -4,7 +4,7 @@ import { createRule } from "../../utils";
 import type { RuleListener } from "../../types";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { Rule } from "eslint";
-import { getSourceCode } from "eslint-compat-utils";
+import { getSourceCode } from "../../utils/compat-momoa";
 
 export default createRule("vue-custom-block/no-parsing-error", {
   meta: {

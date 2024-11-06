@@ -9,6 +9,7 @@ const tester = new RuleTester({
   languageOptions: {
     parser: jsonParser,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-sparse-arrays", rule as any, {

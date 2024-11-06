@@ -1,6 +1,6 @@
-import { getCwd, getFilename, getSourceCode } from "eslint-compat-utils";
-import type { RuleListener, RuleModule } from "../types";
-import { createRule } from "../utils";
+import { getCwd, getFilename } from "eslint-compat-utils";
+import type { BaseRuleListener, RuleModule } from "../types";
+import { createRule, isJson } from "../utils";
 import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config";
 
 export default createRule("auto", {
@@ -18,13 +18,12 @@ export default createRule("auto", {
     type: "suggestion",
   },
   create(context, params) {
-    const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
     const autoConfig = getAutoConfig(getCwd(context), getFilename(context));
 
-    const visitor: RuleListener = {};
+    const visitor: BaseRuleListener = {};
     for (const ruleId of Object.keys(autoConfig)) {
       // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special rule
       const rule: RuleModule = require(
@@ -45,20 +44,25 @@ export default createRule("auto", {
           context.report(options);
         },
       };
-      const ruleVisitor = rule.jsoncDefineRule.create(subContext, params);
-      for (const key of Object.keys(ruleVisitor)) {
+      const ruleVisitor: BaseRuleListener = rule.jsoncDefineRule.create(
+        subContext,
+        params,
+      );
+      for (const key of Object.keys(
+        ruleVisitor,
+      ) as (keyof BaseRuleListener)[]) {
         const newVisit = ruleVisitor[key];
         const oldVisit = visitor[key];
         if (!newVisit) {
           continue;
         }
         if (!oldVisit) {
-          visitor[key] = ruleVisitor[key];
+          visitor[key] = ruleVisitor[key] as any;
         } else {
-          visitor[key] = (...args: [never]) => {
+          visitor[key] = ((...args: [never]) => {
             oldVisit(...args);
             newVisit(...args);
-          };
+          }) as any;
         }
       }
     }

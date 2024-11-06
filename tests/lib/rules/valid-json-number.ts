@@ -17,9 +17,10 @@ tester.run("valid-json-number", rule as any, {
     {
       filename: "test.json6",
       code: "undefined",
+      ignoreMomoa: true,
     },
-    "[undefined]",
-    "{a: undefined}",
+    { code: "[undefined]", ignoreMomoa: true },
+    { code: "{a: undefined}", ignoreMomoa: true },
   ],
   invalid: [
     {
@@ -113,6 +114,7 @@ tester.run("valid-json-number", rule as any, {
           endColumn: 13,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: "0x123",

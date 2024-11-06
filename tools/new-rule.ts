@@ -24,8 +24,8 @@ const logger = console;
     ruleFile,
     `
 import type { AST } from "jsonc-eslint-parser"
-import { getSourceCode } from "eslint-compat-utils";
-import { createRule, defineWrapperListener, getCoreRule } from "../utils"
+import { getSourceCode } from "../utils/compat-momoa";
+import { createRule, isJson, defineWrapperListener, getCoreRule } from "../utils"
 const coreRule = getCoreRule("${ruleId}")
 
 export default createRule("${ruleId}", {
@@ -42,7 +42,7 @@ export default createRule("${ruleId}", {
     },
     create(context) {
         const sourceCode = getSourceCode(context);
-        if (!sourceCode.parserServices.isJSON) {
+        if (!isJson(context)) {
           return {};
         }
         return defineWrapperListener(coreRule, context, context.options)

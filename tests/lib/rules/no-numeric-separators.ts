@@ -13,6 +13,7 @@ const tester = new RuleTester({
     ecmaVersion: 2021,
     parser: jsonParser,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-numeric-separators", rule as any, {

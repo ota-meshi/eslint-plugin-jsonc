@@ -59,6 +59,7 @@ export default [
       "@typescript-eslint/no-shadow": "off",
       "one-var": "off",
       "no-invalid-this": "off",
+      "new-cap": "off",
 
       "no-restricted-imports": [
         "error",

@@ -1,7 +1,7 @@
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule, isJson } from "../utils";
 import { PatternMatcher } from "@eslint-community/eslint-utils";
-import { getSourceCode } from "eslint-compat-utils";
+import { getSourceCode } from "../utils/compat-momoa";
 
 export default createRule("no-escape-sequence-in-identifier", {
   meta: {
@@ -20,7 +20,7 @@ export default createRule("no-escape-sequence-in-identifier", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
     return {

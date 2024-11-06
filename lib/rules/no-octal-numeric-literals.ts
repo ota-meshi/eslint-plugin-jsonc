@@ -1,5 +1,4 @@
-import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
+import { createRule, isJson } from "../utils";
 
 const octalNumericLiteralPattern = /^0o/iu;
 
@@ -19,8 +18,7 @@ export default createRule("no-octal-numeric-literals", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
     return {

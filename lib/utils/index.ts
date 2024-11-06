@@ -5,6 +5,10 @@ import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
 import { getFilename, getSourceCode } from "eslint-compat-utils";
+import {
+  compatMomoaRuleListener,
+  getSourceCode as getCompatSourceCode,
+} from "./compat-momoa";
 
 /**
  * Define the rule.
@@ -44,16 +48,22 @@ export function createRule(
               return block.name === "i18n";
             },
             create(blockContext: Rule.RuleContext) {
-              return rule.create(blockContext, {
-                customBlock: true,
-              });
+              return compatMomoaRuleListener(
+                rule.create(blockContext, {
+                  customBlock: true,
+                }),
+                blockContext,
+              );
             },
           },
         );
       }
-      return rule.create(context, {
-        customBlock: false,
-      });
+      return compatMomoaRuleListener(
+        rule.create(context, {
+          customBlock: false,
+        }),
+        context,
+      );
     },
   };
 }
@@ -99,8 +109,7 @@ export function defineWrapperListener(
   context: Rule.RuleContext,
   options: any[],
 ): RuleListener {
-  const sourceCode = getSourceCode(context);
-  if (!sourceCode.parserServices.isJSON) {
+  if (!isJson(context)) {
     return {};
   }
   const listener = coreRule.create({
@@ -108,6 +117,9 @@ export function defineWrapperListener(
     // @ts-expect-error
     __proto__: context,
     options,
+    get sourceCode() {
+      return getCompatSourceCode(context);
+    },
   }) as RuleListener;
 
   const jsonListener: RuleListener = {};

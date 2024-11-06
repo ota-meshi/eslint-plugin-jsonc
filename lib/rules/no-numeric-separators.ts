@@ -1,5 +1,5 @@
-import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
+import { createRule, isJson } from "../utils";
+import { getSourceCode } from "../utils/compat-momoa";
 
 export default createRule("no-numeric-separators", {
   meta: {
@@ -18,7 +18,7 @@ export default createRule("no-numeric-separators", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
     return {

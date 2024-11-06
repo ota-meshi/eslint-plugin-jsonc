@@ -41,6 +41,7 @@ tester.run("space-unary-ops", rule as any, {
           endColumn: 23,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       filename: "test.vue",

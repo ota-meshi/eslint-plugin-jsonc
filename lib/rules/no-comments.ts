@@ -1,5 +1,5 @@
-import { getSourceCode } from "eslint-compat-utils";
-import { createRule } from "../utils";
+import { getSourceCode } from "../utils/compat-momoa";
+import { createRule, isJson } from "../utils";
 
 export default createRule("no-comments", {
   meta: {
@@ -17,7 +17,7 @@ export default createRule("no-comments", {
   },
   create(context) {
     const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!isJson(context)) {
       return {};
     }
     return {
