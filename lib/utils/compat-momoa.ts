@@ -229,7 +229,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
             return unaryExpression;
           },
           type: "JSONLiteral",
-          value: Number(rawArgument), // Math.abs(node.value),
+          value: Number(rawArgument), // TODO Math.abs(node.value),
           bigint: null,
           regex: null,
           raw: rawArgument,
@@ -260,7 +260,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           return getParent(node) as AST.JSONLiteral["parent"];
         },
         type: "JSONLiteral",
-        value: Number(raw), // node.value
+        value: Number(raw), // TODO node.value
         bigint: null,
         regex: null,
         get raw() {
