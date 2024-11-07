@@ -1,4 +1,3 @@
-import { getCwd, getFilename } from "eslint-compat-utils";
 import type { BaseRuleListener, RuleModule } from "../types";
 import { createRule } from "../utils";
 import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config";
@@ -21,7 +20,7 @@ export default createRule("auto", {
     if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
-    const autoConfig = getAutoConfig(getCwd(context), getFilename(context));
+    const autoConfig = getAutoConfig(context.cwd, context.filename);
 
     const visitor: BaseRuleListener = {};
     for (const ruleId of Object.keys(autoConfig)) {

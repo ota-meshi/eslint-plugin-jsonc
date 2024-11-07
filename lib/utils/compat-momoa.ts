@@ -8,7 +8,7 @@ import type {
 import type { Rule } from "eslint";
 import { SourceCode } from "eslint";
 import type { JSONSourceCode } from "@eslint/json";
-import { getSourceCode } from "eslint-compat-utils";
+import { getSourceCode, getCwd, getFilename } from "eslint-compat-utils";
 import type { BaseRuleListener, MomoaNode, MomoaRuleListener } from "../types";
 
 type NodeConvertMap = {
@@ -57,7 +57,22 @@ export function compatMomoaCreate<
       originalSourceCode.ast.loc.start.column !== 1
     ) {
       // If the source code is not Momoa, return the original create function.
-      return create(context, ...args);
+
+      const sourceCode = originalSourceCode as SourceCode;
+      // Define the `sourceCode` property to work with older ESLints.
+      const compatContext: Rule.RuleContext = {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
+        // @ts-expect-error
+        __proto__: context,
+        sourceCode,
+        get filename() {
+          return getFilename(context);
+        },
+        get cwd() {
+          return getCwd(context);
+        },
+      };
+      return create(compatContext, ...args);
     }
 
     const momoaSourceCode = originalSourceCode as JSONSourceCode;
@@ -71,6 +86,7 @@ export function compatMomoaCreate<
         return (sourceCode ??= getCompatSourceCode(momoaSourceCode));
       },
       report(descriptor) {
+        // Revert to `@eslint/json` report position (1-based column).
         const momoaDescriptor = {
           ...descriptor,
         };

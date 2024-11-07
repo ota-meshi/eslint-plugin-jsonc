@@ -93,19 +93,7 @@ export default [
         },
         {
           object: "context",
-          property: "filename",
-          message:
-            "Please use `eslint-compat-utils` module's `getFilename(context)` instead.",
-        },
-        {
-          object: "context",
           property: "getCwd",
-          message:
-            "Please use `eslint-compat-utils` module's `getCwd(context)` instead.",
-        },
-        {
-          object: "context",
-          property: "cwd",
           message:
             "Please use `eslint-compat-utils` module's `getCwd(context)` instead.",
         },
