@@ -8,6 +8,7 @@ const tester = new RuleTester({
     parser: jsonParser,
     ecmaVersion: 2020,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-bigint-literals", rule as any, {

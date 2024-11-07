@@ -1,10 +1,9 @@
 import naturalCompare from "natural-compare";
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 import { isCommaToken } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import type { SourceCode, AST as ESLintAST } from "eslint";
-import { getSourceCode } from "../utils/compat-momoa";
 
 type JSONValue = ReturnType<typeof getStaticJSONValue>;
 
@@ -394,8 +393,8 @@ export default createRule("sort-array-values", {
     type: "suggestion",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     // Parse options.

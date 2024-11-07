@@ -7,6 +7,7 @@ const tester = new RuleTester({
   languageOptions: {
     parser: jsonParser,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-number-props", rule as any, {

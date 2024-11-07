@@ -1,5 +1,5 @@
 import { isNumberIdentifier } from "jsonc-eslint-parser";
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 
 export default createRule("no-nan", {
   meta: {
@@ -16,7 +16,7 @@ export default createRule("no-nan", {
     type: "problem",
   },
   create(context) {
-    if (!isJson(context)) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

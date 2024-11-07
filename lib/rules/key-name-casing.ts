@@ -1,7 +1,6 @@
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 import type { CasingKind } from "../utils/casing";
 import { getChecker, allowedCaseOptions } from "../utils/casing";
-import { getSourceCode } from "../utils/compat-momoa";
 
 type Option = {
   [key in CasingKind]?: boolean;
@@ -60,8 +59,8 @@ export default createRule("key-name-casing", {
     type: "suggestion",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     const option: Option = { ...context.options[0] };

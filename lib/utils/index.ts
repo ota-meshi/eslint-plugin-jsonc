@@ -5,10 +5,7 @@ import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
 import { getFilename, getSourceCode } from "eslint-compat-utils";
-import {
-  compatMomoaRuleListener,
-  getSourceCode as getCompatSourceCode,
-} from "./compat-momoa";
+import { compatMomoaCreate } from "./compat-momoa";
 
 /**
  * Define the rule.
@@ -31,6 +28,7 @@ export function createRule(
     },
     jsoncDefineRule: rule,
     create(context: Rule.RuleContext) {
+      const create = compatMomoaCreate(rule.create);
       const sourceCode = getSourceCode(context);
       if (
         typeof sourceCode.parserServices?.defineCustomBlocksVisitor ===
@@ -48,57 +46,18 @@ export function createRule(
               return block.name === "i18n";
             },
             create(blockContext: Rule.RuleContext) {
-              return compatMomoaRuleListener(
-                rule.create(blockContext, {
-                  customBlock: true,
-                }),
-                blockContext,
-              );
+              return create(blockContext, {
+                customBlock: true,
+              });
             },
           },
         );
       }
-      return compatMomoaRuleListener(
-        rule.create(context, {
-          customBlock: false,
-        }),
-        context,
-      );
+      return create(context, {
+        customBlock: false,
+      });
     },
   };
-}
-
-/**
- * Checks the context and returns whether a JSON parser is being used or not.
- */
-export function isJson(context: Rule.RuleContext): boolean {
-  const sourceCode = getSourceCode(context);
-  if (sourceCode.parserServices?.isJSON) {
-    return true;
-  }
-  // *** Check for momoa ***
-  if (context.parserPath) {
-    // Using a legacy configuration, so momoa is not used.
-    return false;
-  }
-  const parser = context.languageOptions?.parser;
-  if (parser) {
-    if ("parse" in parser && typeof parser?.parse === "function") {
-      try {
-        const ast = parser.parse("{}");
-        return (ast as any).type === "Document";
-      } catch {
-        return false;
-      }
-    }
-  } else {
-    // If no parser is specified, it will parse according to the `language` config.
-
-    // If the root node of the AST of a source code class instance is `Document`,
-    // it is probably a node parsed by momoa.
-    return (sourceCode.ast.type as string) === "Document";
-  }
-  return false;
 }
 
 /**
@@ -109,7 +68,7 @@ export function defineWrapperListener(
   context: Rule.RuleContext,
   options: any[],
 ): RuleListener {
-  if (!isJson(context)) {
+  if (!context.sourceCode.parserServices.isJSON) {
     return {};
   }
   const listener = coreRule.create({
@@ -117,9 +76,6 @@ export function defineWrapperListener(
     // @ts-expect-error
     __proto__: context,
     options,
-    get sourceCode() {
-      return getCompatSourceCode(context);
-    },
   }) as RuleListener;
 
   const jsonListener: RuleListener = {};

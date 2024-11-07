@@ -1,5 +1,5 @@
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 
 export default createRule("no-binary-expression", {
   meta: {
@@ -18,7 +18,7 @@ export default createRule("no-binary-expression", {
     type: "problem",
   },
   create(context) {
-    if (!isJson(context)) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
 

@@ -62,10 +62,10 @@ export interface RuleMetaData {
 
 export interface PartialRuleModule {
   meta: PartialRuleMetaData;
-  create(
+  create: (
     context: Rule.RuleContext,
     params: { customBlock: boolean },
-  ): BaseRuleListener;
+  ) => BaseRuleListener;
 }
 
 export interface PartialRuleMetaData {

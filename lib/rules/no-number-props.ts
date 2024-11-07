@@ -1,4 +1,4 @@
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 
 export default createRule("no-number-props", {
   meta: {
@@ -16,7 +16,7 @@ export default createRule("no-number-props", {
     type: "problem",
   },
   create(context) {
-    if (!isJson(context)) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

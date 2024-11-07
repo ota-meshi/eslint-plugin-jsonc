@@ -1,7 +1,6 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
-import { createRule, isJson } from "../utils";
-import { getSourceCode } from "../utils/compat-momoa";
+import { createRule } from "../utils";
 
 export default createRule("object-property-newline", {
   meta: {
@@ -40,8 +39,8 @@ export default createRule("object-property-newline", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     const allowSameLine =

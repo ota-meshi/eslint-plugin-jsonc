@@ -1,5 +1,4 @@
-import { createRule, isJson } from "../utils";
-import { getSourceCode } from "../utils/compat-momoa";
+import { createRule } from "../utils";
 
 export default createRule("no-numeric-separators", {
   meta: {
@@ -17,8 +16,8 @@ export default createRule("no-numeric-separators", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

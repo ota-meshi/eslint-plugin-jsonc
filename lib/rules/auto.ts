@@ -1,6 +1,6 @@
 import { getCwd, getFilename } from "eslint-compat-utils";
 import type { BaseRuleListener, RuleModule } from "../types";
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config";
 
 export default createRule("auto", {
@@ -18,7 +18,7 @@ export default createRule("auto", {
     type: "suggestion",
   },
   create(context, params) {
-    if (!isJson(context)) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     const autoConfig = getAutoConfig(getCwd(context), getFilename(context));

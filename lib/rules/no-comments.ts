@@ -1,5 +1,4 @@
-import { getSourceCode } from "../utils/compat-momoa";
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 
 export default createRule("no-comments", {
   meta: {
@@ -16,8 +15,8 @@ export default createRule("no-comments", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

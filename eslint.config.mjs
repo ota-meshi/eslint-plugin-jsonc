@@ -87,12 +87,6 @@ export default [
         },
         {
           object: "context",
-          property: "sourceCode",
-          message:
-            "Please use `eslint-compat-utils` module's `getSourceCode(context)` instead.",
-        },
-        {
-          object: "context",
           property: "getFilename",
           message:
             "Please use `eslint-compat-utils` module's `getFilename(context)` instead.",

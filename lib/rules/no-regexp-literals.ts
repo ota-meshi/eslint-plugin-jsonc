@@ -1,4 +1,4 @@
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 
 export default createRule("no-regexp-literals", {
   meta: {
@@ -15,7 +15,7 @@ export default createRule("no-regexp-literals", {
     type: "problem",
   },
   create(context) {
-    if (!isJson(context)) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

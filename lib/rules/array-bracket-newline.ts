@@ -1,8 +1,7 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule, isJson } from "../utils";
-import { getSourceCode } from "../utils/compat-momoa";
+import { createRule } from "../utils";
 import { isTokenOnSameLine } from "../utils/eslint-ast-utils";
 import type { Token } from "../types";
 import { isCommentToken } from "@eslint-community/eslint-utils";
@@ -57,8 +56,8 @@ export default createRule("array-bracket-newline", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
 

@@ -1,11 +1,15 @@
-import type { RuleListener, AST } from "jsonc-eslint-parser";
-import type { DocumentNode, ElementNode } from "@humanwhocodes/momoa";
+import type { RuleListener, AST, RuleFunction } from "jsonc-eslint-parser";
+import { VisitorKeys } from "jsonc-eslint-parser";
+import type {
+  Token as MomoaToken,
+  DocumentNode,
+  ElementNode,
+} from "@humanwhocodes/momoa";
 import type { Rule } from "eslint";
 import { SourceCode } from "eslint";
 import type { JSONSourceCode } from "@eslint/json";
-import { getSourceCode as getBaseSourceCode } from "eslint-compat-utils";
+import { getSourceCode } from "eslint-compat-utils";
 import type { BaseRuleListener, MomoaNode, MomoaRuleListener } from "../types";
-import type { Token as MomoaToken } from "@humanwhocodes/momoa";
 
 type NodeConvertMap = {
   Array: AST.JSONArrayExpression;
@@ -36,70 +40,101 @@ type Comment = AST.JSONProgram["comments"][number];
 type TokenConverter = (token: MomoaToken) => (Token | Comment)[];
 const NODE_CONVERTERS = new WeakMap<DocumentNode, NodeConverter>();
 const TOKEN_CONVERTERS = new WeakMap<DocumentNode, TokenConverter>();
+
+/**
+ * This is a helper function that converts the given create function into a Momoa compatible create function.
+ */
+export function compatMomoaCreate<
+  R extends object,
+  F extends (context: Rule.RuleContext, ...args: any[]) => R,
+>(create: F): F {
+  return ((context, ...args) => {
+    const originalSourceCode = getSourceCode(context) as
+      | SourceCode
+      | JSONSourceCode;
+    if (
+      originalSourceCode.ast.type !== "Document" ||
+      originalSourceCode.ast.loc.start.column !== 1
+    ) {
+      // If the source code is not Momoa, return the original create function.
+      return create(context, ...args);
+    }
+
+    const momoaSourceCode = originalSourceCode as JSONSourceCode;
+
+    let sourceCode;
+    const compatContext: Rule.RuleContext = {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
+      // @ts-expect-error
+      __proto__: context,
+      get sourceCode() {
+        return (sourceCode ??= getCompatSourceCode(momoaSourceCode));
+      },
+      report(descriptor) {
+        const momoaDescriptor = {
+          ...descriptor,
+        };
+        if ("loc" in momoaDescriptor) {
+          if ("line" in momoaDescriptor.loc) {
+            momoaDescriptor.loc = convertPositionFromJsoncToMomoa(
+              momoaDescriptor.loc,
+            );
+          } else {
+            momoaDescriptor.loc = convertSourceLocationFromJsoncToMomoa(
+              momoaDescriptor.loc,
+            );
+          }
+        }
+        if ("node" in momoaDescriptor) {
+          momoaDescriptor.node = {
+            ...momoaDescriptor.node,
+            loc: convertSourceLocationFromJsoncToMomoa(
+              momoaDescriptor.node.loc!,
+            ),
+          };
+        }
+        context.report(momoaDescriptor);
+      },
+    };
+
+    return compatMomoaRuleListener(
+      create(compatContext, ...args),
+      momoaSourceCode,
+    ) as R;
+  }) as F;
+}
+
 /**
  * This is a helper function that converts the given listener into a listener that can also listen to Momoa nodes.
  */
-
-/**
- *
- */
-export function compatMomoaRuleListener(
+function compatMomoaRuleListener(
   listener: BaseRuleListener,
-  context: Rule.RuleContext,
+  momoaSourceCode: JSONSourceCode,
 ): RuleListener {
-  const convert = getNodeConverter(context);
-  type ListenerKey = keyof MomoaRuleListener;
-  const listenerKeys = new Set<keyof MomoaRuleListener>([
-    ...(listener.Program ? (["Document"] satisfies ListenerKey[]) : []),
-    ...(listener["Program:exit"]
-      ? (["Document:exit"] satisfies ListenerKey[])
-      : []),
-    ...(listener.JSONLiteral
-      ? (["Boolean", "String", "Null", "Number"] satisfies ListenerKey[])
-      : []),
-    ...(listener["JSONLiteral:exit"]
-      ? ([
-          "Boolean:exit",
-          "String:exit",
-          "Null:exit",
-          "Number:exit",
-        ] satisfies ListenerKey[])
-      : []),
-    ...(listener.JSONArrayExpression
-      ? (["Array"] satisfies ListenerKey[])
-      : []),
-    ...(listener["JSONArrayExpression:exit"]
-      ? (["Array:exit"] satisfies ListenerKey[])
-      : []),
-    ...(listener.JSONObjectExpression
-      ? (["Object"] satisfies ListenerKey[])
-      : []),
-    ...(listener["JSONObjectExpression:exit"]
-      ? (["Object:exit"] satisfies ListenerKey[])
-      : []),
-    ...(listener.JSONProperty ? (["Member"] satisfies ListenerKey[]) : []),
-    ...(listener["JSONProperty:exit"]
-      ? (["Member:exit"] satisfies ListenerKey[])
-      : []),
-    ...(listener.JSONIdentifier
-      ? (["Identifier", "Infinity", "NaN"] satisfies ListenerKey[])
-      : []),
-    ...(listener["JSONIdentifier:exit"]
-      ? ([
-          "Identifier:exit",
-          "Infinity:exit",
-          "NaN:exit",
-        ] satisfies ListenerKey[])
-      : []),
-    ...(listener.JSONUnaryExpression
-      ? (["Number", "Infinity", "NaN"] satisfies ListenerKey[])
-      : []),
-    ...(listener["JSONUnaryExpression:exit"]
-      ? (["Number:exit", "Infinity:exit", "NaN:exit"] satisfies ListenerKey[])
-      : []),
-  ]);
+  const convert = getNodeConverter(momoaSourceCode);
+  const listenerKeys = new Set<keyof MomoaRuleListener>();
+  for (const [jsonKey, momoaKeys] of [
+    ["Program", ["Document"]],
+    ["JSONLiteral", ["Boolean", "String", "Null", "Number"]],
+    ["JSONArrayExpression", ["Array"]],
+    ["JSONObjectExpression", ["Object"]],
+    ["JSONProperty", ["Member"]],
+    ["JSONIdentifier", ["Identifier", "Infinity", "NaN"]],
+    ["JSONUnaryExpression", ["Number", "Infinity", "NaN"]],
+  ] as const) {
+    if (listener[jsonKey]) {
+      for (const momoaKey of momoaKeys) {
+        listenerKeys.add(momoaKey);
+      }
+    }
+    if (listener[`${jsonKey}:exit`]) {
+      for (const momoaKey of momoaKeys) {
+        listenerKeys.add(`${momoaKey}:exit`);
+      }
+    }
+  }
 
-  const result: MomoaRuleListener = Object.fromEntries(
+  const result: RuleListener = Object.fromEntries(
     [...listenerKeys].map((key) => {
       if (key.endsWith(":exit")) {
         return [
@@ -111,10 +146,40 @@ export function compatMomoaRuleListener(
       return [key, (node: Exclude<MomoaNode, ElementNode>) => dispatch(node)];
     }),
   );
-  return {
-    ...result,
-    ...listener,
-  };
+
+  const momoaNodes = new Set<string>([
+    "Array",
+    "Boolean",
+    "Document",
+    "Element",
+    "Identifier",
+    "Infinity",
+    "Member",
+    "NaN",
+    "Null",
+    "Number",
+    "Object",
+    "String",
+  ] satisfies MomoaNode["type"][]);
+  for (const [key, fn] of Object.entries(listener)) {
+    const momoaFn = result[key];
+
+    const convertedFn: RuleFunction = momoaFn
+      ? (...args) => {
+          momoaFn(...args);
+          fn(...args);
+        }
+      : fn;
+
+    result[key] = (node: AST.JSONNode | MomoaNode, ...args) => {
+      // Because we've converted the node and token location,
+      // it's not compatible with listening to the original Momoa node.
+      // Therefore, we'll ignore the original Momoa node.
+      if (momoaNodes.has(node.type)) return;
+      convertedFn(node as never, ...args);
+    };
+  }
+  return result;
 
   /**
    * Dispatch the given node to the listener.
@@ -124,8 +189,13 @@ export function compatMomoaRuleListener(
     options?: { exit: boolean },
   ) {
     const exit = options?.exit;
-    if (exit) listener[`${node.type}:exit`]?.(node as never);
-    else listener[node.type]?.(node as never);
+
+    // Because we've converted the node and token location,
+    // it's not compatible with listening to the original Momoa node.
+    // Therefore, we'll ignore the original Momoa node.
+
+    // if (exit) listener[`${node.type}:exit`]?.(node as never);
+    // else listener[node.type]?.(node as never);
 
     const jsonNode = convert(node);
     if (Array.isArray(jsonNode)) {
@@ -143,25 +213,42 @@ export function compatMomoaRuleListener(
 /**
  * This is a helper function that converts the sourceCode for Momoa to a sourceCode for JSONC.
  */
-export function getSourceCode(context: Rule.RuleContext): SourceCode {
-  const sourceCode = getBaseSourceCode(context) as SourceCode | JSONSourceCode;
-  if (sourceCode.ast.type !== "Document") {
-    return sourceCode as SourceCode;
-  }
-  const convert = getNodeConverter(context);
-  return new SourceCode(sourceCode.text, convert(sourceCode.ast) as any);
+function getCompatSourceCode(momoaSourceCode: JSONSourceCode): SourceCode {
+  const convert = getNodeConverter(momoaSourceCode);
+  const jsSourceCode = new SourceCode({
+    text: momoaSourceCode.text,
+    ast: convert(momoaSourceCode.ast) as any,
+    parserServices: { isJSON: true },
+    visitorKeys: VisitorKeys,
+  });
+
+  const compatSourceCode: SourceCode | JSONSourceCode = new Proxy(
+    momoaSourceCode,
+    {
+      get(_target, prop) {
+        const value = Reflect.get(jsSourceCode, prop);
+        if (value !== undefined)
+          return typeof value === "function" ? value.bind(jsSourceCode) : value;
+        const momoaValue = Reflect.get(momoaSourceCode, prop);
+        return typeof momoaValue === "function"
+          ? momoaValue.bind(momoaSourceCode)
+          : momoaValue;
+      },
+    },
+  );
+
+  return compatSourceCode as unknown as SourceCode;
 }
 
 /**
- * Get the node converter function for the given context.
+ * Get the node converter function for the given sourceCode.
  */
-function getNodeConverter(context: Rule.RuleContext): NodeConverter {
-  const sourceCode = getBaseSourceCode(context) as never as JSONSourceCode;
-  const converter = NODE_CONVERTERS.get(sourceCode.ast);
+function getNodeConverter(momoaSourceCode: JSONSourceCode): NodeConverter {
+  const converter = NODE_CONVERTERS.get(momoaSourceCode.ast);
   if (converter) {
     return converter;
   }
-  const tokenConverter = getTokenConverter(context);
+  const tokenConverter = getTokenConverter(momoaSourceCode);
   const convertedNodes = new Map<MomoaNode, AST.JSONNode | AST.JSONNode[]>();
 
   const nodeConverters: {
@@ -180,7 +267,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           return (elements ??= node.elements.map((e) => convertNode(e.value)));
         },
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Boolean(node) {
@@ -193,10 +280,10 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
         bigint: null,
         regex: null,
         get raw() {
-          return sourceCode.text.slice(...node.range!);
+          return momoaSourceCode.text.slice(...node.range!);
         },
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Null(node) {
@@ -209,38 +296,38 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
         bigint: null,
         regex: null,
         get raw() {
-          return sourceCode.text.slice(...node.range!);
+          return momoaSourceCode.text.slice(...node.range!);
         },
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Number(node) {
-      const raw = sourceCode.text.slice(...node.range!);
+      const raw = momoaSourceCode.text.slice(...node.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         const argumentRange = [node.range![0] + 1, node.range![1]] as [
           number,
           number,
         ];
-        const rawArgument = sourceCode.text.slice(...argumentRange);
+        const rawArgument = momoaSourceCode.text.slice(...argumentRange);
         const literal: AST.JSONLiteral = {
           get parent() {
             // eslint-disable-next-line @typescript-eslint/no-use-before-define -- OK
             return unaryExpression;
           },
           type: "JSONLiteral",
-          value: Number(rawArgument), // TODO Math.abs(node.value),
+          value: Math.abs(node.value),
           bigint: null,
           regex: null,
           raw: rawArgument,
           range: argumentRange,
-          loc: {
+          loc: convertSourceLocationFromMomoaToJsonc({
             start: {
               line: node.loc.start.line,
               column: node.loc.start.column + 1,
             },
             end: node.loc.end,
-          },
+          }),
         };
         const unaryExpression: AST.JSONUnaryExpression = {
           get parent() {
@@ -251,7 +338,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           prefix: true,
           argument: literal,
           range: node.range!,
-          loc: node.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(node.loc),
         };
         return [unaryExpression, literal];
       }
@@ -260,14 +347,14 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           return getParent(node) as AST.JSONLiteral["parent"];
         },
         type: "JSONLiteral",
-        value: Number(raw), // TODO node.value
+        value: node.value,
         bigint: null,
         regex: null,
         get raw() {
-          return sourceCode.text.slice(...node.range!);
+          return momoaSourceCode.text.slice(...node.range!);
         },
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     String(node) {
@@ -280,10 +367,10 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
         bigint: null,
         regex: null,
         get raw() {
-          return sourceCode.text.slice(...node.range!);
+          return momoaSourceCode.text.slice(...node.range!);
         },
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Document(node): AST.JSONProgram {
@@ -315,7 +402,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
             .flatMap(tokenConverter));
         },
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Object(node) {
@@ -329,7 +416,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           return (members ??= node.members.map(convertNode));
         },
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Member(node) {
@@ -351,7 +438,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
         shorthand: false,
         computed: false,
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Identifier(node) {
@@ -362,11 +449,11 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
         type: "JSONIdentifier",
         name: node.name,
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     Infinity(node) {
-      const raw = sourceCode.text.slice(...node.range!);
+      const raw = momoaSourceCode.text.slice(...node.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         const argumentRange = [node.range![0] + 1, node.range![1]] as [
           number,
@@ -380,13 +467,13 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           type: "JSONIdentifier",
           name: "Infinity",
           range: argumentRange,
-          loc: {
+          loc: convertSourceLocationFromMomoaToJsonc({
             start: {
               line: node.loc.start.line,
               column: node.loc.start.column + 1,
             },
             end: node.loc.end,
-          },
+          }),
         };
         const unaryExpression: AST.JSONUnaryExpression = {
           get parent() {
@@ -397,7 +484,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           prefix: true,
           argument: identifier,
           range: node.range!,
-          loc: node.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(node.loc),
         };
         return [unaryExpression, identifier];
       }
@@ -408,11 +495,11 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
         type: "JSONIdentifier",
         name: "Infinity",
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
     NaN(node) {
-      const raw = sourceCode.text.slice(...node.range!);
+      const raw = momoaSourceCode.text.slice(...node.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         const argumentRange = [node.range![0] + 1, node.range![1]] as [
           number,
@@ -426,13 +513,13 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           type: "JSONIdentifier",
           name: "NaN",
           range: argumentRange,
-          loc: {
+          loc: convertSourceLocationFromMomoaToJsonc({
             start: {
               line: node.loc.start.line,
               column: node.loc.start.column + 1,
             },
             end: node.loc.end,
-          },
+          }),
         };
         const unaryExpression: AST.JSONUnaryExpression = {
           get parent() {
@@ -443,7 +530,7 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
           prefix: true,
           argument: identifier,
           range: node.range!,
-          loc: node.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(node.loc),
         };
         return [unaryExpression, identifier];
       }
@@ -454,18 +541,18 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
         type: "JSONIdentifier",
         name: "NaN",
         range: node.range!,
-        loc: node.loc,
+        loc: convertSourceLocationFromMomoaToJsonc(node.loc),
       };
     },
   };
-  NODE_CONVERTERS.set(sourceCode.ast, convertNode as NodeConverter);
+  NODE_CONVERTERS.set(momoaSourceCode.ast, convertNode as NodeConverter);
   return convertNode as NodeConverter;
 
   /**
    * Get the parent node of the given node.
    */
   function getParent(node: MomoaNode): AST.JSONNode | null {
-    const parent = sourceCode.getParent(node);
+    const parent = momoaSourceCode.getParent(node);
     if (!parent) return null;
     const parentNode = parent as MomoaNode;
     if (parentNode.type === "Element") {
@@ -496,11 +583,10 @@ function getNodeConverter(context: Rule.RuleContext): NodeConverter {
 }
 
 /**
- * Get the token converter function for the given context.
+ * Get the token converter function for the given sourceCode.
  */
-function getTokenConverter(context: Rule.RuleContext): TokenConverter {
-  const sourceCode = getBaseSourceCode(context) as never as JSONSourceCode;
-  const converter = TOKEN_CONVERTERS.get(sourceCode.ast);
+function getTokenConverter(momoaSourceCode: JSONSourceCode): TokenConverter {
+  const converter = TOKEN_CONVERTERS.get(momoaSourceCode.ast);
   if (converter) {
     return converter;
   }
@@ -514,13 +600,13 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
         {
           type: "Block",
           get value() {
-            return sourceCode.text.slice(
+            return momoaSourceCode.text.slice(
               token.range![0] + 2,
               token.range![1] - 2,
             );
           },
           range: token.range,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -529,10 +615,13 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
         {
           type: "Line",
           get value() {
-            return sourceCode.text.slice(token.range![0] + 2, token.range![1]);
+            return momoaSourceCode.text.slice(
+              token.range![0] + 2,
+              token.range![1],
+            );
           },
           range: token.range,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -541,10 +630,10 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
         {
           type: "Keyword",
           get value() {
-            return sourceCode.text.slice(...token.range!);
+            return momoaSourceCode.text.slice(...token.range!);
           },
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -553,10 +642,10 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
         {
           type: "Keyword",
           get value() {
-            return sourceCode.text.slice(...token.range!);
+            return momoaSourceCode.text.slice(...token.range!);
           },
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -565,40 +654,40 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
         {
           type: "Identifier",
           get value() {
-            return sourceCode.text.slice(...token.range!);
+            return momoaSourceCode.text.slice(...token.range!);
           },
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
     Infinity(token) {
-      const raw = sourceCode.text.slice(...token.range!);
+      const raw = momoaSourceCode.text.slice(...token.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         return [
           {
             type: "Punctuator",
             value: raw[0],
             range: [token.range![0], token.range![0] + 1],
-            loc: {
+            loc: convertSourceLocationFromMomoaToJsonc({
               start: token.loc.start,
               end: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
-            },
+            }),
           },
           {
             type: "Identifier",
             value: "Infinity",
             range: [token.range![0] + 1, token.range![1]],
-            loc: {
+            loc: convertSourceLocationFromMomoaToJsonc({
               start: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
               end: token.loc.end,
-            },
+            }),
           },
         ];
       }
@@ -607,37 +696,37 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Identifier",
           value: "Infinity",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
     NaN(token) {
-      const raw = sourceCode.text.slice(...token.range!);
+      const raw = momoaSourceCode.text.slice(...token.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         return [
           {
             type: "Punctuator",
             value: raw[0],
             range: [token.range![0], token.range![0] + 1],
-            loc: {
+            loc: convertSourceLocationFromMomoaToJsonc({
               start: token.loc.start,
               end: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
-            },
+            }),
           },
           {
             type: "Identifier",
             value: "NaN",
             range: [token.range![0] + 1, token.range![1]],
-            loc: {
+            loc: convertSourceLocationFromMomoaToJsonc({
               start: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
               end: token.loc.end,
-            },
+            }),
           },
         ];
       }
@@ -646,12 +735,12 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Identifier",
           value: "NaN",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
     Number(token) {
-      const raw = sourceCode.text.slice(...token.range!);
+      const raw = momoaSourceCode.text.slice(...token.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         const range = [token.range![0] + 1, token.range![1]] as [
           number,
@@ -662,27 +751,27 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
             type: "Punctuator",
             value: raw[0],
             range: [token.range![0], token.range![0] + 1],
-            loc: {
+            loc: convertSourceLocationFromMomoaToJsonc({
               start: token.loc.start,
               end: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
-            },
+            }),
           },
           {
             type: "Numeric",
             get value() {
-              return sourceCode.text.slice(...range);
+              return momoaSourceCode.text.slice(...range);
             },
             range,
-            loc: {
+            loc: convertSourceLocationFromMomoaToJsonc({
               start: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
               end: token.loc.end,
-            },
+            }),
           },
         ];
       }
@@ -690,10 +779,10 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
         {
           type: "Numeric",
           get value() {
-            return sourceCode.text.slice(...token.range!);
+            return momoaSourceCode.text.slice(...token.range!);
           },
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -702,10 +791,10 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
         {
           type: "String",
           get value() {
-            return sourceCode.text.slice(...token.range!);
+            return momoaSourceCode.text.slice(...token.range!);
           },
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -715,7 +804,7 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Punctuator",
           value: ":",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -725,7 +814,7 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Punctuator",
           value: ",",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -735,7 +824,7 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Punctuator",
           value: "[",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -745,7 +834,7 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Punctuator",
           value: "{",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -755,7 +844,7 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Punctuator",
           value: "]",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
@@ -765,12 +854,12 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
           type: "Punctuator",
           value: "}",
           range: token.range!,
-          loc: token.loc,
+          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
         },
       ];
     },
   };
-  TOKEN_CONVERTERS.set(sourceCode.ast, convertToken);
+  TOKEN_CONVERTERS.set(momoaSourceCode.ast, convertToken);
   return convertToken;
 
   /**
@@ -785,4 +874,48 @@ function getTokenConverter(context: Rule.RuleContext): TokenConverter {
     convertedTokens.set(token, newToken);
     return newToken;
   }
+}
+
+/**
+ * Convert the source location from Momoa to JSONC.
+ */
+function convertSourceLocationFromMomoaToJsonc(
+  loc: AST.SourceLocation,
+): AST.SourceLocation {
+  return {
+    start: convertPositionFromMomoaToJsonc(loc.start),
+    end: convertPositionFromMomoaToJsonc(loc.end),
+  };
+}
+
+/**
+ * Convert the position from Momoa to JSONC.
+ */
+function convertPositionFromMomoaToJsonc(position: AST.Position): AST.Position {
+  return {
+    line: position.line,
+    column: position.column - 1,
+  };
+}
+
+/**
+ * Convert the source location from JSONC to Momoa.
+ */
+function convertSourceLocationFromJsoncToMomoa(
+  loc: AST.SourceLocation,
+): AST.SourceLocation {
+  return {
+    start: convertPositionFromJsoncToMomoa(loc.start),
+    end: convertPositionFromJsoncToMomoa(loc.end),
+  };
+}
+
+/**
+ * Convert the position from JSONC to Momoa.
+ */
+function convertPositionFromJsoncToMomoa(position: AST.Position): AST.Position {
+  return {
+    line: position.line,
+    column: position.column + 1,
+  };
 }

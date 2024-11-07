@@ -1,4 +1,4 @@
-import { createRule, isJson } from "../utils";
+import { createRule } from "../utils";
 
 const octalNumericLiteralPattern = /^0o/iu;
 
@@ -18,7 +18,7 @@ export default createRule("no-octal-numeric-literals", {
     type: "problem",
   },
   create(context) {
-    if (!isJson(context)) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

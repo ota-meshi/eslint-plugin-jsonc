@@ -1,8 +1,7 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST, RuleListener } from "jsonc-eslint-parser";
-import { createRule, isJson } from "../utils";
-import { getSourceCode } from "../utils/compat-momoa";
+import { createRule } from "../utils";
 import type { JSONSchema4 } from "json-schema";
 import type { Comment, Token } from "../types";
 import type { SourceCode } from "eslint";
@@ -593,8 +592,8 @@ export default createRule("indent", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     const DEFAULT_VARIABLE_INDENT = 1;
@@ -1109,6 +1108,7 @@ export default createRule("indent", {
         // If a node's type is nonstandard, we can't tell how its children should be offset, so ignore it.
         if (!KNOWN_NODES.has(node.type)) addToIgnoredNodes(node);
       },
+      // eslint-disable-next-line complexity -- ignore
       "Program:exit"() {
         // If ignoreComments option is enabled, ignore all comment tokens.
         if (options.ignoreComments) {

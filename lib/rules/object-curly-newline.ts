@@ -1,8 +1,7 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule, isJson } from "../utils";
-import { getSourceCode } from "../utils/compat-momoa";
+import { createRule } from "../utils";
 import type { Comment, Token } from "../types";
 import type { JSONSchema4 } from "json-schema";
 import {
@@ -176,8 +175,8 @@ export default createRule("object-curly-newline", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
     const normalizedOptions = normalizeOptions(context.options[0]);

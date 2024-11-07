@@ -2,8 +2,7 @@ import type { Rule } from "eslint";
 import { isParenthesized } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { isExpression } from "jsonc-eslint-parser";
-import { createRule, isJson } from "../utils";
-import { getSourceCode } from "../utils/compat-momoa";
+import { createRule } from "../utils";
 
 export default createRule("no-parenthesized", {
   meta: {
@@ -22,8 +21,8 @@ export default createRule("no-parenthesized", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!isJson(context)) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices.isJSON) {
       return {};
     }
 
