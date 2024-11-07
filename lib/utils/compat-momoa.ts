@@ -70,19 +70,15 @@ export function compatMomoaCreate<
     const originalSourceCode = getSourceCode(context) as
       | SourceCode
       | JSONSourceCode;
-    if (
-      originalSourceCode.ast.type !== "Document" ||
-      originalSourceCode.ast.loc.start.column !== 1
-    ) {
+    if (!isMomoaSourceCode(originalSourceCode)) {
       // If the source code is not Momoa, return the original create function.
 
-      const sourceCode = originalSourceCode as SourceCode;
       // Define the `sourceCode` property to work with older ESLints.
       const compatContext: Rule.RuleContext = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
         // @ts-expect-error
         __proto__: context,
-        sourceCode,
+        sourceCode: originalSourceCode,
         get filename() {
           return getFilename(context);
         },
@@ -93,15 +89,13 @@ export function compatMomoaCreate<
       return create(compatContext, ...args);
     }
 
-    const momoaSourceCode = originalSourceCode as JSONSourceCode;
-
     let sourceCode;
     const compatContext: Rule.RuleContext = {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
       // @ts-expect-error
       __proto__: context,
       get sourceCode() {
-        return (sourceCode ??= getCompatSourceCode(momoaSourceCode));
+        return (sourceCode ??= getCompatSourceCode(originalSourceCode));
       },
       report(descriptor) {
         // Revert to `@eslint/json` report position (1-based column).
@@ -133,7 +127,7 @@ export function compatMomoaCreate<
 
     return compatMomoaRuleListener(
       create(compatContext, ...args) as RuleListener,
-      momoaSourceCode,
+      originalSourceCode,
     );
   }) as F;
 }
@@ -227,6 +221,29 @@ function compatMomoaRuleListener(
       listener[`${jsonNode.type}:exit`]?.(jsonNode as never);
     }
   }
+}
+
+/**
+ * Check whether the given sourceCode is a Momoa sourceCode.
+ */
+function isMomoaSourceCode(
+  sourceCode: SourceCode | JSONSourceCode,
+): sourceCode is JSONSourceCode {
+  return (
+    sourceCode.ast.type === "Document" &&
+    sourceCode.ast.loc.start.column === 1 &&
+    [
+      "Array",
+      "Object",
+      "Boolean",
+      "String",
+      "Number",
+      "Null",
+      "NaN",
+      "Infinity",
+    ].includes(sourceCode.ast.body?.type) &&
+    typeof (sourceCode as JSONSourceCode).getParent === "function"
+  );
 }
 
 /**
