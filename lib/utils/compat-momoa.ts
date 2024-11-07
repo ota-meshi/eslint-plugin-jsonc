@@ -1,10 +1,6 @@
 import type { RuleListener, AST, RuleFunction } from "jsonc-eslint-parser";
 import { VisitorKeys } from "jsonc-eslint-parser";
-import type {
-  Token as MomoaToken,
-  DocumentNode,
-  ElementNode,
-} from "@humanwhocodes/momoa";
+import type { Token as MomoaToken, DocumentNode } from "@humanwhocodes/momoa";
 import type { Rule } from "eslint";
 import { SourceCode } from "eslint";
 import type { JSONSourceCode } from "@eslint/json";
@@ -31,7 +27,7 @@ type NodeConvertMap = {
     | [AST.JSONUnaryExpression, AST.JSONNumberIdentifier];
 };
 
-type TargetMomoaNode = Exclude<MomoaNode, ElementNode>;
+type TargetMomoaNode = Extract<MomoaNode, { type: keyof NodeConvertMap }>;
 
 type NodeConverter = <N extends TargetMomoaNode>(
   node: N,
