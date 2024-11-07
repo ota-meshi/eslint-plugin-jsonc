@@ -9,7 +9,7 @@ import type { Rule } from "eslint";
 import { SourceCode } from "eslint";
 import type { JSONSourceCode } from "@eslint/json";
 import { getSourceCode, getCwd, getFilename } from "eslint-compat-utils";
-import type { BaseRuleListener, MomoaNode, MomoaRuleListener } from "../types";
+import type { MomoaNode, MomoaRuleListener } from "../types";
 
 type NodeConvertMap = {
   Array: AST.JSONArrayExpression;
@@ -31,15 +31,33 @@ type NodeConvertMap = {
     | [AST.JSONUnaryExpression, AST.JSONNumberIdentifier];
 };
 
-type NodeConverter = <N extends Exclude<MomoaNode, ElementNode>>(
+type TargetMomoaNode = Exclude<MomoaNode, ElementNode>;
+
+type NodeConverter = <N extends TargetMomoaNode>(
   node: N,
 ) => NodeConvertMap[N["type"]];
 
 type Token = AST.JSONProgram["tokens"][number];
 type Comment = AST.JSONProgram["comments"][number];
 type TokenConverter = (token: MomoaToken) => (Token | Comment)[];
+
 const NODE_CONVERTERS = new WeakMap<DocumentNode, NodeConverter>();
 const TOKEN_CONVERTERS = new WeakMap<DocumentNode, TokenConverter>();
+
+const MOMOA_NODES = new Set<MomoaNode["type"]>([
+  "Array",
+  "Boolean",
+  "Document",
+  "Element",
+  "Identifier",
+  "Infinity",
+  "Member",
+  "NaN",
+  "Null",
+  "Number",
+  "Object",
+  "String",
+]);
 
 /**
  * This is a helper function that converts the given create function into a Momoa compatible create function.
@@ -114,9 +132,9 @@ export function compatMomoaCreate<
     };
 
     return compatMomoaRuleListener(
-      create(compatContext, ...args),
+      create(compatContext, ...args) as RuleListener,
       momoaSourceCode,
-    ) as R;
+    );
   }) as F;
 }
 
@@ -124,11 +142,11 @@ export function compatMomoaCreate<
  * This is a helper function that converts the given listener into a listener that can also listen to Momoa nodes.
  */
 function compatMomoaRuleListener(
-  listener: BaseRuleListener,
+  listener: RuleListener,
   momoaSourceCode: JSONSourceCode,
 ): RuleListener {
   const convert = getNodeConverter(momoaSourceCode);
-  const listenerKeys = new Set<keyof MomoaRuleListener>();
+  const listenerKeysSet = new Set<keyof MomoaRuleListener>();
   for (const [jsonKey, momoaKeys] of [
     ["Program", ["Document"]],
     ["JSONLiteral", ["Boolean", "String", "Null", "Number"]],
@@ -140,44 +158,27 @@ function compatMomoaRuleListener(
   ] as const) {
     if (listener[jsonKey]) {
       for (const momoaKey of momoaKeys) {
-        listenerKeys.add(momoaKey);
+        listenerKeysSet.add(momoaKey);
       }
     }
     if (listener[`${jsonKey}:exit`]) {
       for (const momoaKey of momoaKeys) {
-        listenerKeys.add(`${momoaKey}:exit`);
+        listenerKeysSet.add(`${momoaKey}:exit`);
       }
     }
   }
 
   const result: RuleListener = Object.fromEntries(
-    [...listenerKeys].map((key) => {
+    [...listenerKeysSet].map((key) => {
       if (key.endsWith(":exit")) {
-        return [
-          key,
-          (node: Exclude<MomoaNode, ElementNode>) =>
-            dispatch(node, { exit: true }),
-        ];
+        return [key, (node: TargetMomoaNode) => dispatchExit(node)];
       }
-      return [key, (node: Exclude<MomoaNode, ElementNode>) => dispatch(node)];
+      return [key, (node: TargetMomoaNode) => dispatch(node)];
     }),
   );
 
-  const momoaNodes = new Set<string>([
-    "Array",
-    "Boolean",
-    "Document",
-    "Element",
-    "Identifier",
-    "Infinity",
-    "Member",
-    "NaN",
-    "Null",
-    "Number",
-    "Object",
-    "String",
-  ] satisfies MomoaNode["type"][]);
   for (const [key, fn] of Object.entries(listener)) {
+    if (!fn) continue;
     const momoaFn = result[key];
 
     const convertedFn: RuleFunction = momoaFn
@@ -188,11 +189,13 @@ function compatMomoaRuleListener(
       : fn;
 
     result[key] = (node: AST.JSONNode | MomoaNode, ...args) => {
-      // Because we've converted the node and token location,
-      // it's not compatible with listening to the original Momoa node.
-      // Therefore, we'll ignore the original Momoa node.
-      if (momoaNodes.has(node.type)) return;
-      convertedFn(node as never, ...args);
+      if (isMomoaNode(node)) {
+        if (node.type !== "Element") {
+          convertedFn(convert(node) as never, ...args);
+        }
+      } else {
+        convertedFn(node as never, ...args);
+      }
     };
   }
   return result;
@@ -200,30 +203,37 @@ function compatMomoaRuleListener(
   /**
    * Dispatch the given node to the listener.
    */
-  function dispatch(
-    node: Exclude<MomoaNode, ElementNode>,
-    options?: { exit: boolean },
-  ) {
-    const exit = options?.exit;
-
-    // Because we've converted the node and token location,
-    // it's not compatible with listening to the original Momoa node.
-    // Therefore, we'll ignore the original Momoa node.
-
-    // if (exit) listener[`${node.type}:exit`]?.(node as never);
-    // else listener[node.type]?.(node as never);
-
+  function dispatch(node: TargetMomoaNode) {
     const jsonNode = convert(node);
     if (Array.isArray(jsonNode)) {
       for (const n of jsonNode) {
-        if (exit) listener[`${n.type}:exit`]?.(n as never);
-        else listener[n.type]?.(n as never);
+        listener[n.type]?.(n as never);
       }
     } else {
-      if (exit) listener[`${jsonNode.type}:exit`]?.(jsonNode as never);
-      else listener[jsonNode.type]?.(jsonNode as never);
+      listener[jsonNode.type]?.(jsonNode as never);
     }
   }
+
+  /**
+   * Dispatch the given node to the listener.
+   */
+  function dispatchExit(node: TargetMomoaNode) {
+    const jsonNode = convert(node);
+    if (Array.isArray(jsonNode)) {
+      for (const n of jsonNode) {
+        listener[`${n.type}:exit`]?.(n as never);
+      }
+    } else {
+      listener[`${jsonNode.type}:exit`]?.(jsonNode as never);
+    }
+  }
+}
+
+/**
+ * Check whether the given node is a Momoa node.
+ */
+function isMomoaNode(node: AST.JSONNode | MomoaNode): node is MomoaNode {
+  return MOMOA_NODES.has((node as MomoaNode).type);
 }
 
 /**
@@ -268,7 +278,7 @@ function getNodeConverter(momoaSourceCode: JSONSourceCode): NodeConverter {
   const convertedNodes = new Map<MomoaNode, AST.JSONNode | AST.JSONNode[]>();
 
   const nodeConverters: {
-    [Node in Exclude<MomoaNode, ElementNode> as Node["type"]]: (
+    [Node in TargetMomoaNode as Node["type"]]: (
       node: Node,
     ) => NodeConvertMap[Node["type"]];
   } = {
@@ -585,9 +595,7 @@ function getNodeConverter(momoaSourceCode: JSONSourceCode): NodeConverter {
   /**
    * Convert the given momoa node to a JSONC node.
    */
-  function convertNode<T extends AST.JSONNode>(
-    node: Exclude<MomoaNode, ElementNode>,
-  ): T | T[] {
+  function convertNode<T extends AST.JSONNode>(node: TargetMomoaNode): T | T[] {
     if (convertedNodes.has(node)) {
       return convertedNodes.get(node)! as T | T[];
     }
