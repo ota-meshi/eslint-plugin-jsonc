@@ -1,11 +1,18 @@
 import type * as eslint from "eslint";
 import { getRuleTester } from "eslint-compat-utils/rule-tester";
 import * as jsonParser from "jsonc-eslint-parser";
-import jsonPlugin from "@eslint/json";
 import semver from "semver";
 import { getESLint } from "eslint-compat-utils/eslint";
 const RuleTester = getRuleTester();
 const ESLint = getESLint();
+
+let jsonPlugin: any;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- ignore
+  jsonPlugin = require("@eslint/json").default;
+} catch {
+  // ignore
+}
 
 export type ValidTestCase = eslint.RuleTester.ValidTestCase & {
   ignoreMomoa?: boolean;
@@ -33,7 +40,7 @@ class JSONRuleTester {
         ? new RuleTester({
             ...rest,
             plugins: {
-              json: jsonPlugin as any,
+              json: jsonPlugin,
             },
             language: "json/json5",
             languageOptions: {
