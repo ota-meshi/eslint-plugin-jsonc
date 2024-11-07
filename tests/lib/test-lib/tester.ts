@@ -2,7 +2,10 @@ import type * as eslint from "eslint";
 import { getRuleTester } from "eslint-compat-utils/rule-tester";
 import * as jsonParser from "jsonc-eslint-parser";
 import jsonPlugin from "@eslint/json";
+import semver from "semver";
+import { getESLint } from "eslint-compat-utils/eslint";
 const RuleTester = getRuleTester();
+const ESLint = getESLint();
 
 export type ValidTestCase = eslint.RuleTester.ValidTestCase & {
   ignoreMomoa?: boolean;
@@ -25,19 +28,20 @@ class JSONRuleTester {
     this._testerOptions = options;
     const { ignoreMomoa, ...rest } = options || {};
     this.testerForBase = new RuleTester(rest);
-    this.testerForMomoa = ignoreMomoa
-      ? null
-      : new RuleTester({
-          ...rest,
-          plugins: {
-            json: jsonPlugin as any,
-          },
-          language: "json/json5",
-          languageOptions: {
-            ...rest?.languageOptions,
-            parser: undefined,
-          },
-        });
+    this.testerForMomoa =
+      !ignoreMomoa && semver.satisfies(ESLint.version, ">=9.6.0")
+        ? new RuleTester({
+            ...rest,
+            plugins: {
+              json: jsonPlugin as any,
+            },
+            language: "json/json5",
+            languageOptions: {
+              ...rest?.languageOptions,
+              parser: undefined,
+            },
+          })
+        : null;
   }
 
   public run(
