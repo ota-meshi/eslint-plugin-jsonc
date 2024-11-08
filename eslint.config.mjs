@@ -60,6 +60,7 @@ export default [
       "one-var": "off",
       "no-invalid-this": "off",
       "new-cap": "off",
+      "func-style": "off",
 
       "no-restricted-imports": [
         "error",

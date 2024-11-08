@@ -1,4 +1,4 @@
-import type { RuleListener, AST, RuleFunction } from "jsonc-eslint-parser";
+import type { RuleListener, AST } from "jsonc-eslint-parser";
 import { VisitorKeys } from "jsonc-eslint-parser";
 import type { Token as MomoaToken, DocumentNode } from "@humanwhocodes/momoa";
 import type { Rule } from "eslint";
@@ -160,33 +160,36 @@ function compatMomoaRuleListener(
 
   const result: RuleListener = Object.fromEntries(
     [...listenerKeysSet].map((key) => {
-      if (key.endsWith(":exit")) {
-        return [key, (node: TargetMomoaNode) => dispatchExit(node)];
-      }
-      return [key, (node: TargetMomoaNode) => dispatch(node)];
+      const listener = key.endsWith(":exit") ? dispatchExit : dispatch;
+      return [key, listener];
     }),
   );
 
   for (const [key, fn] of Object.entries(listener)) {
     if (!fn) continue;
-    const momoaFn = result[key];
 
-    const convertedFn: RuleFunction = momoaFn
-      ? (...args) => {
-          momoaFn(...args);
-          fn(...args);
-        }
-      : fn;
-
-    result[key] = (node: AST.JSONNode | MomoaNode, ...args) => {
+    const newFn = (node: AST.JSONNode | MomoaNode, ...args: []) => {
       if (isMomoaNode(node)) {
         if (node.type !== "Element") {
-          convertedFn(convert(node) as never, ...args);
+          const invoke = key.endsWith(":exit")
+            ? invokeWithReverseConvertedNode
+            : invokeWithConvertedNode;
+          invoke(node, (n) => fn(n as never, ...args));
         }
       } else {
-        convertedFn(node as never, ...args);
+        fn(node as never, ...args);
       }
     };
+
+    const momoaFn = result[key];
+    if (momoaFn) {
+      result[key] = (...args) => {
+        momoaFn(...args);
+        newFn(...args);
+      };
+    } else {
+      result[key] = newFn;
+    }
   }
   return result;
 
@@ -194,27 +197,50 @@ function compatMomoaRuleListener(
    * Dispatch the given node to the listener.
    */
   function dispatch(node: TargetMomoaNode) {
+    invokeWithConvertedNode(node, (n) => listener[n.type]?.(n as never));
+  }
+
+  /**
+   * Dispatch the given node to the exit listener.
+   */
+  function dispatchExit(node: TargetMomoaNode) {
+    invokeWithReverseConvertedNode(node, (n) =>
+      listener[`${n.type}:exit`]?.(n as never),
+    );
+  }
+
+  /**
+   * Invoke the given callback with the converted node.
+   */
+  function invokeWithConvertedNode(
+    node: TargetMomoaNode,
+    cb: (node: AST.JSONNode) => void,
+  ) {
     const jsonNode = convert(node);
     if (Array.isArray(jsonNode)) {
       for (const n of jsonNode) {
-        listener[n.type]?.(n as never);
+        cb(n);
       }
     } else {
-      listener[jsonNode.type]?.(jsonNode as never);
+      cb(jsonNode);
     }
   }
 
   /**
-   * Dispatch the given node to the listener.
+   * Invoke the given callback with the converted node in reverse order.
    */
-  function dispatchExit(node: TargetMomoaNode) {
+  function invokeWithReverseConvertedNode(
+    node: TargetMomoaNode,
+    cb: (node: AST.JSONNode) => void,
+  ) {
     const jsonNode = convert(node);
     if (Array.isArray(jsonNode)) {
-      for (const n of jsonNode) {
-        listener[`${n.type}:exit`]?.(n as never);
+      for (let index = jsonNode.length - 1; index >= 0; index--) {
+        const n = jsonNode[index];
+        cb(n);
       }
     } else {
-      listener[`${jsonNode.type}:exit`]?.(jsonNode as never);
+      cb(jsonNode);
     }
   }
 }
