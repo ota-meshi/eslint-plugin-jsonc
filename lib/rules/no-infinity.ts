@@ -1,6 +1,5 @@
 import { isNumberIdentifier } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("no-infinity", {
   meta: {
@@ -17,8 +16,7 @@ export default createRule("no-infinity", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

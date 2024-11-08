@@ -1,4 +1,3 @@
-import { getSourceCode } from "eslint-compat-utils";
 import { createRule } from "../utils";
 
 export default createRule("no-comments", {
@@ -16,7 +15,7 @@ export default createRule("no-comments", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

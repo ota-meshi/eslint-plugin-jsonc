@@ -1,5 +1,4 @@
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("no-template-literals", {
   meta: {
@@ -17,8 +16,7 @@ export default createRule("no-template-literals", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

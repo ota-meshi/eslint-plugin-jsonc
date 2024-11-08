@@ -1,4 +1,4 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/valid-json-number";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
@@ -17,9 +17,10 @@ tester.run("valid-json-number", rule as any, {
     {
       filename: "test.json6",
       code: "undefined",
+      ignoreMomoa: true,
     },
-    "[undefined]",
-    "{a: undefined}",
+    { code: "[undefined]", ignoreMomoa: true },
+    { code: "{a: undefined}", ignoreMomoa: true },
   ],
   invalid: [
     {
@@ -113,6 +114,7 @@ tester.run("valid-json-number", rule as any, {
           endColumn: 13,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: "0x123",
@@ -144,6 +146,7 @@ tester.run("valid-json-number", rule as any, {
         "Plus signs are not allowed in JSON.",
         "Octal literals are not allowed in JSON.",
       ],
+      ignoreMomoa: true,
     },
     {
       code: "[0b1001,-0b1001,+0b1001]",
@@ -154,6 +157,7 @@ tester.run("valid-json-number", rule as any, {
         "Plus signs are not allowed in JSON.",
         "Binary literals are not allowed in JSON.",
       ],
+      ignoreMomoa: true,
     },
     {
       filename: "test.vue",

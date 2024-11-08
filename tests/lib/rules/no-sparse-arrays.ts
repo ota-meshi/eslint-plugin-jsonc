@@ -1,4 +1,5 @@
-import { ESLint, RuleTester } from "../test-lib/eslint-compat";
+import { ESLint } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/no-sparse-arrays";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
@@ -8,6 +9,7 @@ const tester = new RuleTester({
   languageOptions: {
     parser: jsonParser,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-sparse-arrays", rule as any, {

@@ -59,6 +59,8 @@ export default [
       "@typescript-eslint/no-shadow": "off",
       "one-var": "off",
       "no-invalid-this": "off",
+      "new-cap": "off",
+      "func-style": "off",
 
       "no-restricted-imports": [
         "error",
@@ -86,31 +88,13 @@ export default [
         },
         {
           object: "context",
-          property: "sourceCode",
-          message:
-            "Please use `eslint-compat-utils` module's `getSourceCode(context)` instead.",
-        },
-        {
-          object: "context",
           property: "getFilename",
           message:
             "Please use `eslint-compat-utils` module's `getFilename(context)` instead.",
         },
         {
           object: "context",
-          property: "filename",
-          message:
-            "Please use `eslint-compat-utils` module's `getFilename(context)` instead.",
-        },
-        {
-          object: "context",
           property: "getCwd",
-          message:
-            "Please use `eslint-compat-utils` module's `getCwd(context)` instead.",
-        },
-        {
-          object: "context",
-          property: "cwd",
           message:
             "Please use `eslint-compat-utils` module's `getCwd(context)` instead.",
         },
@@ -140,6 +124,9 @@ export default [
   },
   {
     files: ["*.md/**", "**/*.md/**"],
+    languageOptions: {
+      sourceType: "module",
+    },
     rules: {
       "n/no-missing-import": "off",
     },

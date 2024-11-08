@@ -1,4 +1,4 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/no-template-literals";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
@@ -8,6 +8,7 @@ const tester = new RuleTester({
     parser: jsonParser,
     ecmaVersion: 2020,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-template-literals", rule as any, {

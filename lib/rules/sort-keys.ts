@@ -3,7 +3,6 @@ import { createRule } from "../utils";
 import { isCommaToken } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import { getSourceCode } from "eslint-compat-utils";
 
 //------------------------------------------------------------------------------
 // Helpers
@@ -409,7 +408,7 @@ export default createRule("sort-keys", {
     type: "suggestion",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

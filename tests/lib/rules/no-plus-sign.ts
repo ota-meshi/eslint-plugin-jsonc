@@ -1,4 +1,4 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/no-plus-sign";
 import * as jsonParser from "jsonc-eslint-parser";
 
@@ -21,6 +21,7 @@ tester.run("no-plus-sign", rule as any, {
       code: `+ 42`,
       output: ` 42`,
       errors: ["Plus sign should not be used."],
+      ignoreMomoa: true,
     },
   ],
 });

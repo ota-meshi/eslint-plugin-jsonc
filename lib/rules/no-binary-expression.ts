@@ -1,6 +1,5 @@
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("no-binary-expression", {
   meta: {
@@ -19,8 +18,7 @@ export default createRule("no-binary-expression", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
 

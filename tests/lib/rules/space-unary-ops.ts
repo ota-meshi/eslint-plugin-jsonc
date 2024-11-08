@@ -1,4 +1,4 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/space-unary-ops";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
@@ -41,6 +41,7 @@ tester.run("space-unary-ops", rule as any, {
           endColumn: 23,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       filename: "test.vue",

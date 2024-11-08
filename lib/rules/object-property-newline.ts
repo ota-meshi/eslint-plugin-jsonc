@@ -1,7 +1,6 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("object-property-newline", {
   meta: {
@@ -40,7 +39,7 @@ export default createRule("object-property-newline", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

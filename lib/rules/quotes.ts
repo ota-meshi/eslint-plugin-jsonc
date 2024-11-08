@@ -2,7 +2,6 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 import { LINEBREAKS, isSurroundedBy } from "../utils/eslint-ast-utils";
 
 /**
@@ -112,7 +111,7 @@ export default createRule("quotes", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

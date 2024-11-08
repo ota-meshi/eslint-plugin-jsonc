@@ -1,5 +1,4 @@
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 
 const binaryNumericLiteralPattern = /^0b/iu;
 
@@ -19,8 +18,7 @@ export default createRule("no-binary-numeric-literals", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
-    if (!sourceCode.parserServices.isJSON) {
+    if (!context.sourceCode.parserServices.isJSON) {
       return {};
     }
     return {

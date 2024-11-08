@@ -1,4 +1,4 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/no-numeric-separators";
 import { Linter } from "eslint";
 import semver from "semver";
@@ -13,6 +13,7 @@ const tester = new RuleTester({
     ecmaVersion: 2021,
     parser: jsonParser,
   },
+  ignoreMomoa: true,
 });
 
 tester.run("no-numeric-separators", rule as any, {

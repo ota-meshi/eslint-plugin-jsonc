@@ -2,7 +2,6 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST, RuleListener } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 import {
   isCommaToken,
   isNotClosingParenToken,
@@ -53,7 +52,7 @@ export default createRule("comma-style", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

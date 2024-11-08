@@ -95,7 +95,7 @@ Use `eslint.config.js` file to configure rules. See also: <https://eslint.org/do
 
 Example **eslint.config.js**:
 
-```mjs
+```js
 import eslintPluginJsonc from 'eslint-plugin-jsonc';
 export default [
   // add more generic rule sets here, such as:
@@ -178,6 +178,55 @@ module.exports = {
   // ...
 };
 ```
+
+#### **Experimental** support for `@eslint/json`
+
+We've launched experimental support for [`@eslint/json`].
+
+Configure it as follows:
+
+```js
+import json from "@eslint/json";
+import jsonc from 'eslint-plugin-jsonc';
+
+export default [
+  {
+    plugins: {
+      json,
+      jsonc
+    },
+  },
+  {
+    files: ["**/*.json"],
+    language: "json/json",
+    rules: {
+      // 'json/rule-name': 'error',
+      // 'jsonc/rule-name': 'error'
+    },
+  },
+  {
+    files: ["**/*.jsonc", ".vscode/*.json"],
+    language: "json/jsonc",
+    rules: {
+      // 'json/rule-name': 'error',
+      // 'jsonc/rule-name': 'error'
+    },
+  },
+  {
+    files: ["**/*.json5"],
+    language: "json/json5",
+    rules: {
+      // 'json/rule-name': 'error',
+      // 'jsonc/rule-name': 'error'
+    },
+  },
+];
+```
+
+However, we're not yet sure how best to make this work.
+Please note that we may change behavior without notice.
+
+[`@eslint/json`]: https://github.com/eslint/json
 
 ## :computer: Editor Integrations
 

@@ -2,7 +2,6 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 // @ts-expect-error missing types
 import { tokenize } from "espree";
 import { keywords } from "../utils/eslint-keywords";
@@ -86,7 +85,7 @@ export default createRule("quote-props", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }
@@ -166,6 +165,7 @@ export default createRule("quote-props", {
      * Ensures that a property's key is quoted only when necessary
      * @param node Property AST node
      */
+    // eslint-disable-next-line complexity -- ignore
     function checkUnnecessaryQuotes(node: AST.JSONProperty): void {
       const key = node.key;
 

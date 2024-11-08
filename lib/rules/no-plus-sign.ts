@@ -1,5 +1,4 @@
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("no-plus-sign", {
   meta: {
@@ -17,7 +16,7 @@ export default createRule("no-plus-sign", {
     type: "problem",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

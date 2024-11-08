@@ -24,7 +24,6 @@ const logger = console;
     ruleFile,
     `
 import type { AST } from "jsonc-eslint-parser"
-import { getSourceCode } from "eslint-compat-utils";
 import { createRule, defineWrapperListener, getCoreRule } from "../utils"
 const coreRule = getCoreRule("${ruleId}")
 
@@ -41,7 +40,7 @@ export default createRule("${ruleId}", {
         type: coreRule.meta!.type!,
     },
     create(context) {
-        const sourceCode = getSourceCode(context);
+        const sourceCode = context.sourceCode;
         if (!sourceCode.parserServices.isJSON) {
           return {};
         }
@@ -52,7 +51,7 @@ export default createRule("${ruleId}", {
   );
   fs.writeFileSync(
     testFile,
-    `import { RuleTester } from "../test-lib/eslint-compat"
+    `import { RuleTester } from "../test-lib/tester"
 import rule from "../../../lib/rules/${ruleId}"
 import * as jsonParser from "jsonc-eslint-parser";
 

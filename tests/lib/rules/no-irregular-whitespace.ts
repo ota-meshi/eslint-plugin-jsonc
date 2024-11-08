@@ -1,4 +1,4 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/no-irregular-whitespace";
 import * as jsonParser from "jsonc-eslint-parser";
 
@@ -39,27 +39,33 @@ tester.run("no-irregular-whitespace", rule as any, {
     {
       code: `\`\u000B\``,
       options: [{ skipTemplates: true }],
+      ignoreMomoa: true,
     },
     {
       code: `[\`\u000B\`]`,
       options: [{ skipTemplates: true }],
+      ignoreMomoa: true,
     },
     {
       code: `{"\u000B": \`\u000B\`}`,
       options: [{ skipTemplates: true }],
+      ignoreMomoa: true,
     },
     // RegExps
     {
       code: `/\u000B/`,
       options: [{ skipRegExps: true }],
+      ignoreMomoa: true,
     },
     {
       code: `[/\u000B/]`,
       options: [{ skipRegExps: true }],
+      ignoreMomoa: true,
     },
     {
       code: `{"\u000B": /\u000B/}`,
       options: [{ skipRegExps: true }],
+      ignoreMomoa: true,
     },
     // Comments
     {
@@ -92,6 +98,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 24,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: `{"\u000B": [\`\u000B\`, /\u000B/]} \u000B // \u000B`,
@@ -110,6 +117,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 19,
         },
       ],
+      ignoreMomoa: true,
     },
     // String
     {
@@ -161,6 +169,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 2,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: `[\`\u000B\`]`,
@@ -172,6 +181,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 3,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: `{"\u000B": \`\u000B\`}`,
@@ -183,6 +193,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 8,
         },
       ],
+      ignoreMomoa: true,
     },
     // RegExps
     {
@@ -195,6 +206,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 2,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: `[/\u000B/]`,
@@ -206,6 +218,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 3,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: `{"\u000B": /\u000B/}`,
@@ -217,6 +230,7 @@ tester.run("no-irregular-whitespace", rule as any, {
           column: 8,
         },
       ],
+      ignoreMomoa: true,
     },
     // Comments
     {

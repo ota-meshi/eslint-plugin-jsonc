@@ -2,7 +2,6 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 import { isCommaToken } from "@eslint-community/eslint-utils";
 import { getNextLocation } from "../utils/eslint-ast-utils";
 
@@ -96,7 +95,7 @@ export default createRule("comma-dangle", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

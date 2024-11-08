@@ -1,7 +1,6 @@
 import { createRule } from "../utils";
 import type { CasingKind } from "../utils/casing";
 import { getChecker, allowedCaseOptions } from "../utils/casing";
-import { getSourceCode } from "eslint-compat-utils";
 
 type Option = {
   [key in CasingKind]?: boolean;
@@ -60,7 +59,7 @@ export default createRule("key-name-casing", {
     type: "suggestion",
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }

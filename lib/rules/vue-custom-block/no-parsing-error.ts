@@ -4,7 +4,6 @@ import { createRule } from "../../utils";
 import type { RuleListener } from "../../types";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { Rule } from "eslint";
-import { getSourceCode } from "eslint-compat-utils";
 
 export default createRule("vue-custom-block/no-parsing-error", {
   meta: {
@@ -22,7 +21,7 @@ export default createRule("vue-custom-block/no-parsing-error", {
     if (!customBlock) {
       return {};
     }
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     /* eslint-disable no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1 */
     // @ts-expect-error -- Workaround for bug in vue-eslint-parser v9.3.1
     const parserServices = context.parserServices ?? sourceCode.parserServices;

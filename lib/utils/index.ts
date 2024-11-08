@@ -5,6 +5,7 @@ import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
 import { getFilename, getSourceCode } from "eslint-compat-utils";
+import { compatMomoaCreate } from "./compat-momoa";
 
 /**
  * Define the rule.
@@ -27,9 +28,10 @@ export function createRule(
     },
     jsoncDefineRule: rule,
     create(context: Rule.RuleContext) {
+      const create = compatMomoaCreate(rule.create);
       const sourceCode = getSourceCode(context);
       if (
-        typeof sourceCode.parserServices.defineCustomBlocksVisitor ===
+        typeof sourceCode.parserServices?.defineCustomBlocksVisitor ===
           "function" &&
         path.extname(getFilename(context)) === ".vue"
       ) {
@@ -44,14 +46,14 @@ export function createRule(
               return block.name === "i18n";
             },
             create(blockContext: Rule.RuleContext) {
-              return rule.create(blockContext, {
+              return create(blockContext, {
                 customBlock: true,
               });
             },
           },
         );
       }
-      return rule.create(context, {
+      return create(context, {
         customBlock: false,
       });
     },
@@ -66,8 +68,7 @@ export function defineWrapperListener(
   context: Rule.RuleContext,
   options: any[],
 ): RuleListener {
-  const sourceCode = getSourceCode(context);
-  if (!sourceCode.parserServices.isJSON) {
+  if (!context.sourceCode.parserServices.isJSON) {
     return {};
   }
   const listener = coreRule.create({

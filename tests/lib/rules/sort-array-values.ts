@@ -1,4 +1,4 @@
-import { RuleTester } from "../test-lib/eslint-compat";
+import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/sort-array-values";
 import * as jsonParser from "jsonc-eslint-parser";
 
@@ -220,6 +220,7 @@ tester.run("sort-array-values", rule as any, {
           column: 13,
         },
       ],
+      ignoreMomoa: true,
     },
     {
       code: '{"key": ["b", "a", "c", 2, 1] }',

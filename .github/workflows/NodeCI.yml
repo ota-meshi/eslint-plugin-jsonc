@@ -82,7 +82,7 @@ jobs:
       - name: Install Packages
         run: npm install
       - name: Test
-        run: npm test
+        run: npm run test:transpile-only
   test-with-eslint6:
     runs-on: ubuntu-latest
     strategy:
@@ -100,7 +100,7 @@ jobs:
           npx rimraf node_modules
           npm install
       - name: Test
-        run: npm test
+        run: npm run test:transpile-only
   test-with-eslint7:
     runs-on: ubuntu-latest
     strategy:
@@ -118,7 +118,7 @@ jobs:
           npx rimraf node_modules
           npm install
       - name: Test
-        run: npm test
+        run: npm run test:transpile-only
   test-and-coverage:
     runs-on: ubuntu-latest
     steps:

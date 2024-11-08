@@ -2,7 +2,6 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST, RuleListener } from "jsonc-eslint-parser";
 import { createRule } from "../utils";
-import { getSourceCode } from "eslint-compat-utils";
 import type { JSONSchema4 } from "json-schema";
 import type { Comment, Token } from "../types";
 import type { SourceCode } from "eslint";
@@ -593,7 +592,7 @@ export default createRule("indent", {
     },
   },
   create(context) {
-    const sourceCode = getSourceCode(context);
+    const sourceCode = context.sourceCode;
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }
@@ -1109,6 +1108,7 @@ export default createRule("indent", {
         // If a node's type is nonstandard, we can't tell how its children should be offset, so ignore it.
         if (!KNOWN_NODES.has(node.type)) addToIgnoredNodes(node);
       },
+      // eslint-disable-next-line complexity -- ignore
       "Program:exit"() {
         // If ignoreComments option is enabled, ignore all comment tokens.
         if (options.ignoreComments) {
