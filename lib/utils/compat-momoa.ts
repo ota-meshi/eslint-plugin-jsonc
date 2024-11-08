@@ -35,7 +35,8 @@ type NodeConverter = <N extends TargetMomoaNode>(
 
 type Token = AST.JSONProgram["tokens"][number];
 type Comment = AST.JSONProgram["comments"][number];
-type TokenConverter = (token: MomoaToken) => (Token | Comment)[];
+type JSONToken = Token | Comment;
+type TokenConverter = (token: MomoaToken) => JSONToken | JSONToken[];
 
 const NODE_CONVERTERS = new WeakMap<DocumentNode, NodeConverter>();
 const TOKEN_CONVERTERS = new WeakMap<DocumentNode, TokenConverter>();
@@ -653,282 +654,193 @@ function getTokenConverter(momoaSourceCode: JSONSourceCode): TokenConverter {
   if (converter) {
     return converter;
   }
-  const convertedTokens = new Map<MomoaToken, (Token | Comment)[]>();
+  const convertedTokens = new Map<MomoaToken, JSONToken | JSONToken[]>();
 
   const tokenConverters: {
-    [Node in MomoaToken["type"]]: (token: MomoaToken) => (Token | Comment)[];
+    [Node in MomoaToken["type"]]: (
+      token: MomoaToken,
+    ) => JSONToken | JSONToken[];
   } = {
     BlockComment(token) {
-      return [
-        {
-          type: "Block",
-          get value() {
-            return momoaSourceCode.text.slice(
-              token.range![0] + 2,
-              token.range![1] - 2,
-            );
-          },
-          range: token.range,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
+      return {
+        type: "Block",
+        get value() {
+          return momoaSourceCode.text.slice(
+            token.range![0] + 2,
+            token.range![1] - 2,
+          );
         },
-      ];
+        range: token.range,
+        loc: convertSourceLocationFromMomoaToJsonc(token.loc),
+      };
     },
     LineComment(token) {
-      return [
-        {
-          type: "Line",
-          get value() {
-            return momoaSourceCode.text.slice(
-              token.range![0] + 2,
-              token.range![1],
-            );
-          },
-          range: token.range,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
+      return {
+        type: "Line",
+        get value() {
+          return momoaSourceCode.text.slice(
+            token.range![0] + 2,
+            token.range![1],
+          );
         },
-      ];
+        range: token.range,
+        loc: convertSourceLocationFromMomoaToJsonc(token.loc),
+      };
     },
     Boolean(token) {
-      return [
-        {
-          type: "Keyword",
-          get value() {
-            return momoaSourceCode.text.slice(...token.range!);
-          },
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createStandardToken("Keyword", token);
     },
     Null(token) {
-      return [
-        {
-          type: "Keyword",
-          get value() {
-            return momoaSourceCode.text.slice(...token.range!);
-          },
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createStandardToken("Keyword", token);
     },
     Identifier(token) {
-      return [
-        {
-          type: "Identifier",
-          get value() {
-            return momoaSourceCode.text.slice(...token.range!);
-          },
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createStandardToken("Identifier", token);
     },
     Infinity(token) {
       const raw = momoaSourceCode.text.slice(...token.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         return [
-          {
-            type: "Punctuator",
-            value: raw[0],
+          createPunctuator(raw[0], {
             range: [token.range![0], token.range![0] + 1],
-            loc: convertSourceLocationFromMomoaToJsonc({
+            loc: {
               start: token.loc.start,
               end: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
-            }),
-          },
-          {
-            type: "Identifier",
-            value: "Infinity",
+            },
+          }),
+          createStandardToken("Identifier", {
             range: [token.range![0] + 1, token.range![1]],
-            loc: convertSourceLocationFromMomoaToJsonc({
+            loc: {
               start: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
               end: token.loc.end,
-            }),
-          },
+            },
+          }),
         ];
       }
-      return [
-        {
-          type: "Identifier",
-          value: "Infinity",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createStandardToken("Identifier", token);
     },
     NaN(token) {
       const raw = momoaSourceCode.text.slice(...token.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
         return [
-          {
-            type: "Punctuator",
-            value: raw[0],
+          createPunctuator(raw[0], {
             range: [token.range![0], token.range![0] + 1],
-            loc: convertSourceLocationFromMomoaToJsonc({
+            loc: {
               start: token.loc.start,
               end: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
-            }),
-          },
-          {
-            type: "Identifier",
-            value: "NaN",
+            },
+          }),
+          createStandardToken("Identifier", {
             range: [token.range![0] + 1, token.range![1]],
-            loc: convertSourceLocationFromMomoaToJsonc({
+            loc: {
               start: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
               end: token.loc.end,
-            }),
-          },
+            },
+          }),
         ];
       }
-      return [
-        {
-          type: "Identifier",
-          value: "NaN",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createStandardToken("Identifier", token);
     },
     Number(token) {
       const raw = momoaSourceCode.text.slice(...token.range!);
       if (raw.startsWith("-") || raw.startsWith("+")) {
-        const range = [token.range![0] + 1, token.range![1]] as [
-          number,
-          number,
-        ];
         return [
-          {
-            type: "Punctuator",
-            value: raw[0],
+          createPunctuator(raw[0], {
             range: [token.range![0], token.range![0] + 1],
-            loc: convertSourceLocationFromMomoaToJsonc({
+            loc: {
               start: token.loc.start,
               end: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
-            }),
-          },
-          {
-            type: "Numeric",
-            get value() {
-              return momoaSourceCode.text.slice(...range);
             },
-            range,
-            loc: convertSourceLocationFromMomoaToJsonc({
+          }),
+          createStandardToken("Numeric", {
+            range: [token.range![0] + 1, token.range![1]],
+            loc: {
               start: {
                 line: token.loc.start.line,
                 column: token.loc.start.column + 1,
               },
               end: token.loc.end,
-            }),
-          },
+            },
+          }),
         ];
       }
-      return [
-        {
-          type: "Numeric",
-          get value() {
-            return momoaSourceCode.text.slice(...token.range!);
-          },
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createStandardToken("Numeric", token);
     },
     String(token) {
-      return [
-        {
-          type: "String",
-          get value() {
-            return momoaSourceCode.text.slice(...token.range!);
-          },
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createStandardToken("String", token);
     },
     Colon(token) {
-      return [
-        {
-          type: "Punctuator",
-          value: ":",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createPunctuator(":", token);
     },
     Comma(token) {
-      return [
-        {
-          type: "Punctuator",
-          value: ",",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createPunctuator(",", token);
     },
     LBracket(token) {
-      return [
-        {
-          type: "Punctuator",
-          value: "[",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createPunctuator("[", token);
     },
     LBrace(token) {
-      return [
-        {
-          type: "Punctuator",
-          value: "{",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createPunctuator("{", token);
     },
     RBracket(token) {
-      return [
-        {
-          type: "Punctuator",
-          value: "]",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createPunctuator("]", token);
     },
     RBrace(token) {
-      return [
-        {
-          type: "Punctuator",
-          value: "}",
-          range: token.range!,
-          loc: convertSourceLocationFromMomoaToJsonc(token.loc),
-        },
-      ];
+      return createPunctuator("}", token);
     },
   };
   TOKEN_CONVERTERS.set(momoaSourceCode.ast, convertToken);
   return convertToken;
 
   /**
+   * Create a token.
+   */
+  function createStandardToken(
+    type: JSONToken["type"],
+    token: { range?: [number, number]; loc: AST.SourceLocation },
+  ): JSONToken {
+    return {
+      type,
+      get value() {
+        return momoaSourceCode.text.slice(...token.range!);
+      },
+      range: token.range!,
+      loc: convertSourceLocationFromMomoaToJsonc(token.loc),
+    };
+  }
+
+  /**
+   * Create a punctuator token.
+   */
+  function createPunctuator(
+    value: string,
+    token: { range?: [number, number]; loc: AST.SourceLocation },
+  ): JSONToken {
+    return {
+      type: "Punctuator",
+      value,
+      range: token.range!,
+      loc: convertSourceLocationFromMomoaToJsonc(token.loc),
+    };
+  }
+
+  /**
    * Convert the given momoa token to a JSONC token.
    */
-  function convertToken(token: MomoaToken): (Token | Comment)[] {
+  function convertToken(token: MomoaToken): JSONToken | JSONToken[] {
     if (convertedTokens.has(token)) {
       return convertedTokens.get(token)!;
     }

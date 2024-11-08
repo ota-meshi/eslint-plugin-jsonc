@@ -14,8 +14,8 @@ import flatRecommendedWithJson5 from "./configs/flat/recommended-with-json5";
 import flatPrettier from "./configs/flat/prettier";
 import flatAll from "./configs/flat/all";
 import * as meta from "./meta";
+import { compatMomoaCreate } from "./utils/compat-momoa";
 
-// backward compatibility
 import {
   parseForESLint,
   parseJSON,
@@ -52,9 +52,9 @@ export default {
   meta,
   configs,
   rules,
-  // as parser
+
+  // backward compatibility
   parseForESLint,
-  // tools
   parseJSON,
   traverseNodes,
   getStaticJSONValue,
@@ -63,12 +63,14 @@ export {
   meta,
   configs,
   rules,
-  // as parser
-  parseForESLint,
   // tools
+  compatMomoaCreate,
+  // types
+  AST,
+
+  // backward compatibility
+  parseForESLint,
   parseJSON,
   traverseNodes,
   getStaticJSONValue,
-  // types
-  AST,
 };
