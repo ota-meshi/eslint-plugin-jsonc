@@ -124,6 +124,9 @@ export default [
   },
   {
     files: ["*.md/**", "**/*.md/**"],
+    languageOptions: {
+      sourceType: "module",
+    },
     rules: {
       "n/no-missing-import": "off",
     },
