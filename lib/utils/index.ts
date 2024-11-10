@@ -27,13 +27,14 @@ export function createRule(
       },
     },
     jsoncDefineRule: rule,
-    create(context: Rule.RuleContext) {
+    create(baseContext: Rule.RuleContext) {
+      const context = getCompatContext(baseContext);
       const create = toCompatCreate(rule.create);
-      const sourceCode = getSourceCode(context);
+      const sourceCode = context.sourceCode;
       if (
         typeof sourceCode.parserServices?.defineCustomBlocksVisitor ===
           "function" &&
-        path.extname(getFilename(context)) === ".vue"
+        path.extname(context.filename) === ".vue"
       ) {
         return sourceCode.parserServices.defineCustomBlocksVisitor(
           context,
@@ -46,14 +47,14 @@ export function createRule(
               return block.name === "i18n";
             },
             create(blockContext: Rule.RuleContext) {
-              return create(getCompatContext(blockContext), {
+              return create(blockContext, {
                 customBlock: true,
               });
             },
           },
         );
       }
-      return create(getCompatContext(context), {
+      return create(context, {
         customBlock: false,
       });
     },
