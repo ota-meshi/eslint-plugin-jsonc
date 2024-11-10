@@ -5,7 +5,7 @@ import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
 import { getFilename, getSourceCode } from "eslint-compat-utils";
-import { compatMomoaCreate } from "./compat-momoa";
+import { toCompatCreate } from "eslint-json-compat-utils";
 
 /**
  * Define the rule.
@@ -28,7 +28,7 @@ export function createRule(
     },
     jsoncDefineRule: rule,
     create(context: Rule.RuleContext) {
-      const create = compatMomoaCreate(rule.create);
+      const create = toCompatCreate(rule.create);
       const sourceCode = getSourceCode(context);
       if (
         typeof sourceCode.parserServices?.defineCustomBlocksVisitor ===
