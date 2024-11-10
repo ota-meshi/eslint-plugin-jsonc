@@ -4,8 +4,8 @@ import type { AST } from "jsonc-eslint-parser";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
-import { getFilename, getSourceCode } from "eslint-compat-utils";
-import { compatMomoaCreate } from "./compat-momoa";
+import { getCwd, getFilename, getSourceCode } from "eslint-compat-utils";
+import { toCompatCreate } from "eslint-json-compat-utils";
 
 /**
  * Define the rule.
@@ -27,13 +27,14 @@ export function createRule(
       },
     },
     jsoncDefineRule: rule,
-    create(context: Rule.RuleContext) {
-      const create = compatMomoaCreate(rule.create);
-      const sourceCode = getSourceCode(context);
+    create(baseContext: Rule.RuleContext) {
+      const context = getCompatContext(baseContext);
+      const create = toCompatCreate(rule.create);
+      const sourceCode = context.sourceCode;
       if (
         typeof sourceCode.parserServices?.defineCustomBlocksVisitor ===
           "function" &&
-        path.extname(getFilename(context)) === ".vue"
+        path.extname(context.filename) === ".vue"
       ) {
         return sourceCode.parserServices.defineCustomBlocksVisitor(
           context,
@@ -56,6 +57,30 @@ export function createRule(
       return create(context, {
         customBlock: false,
       });
+    },
+  };
+}
+
+/**
+ * Get the compatible context from the given context.
+ */
+function getCompatContext(context: Rule.RuleContext): Rule.RuleContext {
+  if (context.sourceCode) {
+    return context;
+  }
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
+    // @ts-expect-error
+    __proto__: context,
+    get sourceCode() {
+      return getSourceCode(context);
+    },
+    get filename() {
+      return getFilename(context);
+    },
+    get cwd() {
+      return getCwd(context);
     },
   };
 }
