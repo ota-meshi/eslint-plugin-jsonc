@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.18.1
+
+### Patch Changes
+
+- [#374](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/374) [`3f8a1b9`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/3f8a1b90b3b3a62bb5c598c62dc55a1d08ccea7b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency eslint-json-compat-utils to ^0.2.0
+
 ## 2.18.0
 
 ### Minor Changes
