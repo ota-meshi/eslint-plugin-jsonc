@@ -50,11 +50,6 @@ export default [
       },
     },
     rules: {
-      // TODO: Remove this rule when the issue is fixed.
-      // https://github.com/eslint/eslint/issues/19134
-      "@typescript-eslint/no-unused-expressions": "off",
-      "@typescript-eslint/no-empty-function": "off",
-
       "jsdoc/require-jsdoc": "error",
       "no-warning-comments": "warn",
       "no-lonely-if": "off",
