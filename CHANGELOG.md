@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.18.2
+
+### Patch Changes
+
+- [#378](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/378) [`e46de35`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/e46de35da1e491064a2be7955c8aed0507126577) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash when used with eslint v9.15
+
 ## 2.18.1
 
 ### Patch Changes
