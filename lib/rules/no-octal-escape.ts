@@ -3,6 +3,7 @@ const coreRule = getCoreRule("no-octal-escape");
 
 export default createRule("no-octal-escape", {
   meta: {
+    ...coreRule.meta,
     docs: {
       description: "disallow octal escape sequences in string literals",
       recommended: null,
@@ -14,6 +15,8 @@ export default createRule("no-octal-escape", {
     schema: coreRule.meta!.schema!,
     messages: coreRule.meta!.messages!,
     type: coreRule.meta!.type!,
+    deprecated: false,
+    replacedBy: [],
   },
   create(context) {
     return defineWrapperListener(coreRule, context, context.options);

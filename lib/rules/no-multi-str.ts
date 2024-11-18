@@ -3,6 +3,7 @@ const coreRule = getCoreRule("no-multi-str");
 
 export default createRule("no-multi-str", {
   meta: {
+    ...coreRule.meta,
     docs: {
       description: "disallow multiline strings",
       recommended: ["json", "jsonc"],
@@ -17,6 +18,8 @@ export default createRule("no-multi-str", {
       multilineString: "Multiline support is limited to JSON5 only.",
     },
     type: coreRule.meta!.type!,
+    deprecated: false,
+    replacedBy: [],
   },
   create(context) {
     return defineWrapperListener(coreRule, context, context.options);

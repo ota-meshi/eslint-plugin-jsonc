@@ -3,6 +3,7 @@ const coreRule = getCoreRule("no-floating-decimal");
 
 export default createRule("no-floating-decimal", {
   meta: {
+    ...coreRule.meta,
     docs: {
       description:
         "disallow leading or trailing decimal points in numeric literals",
@@ -15,6 +16,8 @@ export default createRule("no-floating-decimal", {
     schema: coreRule.meta!.schema!,
     messages: coreRule.meta!.messages!,
     type: coreRule.meta!.type!,
+    deprecated: false,
+    replacedBy: [],
   },
   create(context) {
     return defineWrapperListener(coreRule, context, context.options);
