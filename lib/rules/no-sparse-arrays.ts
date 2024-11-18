@@ -3,6 +3,7 @@ const coreRule = getCoreRule("no-sparse-arrays");
 
 export default createRule("no-sparse-arrays", {
   meta: {
+    ...coreRule.meta,
     docs: {
       description: "disallow sparse arrays",
       recommended: ["json", "jsonc", "json5"],
@@ -14,6 +15,8 @@ export default createRule("no-sparse-arrays", {
     schema: coreRule.meta!.schema!,
     messages: coreRule.meta!.messages!,
     type: coreRule.meta!.type!,
+    deprecated: false,
+    replacedBy: [],
   },
   create(context) {
     return defineWrapperListener(coreRule, context, context.options);

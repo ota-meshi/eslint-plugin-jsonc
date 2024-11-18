@@ -29,6 +29,7 @@ const coreRule = getCoreRule("${ruleId}")
 
 export default createRule("${ruleId}", {
     meta: {
+        ...coreRule.meta,
         docs: {
             description: "...",
             recommended: true,
@@ -38,6 +39,8 @@ export default createRule("${ruleId}", {
         schema: coreRule.meta!.schema!,
         messages: coreRule.meta!.messages!,
         type: coreRule.meta!.type!,
+        deprecated: false,
+        replacedBy: [],
     },
     create(context) {
         const sourceCode = context.sourceCode;

@@ -3,6 +3,7 @@ const coreRule = getCoreRule("no-irregular-whitespace");
 
 export default createRule("no-irregular-whitespace", {
   meta: {
+    ...coreRule.meta,
     docs: {
       description: "disallow irregular whitespace",
       // TODO: We will switch this in the next major version.
@@ -16,6 +17,8 @@ export default createRule("no-irregular-whitespace", {
     schema: coreRule.meta!.schema!,
     messages: coreRule.meta!.messages!,
     type: coreRule.meta!.type!,
+    deprecated: false,
+    replacedBy: [],
   },
   create(context) {
     return defineWrapperListener(coreRule, context, context.options);

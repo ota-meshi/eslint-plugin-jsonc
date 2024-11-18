@@ -1,4 +1,4 @@
-import type { BaseRuleListener, RuleModule } from "../types";
+import type { BaseRuleListener, PartialRuleModule, RuleModule } from "../types";
 import { createRule } from "../utils";
 import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config";
 
@@ -30,7 +30,7 @@ export default createRule("auto", {
       ).default;
       const subContext: any = {
         __proto__: context,
-        options: getRuleOptions(autoConfig[ruleId]),
+        options: getRuleOptions(autoConfig[ruleId], rule.jsoncDefineRule),
         report(options: any) {
           if (options.messageId) {
             options.message = `[${ruleId}] ${
@@ -72,9 +72,17 @@ export default createRule("auto", {
 /**
  * Build the options to create the rule.
  */
-function getRuleOptions(options: number | string | any[]): any[] {
-  if (!Array.isArray(options)) {
-    return [];
+function getRuleOptions(
+  options: number | string | any[],
+  rule: PartialRuleModule,
+): any[] {
+  const jsonOptions = Array.isArray(options) ? options.slice(1) : [];
+  if (rule.meta.defaultOptions) {
+    rule.meta.defaultOptions.forEach((option, index) => {
+      if (jsonOptions[index] === undefined) {
+        jsonOptions[index] = option;
+      }
+    });
   }
-  return options.slice(1);
+  return jsonOptions;
 }
