@@ -41,6 +41,14 @@ The parser package used by this plugin is [jsonc-eslint-parser].
 
 ## :question: How is it different from other JSON plugins?
 
+### [`@eslint/json`]
+
+They work similarly, but [`@eslint/json`] is an ESLint JSON language plugin, but `eslint-plugin-jsonc` is an ESLint plugin.
+
+- `eslint-plugin-jsonc` was created 4 years before [`@eslint/json`] and it has more rules than [`@eslint/json`].
+- The parser used by `eslint-plugin-jsonc` accepts more non-standard JSON syntax than [`@eslint/json`]. `eslint-plugin-jsonc` has rules that can auto-fixed these non-standard syntax to standard syntax.
+- `eslint-plugin-jsonc` can also be used together with [`@eslint/json`].
+
 ### Plugins that do not use AST
 
 e.g. [eslint-plugin-json](https://www.npmjs.com/package/eslint-plugin-json)
