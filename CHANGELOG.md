@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.19.0
+
+### Minor Changes
+
+- [#390](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/390) [`5950e3d`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/5950e3ddf2f3e9f169e692c48f564ba27d54e9fc) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: improve auto-fix of sort rules
+
 ## 2.18.2
 
 ### Patch Changes
