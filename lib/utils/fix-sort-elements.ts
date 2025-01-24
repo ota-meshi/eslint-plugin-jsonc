@@ -88,7 +88,7 @@ export function* fixForSorting(
 }
 
 /**
- * Calculate the range of the target information.
+ * Calculate the fix information of the target.
  */
 function calcTargetInfo(
   sourceCode: SourceCode,
@@ -97,14 +97,12 @@ function calcTargetInfo(
   insertCode: string;
   removeRanges: ESLintAST.Range[];
 } {
-  if (!target.node) {
-    return calcTargetInfoFromAround(sourceCode, target);
-  }
-  const node = target.node;
-  const nodeLastToken = getLastTokenOfNode(sourceCode, node);
+  const nodeEndIndex = target.node
+    ? getLastTokenOfNode(sourceCode, target.node).range[1]
+    : target.after.range[0];
 
-  const endInfo = getElementEndInfo(sourceCode, node);
-  const prevInfo = getPrevElementInfo(sourceCode, { node });
+  const endInfo = getElementEndInfo(sourceCode, target);
+  const prevInfo = getPrevElementInfo(sourceCode, target);
 
   let insertCode: string;
 
@@ -113,17 +111,14 @@ function calcTargetInfo(
     insertCode = `${sourceCode.text.slice(
       prevInfo.last.range![1],
       prevInfo.comma.range[0],
-    )}${sourceCode.text.slice(prevInfo.comma.range[1], nodeLastToken.range[1])}`;
+    )}${sourceCode.text.slice(prevInfo.comma.range[1], nodeEndIndex)}`;
     removeRanges.push(
       [prevInfo.last.range![1], prevInfo.comma.range[0]],
-      [prevInfo.comma.range[1], nodeLastToken.range[1]],
+      [prevInfo.comma.range[1], nodeEndIndex],
     );
   } else {
-    insertCode = sourceCode.text.slice(
-      prevInfo.last.range![1],
-      nodeLastToken.range[1],
-    );
-    removeRanges.push([prevInfo.last.range![1], nodeLastToken.range[1]]);
+    insertCode = sourceCode.text.slice(prevInfo.last.range![1], nodeEndIndex);
+    removeRanges.push([prevInfo.last.range![1], nodeEndIndex]);
   }
 
   const hasTrailingComma =
@@ -134,52 +129,12 @@ function calcTargetInfo(
       removeRanges.push(prevInfo.comma.range);
     }
   }
-  insertCode += sourceCode.text.slice(
-    nodeLastToken.range[1],
-    endInfo.last.range![1],
-  );
-  removeRanges.push([nodeLastToken.range[1], endInfo.last.range![1]]);
+  insertCode += sourceCode.text.slice(nodeEndIndex, endInfo.last.range![1]);
+  removeRanges.push([nodeEndIndex, endInfo.last.range![1]]);
 
   return {
     insertCode,
     removeRanges,
-  };
-}
-
-/**
- * Calculate the range of the target information from the around tokens.
- */
-function calcTargetInfoFromAround(
-  sourceCode: SourceCode,
-  target: AroundTarget,
-): {
-  insertCode: string;
-  removeRanges: ESLintAST.Range[];
-} {
-  const hasTrailingComma = isComma(target.after);
-  const codeStart = target.before.range[1]; // to include comments
-  let codeEnd: number;
-  if (hasTrailingComma) {
-    // , /**/,
-    //  ^^^^^^
-    codeEnd = target.after.range[1];
-  } else {
-    // , /**/ ]
-    //  ^^^^^^
-    codeEnd = target.after.range[0];
-  }
-  let removeStart = codeStart;
-  if (!hasTrailingComma) {
-    // The target is always the second or subsequent element, so it always has a leading comma.
-    // , /**/ ]
-    // ^^^^^^^
-    removeStart = target.before.range[0];
-  }
-
-  return {
-    insertCode:
-      sourceCode.text.slice(codeStart, codeEnd) + (hasTrailingComma ? "" : ","),
-    removeRanges: [[removeStart, codeEnd]],
   };
 }
 
@@ -193,7 +148,7 @@ function getFirstTokenOfNode(
   let token = sourceCode.getFirstToken(node as never)!;
   let target: ESLintAST.Token | null = token;
   while (
-    (target = sourceCode.getTokenBefore(target)) &&
+    (target = sourceCode.getTokenBefore(token)) &&
     isOpeningParenToken(target)
   ) {
     token = target;
@@ -211,7 +166,7 @@ function getLastTokenOfNode(
   let token = sourceCode.getLastToken(node as never)!;
   let target: ESLintAST.Token | null = token;
   while (
-    (target = sourceCode.getTokenAfter(target)) &&
+    (target = sourceCode.getTokenAfter(token)) &&
     isClosingParenToken(target)
   ) {
     token = target;
@@ -224,7 +179,7 @@ function getLastTokenOfNode(
  */
 function getElementEndInfo(
   sourceCode: SourceCode,
-  node: AST.JSONNode | ESLintAST.Token,
+  target: Target | { node: ESLintAST.Token },
 ): {
   // Trailing comma
   comma: ESLintAST.Token | null;
@@ -233,14 +188,15 @@ function getElementEndInfo(
   // The last token of the target element
   last: ESLintAST.Token | ESTree.Comment;
 } {
-  const lastToken = getLastTokenOfNode(sourceCode, node);
-  const afterToken = sourceCode.getTokenAfter(lastToken)!;
+  const afterToken = target.node
+    ? sourceCode.getTokenAfter(getLastTokenOfNode(sourceCode, target.node))!
+    : target.after;
   if (isNotCommaToken(afterToken)) {
     // If there is no comma, the element is the last element.
     return {
       comma: null,
       nextElement: null,
-      last: getLastTokenWithTrailingComments(),
+      last: getLastTokenWithTrailingComments(sourceCode, target),
     };
   }
   const comma = afterToken;
@@ -260,11 +216,13 @@ function getElementEndInfo(
     return {
       comma,
       nextElement: null,
-      last: getLastTokenWithTrailingComments(),
+      last: getLastTokenWithTrailingComments(sourceCode, target),
     };
   }
 
-  if (node.loc.end.line === nextElement.loc.start.line) {
+  const node = target.node;
+
+  if (node && node.loc.end.line === nextElement.loc.start.line) {
     // There is no line break between the target element and the next element.
     return {
       comma,
@@ -274,6 +232,7 @@ function getElementEndInfo(
   }
   // There are line breaks between the target element and the next element.
   if (
+    node &&
     node.loc.end.line < comma.loc.start.line &&
     comma.loc.end.line < nextElement.loc.start.line
   ) {
@@ -289,29 +248,38 @@ function getElementEndInfo(
   return {
     comma,
     nextElement,
-    last: getLastTokenWithTrailingComments(),
+    last: getLastTokenWithTrailingComments(sourceCode, target),
   };
+}
 
-  /**
-   * Get the last token of the target element with trailing comments.
-   */
-  function getLastTokenWithTrailingComments() {
-    if (lastToken == null) return afterToken;
-    let last: ESLintAST.Token | ESTree.Comment = lastToken;
-    let after = sourceCode.getTokenAfter(lastToken, {
+/**
+ * Get the last token of the target element with trailing comments.
+ */
+function getLastTokenWithTrailingComments(
+  sourceCode: SourceCode,
+  target: Target | { node: ESLintAST.Token },
+) {
+  if (!target.node) {
+    return sourceCode.getTokenBefore(target.after, {
       includeComments: true,
     })!;
-    while (
-      (isCommentToken(after) || isComma(after)) &&
-      node.loc.end.line === after.loc!.end.line
-    ) {
-      last = after;
-      after = sourceCode.getTokenAfter(after, {
-        includeComments: true,
-      })!;
-    }
-    return last;
   }
+  const node = target.node;
+  let last: ESLintAST.Token | ESTree.Comment = getLastTokenOfNode(
+    sourceCode,
+    node,
+  );
+  let after: ESLintAST.Token | ESTree.Comment | null;
+  while (
+    (after = sourceCode.getTokenAfter(last, {
+      includeComments: true,
+    })) &&
+    (isCommentToken(after) || isComma(after)) &&
+    node.loc.end.line === after.loc!.end.line
+  ) {
+    last = after;
+  }
+  return last;
 }
 
 /**
@@ -352,7 +320,7 @@ function getPrevElementInfo(
     };
   }
 
-  const endInfo = getElementEndInfo(sourceCode, prevElement);
+  const endInfo = getElementEndInfo(sourceCode, { node: prevElement });
 
   return {
     comma: endInfo.comma,
