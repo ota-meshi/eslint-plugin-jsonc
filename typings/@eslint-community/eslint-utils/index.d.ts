@@ -41,7 +41,7 @@ declare module "@eslint-community/eslint-utils" {
     node: any,
     sourceCode: SourceCode,
   ): boolean;
-  export const isSemicolonToken: IsToken;
+  export const isSemicolonToken: IsToken<";">;
   export const ReferenceTracker: {
     READ: never;
     CALL: never;
