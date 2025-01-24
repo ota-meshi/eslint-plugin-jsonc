@@ -312,5 +312,71 @@ tester.run("sort-array-values", rule as any, {
         "Expected array values to be in natural ascending order. 'B' should be before 'b'.",
       ],
     },
+    {
+      code: '["b", "a"]',
+      output: '[ "a","b"]',
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+      ],
+    },
+    {
+      code: '[/*c1*/,/*c2*/,"b"/*c3*/,/*c4*/"a"/*c5*/,/*c6*/,/*c7*/]',
+      output: '[/*c1*/,/*c2*/,/*c4*/"a"/*c5*/,"b"/*c3*/,/*c6*/,/*c7*/]',
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+      ],
+      ignoreMomoa: true,
+    },
+    {
+      code: `[
+        "b", // B
+        "a" // A
+      ]`,
+      output: `[
+        "a", // A
+        "b" // B
+      ]`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+      ],
+    },
+    {
+      code: `[
+        ("b"), // B
+        ("a") // A
+      ]`,
+      output: `[
+        ("a"), // A
+        ("b") // B
+      ]`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+      ],
+      ignoreMomoa: true,
+    },
   ],
 });

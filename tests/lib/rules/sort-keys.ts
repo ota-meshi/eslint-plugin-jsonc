@@ -688,10 +688,10 @@ tester.run("sort-keys", rule as any, {
         ,"a": 42
       }`,
       output: `
-      {"a": 42,
-        "b": 42
+      {
 
-        
+        "a": 42,
+        "b": 42
       }`,
       options: ["asc", { allowLineSeparatedGroups: false }],
       errors: [
@@ -928,10 +928,10 @@ tester.run("sort-keys", rule as any, {
         , "a": 2
       }`,
       output: `
-      { "a": 2,
-        "b": 1
+      {
         // comment before comma
-        
+         "a": 2,
+        "b": 1
       }`,
       options: ["asc", { allowLineSeparatedGroups: true }],
       errors: [
@@ -970,6 +970,72 @@ tester.run("sort-keys", rule as any, {
           line: 8,
           column: 9,
         },
+      ],
+    },
+    {
+      code: `
+      {
+        "compilerOptions": {
+          "target": "esnext", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+          "strict": true /* Enable all strict type-checking options. */
+        }
+      }`,
+      output: `
+      {
+        "compilerOptions": {
+          "strict": true, /* Enable all strict type-checking options. */
+          "target": "esnext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+        }
+      }`,
+      options: ["asc"],
+      errors: [
+        {
+          message:
+            "Expected object keys to be in ascending order. 'strict' should be before 'target'.",
+          line: 5,
+        },
+      ],
+    },
+    {
+      code: `
+      {
+        "b": "foo"
+        , /* comment */
+        "a": "bar" // comment
+      }`,
+      output: `
+      { /* comment */
+        "a": "bar", // comment
+        "b": "foo"
+        
+      }`,
+      options: ["asc"],
+      errors: [
+        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+      ],
+    },
+    {
+      code: `
+      { "b": "foo" /* c1 */ , /* c2 */ "a": "bar" /* c3 */ }`,
+      output: `
+      { /* c2 */ "a": "bar", /* c3 */ "b": "foo" /* c1 */  }`,
+      options: ["asc"],
+      errors: [
+        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+      ],
+    },
+    {
+      code: `
+      {
+        "b": "foo" /* c1 */ , /* c2 */ "a": "bar" // comment
+      }`,
+      output: `
+      { /* c2 */ "a": "bar", // comment
+        "b": "foo" /* c1 */ 
+      }`,
+      options: ["asc"],
+      errors: [
+        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
       ],
     },
   ],
