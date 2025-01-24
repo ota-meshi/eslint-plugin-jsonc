@@ -11,27 +11,6 @@ import type { Rule, AST as ESLintAST, SourceCode } from "eslint";
 import type { AST } from "jsonc-eslint-parser";
 import type * as ESTree from "estree";
 
-/**
- * Check if the token is a comma.
- */
-function isComma(token: ESLintAST.Token): boolean {
-  return isCommaToken(token);
-}
-
-/**
- * Check if the token is a closing brace.
- */
-function isClosingBrace(token: ESLintAST.Token): boolean {
-  return isClosingBraceToken(token);
-}
-
-/**
- * Check if the token is a closing bracket.
- */
-function isClosingBracket(token: ESLintAST.Token): boolean {
-  return isClosingBracketToken(token);
-}
-
 export type AroundTarget =
   | {
       before: ESLintAST.Token;
@@ -201,7 +180,7 @@ function getElementEndInfo(
   }
   const comma = afterToken;
   const nextElement = sourceCode.getTokenAfter(afterToken)!;
-  if (isComma(nextElement)) {
+  if (isCommaToken(nextElement)) {
     // If the next element is empty,
     // the position of the comma is the end of the element's range.
     return {
@@ -210,7 +189,7 @@ function getElementEndInfo(
       last: comma,
     };
   }
-  if (isClosingBrace(nextElement) || isClosingBracket(nextElement)) {
+  if (isClosingBraceToken(nextElement) || isClosingBracketToken(nextElement)) {
     // If the next token is a closing brace or bracket,
     // the position of the comma is the end of the element's range.
     return {
@@ -274,7 +253,7 @@ function getLastTokenWithTrailingComments(
     (after = sourceCode.getTokenAfter(last, {
       includeComments: true,
     })) &&
-    (isCommentToken(after) || isComma(after)) &&
+    (isCommentToken(after) || isCommaToken(after)) &&
     node.loc.end.line === after.loc!.end.line
   ) {
     last = after;
@@ -310,7 +289,7 @@ function getPrevElementInfo(
   const comma = beforeToken;
   const prevElement = sourceCode.getTokenBefore(beforeToken)!;
 
-  if (isComma(prevElement)) {
+  if (isCommaToken(prevElement)) {
     // If the previous element is empty,
     // the position of the comma is the end of the previous element's range.
     return {

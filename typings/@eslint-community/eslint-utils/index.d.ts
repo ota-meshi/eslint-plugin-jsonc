@@ -1,24 +1,25 @@
 import type { Comment } from "estree";
 import type { AST, SourceCode } from "eslint";
 
-type IsToken = (token: AST.Token | Comment) => token is AST.Token;
+type IsToken<V extends string> = (
+  token: AST.Token | Comment,
+) => token is AST.Token & { value: V };
 type IsNotToken = (token: AST.Token | Comment) => boolean;
 
 declare module "@eslint-community/eslint-utils" {
   export const findVariable: unknown;
-  export const getFunctionHeadLocation: IsToken;
-  export const getFunctionNameWithKind: IsToken;
-  export const getInnermostScope: IsToken;
-  export const getPropertyName: IsToken;
-  export const getStaticValue: IsToken;
-  export const getStringIfConstant: IsToken;
-  export const hasSideEffect: IsToken;
-  export const isArrowToken: IsToken;
-  export const isClosingBraceToken: IsToken;
-  export const isClosingBracketToken: IsToken;
-  export const isClosingParenToken: IsToken;
-  export const isColonToken: IsToken;
-  export const isCommaToken: IsToken;
+  export const getFunctionHeadLocation: unknown;
+  export const getFunctionNameWithKind: unknown;
+  export const getInnermostScope: unknown;
+  export const getPropertyName: unknown;
+  export const getStaticValue: unknown;
+  export const getStringIfConstant: unknown;
+  export const hasSideEffect: unknown;
+  export const isClosingBraceToken: IsToken<"}">;
+  export const isClosingBracketToken: IsToken<"]">;
+  export const isClosingParenToken: IsToken<")">;
+  export const isColonToken: IsToken<";">;
+  export const isCommaToken: IsToken<",">;
   export const isCommentToken: (token: AST.Token | Comment) => token is Comment;
   export const isNotArrowToken: IsNotToken;
   export const isNotClosingBraceToken: IsNotToken;
@@ -31,9 +32,9 @@ declare module "@eslint-community/eslint-utils" {
   export const isNotOpeningBracketToken: IsNotToken;
   export const isNotOpeningParenToken: IsNotToken;
   export const isNotSemicolonToken: IsNotToken;
-  export const isOpeningBraceToken: IsToken;
-  export const isOpeningBracketToken: IsToken;
-  export const isOpeningParenToken: IsToken;
+  export const isOpeningBraceToken: IsToken<"{">;
+  export const isOpeningBracketToken: IsToken<"[">;
+  export const isOpeningParenToken: IsToken<"(">;
   export function isParenthesized(node: any, sourceCode: SourceCode): boolean;
   export function isParenthesized(
     times: number,
