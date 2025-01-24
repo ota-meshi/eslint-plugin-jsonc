@@ -1,8 +1,8 @@
 import naturalCompare from "natural-compare";
 import { createRule } from "../utils";
-import { isCommaToken } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
+import { fixForSorting } from "../utils/fix-sort-elements";
 
 //------------------------------------------------------------------------------
 // Helpers
@@ -451,7 +451,7 @@ export default createRule("sort-keys", {
             prevName: prev.name,
             orderText: option.orderText,
           },
-          *fix(fixer) {
+          fix(fixer) {
             let moveTarget = prevList[0];
             for (const prev of prevList) {
               if (option.isValidOrder(prev, data)) {
@@ -460,39 +460,7 @@ export default createRule("sort-keys", {
                 moveTarget = prev;
               }
             }
-
-            const beforeToken = sourceCode.getTokenBefore(data.node as never)!;
-            const afterToken = sourceCode.getTokenAfter(data.node as never)!;
-            const hasAfterComma = isCommaToken(afterToken);
-            const codeStart = beforeToken.range[1]; // to include comments
-            const codeEnd = hasAfterComma
-              ? afterToken.range[1] // |/**/ key: value,|
-              : data.node.range[1]; // |/**/ key: value|
-            const removeStart = hasAfterComma
-              ? codeStart // |/**/ key: value,|
-              : beforeToken.range[0]; // |,/**/ key: value|
-
-            const insertCode =
-              sourceCode.text.slice(codeStart, codeEnd) +
-              (hasAfterComma ? "" : ",");
-
-            const insertTarget = sourceCode.getTokenBefore(
-              moveTarget.node as never,
-            )!;
-            let insertRange = insertTarget.range;
-            const insertNext = sourceCode.getTokenAfter(insertTarget, {
-              includeComments: true,
-            })!;
-            if (insertNext.loc!.start.line - insertTarget.loc.end.line > 1) {
-              const offset = sourceCode.getIndexFromLoc({
-                line: insertNext.loc!.start.line - 1,
-                column: 0,
-              });
-              insertRange = [offset, offset];
-            }
-            yield fixer.insertTextAfterRange(insertRange, insertCode);
-
-            yield fixer.removeRange([removeStart, codeEnd]);
+            return fixForSorting(fixer, sourceCode, data, moveTarget);
           },
         });
       }

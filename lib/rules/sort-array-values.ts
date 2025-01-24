@@ -1,9 +1,10 @@
 import naturalCompare from "natural-compare";
 import { createRule } from "../utils";
-import { isCommaToken } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import type { SourceCode, AST as ESLintAST } from "eslint";
+import type { SourceCode } from "eslint";
+import type { AroundTarget } from "../utils/fix-sort-elements";
+import { fixForSorting } from "../utils/fix-sort-elements";
 
 type JSONValue = ReturnType<typeof getStaticJSONValue>;
 
@@ -40,7 +41,6 @@ type ParsedOption = {
 type Validator = (a: JSONElementData, b: JSONElementData) => boolean;
 
 type JSONElement = AST.JSONArrayExpression["elements"][number];
-type AroundTokens = { before: ESLintAST.Token; after: ESLintAST.Token };
 class JSONElementData {
   public readonly array: JSONArrayData;
 
@@ -50,52 +50,37 @@ class JSONElementData {
 
   private cached: { value: JSONValue } | null = null;
 
-  private cachedRange: [number, number] | null = null;
-
-  private cachedAroundTokens: AroundTokens | null = null;
+  private cachedAround: AroundTarget | null = null;
 
   public get reportLoc() {
     if (this.node) {
       return this.node.loc;
     }
-    const aroundTokens = this.aroundTokens;
+    const around = this.around;
     return {
-      start: aroundTokens.before.loc.end,
-      end: aroundTokens.after.loc.start,
+      start: around.before.loc.end,
+      end: around.after.loc.start,
     };
   }
 
-  public get range(): [number, number] {
-    if (this.node) {
-      return this.node.range;
-    }
-    if (this.cachedRange) {
-      return this.cachedRange;
-    }
-    const aroundTokens = this.aroundTokens;
-    return (this.cachedRange = [
-      aroundTokens.before.range[1],
-      aroundTokens.after.range[0],
-    ]);
-  }
-
-  public get aroundTokens(): AroundTokens {
-    if (this.cachedAroundTokens) {
-      return this.cachedAroundTokens;
+  public get around(): AroundTarget {
+    if (this.cachedAround) {
+      return this.cachedAround;
     }
     const sourceCode = this.array.sourceCode;
     if (this.node) {
-      return (this.cachedAroundTokens = {
+      return (this.cachedAround = {
+        node: this.node,
         before: sourceCode.getTokenBefore(this.node as never)!,
         after: sourceCode.getTokenAfter(this.node as never)!,
       });
     }
     const before =
       this.index > 0
-        ? this.array.elements[this.index - 1].aroundTokens.after
+        ? this.array.elements[this.index - 1].around.after
         : sourceCode.getFirstToken(this.array.node as never)!;
     const after = sourceCode.getTokenAfter(before)!;
-    return (this.cachedAroundTokens = { before, after });
+    return (this.cachedAround = { before, after });
   }
 
   public constructor(array: JSONArrayData, node: JSONElement, index: number) {
@@ -426,7 +411,7 @@ export default createRule("sort-array-values", {
             prevValue: toText(prev),
             orderText: option.orderText(data),
           },
-          *fix(fixer) {
+          fix(fixer) {
             let moveTarget = prevList[0];
             for (const prev of prevList) {
               if (option.isValidOrder(prev, data)) {
@@ -435,26 +420,12 @@ export default createRule("sort-array-values", {
                 moveTarget = prev;
               }
             }
-
-            const beforeToken = data.aroundTokens.before;
-            const afterToken = data.aroundTokens.after;
-            const hasAfterComma = isCommaToken(afterToken);
-            const codeStart = beforeToken.range[1]; // to include comments
-            const codeEnd = hasAfterComma
-              ? afterToken.range[1] // |/**/ value,|
-              : data.range[1]; // |/**/ value|
-            const removeStart = hasAfterComma
-              ? codeStart // |/**/ value,|
-              : beforeToken.range[0]; // |,/**/ value|
-
-            const insertCode =
-              sourceCode.text.slice(codeStart, codeEnd) +
-              (hasAfterComma ? "" : ",");
-
-            const insertTarget = moveTarget.aroundTokens.before;
-            yield fixer.insertTextAfterRange(insertTarget.range, insertCode);
-
-            yield fixer.removeRange([removeStart, codeEnd]);
+            return fixForSorting(
+              fixer,
+              sourceCode,
+              data.around,
+              moveTarget.around,
+            );
           },
         });
       }
