@@ -1038,5 +1038,23 @@ tester.run("sort-keys", rule as any, {
         "Expected object keys to be in ascending order. 'a' should be before 'b'.",
       ],
     },
+    {
+      code: `
+      {
+        "a": "A", /* c1 */
+        "c": "B", /* c2 */
+        "b": "C" /* c3 */
+      }`,
+      output: `
+      {
+        "a": "A", /* c1 */
+        "b": "C", /* c3 */
+        "c": "B" /* c2 */
+      }`,
+      options: ["asc"],
+      errors: [
+        "Expected object keys to be in ascending order. 'b' should be before 'c'.",
+      ],
+    },
   ],
 });

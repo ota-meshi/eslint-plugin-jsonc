@@ -9,6 +9,7 @@ import {
 } from "@eslint-community/eslint-utils";
 import type { Rule, AST as ESLintAST, SourceCode } from "eslint";
 import type { AST } from "jsonc-eslint-parser";
+import type * as ESTree from "estree";
 
 /**
  * Check if the token is a comma.
@@ -55,14 +56,23 @@ export function* fixForSorting(
 ): IterableIterator<Rule.Fix> {
   const targetInfo = calcTargetInfo(sourceCode, target);
 
-  const toBeforeToken = to.node
-    ? sourceCode.getTokenBefore(getFirstTokenOfNode(sourceCode, to.node))!
-    : to.before;
-  let insertRange = toBeforeToken.range;
-  const toBeforeNextToken = sourceCode.getTokenAfter(toBeforeToken, {
+  const toPrevInfo = getPrevElementInfo(sourceCode, to);
+
+  if (
+    toPrevInfo.comma &&
+    toPrevInfo.last.range![1] <= toPrevInfo.comma.range[0]
+  ) {
+    yield fixer.removeRange(toPrevInfo.comma.range);
+  }
+
+  let insertRange = [
+    toPrevInfo.last.range![1],
+    toPrevInfo.last.range![1],
+  ] as ESLintAST.Range;
+  const toBeforeNextToken = sourceCode.getTokenAfter(toPrevInfo.last, {
     includeComments: true,
   })!;
-  if (toBeforeNextToken.loc!.start.line - toBeforeToken.loc.end.line > 1) {
+  if (toBeforeNextToken.loc!.start.line - toPrevInfo.last.loc!.end.line > 1) {
     // If there are blank lines, the element is inserted after the blank lines.
     const offset = sourceCode.getIndexFromLoc({
       line: toBeforeNextToken.loc!.start.line - 1,
@@ -94,35 +104,41 @@ function calcTargetInfo(
   const nodeLastToken = getLastTokenOfNode(sourceCode, node);
 
   const endInfo = getElementEndInfo(sourceCode, node);
-  const prevInfo = getPrevElementInfo(sourceCode, node);
+  const prevInfo = getPrevElementInfo(sourceCode, { node });
 
   let insertCode: string;
 
   const removeRanges: ESLintAST.Range[] = [];
-  if (prevInfo.comma && prevInfo.end <= prevInfo.comma.range[0]) {
+  if (prevInfo.comma && prevInfo.last.range![1] <= prevInfo.comma.range[0]) {
     insertCode = `${sourceCode.text.slice(
-      prevInfo.end,
+      prevInfo.last.range![1],
       prevInfo.comma.range[0],
     )}${sourceCode.text.slice(prevInfo.comma.range[1], nodeLastToken.range[1])}`;
     removeRanges.push(
-      [prevInfo.end, prevInfo.comma.range[0]],
+      [prevInfo.last.range![1], prevInfo.comma.range[0]],
       [prevInfo.comma.range[1], nodeLastToken.range[1]],
     );
   } else {
-    insertCode = sourceCode.text.slice(prevInfo.end, nodeLastToken.range[1]);
-    removeRanges.push([prevInfo.end, nodeLastToken.range[1]]);
+    insertCode = sourceCode.text.slice(
+      prevInfo.last.range![1],
+      nodeLastToken.range[1],
+    );
+    removeRanges.push([prevInfo.last.range![1], nodeLastToken.range[1]]);
   }
 
   const hasTrailingComma =
-    endInfo.comma && endInfo.comma.range[1] <= endInfo.end;
+    endInfo.comma && endInfo.comma.range[1] <= endInfo.last.range![1];
   if (!hasTrailingComma) {
     insertCode += ",";
     if (prevInfo.comma) {
       removeRanges.push(prevInfo.comma.range);
     }
   }
-  insertCode += sourceCode.text.slice(nodeLastToken.range[1], endInfo.end);
-  removeRanges.push([nodeLastToken.range[1], endInfo.end]);
+  insertCode += sourceCode.text.slice(
+    nodeLastToken.range[1],
+    endInfo.last.range![1],
+  );
+  removeRanges.push([nodeLastToken.range[1], endInfo.last.range![1]]);
 
   return {
     insertCode,
@@ -214,8 +230,8 @@ function getElementEndInfo(
   comma: ESLintAST.Token | null;
   // Next element token
   nextElement: ESLintAST.Token | null;
-  // The end of the range of the target element
-  end: number;
+  // The last token of the target element
+  last: ESLintAST.Token | ESTree.Comment;
 } {
   const lastToken = getLastTokenOfNode(sourceCode, node);
   const afterToken = sourceCode.getTokenAfter(lastToken)!;
@@ -224,7 +240,7 @@ function getElementEndInfo(
     return {
       comma: null,
       nextElement: null,
-      end: calcEndWithTrailingComments(),
+      last: getLastTokenWithTrailingComments(),
     };
   }
   const comma = afterToken;
@@ -235,7 +251,7 @@ function getElementEndInfo(
     return {
       comma,
       nextElement: null,
-      end: comma.range[1],
+      last: comma,
     };
   }
   if (isClosingBrace(nextElement) || isClosingBracket(nextElement)) {
@@ -244,7 +260,7 @@ function getElementEndInfo(
     return {
       comma,
       nextElement: null,
-      end: calcEndWithTrailingComments(),
+      last: getLastTokenWithTrailingComments(),
     };
   }
 
@@ -253,7 +269,7 @@ function getElementEndInfo(
     return {
       comma,
       nextElement,
-      end: comma.range[1],
+      last: comma,
     };
   }
   // There are line breaks between the target element and the next element.
@@ -266,21 +282,22 @@ function getElementEndInfo(
     return {
       comma,
       nextElement,
-      end: comma.range[1],
+      last: comma,
     };
   }
 
   return {
     comma,
     nextElement,
-    end: calcEndWithTrailingComments(),
+    last: getLastTokenWithTrailingComments(),
   };
 
   /**
-   * Calculate the end of the target element with trailing comments.
+   * Get the last token of the target element with trailing comments.
    */
-  function calcEndWithTrailingComments() {
-    let end = lastToken.range[1];
+  function getLastTokenWithTrailingComments() {
+    if (lastToken == null) return afterToken;
+    let last: ESLintAST.Token | ESTree.Comment = lastToken;
     let after = sourceCode.getTokenAfter(lastToken, {
       includeComments: true,
     })!;
@@ -288,12 +305,12 @@ function getElementEndInfo(
       (isCommentToken(after) || isComma(after)) &&
       node.loc.end.line === after.loc!.end.line
     ) {
-      end = after.range![1];
+      last = after;
       after = sourceCode.getTokenAfter(after, {
         includeComments: true,
       })!;
     }
-    return end;
+    return last;
   }
 }
 
@@ -302,23 +319,24 @@ function getElementEndInfo(
  */
 function getPrevElementInfo(
   sourceCode: SourceCode,
-  node: AST.JSONNode,
+  target: Target,
 ): {
   // Leading comma
   comma: ESLintAST.Token | null;
   // Previous element token
   prevElement: ESLintAST.Token | null;
-  // The end of the range of the target element
-  end: number;
+  // The last token of the target element
+  last: ESLintAST.Token | ESTree.Comment;
 } {
-  const firstToken = getFirstTokenOfNode(sourceCode, node);
-  const beforeToken = sourceCode.getTokenBefore(firstToken)!;
+  const beforeToken = target.node
+    ? sourceCode.getTokenBefore(getFirstTokenOfNode(sourceCode, target.node))!
+    : target.before;
   if (isNotCommaToken(beforeToken)) {
     // If there is no comma, the element is the first element.
     return {
       comma: null,
       prevElement: null,
-      end: beforeToken.range[1],
+      last: beforeToken,
     };
   }
   const comma = beforeToken;
@@ -330,7 +348,7 @@ function getPrevElementInfo(
     return {
       comma,
       prevElement: null,
-      end: comma.range[1],
+      last: comma,
     };
   }
 
@@ -339,6 +357,6 @@ function getPrevElementInfo(
   return {
     comma: endInfo.comma,
     prevElement,
-    end: endInfo.end,
+    last: endInfo.last,
   };
 }
