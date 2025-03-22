@@ -1,15 +1,26 @@
+import { makeSynchronizedFunction } from "make-synchronized";
 import type { Linter } from "eslint";
-// @ts-expect-error -- ignore
-import { createSyncFn } from "synckit";
+import { getESLint } from "eslint-compat-utils/eslint";
 
-const getSync = createSyncFn(require.resolve("./worker"));
+const ESLint = getESLint();
+
+/**
+ *
+ */
+async function calculateConfigForFileAsync(
+  cwd: string,
+  fileName: string,
+): Promise<Pick<Linter.Config, "rules">> {
+  const eslint = new ESLint({ cwd });
+  const config = await eslint.calculateConfigForFile(fileName);
+  return { rules: config.rules };
+}
 
 /**
  * Synchronously calculateConfigForFile
  */
-export function calculateConfigForFile(
-  cwd: string,
-  fileName: string,
-): Pick<Linter.Config, "rules"> {
-  return getSync(cwd, fileName);
-}
+export const calculateConfigForFile = makeSynchronizedFunction(
+  __filename,
+  calculateConfigForFileAsync,
+  "calculateConfigForFile",
+);
