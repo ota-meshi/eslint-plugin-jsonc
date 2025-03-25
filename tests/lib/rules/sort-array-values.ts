@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("sort-array-values", rule as any, {
+tester.run("sort-array-values", rule, {
   valid: [
     {
       code: '{"key": ["a", "b", "c"] }',

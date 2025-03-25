@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-plus-sign", rule as any, {
+tester.run("no-plus-sign", rule, {
   valid: ["42", "-42", "-42.0"],
   invalid: [
     {

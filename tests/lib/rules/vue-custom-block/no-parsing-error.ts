@@ -10,7 +10,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("vue-custom-block/no-parsing-error", rule as any, {
+tester.run("vue-custom-block/no-parsing-error", rule, {
   valid: [
     '{"key": "value"}',
     '"string"',

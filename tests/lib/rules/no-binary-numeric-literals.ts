@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-binary-numeric-literals", rule as any, {
+tester.run("no-binary-numeric-literals", rule, {
   valid: ["0", "1010"],
   invalid: [
     {

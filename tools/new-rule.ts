@@ -65,7 +65,7 @@ const tester = new RuleTester({
   },
 })
 
-tester.run("${ruleId}", rule as any, {
+tester.run("${ruleId}", rule, {
     valid: [
         '{"key": "value"}', '"string"', '["element"]'
     ],

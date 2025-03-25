@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-dupe-keys", rule as any, {
+tester.run("no-dupe-keys", rule, {
   valid: ['{"key": "value"}', '{"key": "value", "key2": "value"}'],
   invalid: [
     {

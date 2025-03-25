@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-infinity", rule as any, {
+tester.run("no-infinity", rule, {
   valid: ["NaN", "42", '"foo"', "{Infinity:42}"],
   invalid: [
     {

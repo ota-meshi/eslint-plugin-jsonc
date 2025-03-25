@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-number-props", rule as any, {
+tester.run("no-number-props", rule, {
   valid: ['{"key": 123}', "{key: 123}", "123", "[123]"],
   invalid: [
     {

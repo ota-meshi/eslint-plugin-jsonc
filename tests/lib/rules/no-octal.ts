@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-octal", rule as any, {
+tester.run("no-octal", rule, {
   valid: ["0", "1", "9"],
   invalid: [
     {

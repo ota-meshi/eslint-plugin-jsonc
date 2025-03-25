@@ -14,7 +14,7 @@ if (semver.gte(Linter.version, "7.3.0")) {
     ignoreMomoa: true,
   });
 
-  tester.run("no-numeric-separators", rule as any, {
+  tester.run("no-numeric-separators", rule, {
     valid: ['{"key": 1234}', "1234", "[1234]"],
     invalid: [
       {

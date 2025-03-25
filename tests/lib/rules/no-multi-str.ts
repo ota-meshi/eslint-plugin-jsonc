@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-multi-str", rule as any, {
+tester.run("no-multi-str", rule, {
   valid: ['{"GOOD": "Line 1 \\nLine 2"}', '"Line 1 \\nLine 2"'],
   invalid: [
     {

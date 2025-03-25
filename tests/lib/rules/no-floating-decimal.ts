@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-floating-decimal", rule as any, {
+tester.run("no-floating-decimal", rule, {
   valid: ["42", "42.0", "0.42"],
   invalid: [
     {

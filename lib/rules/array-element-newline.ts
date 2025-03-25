@@ -12,7 +12,7 @@ type BasicConfig =
       multiline?: boolean;
       minItems?: number | null;
     };
-export default createRule("array-element-newline", {
+export default createRule<[BasicConfig]>("array-element-newline", {
   meta: {
     docs: {
       description: "enforce line breaks between array elements",

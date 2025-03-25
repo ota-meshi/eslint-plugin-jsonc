@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("object-property-newline", rule as any, {
+tester.run("object-property-newline", rule, {
   valid: [
     `
         {

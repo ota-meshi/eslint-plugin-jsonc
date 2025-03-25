@@ -10,7 +10,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("valid-json-number", rule as any, {
+tester.run("valid-json-number", rule, {
   valid: [
     "[123, 0.4, -42]",
     // not target

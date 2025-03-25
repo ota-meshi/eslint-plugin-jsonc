@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-parenthesized", rule as any, {
+tester.run("no-parenthesized", rule, {
   valid: ["{42: 42}", "42", "[42]"],
   invalid: [
     {

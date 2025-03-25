@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-escape-sequence-in-identifier", rule as any, {
+tester.run("no-escape-sequence-in-identifier", rule, {
   valid: ["{key: 42}"],
   invalid: [
     {

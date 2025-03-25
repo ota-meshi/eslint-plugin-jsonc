@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("array-element-newline", rule as any, {
+tester.run("array-element-newline", rule, {
   valid: [
     `[1,
             2,

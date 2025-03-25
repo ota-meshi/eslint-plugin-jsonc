@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-undefined-value", rule as any, {
+tester.run("no-undefined-value", rule, {
   valid: ["null", "[1,,2]", "{undefined:1}"],
   invalid: [
     {

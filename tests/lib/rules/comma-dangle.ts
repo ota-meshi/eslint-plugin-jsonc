@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("comma-dangle", rule as any, {
+tester.run("comma-dangle", rule, {
   valid: ['{"key": "value"}'],
   invalid: [
     {

@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-irregular-whitespace", rule as any, {
+tester.run("no-irregular-whitespace", rule, {
   valid: [
     `"\u0020"`,
     `"\u0009"`,

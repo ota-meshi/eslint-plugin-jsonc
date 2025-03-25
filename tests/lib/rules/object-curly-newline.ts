@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("object-curly-newline", rule as any, {
+tester.run("object-curly-newline", rule, {
   valid: ['{"key": "value"}', '{\n"key": "value"\n}'],
   invalid: [
     {

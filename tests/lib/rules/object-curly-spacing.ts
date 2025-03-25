@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("object-curly-spacing", rule as any, {
+tester.run("object-curly-spacing", rule, {
   valid: [
     '{"key": "value"}',
 

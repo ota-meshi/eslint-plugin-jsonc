@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-comments", rule as any, {
+tester.run("no-comments", rule, {
   valid: ['{"key": "value"}', '"string"', '["element"]'],
   invalid: [
     {
