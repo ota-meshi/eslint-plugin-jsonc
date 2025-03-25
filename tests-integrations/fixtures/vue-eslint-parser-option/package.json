@@ -12,6 +12,6 @@
   "devDependencies": {
     "eslint": "^9.0.0",
     "eslint-plugin-jsonc": "file:../../../eslint-plugin-jsonc-2.16.0.tgz",
-    "vue-eslint-parser": "^9.0.0"
+    "vue-eslint-parser": "^10.0.0"
   }
 }
