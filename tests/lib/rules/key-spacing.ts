@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("key-spacing", rule as any, {
+tester.run("key-spacing", rule, {
   valid: ['{"key": "value"}'],
   invalid: [
     {

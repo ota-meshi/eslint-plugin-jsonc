@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-regexp-literals", rule as any, {
+tester.run("no-regexp-literals", rule, {
   valid: ['{"key": "value"}', '"string"', '["element"]'],
   invalid: [
     {

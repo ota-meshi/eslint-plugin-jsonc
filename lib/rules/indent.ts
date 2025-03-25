@@ -448,7 +448,44 @@ const ELEMENT_LIST_SCHEMA: JSONSchema4 = {
     },
   ],
 };
-export default createRule("indent", {
+
+export type ElementList = number | "first" | "off";
+
+export interface RuleOptions {
+  SwitchCase?: number;
+  VariableDeclarator?:
+    | ElementList
+    | {
+        var?: ElementList;
+        let?: ElementList;
+        const?: ElementList;
+      };
+  outerIIFEBody?: number | "off";
+  MemberExpression?: number | "off";
+  FunctionDeclaration?: {
+    parameters?: ElementList;
+    body?: number;
+  };
+  FunctionExpression?: {
+    parameters?: ElementList;
+    body?: number;
+  };
+  StaticBlock?: {
+    body?: number;
+  };
+  CallExpression?: {
+    arguments?: ElementList;
+  };
+  ArrayExpression?: ElementList;
+  ObjectExpression?: ElementList;
+  ImportDeclaration?: ElementList;
+  flatTernaryExpressions?: boolean;
+  offsetTernaryExpressions?: boolean;
+  ignoredNodes?: string[];
+  ignoreComments?: boolean;
+}
+
+export default createRule<["tab" | number, RuleOptions]>("indent", {
   meta: {
     docs: {
       description: "enforce consistent indentation",
@@ -632,7 +669,7 @@ export default createRule("indent", {
       ignoredNodes: [],
       ignoreComments: false,
       offsetTernaryExpressions: false,
-    };
+    } satisfies RuleOptions;
 
     if (context.options.length) {
       if (context.options[0] === "tab") {

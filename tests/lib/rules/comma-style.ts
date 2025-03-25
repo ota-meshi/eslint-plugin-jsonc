@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("comma-style", rule as any, {
+tester.run("comma-style", rule, {
   valid: [
     `{
             "GOOD": ["apples",

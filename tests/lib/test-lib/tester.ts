@@ -3,6 +3,7 @@ import { getRuleTester } from "eslint-compat-utils/rule-tester";
 import * as jsonParser from "jsonc-eslint-parser";
 import semver from "semver";
 import { getESLint } from "eslint-compat-utils/eslint";
+import type { RuleModule } from "../../../lib/types";
 const RuleTester = getRuleTester();
 const ESLint = getESLint();
 
@@ -51,15 +52,15 @@ class JSONRuleTester {
         : null;
   }
 
-  public run(
+  public run<RuleOptions>(
     name: string,
-    rule: any,
+    rule: RuleModule<RuleOptions>,
     tests: {
       valid: (string | ValidTestCase)[];
       invalid: InvalidTestCase[];
     },
   ): void {
-    this.testerForBase.run(name, rule, {
+    this.testerForBase.run(name, rule as unknown as eslint.Rule.RuleModule, {
       ...tests,
       valid: tests.valid.map((test) => {
         if (typeof test === "string") {
@@ -95,7 +96,7 @@ class JSONRuleTester {
     const testerForMomoa = this.testerForMomoa;
     if (!testerForMomoa) return;
     describe(`${name} with momoa`, () => {
-      testerForMomoa.run(name, rule, {
+      testerForMomoa.run(name, rule as unknown as eslint.Rule.RuleModule, {
         valid: valid.map((test) => {
           if (typeof test === "string") {
             return test;

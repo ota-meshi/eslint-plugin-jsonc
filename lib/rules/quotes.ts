@@ -70,7 +70,14 @@ const UNESCAPED_LINEBREAK_PATTERN = new RegExp(
 
 const AVOID_ESCAPE = "avoid-escape";
 
-export default createRule("quotes", {
+export interface RuleOptions {
+  avoidEscape?: boolean;
+  allowTemplateLiterals?: boolean;
+}
+
+export default createRule<
+  ["single" | "double" | "backtick", "avoid-escape" | RuleOptions]
+>("quotes", {
   meta: {
     docs: {
       description: "enforce use of double or single quotes",
@@ -115,8 +122,8 @@ export default createRule("quotes", {
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }
-    let quoteOption = context.options[0] as "double" | "single";
-    if ((quoteOption as string) === "backtick") {
+    let quoteOption = context.options[0];
+    if (quoteOption === "backtick") {
       quoteOption = "double";
     }
     const settings = QUOTE_SETTINGS[quoteOption || "double"];

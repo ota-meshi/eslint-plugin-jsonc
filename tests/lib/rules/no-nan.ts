@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-nan", rule as any, {
+tester.run("no-nan", rule, {
   valid: ["Infinity", "1234", '"foo"', "{NaN:42}"],
   invalid: [
     {

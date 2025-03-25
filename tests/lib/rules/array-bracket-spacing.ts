@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("array-bracket-spacing", rule as any, {
+tester.run("array-bracket-spacing", rule, {
   valid: [
     '["element"]',
     { code: "[ 1 ]", options: ["always"] },

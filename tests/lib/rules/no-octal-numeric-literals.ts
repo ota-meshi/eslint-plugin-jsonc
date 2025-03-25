@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-octal-numeric-literals", rule as any, {
+tester.run("no-octal-numeric-literals", rule, {
   valid: ["0", "777"],
   invalid: [
     {

@@ -10,7 +10,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-unicode-codepoint-escapes", rule as any, {
+tester.run("no-unicode-codepoint-escapes", rule, {
   valid: ['"\\u0041"', '{"\\u0041": "string"}', "`\\u0042`"],
   invalid: [
     {

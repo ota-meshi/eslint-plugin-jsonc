@@ -51,7 +51,7 @@ const OPTIONS_FOR_JSON_SCHEMA = [
   },
 ];
 
-tester.run("sort-keys", rule as any, {
+tester.run("sort-keys", rule, {
   valid: [
     '{"a": 1, "b": 2, "c": 3}',
 

@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("quotes", rule as any, {
+tester.run("quotes", rule, {
   valid: ['{"key": "value"}', '"string"', '["element"]'],
   invalid: [
     {

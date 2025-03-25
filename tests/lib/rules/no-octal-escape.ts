@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-octal-escape", rule as any, {
+tester.run("no-octal-escape", rule, {
   valid: ['{"GOOD": "Copyright \\u00A9"}'],
   invalid: [
     {

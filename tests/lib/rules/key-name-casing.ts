@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("key-name-casing", rule as any, {
+tester.run("key-name-casing", rule, {
   valid: [
     '{"key": "value"}',
     '{"camelCase": "value"}',

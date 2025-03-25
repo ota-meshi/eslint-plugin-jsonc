@@ -13,13 +13,30 @@ const DEFAULT_OPTIONS = Object.freeze({
 
 const closeBraces = ["}", "]", ")", ">"];
 
+export type RuleValueOption =
+  | "always-multiline"
+  | "always"
+  | "never"
+  | "only-multiline";
+export type RuleValueWithIgnoreOption = RuleValueOption | "ignore";
+
+export interface RuleOptions {
+  arrays?: RuleValueWithIgnoreOption;
+  objects?: RuleValueWithIgnoreOption;
+  imports?: RuleValueWithIgnoreOption;
+  exports?: RuleValueWithIgnoreOption;
+  functions?: RuleValueWithIgnoreOption;
+}
+
 /**
  * Normalize option value.
  * @param optionValue The 1st option value to normalize.
  * @param ecmaVersion The normalized ECMAScript version.
  * @returns The normalized option value.
  */
-function normalizeOptions(optionValue: any) {
+function normalizeOptions(
+  optionValue: RuleValueWithIgnoreOption | RuleOptions,
+) {
   if (typeof optionValue === "string") {
     return {
       arrays: optionValue,
@@ -36,7 +53,7 @@ function normalizeOptions(optionValue: any) {
   return DEFAULT_OPTIONS;
 }
 
-export default createRule("comma-dangle", {
+export default createRule<[RuleValueOption | RuleOptions]>("comma-dangle", {
   meta: {
     docs: {
       description: "require or disallow trailing commas",

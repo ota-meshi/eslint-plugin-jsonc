@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("array-bracket-newline", rule as any, {
+tester.run("array-bracket-newline", rule, {
   valid: ["[]", "[\n1,\n2\n]"],
   invalid: [
     {

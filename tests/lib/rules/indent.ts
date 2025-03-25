@@ -119,7 +119,7 @@ const tester = new RuleTester({
 
 tester.run(
   "indent",
-  rule as any,
+  rule,
   loadPatterns(
     [
       {

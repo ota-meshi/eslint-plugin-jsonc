@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-hexadecimal-numeric-literals", rule as any, {
+tester.run("no-hexadecimal-numeric-literals", rule, {
   valid: ["0", "777", '"FFF"'],
   invalid: [
     {

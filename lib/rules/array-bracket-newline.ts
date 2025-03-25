@@ -5,13 +5,10 @@ import { createRule } from "../utils";
 import { isTokenOnSameLine } from "../utils/eslint-ast-utils";
 import type { Token } from "../types";
 import { isCommentToken } from "@eslint-community/eslint-utils";
-type Schema0 =
+export type RuleOptions =
   | ("always" | "never" | "consistent")
-  | {
-      multiline?: boolean;
-      minItems?: number | null;
-    };
-export default createRule("array-bracket-newline", {
+  | { multiline?: boolean; minItems?: number | null };
+export default createRule<[RuleOptions]>("array-bracket-newline", {
   meta: {
     docs: {
       description:
@@ -66,7 +63,7 @@ export default createRule("array-bracket-newline", {
      * @param option An option value to parse.
      * @returns Normalized option object.
      */
-    function normalizeOptionValue(option: Schema0) {
+    function normalizeOptionValue(option: RuleOptions) {
       let consistent = false;
       let multiline = false;
       let minItems = 0;
@@ -100,7 +97,7 @@ export default createRule("array-bracket-newline", {
      * @param options An option value to parse.
      * @returns Normalized option object.
      */
-    function normalizeOptions(options: Schema0) {
+    function normalizeOptions(options: RuleOptions) {
       const value = normalizeOptionValue(options);
 
       return { JSONArrayExpression: value, JSONArrayPattern: value };

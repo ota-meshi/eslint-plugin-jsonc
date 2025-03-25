@@ -28,10 +28,10 @@ export type BaseRuleListener = MomoaRuleListener &
   BuiltInRuleListeners &
   BuiltInRuleListenerExits;
 
-export interface RuleModule {
+export interface RuleModule<RuleOptions = unknown[]> {
   meta: RuleMetaData;
-  jsoncDefineRule: PartialRuleModule;
-  create(context: Rule.RuleContext): RuleListener;
+  jsoncDefineRule: PartialRuleModule<RuleOptions>;
+  create(context: Rule.RuleContext & { options: RuleOptions }): RuleListener;
 }
 
 export interface RuleMetaData {
@@ -60,10 +60,10 @@ export interface RuleMetaData {
   type: "problem" | "suggestion" | "layout";
 }
 
-export interface PartialRuleModule {
+export interface PartialRuleModule<RuleOptions = unknown[]> {
   meta: PartialRuleMetaData;
   create: (
-    context: Rule.RuleContext,
+    context: Rule.RuleContext & { options: RuleOptions },
     params: { customBlock: boolean },
   ) => BaseRuleListener;
 }

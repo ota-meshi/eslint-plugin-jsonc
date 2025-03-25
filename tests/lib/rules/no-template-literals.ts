@@ -11,7 +11,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-template-literals", rule as any, {
+tester.run("no-template-literals", rule, {
   valid: ['{"key": "value"}', '"string"', '["element"]'],
   invalid: [
     {

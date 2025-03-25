@@ -1,5 +1,5 @@
 import type { AST } from "jsonc-eslint-parser";
-import type { VAttribute, VElement } from "vue-eslint-parser/ast";
+import type { AST as VueAST } from "vue-eslint-parser";
 import { createRule } from "../../utils";
 import type { RuleListener } from "../../types";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
@@ -33,7 +33,8 @@ export default createRule("vue-custom-block/no-parsing-error", {
     const parseCustomBlockElement:
       | ((parser: any, options: any) => any)
       | undefined = parserServices.parseCustomBlockElement;
-    const customBlockElement: VElement | undefined = parserServices.customBlock;
+    const customBlockElement: VueAST.VElement | undefined =
+      parserServices.customBlock;
 
     if (customBlockElement && parseCustomBlockElement) {
       let lang = getLang(customBlockElement);
@@ -80,10 +81,11 @@ function errorReportVisitor(
 /**
  * Get lang from given custom block
  */
-function getLang(customBlock: VElement) {
+function getLang(customBlock: VueAST.VElement) {
   return (
     customBlock.startTag.attributes.find(
-      (attr): attr is VAttribute => !attr.directive && attr.key.name === "lang",
+      (attr): attr is VueAST.VAttribute =>
+        !attr.directive && attr.key.name === "lang",
     )?.value?.value || null
   );
 }

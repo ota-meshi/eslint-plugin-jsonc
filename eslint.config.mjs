@@ -1,4 +1,5 @@
 import myPlugin from "@ota-meshi/eslint-plugin";
+import globals from "globals";
 
 export default [
   {
@@ -145,6 +146,7 @@ export default [
     files: ["docs/.vitepress/**/*.{js,mjs,ts,mts,vue}"],
     languageOptions: {
       sourceType: "module",
+      globals: globals.browser,
     },
     rules: {
       "eslint-plugin/require-meta-docs-description": "off",

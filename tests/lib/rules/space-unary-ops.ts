@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("space-unary-ops", rule as any, {
+tester.run("space-unary-ops", rule, {
   valid: ["-1", "+1", "-0", "+0"],
   invalid: [
     {

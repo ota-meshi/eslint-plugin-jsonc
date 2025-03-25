@@ -269,7 +269,7 @@ export default createRule("object-curly-newline", {
             fix(fixer) {
               if (hasCommentsFirstToken) return null;
 
-              return fixer.removeRange([openBrace.range[1], first.range![0]]);
+              return fixer.removeRange([openBrace.range[1], first.range[0]]);
             },
           });
         }
@@ -286,7 +286,7 @@ export default createRule("object-curly-newline", {
             fix(fixer) {
               if (hasCommentsLastToken) return null;
 
-              return fixer.removeRange([last.range![1], closeBrace.range[0]]);
+              return fixer.removeRange([last.range[1], closeBrace.range[0]]);
             },
           });
         }

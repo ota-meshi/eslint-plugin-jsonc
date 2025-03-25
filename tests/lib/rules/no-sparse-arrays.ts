@@ -12,7 +12,7 @@ const tester = new RuleTester({
   ignoreMomoa: true,
 });
 
-tester.run("no-sparse-arrays", rule as any, {
+tester.run("no-sparse-arrays", rule, {
   valid: ["[1,2,3,4]", "[1,2,3,4,]"],
   invalid: [
     {

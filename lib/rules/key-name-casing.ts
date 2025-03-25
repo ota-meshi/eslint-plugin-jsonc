@@ -2,13 +2,13 @@ import { createRule } from "../utils";
 import type { CasingKind } from "../utils/casing";
 import { getChecker, allowedCaseOptions } from "../utils/casing";
 
-type Option = {
+export type RuleOptions = {
   [key in CasingKind]?: boolean;
 } & {
   ignores?: string[];
 };
 
-export default createRule("key-name-casing", {
+export default createRule<[RuleOptions]>("key-name-casing", {
   meta: {
     docs: {
       description: "enforce naming convention to property key names",
@@ -63,7 +63,7 @@ export default createRule("key-name-casing", {
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }
-    const option: Option = { ...context.options[0] };
+    const option = { ...context.options[0] };
     if (option.camelCase !== false) {
       option.camelCase = true;
     }

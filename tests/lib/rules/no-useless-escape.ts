@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-useless-escape", rule as any, {
+tester.run("no-useless-escape", rule, {
   valid: ['"\\""'],
   invalid: [
     {

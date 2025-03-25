@@ -5,7 +5,13 @@ import { createRule } from "../utils";
 import type { Token } from "../types";
 import { canTokensBeAdjacent } from "../utils/eslint-ast-utils";
 
-export default createRule("space-unary-ops", {
+export interface RuleOptions {
+  words?: boolean;
+  nonwords?: boolean;
+  overrides?: Record<string, boolean>;
+}
+
+export default createRule<[RuleOptions]>("space-unary-ops", {
   meta: {
     docs: {
       description: "disallow spaces after unary operators",
