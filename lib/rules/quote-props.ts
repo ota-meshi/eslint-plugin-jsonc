@@ -7,7 +7,19 @@ import { tokenize } from "espree";
 import { keywords } from "../utils/eslint-keywords";
 import { isNumericLiteral } from "../utils/eslint-ast-utils";
 
-export default createRule("quote-props", {
+export type RulePresetOption =
+  | "always"
+  | "as-needed"
+  | "consistent"
+  | "consistent-as-needed";
+
+export interface RuleOptions {
+  keywords?: boolean;
+  unnecessary?: boolean;
+  numbers?: boolean;
+}
+
+export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
   meta: {
     docs: {
       description: "require quotes around object literal property names",
@@ -89,12 +101,7 @@ export default createRule("quote-props", {
     if (!sourceCode.parserServices.isJSON) {
       return {};
     }
-    const MODE =
-      (context.options[0] as
-        | "always"
-        | "as-needed"
-        | "consistent"
-        | "consistent-as-needed") || "always";
+    const MODE = context.options[0] || "always";
     const KEYWORDS = (context.options[1] && context.options[1].keywords)!;
     const CHECK_UNNECESSARY =
       !context.options[1] || context.options[1].unnecessary !== false;

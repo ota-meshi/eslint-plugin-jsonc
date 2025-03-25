@@ -321,7 +321,7 @@ const ORDER_OBJECT_SCHEMA = {
 // Rule Definition
 //------------------------------------------------------------------------------
 
-export default createRule("sort-array-values", {
+export default createRule<UserOptions>("sort-array-values", {
   meta: {
     docs: {
       description: "require array values to be sorted",

@@ -311,7 +311,7 @@ const ORDER_OBJECT_SCHEMA = {
 // Rule Definition
 //------------------------------------------------------------------------------
 
-export default createRule("sort-keys", {
+export default createRule<UserOptions>("sort-keys", {
   meta: {
     docs: {
       description: "require object keys to be sorted",

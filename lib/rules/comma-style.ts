@@ -13,7 +13,11 @@ import {
 import type { Comment, Token } from "../types";
 import type { Rule } from "eslint";
 
-export default createRule("comma-style", {
+export interface RuleOptions {
+  exceptions?: Record<string, boolean>;
+}
+
+export default createRule<["first" | "last", RuleOptions]>("comma-style", {
   meta: {
     docs: {
       description: "enforce consistent comma style",
@@ -71,7 +75,7 @@ export default createRule("comma-style", {
           (key.startsWith("JSON")
             ? key
             : `JSON${key}`) as keyof typeof exceptions
-        ] = value as boolean;
+        ] = value;
       }
     }
 

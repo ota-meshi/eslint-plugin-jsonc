@@ -12,10 +12,10 @@ import { toCompatCreate } from "eslint-json-compat-utils";
  * @param ruleName ruleName
  * @param rule rule module
  */
-export function createRule(
+export function createRule<RuleOptions extends unknown[]>(
   ruleName: string,
-  rule: PartialRuleModule,
-): RuleModule {
+  rule: PartialRuleModule<RuleOptions>,
+): RuleModule<RuleOptions> {
   return {
     meta: {
       ...rule.meta,
@@ -27,7 +27,7 @@ export function createRule(
       },
     },
     jsoncDefineRule: rule,
-    create(baseContext: Rule.RuleContext) {
+    create(baseContext: Rule.RuleContext & { options: RuleOptions }) {
       const context = getCompatContext(baseContext);
       const create = toCompatCreate(rule.create);
       const sourceCode = context.sourceCode;
@@ -46,7 +46,7 @@ export function createRule(
               }
               return block.name === "i18n";
             },
-            create(blockContext: Rule.RuleContext) {
+            create(blockContext: Rule.RuleContext & { options: RuleOptions }) {
               return create(blockContext, {
                 customBlock: true,
               });
@@ -64,14 +64,12 @@ export function createRule(
 /**
  * Get the compatible context from the given context.
  */
-function getCompatContext(context: Rule.RuleContext): Rule.RuleContext {
+function getCompatContext<T extends Rule.RuleContext>(context: T): T {
   if (context.sourceCode) {
     return context;
   }
 
   return {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- special
-    // @ts-expect-error
     __proto__: context,
     get sourceCode() {
       return getSourceCode(context);
@@ -82,7 +80,7 @@ function getCompatContext(context: Rule.RuleContext): Rule.RuleContext {
     get cwd() {
       return getCwd(context);
     },
-  };
+  } as unknown as T;
 }
 
 /**

@@ -1,5 +1,4 @@
 import type { Linter } from "eslint";
-// @ts-expect-error -- ignore
 import { createSyncFn } from "synckit";
 
 const getSync = createSyncFn(require.resolve("./worker"));

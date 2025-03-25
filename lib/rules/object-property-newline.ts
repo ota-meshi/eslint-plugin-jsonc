@@ -2,7 +2,15 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import { createRule } from "../utils";
 
-export default createRule("object-property-newline", {
+export interface RuleOptions {
+  allowAllPropertiesOnSameLine?: boolean;
+  /**
+   * @deprecated
+   */
+  allowMultiplePropertiesPerLine?: boolean;
+}
+
+export default createRule<[RuleOptions]>("object-property-newline", {
   meta: {
     docs: {
       description: "enforce placing object properties on separate lines",
