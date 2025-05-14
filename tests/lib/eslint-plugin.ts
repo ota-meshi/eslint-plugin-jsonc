@@ -14,7 +14,6 @@ describe("Integration with eslint-plugin-jsonc", () => {
   it("should lint without errors", async () => {
     const engine = new ESLint({
       cwd: TEST_CWD,
-      // @ts-expect-error -- old ESLint
       extensions: [".js", ".json"],
       plugins: {
         "eslint-plugin-jsonc": plugin as never,

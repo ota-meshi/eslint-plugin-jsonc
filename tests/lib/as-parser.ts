@@ -14,7 +14,6 @@ describe("eslint-plugin-jsonc as parser", () => {
   it("should parse '.json6'", async () => {
     const engine = new ESLint({
       cwd: TEST_CWD,
-      // @ts-expect-error -- old ESLint
       extensions: [".js", ".json6"],
       plugins: {
         "eslint-plugin-jsonc": plugin as never,
