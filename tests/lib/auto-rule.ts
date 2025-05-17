@@ -29,7 +29,6 @@ describe("auto rule", () => {
 
     const engine = new ESLint({
       cwd: TEST_CWD,
-      // @ts-expect-error -- old ESLint
       extensions: [".js", ".json"],
       plugins: {
         "eslint-plugin-jsonc": plugin as never,
@@ -37,7 +36,6 @@ describe("auto rule", () => {
     });
     const fixEngine = new ESLint({
       cwd: TEST_CWD,
-      // @ts-expect-error -- old ESLint
       extensions: [".js", ".json"],
       plugins: {
         "eslint-plugin-jsonc": plugin as never,

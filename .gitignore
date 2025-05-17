@@ -103,6 +103,7 @@ dist
 # TernJS port file
 .tern-port
 
+/yarn.lock
 /typings/eslint/lib
 /dist-ts
 /index.d.ts
