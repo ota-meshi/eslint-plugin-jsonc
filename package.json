@@ -87,7 +87,7 @@
     "@ota-meshi/site-kit-eslint-editor-vue": "^0.2.4",
     "@swc-node/register": "^1.10.10",
     "@swc/core": "^1.11.24",
-    "@types/eslint-scope": "^3.7.7",
+    "@types/eslint-scope": "^8.0.0",
     "@types/mocha": "^10.0.10",
     "@types/natural-compare": "^1.4.3",
     "@types/node": "^22.13.13",
