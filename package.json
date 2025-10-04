@@ -84,7 +84,7 @@
     "@changesets/cli": "^2.28.1",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.4.1",
     "@eslint/json": "^0.12.0",
-    "@ota-meshi/eslint-plugin": "^0.17.6",
+    "@ota-meshi/eslint-plugin": "^0.18.0",
     "@ota-meshi/site-kit-eslint-editor-vue": "^0.2.4",
     "@swc-node/register": "^1.10.10",
     "@swc/core": "^1.11.24",
