@@ -3,8 +3,8 @@ import { createRule } from "../utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import {
-  fixToDownForSorting,
-  fixToUpForSorting,
+  fixToMoveDownForSorting,
+  fixToMoveUpForSorting,
 } from "../utils/fix-sort-elements";
 import { calcShortestEditScript } from "../utils/calc-shortest-edit-script";
 
@@ -457,11 +457,11 @@ export default createRule<UserOptions>("sort-keys", {
     }
 
     /**
-     * Sort pairs by bubble sort.
+     * Sort properties by bubble sort.
      */
-    function bubbleSort(pairs: JSONPropertyData[], option: ParsedOption) {
-      const l = pairs.length;
-      const result = [...pairs];
+    function bubbleSort(properties: JSONPropertyData[], option: ParsedOption) {
+      const l = properties.length;
+      const result = [...properties];
       let swapped: boolean;
       do {
         swapped = false;
@@ -513,7 +513,7 @@ export default createRule<UserOptions>("sort-keys", {
               orderText: option.orderText,
             },
             *fix(fixer) {
-              yield* fixToDownForSorting(fixer, sourceCode, edit.a, target);
+              yield* fixToMoveDownForSorting(fixer, sourceCode, edit.a, target);
             },
           });
         } else {
@@ -531,7 +531,7 @@ export default createRule<UserOptions>("sort-keys", {
               orderText: option.orderText,
             },
             *fix(fixer) {
-              yield* fixToUpForSorting(fixer, sourceCode, edit.a, target);
+              yield* fixToMoveUpForSorting(fixer, sourceCode, edit.a, target);
             },
           });
         }

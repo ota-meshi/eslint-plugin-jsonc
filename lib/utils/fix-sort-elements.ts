@@ -27,7 +27,7 @@ type Target = NodeTarget | AroundTarget;
 /**
  * Fixed by moving the target element down for sorting.
  */
-export function* fixToDownForSorting(
+export function* fixToMoveDownForSorting(
   fixer: Rule.RuleFixer,
   sourceCode: SourceCode,
   target: Target,
@@ -85,7 +85,7 @@ export function* fixToDownForSorting(
 /**
  * Fixed by moving the target element up for sorting.
  */
-export function* fixToUpForSorting(
+export function* fixToMoveUpForSorting(
   fixer: Rule.RuleFixer,
   sourceCode: SourceCode,
   target: Target,

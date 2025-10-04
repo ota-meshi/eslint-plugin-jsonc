@@ -4,7 +4,11 @@ import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import type { SourceCode } from "eslint";
 import type { AroundTarget } from "../utils/fix-sort-elements";
-import { fixToUpForSorting } from "../utils/fix-sort-elements";
+import {
+  fixToMoveDownForSorting,
+  fixToMoveUpForSorting,
+} from "../utils/fix-sort-elements";
+import { calcShortestEditScript } from "../utils/calc-shortest-edit-script";
 
 type JSONValue = ReturnType<typeof getStaticJSONValue>;
 
@@ -372,8 +376,10 @@ export default createRule<UserOptions>("sort-array-values", {
     },
 
     messages: {
-      sortValues:
-        "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be before '{{prevValue}}'.",
+      shouldBeBefore:
+        "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be before '{{targetValue}}'.",
+      shouldBeAfter:
+        "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be after '{{targetValue}}'.",
     },
     type: "suggestion",
   },
@@ -386,48 +392,154 @@ export default createRule<UserOptions>("sort-array-values", {
     const parsedOptions = parseOptions(context.options);
 
     /**
-     * Verify for array element
+     * Sort elements by bubble sort.
      */
-    function verifyArrayElement(data: JSONElementData, option: ParsedOption) {
-      if (option.ignore(data)) {
-        return;
-      }
-      const prevList = data.array.elements
-        .slice(0, data.index)
-        .reverse()
-        .filter((d) => !option.ignore(d));
+    function bubbleSort(elements: JSONElementData[], option: ParsedOption) {
+      const l = elements.length;
+      const result = [...elements];
+      let swapped: boolean;
+      do {
+        swapped = false;
+        for (let nextIndex = 1; nextIndex < l; nextIndex++) {
+          const prevIndex = nextIndex - 1;
+          if (option.isValidOrder(result[prevIndex], result[nextIndex]))
+            continue;
+          [result[prevIndex], result[nextIndex]] = [
+            result[nextIndex],
+            result[prevIndex],
+          ];
+          swapped = true;
+        }
+      } while (swapped);
+      return result;
+    }
 
-      if (prevList.length === 0) {
-        return;
+    /**
+     * Verify for array elements
+     */
+    function verifyArrayElements(
+      elements: JSONElementData[],
+      option: ParsedOption,
+    ) {
+      const sorted = bubbleSort(elements, option);
+      const editScript = calcShortestEditScript(elements, sorted);
+      for (let index = 0; index < editScript.length; index++) {
+        const edit = editScript[index];
+        if (edit.type !== "delete") continue;
+        const insertEditIndex = editScript.findIndex(
+          (e) => e.type === "insert" && e.b === edit.a,
+        );
+        if (insertEditIndex === -1) {
+          // should not happen
+          continue;
+        }
+        if (index < insertEditIndex) {
+          const target = findInsertAfterTarget(edit.a, insertEditIndex);
+          if (!target) {
+            // should not happen
+            continue;
+          }
+          context.report({
+            loc: edit.a.reportLoc,
+            messageId: "shouldBeAfter",
+            data: {
+              thisValue: toText(edit.a),
+              targetValue: toText(target),
+              orderText: option.orderText(edit.a),
+            },
+            *fix(fixer) {
+              yield* fixToMoveDownForSorting(
+                fixer,
+                sourceCode,
+                edit.a.around,
+                target.around,
+              );
+            },
+          });
+        } else {
+          const target = findInsertBeforeTarget(edit.a, insertEditIndex);
+          if (!target) {
+            // should not happen
+            continue;
+          }
+          context.report({
+            loc: edit.a.reportLoc,
+            messageId: "shouldBeBefore",
+            data: {
+              thisValue: toText(edit.a),
+              targetValue: toText(target),
+              orderText: option.orderText(edit.a),
+            },
+            *fix(fixer) {
+              yield* fixToMoveUpForSorting(
+                fixer,
+                sourceCode,
+                edit.a.around,
+                target.around,
+              );
+            },
+          });
+        }
       }
-      const prev = prevList[0];
-      if (!option.isValidOrder(prev, data)) {
-        const reportLoc = data.reportLoc;
-        context.report({
-          loc: reportLoc,
-          messageId: "sortValues",
-          data: {
-            thisValue: toText(data),
-            prevValue: toText(prev),
-            orderText: option.orderText(data),
-          },
-          fix(fixer) {
-            let moveTarget = prevList[0];
-            for (const prev of prevList) {
-              if (option.isValidOrder(prev, data)) {
-                break;
-              } else {
-                moveTarget = prev;
-              }
-            }
-            return fixToUpForSorting(
-              fixer,
-              sourceCode,
-              data.around,
-              moveTarget.around,
-            );
-          },
-        });
+
+      /**
+       * Find insert after target
+       */
+      function findInsertAfterTarget(
+        element: JSONElementData,
+        insertEditIndex: number,
+      ) {
+        for (let index = insertEditIndex - 1; index >= 0; index--) {
+          const edit = editScript[index];
+          if (edit.type === "delete" && edit.a === element) break;
+          if (edit.type !== "common") continue;
+          return edit.a;
+        }
+
+        let lastTarget: JSONElementData | null = null;
+        for (
+          let index = elements.indexOf(element) + 1;
+          index < elements.length;
+          index++
+        ) {
+          const el = elements[index];
+          if (option.isValidOrder(el, element)) {
+            lastTarget = el;
+            continue;
+          }
+          return lastTarget;
+        }
+        return lastTarget;
+      }
+
+      /**
+       * Find insert before target
+       */
+      function findInsertBeforeTarget(
+        element: JSONElementData,
+        insertEditIndex: number,
+      ) {
+        for (
+          let index = insertEditIndex + 1;
+          index < editScript.length;
+          index++
+        ) {
+          const edit = editScript[index];
+          if (edit.type === "delete" && edit.a === element) break;
+          if (edit.type !== "common") continue;
+          return edit.a;
+        }
+
+        let lastTarget: JSONElementData | null = null;
+        for (let index = elements.indexOf(element) - 1; index >= 0; index--) {
+          const el = elements[index];
+          if (option.isValidOrder(element, el)) {
+            lastTarget = el;
+            continue;
+          }
+          return lastTarget;
+        }
+        return lastTarget;
       }
     }
 
@@ -448,9 +560,10 @@ export default createRule<UserOptions>("sort-array-values", {
         if (!option) {
           return;
         }
-        for (const element of data.elements) {
-          verifyArrayElement(element, option);
-        }
+        verifyArrayElements(
+          data.elements.filter((d) => !option.ignore(d)),
+          option,
+        );
       },
     };
   },
