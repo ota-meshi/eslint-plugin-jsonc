@@ -25,33 +25,94 @@ export type AroundTarget =
 type NodeTarget = { node: AST.JSONNode; before?: undefined; after?: undefined };
 type Target = NodeTarget | AroundTarget;
 /**
- * Fixed target element for sorting.
+ * Fixed by moving the target element down for sorting.
  */
-export function* fixForSorting(
+export function* fixToDownForSorting(
   fixer: Rule.RuleFixer,
   sourceCode: SourceCode,
   target: Target,
   to: Target,
 ): IterableIterator<Rule.Fix> {
-  const targetInfo = calcTargetInfo(sourceCode, target);
+  const targetInfo = calcTargetMoveDownInfo(sourceCode, target);
+
+  const toEndInfo = getElementEndInfo(sourceCode, to);
+
+  let { insertCode, removeRanges, hasLeadingComma } = targetInfo;
+  if (toEndInfo.trailingComma) {
+    if (
+      hasLeadingComma &&
+      toEndInfo.last.range![1] <= toEndInfo.trailingComma.range[0]
+    ) {
+      yield fixer.removeRange(toEndInfo.trailingComma.range);
+    }
+    hasLeadingComma = true;
+    insertCode = targetInfo.withTrailingComma.insertCode;
+    removeRanges = targetInfo.withTrailingComma.removeRanges;
+  }
+
+  let insertRange = [
+    toEndInfo.last.range![1],
+    toEndInfo.last.range![1],
+  ] as ESLintAST.Range;
+  const toNextToken = sourceCode.getTokenAfter(toEndInfo.last, {
+    includeComments: true,
+  })!;
+  if (toNextToken.loc!.start.line - toEndInfo.last.loc!.end.line > 1) {
+    // If there are blank lines, the element is inserted after the blank lines.
+    const offset = sourceCode.getIndexFromLoc({
+      line: toNextToken.loc!.start.line - 1,
+      column: 0,
+    });
+    insertRange = [offset, offset];
+  }
+  if (!hasLeadingComma) {
+    if (to.node) {
+      yield fixer.insertTextAfterRange(
+        getLastTokenOfNode(sourceCode, to.node).range,
+        ",",
+      );
+    } else {
+      yield fixer.insertTextBeforeRange(to.after.range, ",");
+    }
+  }
+  yield fixer.insertTextAfterRange(insertRange, insertCode);
+
+  for (const removeRange of removeRanges) {
+    yield fixer.removeRange(removeRange);
+  }
+}
+
+/**
+ * Fixed by moving the target element up for sorting.
+ */
+export function* fixToUpForSorting(
+  fixer: Rule.RuleFixer,
+  sourceCode: SourceCode,
+  target: Target,
+  to: Target,
+): IterableIterator<Rule.Fix> {
+  const targetInfo = calcTargetMoveUpInfo(sourceCode, target);
 
   const toPrevInfo = getPrevElementInfo(sourceCode, to);
 
   if (
-    toPrevInfo.comma &&
-    toPrevInfo.last.range![1] <= toPrevInfo.comma.range[0]
+    toPrevInfo.leadingComma &&
+    toPrevInfo.prevLast.range![1] <= toPrevInfo.leadingComma.range[0]
   ) {
-    yield fixer.removeRange(toPrevInfo.comma.range);
+    yield fixer.removeRange(toPrevInfo.leadingComma.range);
   }
 
   let insertRange = [
-    toPrevInfo.last.range![1],
-    toPrevInfo.last.range![1],
+    toPrevInfo.prevLast.range![1],
+    toPrevInfo.prevLast.range![1],
   ] as ESLintAST.Range;
-  const toBeforeNextToken = sourceCode.getTokenAfter(toPrevInfo.last, {
+  const toBeforeNextToken = sourceCode.getTokenAfter(toPrevInfo.prevLast, {
     includeComments: true,
   })!;
-  if (toBeforeNextToken.loc!.start.line - toPrevInfo.last.loc!.end.line > 1) {
+  if (
+    toBeforeNextToken.loc!.start.line - toPrevInfo.prevLast.loc!.end.line >
+    1
+  ) {
     // If there are blank lines, the element is inserted after the blank lines.
     const offset = sourceCode.getIndexFromLoc({
       line: toBeforeNextToken.loc!.start.line - 1,
@@ -67,9 +128,90 @@ export function* fixForSorting(
 }
 
 /**
- * Calculate the fix information of the target.
+ * Calculate the fix information of the target element to be moved down for sorting.
  */
-function calcTargetInfo(
+function calcTargetMoveDownInfo(
+  sourceCode: SourceCode,
+  target: Target,
+): {
+  insertCode: string;
+  removeRanges: ESLintAST.Range[];
+  hasLeadingComma: boolean;
+  withTrailingComma: {
+    insertCode: string;
+    removeRanges: ESLintAST.Range[];
+  };
+} {
+  const nodeStartIndex = target.node
+    ? getFirstTokenOfNode(sourceCode, target.node).range[0]
+    : target.before.range[1];
+
+  const endInfo = getElementEndInfo(sourceCode, target);
+  const prevInfo = getPrevElementInfo(sourceCode, target);
+
+  let insertCode = sourceCode.text.slice(
+    prevInfo.prevLast.range![1],
+    nodeStartIndex,
+  );
+  const removeRanges: ESLintAST.Range[] = [
+    [prevInfo.prevLast.range![1], nodeStartIndex],
+  ];
+  const hasLeadingComma =
+    prevInfo.leadingComma &&
+    prevInfo.prevLast.range![1] <= prevInfo.leadingComma.range[0];
+
+  let withTrailingComma: {
+    insertCode: string;
+    removeRanges: ESLintAST.Range[];
+  };
+
+  const suffixRange: ESLintAST.Range = [nodeStartIndex, endInfo.last.range![1]];
+  const suffix = sourceCode.text.slice(...suffixRange);
+  if (
+    endInfo.trailingComma &&
+    endInfo.trailingComma.range[1] <= endInfo.last.range![1]
+  ) {
+    withTrailingComma = {
+      insertCode: `${insertCode}${suffix}`,
+      removeRanges: [...removeRanges, suffixRange],
+    };
+    insertCode += `${sourceCode.text.slice(nodeStartIndex, endInfo.trailingComma.range[0])}${sourceCode.text.slice(endInfo.trailingComma.range[1], endInfo.last.range![1])}`;
+
+    if (!hasLeadingComma) {
+      if (endInfo.trailingComma) {
+        removeRanges.push(endInfo.trailingComma.range);
+      }
+    }
+    removeRanges.push(
+      [nodeStartIndex, endInfo.trailingComma.range[0]],
+      [endInfo.trailingComma.range[1], endInfo.last.range![1]],
+    );
+  } else {
+    if (!hasLeadingComma) {
+      if (endInfo.trailingComma) {
+        removeRanges.push(endInfo.trailingComma.range);
+      }
+    }
+    withTrailingComma = {
+      insertCode: `${insertCode},${suffix}`,
+      removeRanges: [...removeRanges, suffixRange],
+    };
+    insertCode += suffix;
+    removeRanges.push(suffixRange);
+  }
+
+  return {
+    insertCode,
+    removeRanges,
+    hasLeadingComma: Boolean(hasLeadingComma),
+    withTrailingComma,
+  };
+}
+
+/**
+ * Calculate the fix information of the target element to be moved up for sorting.
+ */
+function calcTargetMoveUpInfo(
   sourceCode: SourceCode,
   target: Target,
 ): {
@@ -86,26 +228,33 @@ function calcTargetInfo(
   let insertCode: string;
 
   const removeRanges: ESLintAST.Range[] = [];
-  if (prevInfo.comma && prevInfo.last.range![1] <= prevInfo.comma.range[0]) {
+  if (
+    prevInfo.leadingComma &&
+    prevInfo.prevLast.range![1] <= prevInfo.leadingComma.range[0]
+  ) {
     insertCode = `${sourceCode.text.slice(
-      prevInfo.last.range![1],
-      prevInfo.comma.range[0],
-    )}${sourceCode.text.slice(prevInfo.comma.range[1], nodeEndIndex)}`;
+      prevInfo.prevLast.range![1],
+      prevInfo.leadingComma.range[0],
+    )}${sourceCode.text.slice(prevInfo.leadingComma.range[1], nodeEndIndex)}`;
     removeRanges.push(
-      [prevInfo.last.range![1], prevInfo.comma.range[0]],
-      [prevInfo.comma.range[1], nodeEndIndex],
+      [prevInfo.prevLast.range![1], prevInfo.leadingComma.range[0]],
+      [prevInfo.leadingComma.range[1], nodeEndIndex],
     );
   } else {
-    insertCode = sourceCode.text.slice(prevInfo.last.range![1], nodeEndIndex);
-    removeRanges.push([prevInfo.last.range![1], nodeEndIndex]);
+    insertCode = sourceCode.text.slice(
+      prevInfo.prevLast.range![1],
+      nodeEndIndex,
+    );
+    removeRanges.push([prevInfo.prevLast.range![1], nodeEndIndex]);
   }
 
   const hasTrailingComma =
-    endInfo.comma && endInfo.comma.range[1] <= endInfo.last.range![1];
+    endInfo.trailingComma &&
+    endInfo.trailingComma.range[1] <= endInfo.last.range![1];
   if (!hasTrailingComma) {
     insertCode += ",";
-    if (prevInfo.comma) {
-      removeRanges.push(prevInfo.comma.range);
+    if (prevInfo.leadingComma) {
+      removeRanges.push(prevInfo.leadingComma.range);
     }
   }
   insertCode += sourceCode.text.slice(nodeEndIndex, endInfo.last.range![1]);
@@ -161,7 +310,7 @@ function getElementEndInfo(
   target: Target | { node: ESLintAST.Token },
 ): {
   // Trailing comma
-  comma: ESLintAST.Token | null;
+  trailingComma: ESLintAST.Token | null;
   // Next element token
   nextElement: ESLintAST.Token | null;
   // The last token of the target element
@@ -173,7 +322,7 @@ function getElementEndInfo(
   if (isNotCommaToken(afterToken)) {
     // If there is no comma, the element is the last element.
     return {
-      comma: null,
+      trailingComma: null,
       nextElement: null,
       last: getLastTokenWithTrailingComments(sourceCode, target),
     };
@@ -184,7 +333,7 @@ function getElementEndInfo(
     // If the next element is empty,
     // the position of the comma is the end of the element's range.
     return {
-      comma,
+      trailingComma: comma,
       nextElement: null,
       last: comma,
     };
@@ -193,7 +342,7 @@ function getElementEndInfo(
     // If the next token is a closing brace or bracket,
     // the position of the comma is the end of the element's range.
     return {
-      comma,
+      trailingComma: comma,
       nextElement: null,
       last: getLastTokenWithTrailingComments(sourceCode, target),
     };
@@ -204,7 +353,7 @@ function getElementEndInfo(
   if (node && node.loc.end.line === nextElement.loc.start.line) {
     // There is no line break between the target element and the next element.
     return {
-      comma,
+      trailingComma: comma,
       nextElement,
       last: comma,
     };
@@ -218,14 +367,14 @@ function getElementEndInfo(
     // If there is a line break between the target element and a comma and the next element,
     // the position of the comma is the end of the element's range.
     return {
-      comma,
+      trailingComma: comma,
       nextElement,
       last: comma,
     };
   }
 
   return {
-    comma,
+    trailingComma: comma,
     nextElement,
     last: getLastTokenWithTrailingComments(sourceCode, target),
   };
@@ -268,12 +417,12 @@ function getPrevElementInfo(
   sourceCode: SourceCode,
   target: Target,
 ): {
-  // Leading comma
-  comma: ESLintAST.Token | null;
   // Previous element token
   prevElement: ESLintAST.Token | null;
-  // The last token of the target element
-  last: ESLintAST.Token | ESTree.Comment;
+  // Leading comma
+  leadingComma: ESLintAST.Token | null;
+  // The last token of the previous element
+  prevLast: ESLintAST.Token | ESTree.Comment;
 } {
   const beforeToken = target.node
     ? sourceCode.getTokenBefore(getFirstTokenOfNode(sourceCode, target.node))!
@@ -281,9 +430,9 @@ function getPrevElementInfo(
   if (isNotCommaToken(beforeToken)) {
     // If there is no comma, the element is the first element.
     return {
-      comma: null,
       prevElement: null,
-      last: beforeToken,
+      leadingComma: null,
+      prevLast: beforeToken,
     };
   }
   const comma = beforeToken;
@@ -293,17 +442,17 @@ function getPrevElementInfo(
     // If the previous element is empty,
     // the position of the comma is the end of the previous element's range.
     return {
-      comma,
       prevElement: null,
-      last: comma,
+      leadingComma: comma,
+      prevLast: comma,
     };
   }
 
   const endInfo = getElementEndInfo(sourceCode, { node: prevElement });
 
   return {
-    comma: endInfo.comma,
     prevElement,
-    last: endInfo.last,
+    leadingComma: endInfo.trailingComma,
+    prevLast: endInfo.last,
   };
 }

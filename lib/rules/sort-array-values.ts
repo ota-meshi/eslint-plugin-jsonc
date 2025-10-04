@@ -4,7 +4,7 @@ import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import type { SourceCode } from "eslint";
 import type { AroundTarget } from "../utils/fix-sort-elements";
-import { fixForSorting } from "../utils/fix-sort-elements";
+import { fixToUpForSorting } from "../utils/fix-sort-elements";
 
 type JSONValue = ReturnType<typeof getStaticJSONValue>;
 
@@ -420,7 +420,7 @@ export default createRule<UserOptions>("sort-array-values", {
                 moveTarget = prev;
               }
             }
-            return fixForSorting(
+            return fixToUpForSorting(
               fixer,
               sourceCode,
               data.around,

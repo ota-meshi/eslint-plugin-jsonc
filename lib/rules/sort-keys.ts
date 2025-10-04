@@ -2,7 +2,11 @@ import naturalCompare from "natural-compare";
 import { createRule } from "../utils";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import { fixForSorting } from "../utils/fix-sort-elements";
+import {
+  fixToDownForSorting,
+  fixToUpForSorting,
+} from "../utils/fix-sort-elements";
+import { calcShortestEditScript } from "../utils/calc-shortest-edit-script";
 
 //------------------------------------------------------------------------------
 // Helpers
@@ -402,8 +406,10 @@ export default createRule<UserOptions>("sort-keys", {
     },
 
     messages: {
-      sortKeys:
-        "Expected object keys to be in {{orderText}} order. '{{thisName}}' should be before '{{prevName}}'.",
+      shouldBeBefore:
+        "Expected object keys to be in {{orderText}} order. '{{thisName}}' should be before '{{targetName}}'.",
+      shouldBeAfter:
+        "Expected object keys to be in {{orderText}} order. '{{thisName}}' should be after '{{targetName}}'.",
     },
     type: "suggestion",
   },
@@ -416,53 +422,182 @@ export default createRule<UserOptions>("sort-keys", {
     const parsedOptions = parseOptions(context.options);
 
     /**
-     * Verify for property
+     * Group JSON properties.
      */
-    function verifyProperty(data: JSONPropertyData, option: ParsedOption) {
-      if (option.ignore(data)) {
-        return;
-      }
-      const prevList: JSONPropertyData[] = [];
-      let currTarget = data;
-      let prevTarget;
-      while ((prevTarget = currTarget.getPrev())) {
-        if (option.allowLineSeparatedGroups) {
-          if (hasBlankLine(prevTarget, currTarget)) {
-            break;
+    function groupingProperties(
+      properties: JSONPropertyData[],
+      option: ParsedOption,
+    ) {
+      const groups: JSONPropertyData[][] = [];
+
+      let group: JSONPropertyData[] = [];
+      let prev: JSONPropertyData | null = null;
+      for (const property of properties) {
+        if (option.ignore(property)) {
+          prev = property;
+          continue;
+        }
+        if (
+          prev &&
+          option.allowLineSeparatedGroups &&
+          hasBlankLine(prev, property)
+        ) {
+          if (group.length > 0) {
+            groups.push(group);
+            group = [];
           }
         }
+        group.push(property);
+        prev = property;
+      }
+      if (group.length > 0) {
+        groups.push(group);
+      }
+      return groups;
+    }
 
-        if (!option.ignore(prevTarget)) {
-          prevList.push(prevTarget);
+    /**
+     * Sort pairs by bubble sort.
+     */
+    function bubbleSort(pairs: JSONPropertyData[], option: ParsedOption) {
+      const l = pairs.length;
+      const result = [...pairs];
+      let swapped: boolean;
+      do {
+        swapped = false;
+        for (let nextIndex = 1; nextIndex < l; nextIndex++) {
+          const prevIndex = nextIndex - 1;
+          if (option.isValidOrder(result[prevIndex], result[nextIndex]))
+            continue;
+          [result[prevIndex], result[nextIndex]] = [
+            result[nextIndex],
+            result[prevIndex],
+          ];
+          swapped = true;
         }
-        currTarget = prevTarget;
+      } while (swapped);
+      return result;
+    }
+
+    /**
+     * Verify for properties order
+     */
+    function verifyProperties(
+      properties: JSONPropertyData[],
+      option: ParsedOption,
+    ) {
+      const sorted = bubbleSort(properties, option);
+      const editScript = calcShortestEditScript(properties, sorted);
+      for (let index = 0; index < editScript.length; index++) {
+        const edit = editScript[index];
+        if (edit.type !== "delete") continue;
+        const insertEditIndex = editScript.findIndex(
+          (e) => e.type === "insert" && e.b === edit.a,
+        );
+        if (insertEditIndex === -1) {
+          // should not happen
+          continue;
+        }
+        if (index < insertEditIndex) {
+          const target = findInsertAfterTarget(edit.a, insertEditIndex);
+          if (!target) {
+            // should not happen
+            continue;
+          }
+          context.report({
+            loc: edit.a.reportLoc,
+            messageId: "shouldBeAfter",
+            data: {
+              thisName: edit.a.name,
+              targetName: target.name,
+              orderText: option.orderText,
+            },
+            *fix(fixer) {
+              yield* fixToDownForSorting(fixer, sourceCode, edit.a, target);
+            },
+          });
+        } else {
+          const target = findInsertBeforeTarget(edit.a, insertEditIndex);
+          if (!target) {
+            // should not happen
+            continue;
+          }
+          context.report({
+            loc: edit.a.reportLoc,
+            messageId: "shouldBeBefore",
+            data: {
+              thisName: edit.a.name,
+              targetName: target.name,
+              orderText: option.orderText,
+            },
+            *fix(fixer) {
+              yield* fixToUpForSorting(fixer, sourceCode, edit.a, target);
+            },
+          });
+        }
       }
 
-      if (prevList.length === 0) {
-        return;
+      /**
+       * Find insert after target
+       */
+      function findInsertAfterTarget(
+        property: JSONPropertyData,
+        insertEditIndex: number,
+      ) {
+        for (let index = insertEditIndex - 1; index >= 0; index--) {
+          const edit = editScript[index];
+          if (edit.type === "delete" && edit.a === property) break;
+          if (edit.type !== "common") continue;
+          return edit.a;
+        }
+        let lastTarget: JSONPropertyData | null = null;
+        for (
+          let index = properties.indexOf(property) + 1;
+          index < properties.length;
+          index++
+        ) {
+          const element = properties[index];
+          if (option.isValidOrder(element, property)) {
+            lastTarget = element;
+            continue;
+          }
+          return lastTarget;
+        }
+        return lastTarget;
       }
-      const prev = prevList[0];
-      if (!option.isValidOrder(prev, data)) {
-        context.report({
-          loc: data.reportLoc,
-          messageId: "sortKeys",
-          data: {
-            thisName: data.name,
-            prevName: prev.name,
-            orderText: option.orderText,
-          },
-          fix(fixer) {
-            let moveTarget = prevList[0];
-            for (const prev of prevList) {
-              if (option.isValidOrder(prev, data)) {
-                break;
-              } else {
-                moveTarget = prev;
-              }
-            }
-            return fixForSorting(fixer, sourceCode, data, moveTarget);
-          },
-        });
+
+      /**
+       * Find insert before target
+       */
+      function findInsertBeforeTarget(
+        property: JSONPropertyData,
+        insertEditIndex: number,
+      ) {
+        for (
+          let index = insertEditIndex + 1;
+          index < editScript.length;
+          index++
+        ) {
+          const edit = editScript[index];
+          if (edit.type === "delete" && edit.a === property) break;
+          if (edit.type !== "common") continue;
+          return edit.a;
+        }
+
+        let lastTarget: JSONPropertyData | null = null;
+        for (
+          let index = properties.indexOf(property) - 1;
+          index >= 0;
+          index--
+        ) {
+          const element = properties[index];
+          if (option.isValidOrder(property, element)) {
+            lastTarget = element;
+            continue;
+          }
+          return lastTarget;
+        }
+        return lastTarget;
       }
     }
 
@@ -494,8 +629,8 @@ export default createRule<UserOptions>("sort-keys", {
         if (!option) {
           return;
         }
-        for (const prop of data.properties) {
-          verifyProperty(prop, option);
+        for (const properties of groupingProperties(data.properties, option)) {
+          verifyProperties(properties, option);
         }
       },
     };

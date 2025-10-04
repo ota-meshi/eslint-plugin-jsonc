@@ -198,8 +198,8 @@ run({
         "[jsonc/comma-dangle] Unexpected trailing comma.",
 
         "[jsonc/object-curly-spacing] There should be no space after '{'.",
+        "[jsonc/sort-keys] Expected object keys to be in ascending order. 'foo' should be after 'bar'.",
         "[jsonc/object-property-newline] Object properties must go on a new line.",
-        "[jsonc/sort-keys] Expected object keys to be in ascending order. 'bar' should be before 'foo'.",
         "[jsonc/object-property-newline] Object properties must go on a new line.",
         "[jsonc/no-dupe-keys] Duplicate key 'foo'.",
         "[jsonc/object-curly-spacing] There should be no space before '}'.",
