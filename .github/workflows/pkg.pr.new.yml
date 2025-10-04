@@ -1,0 +1,44 @@
+name: Publish to pkg.pr.new
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+    tags: ["!**"]
+
+jobs:
+  build:
+    if: github.repository == 'ota-meshi/eslint-plugin-jsonc'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+      - name: Install Packages
+        run: npm install -f
+      - name: Build
+        run: npm run build
+        env:
+          SYNCKIT_TS_RUNNER: oxc
+      - run: npx pkg-pr-new publish --compact '.' --json output.json --comment=off
+      - name: Add metadata to output
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
+            output.number = context.issue.number;
+            output.event_name = context.eventName;
+            output.ref = context.ref;
+            output.sha = context.eventName === 'pull_request'
+              ? context.payload.pull_request.head.sha
+              : context.payload.after;
+            fs.writeFileSync('output.json', JSON.stringify(output), 'utf8');
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: ./output.json
+
+      - run: ls -R .
