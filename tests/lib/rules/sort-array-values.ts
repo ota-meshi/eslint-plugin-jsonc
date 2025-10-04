@@ -57,58 +57,58 @@ tester.run("sort-array-values", rule, {
   invalid: [
     {
       code: '{"key": ["c", "b", "a"] }',
-      output: '{"key": [ "b","c", "a"] }',
+      output: `{"key": [ "b", "a","c"] }`,
       options: [{ pathPattern: "^key$", order: { type: "asc" } }],
       errors: [
         {
           message:
-            "Expected array values to be in ascending order. 'b' should be before 'c'.",
+            "Expected array values to be in ascending order. 'c' should be after 'a'.",
           line: 1,
-          column: 15,
+          column: 10,
         },
         {
           message:
-            "Expected array values to be in ascending order. 'a' should be before 'b'.",
+            "Expected array values to be in ascending order. 'b' should be after 'a'.",
           line: 1,
-          column: 20,
+          column: 15,
         },
       ],
     },
     {
       code: '{"key": ["a", "b", "c"] }',
-      output: '{"key": [ "b","a", "c"] }',
+      output: `{"key": [ "b", "c","a"] }`,
       options: [{ pathPattern: "^key$", order: { type: "desc" } }],
       errors: [
         {
           message:
-            "Expected array values to be in descending order. 'b' should be before 'a'.",
+            "Expected array values to be in descending order. 'a' should be after 'c'.",
           line: 1,
-          column: 15,
+          column: 10,
         },
         {
           message:
-            "Expected array values to be in descending order. 'c' should be before 'b'.",
+            "Expected array values to be in descending order. 'b' should be after 'c'.",
           line: 1,
-          column: 20,
+          column: 15,
         },
       ],
     },
     {
       code: '{"key": ["b", "a", "c"] }',
-      output: '{"key": [ "a","b", "c"] }',
+      output: `{"key": [ "a", "c","b"] }`,
       options: [{ pathPattern: "^key$", order: ["c", "a", "b"] }],
       errors: [
         {
           message:
-            "Expected array values to be in specified order. 'a' should be before 'b'.",
+            "Expected array values to be in specified order. 'b' should be after 'c'.",
           line: 1,
-          column: 15,
+          column: 10,
         },
         {
           message:
-            "Expected array values to be in specified order. 'c' should be before 'a'.",
+            "Expected array values to be in specified order. 'a' should be after 'c'.",
           line: 1,
-          column: 20,
+          column: 15,
         },
       ],
     },
@@ -119,7 +119,7 @@ tester.run("sort-array-values", rule, {
       errors: [
         {
           message:
-            "Expected array values to be in specified order. 'c' should be before 'b'.",
+            "Expected array values to be in specified order. 'c' should be before 'a'.",
           line: 1,
           column: 20,
         },
@@ -132,7 +132,7 @@ tester.run("sort-array-values", rule, {
       errors: [
         {
           message:
-            "Expected array values to be in specified order. 'c' should be before 'b'.",
+            "Expected array values to be in specified order. 'c' should be before 'a'.",
           line: 1,
           column: 30,
         },
@@ -150,13 +150,19 @@ tester.run("sort-array-values", rule, {
       errors: [
         {
           message:
-            "Expected array values to be in specified order. 'b' should be before 'z'.",
+            "Expected array values to be in specified order. 'z' should be after 'x'.",
           line: 1,
-          column: 20,
+          column: 15,
         },
         {
           message:
-            "Expected array values to be in specified order. 'c' should be before 'y'.",
+            "Expected array values to be in specified order. 'y' should be after 'x'.",
+          line: 1,
+          column: 25,
+        },
+        {
+          message:
+            "Expected array values to be in specified order. 'c' should be before 'a'.",
           line: 1,
           column: 30,
         },
@@ -164,7 +170,7 @@ tester.run("sort-array-values", rule, {
     },
     {
       code: '{"key": [ "c","a", "z", "b", "y", "x"] }',
-      output: '{"key": [ "c","a", "b", "z", "y", "x"] }',
+      output: `{"key": [ "c","a", "b", "y", "x", "z"] }`,
       options: [
         {
           pathPattern: "^key$",
@@ -172,13 +178,13 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in specified order. 'b' should be before 'z'.",
-        "Expected array values to be in specified order. 'x' should be before 'y'.",
+        "Expected array values to be in specified order. 'z' should be after 'x'.",
+        "Expected array values to be in specified order. 'y' should be after 'x'.",
       ],
     },
     {
       code: '{"key": [ "c","a", "b", "z", "y", "x"] }',
-      output: '{"key": [ "c","a", "b", "y", "z", "x"] }',
+      output: `{"key": [ "c","a", "b", "y", "x", "z"] }`,
       options: [
         {
           pathPattern: "^key$",
@@ -186,8 +192,8 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in specified order. 'y' should be before 'z'.",
-        "Expected array values to be in specified order. 'x' should be before 'y'.",
+        "Expected array values to be in specified order. 'z' should be after 'x'.",
+        "Expected array values to be in specified order. 'y' should be after 'x'.",
       ],
     },
     {
@@ -200,7 +206,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in specified order. 'x' should be before 'z'.",
+        "Expected array values to be in specified order. 'x' should be before 'y'.",
       ],
     },
     {
@@ -215,9 +221,9 @@ tester.run("sort-array-values", rule, {
       errors: [
         {
           message:
-            "Expected array values to be in ascending order. '1' should be before '2'.",
+            "Expected array values to be in ascending order. '2' should be after '1'.",
           line: 1,
-          column: 13,
+          column: 11,
         },
       ],
       ignoreMomoa: true,
@@ -234,9 +240,9 @@ tester.run("sort-array-values", rule, {
       errors: [
         {
           message:
-            "Expected array values to be in ascending order. 'a' should be before 'b'.",
+            "Expected array values to be in ascending order. 'b' should be after 'a'.",
           line: 1,
-          column: 15,
+          column: 10,
         },
         {
           message:
@@ -256,7 +262,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in descending order. 'c' should be before 'b'.",
+        "Expected array values to be in descending order. 'b' should be after 'c'.",
         "Expected array values to be in descending order. '2' should be before '1'.",
       ],
     },
@@ -270,7 +276,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in insensitive ascending order. 'a' should be before 'b'.",
+        "Expected array values to be in insensitive ascending order. 'b' should be after 'a'.",
       ],
     },
     {
@@ -283,7 +289,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in ascending order. 'B' should be before 'b'.",
+        "Expected array values to be in ascending order. 'B' should be before 'a'.",
       ],
     },
     {
@@ -296,7 +302,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in ascending order. 'B' should be before 'b'.",
+        "Expected array values to be in ascending order. 'B' should be before 'a'.",
       ],
     },
     {
@@ -309,7 +315,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in natural ascending order. 'B' should be before 'b'.",
+        "Expected array values to be in natural ascending order. 'B' should be before 'a'.",
       ],
     },
     {
@@ -322,7 +328,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
       ],
     },
     {
@@ -335,7 +341,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
       ],
       ignoreMomoa: true,
     },
@@ -355,7 +361,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
       ],
     },
     {
@@ -374,7 +380,7 @@ tester.run("sort-array-values", rule, {
         },
       ],
       errors: [
-        "Expected array values to be in ascending order. 'a' should be before 'b'.",
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
       ],
       ignoreMomoa: true,
     },

@@ -285,36 +285,36 @@ tester.run("sort-keys", rule, {
       code: '{"a": 1, "c": 3, "b": 2}',
       output: '{"a": 1, "b": 2, "c": 3}',
       errors: [
-        "Expected object keys to be in ascending order. 'b' should be before 'c'.",
+        "Expected object keys to be in ascending order. 'c' should be after 'b'.",
       ],
     },
     {
       code: '{a: 1, c: 3, d: 4, "b": 2}',
       output: '{a: 1, "b": 2, c: 3, d: 4}',
       errors: [
-        "Expected object keys to be in ascending order. 'b' should be before 'd'.",
+        "Expected object keys to be in ascending order. 'b' should be before 'c'.",
       ],
     },
     {
       code: '{f: {a: 1, c: 3, d: 4, "b": 2}, e: 5}',
       output: '{ e: 5,f: {a: 1, c: 3, d: 4, "b": 2}}',
       errors: [
-        "Expected object keys to be in ascending order. 'b' should be before 'd'.",
-        "Expected object keys to be in ascending order. 'e' should be before 'f'.",
+        "Expected object keys to be in ascending order. 'f' should be after 'e'.",
+        "Expected object keys to be in ascending order. 'b' should be before 'c'.",
       ],
     },
     {
       code: '{"a": 1, /*c*/"c": 3,/*b*/ "b": 2,}',
       output: '{"a": 1,/*b*/ "b": 2, /*c*/"c": 3,}',
       errors: [
-        "Expected object keys to be in ascending order. 'b' should be before 'c'.",
+        "Expected object keys to be in ascending order. 'c' should be after 'b'.",
       ],
     },
     {
       code: "{$:1, _:2, A:3, a:4}",
       output: "{$:1, A:3, _:2, a:4}",
       errors: [
-        "Expected object keys to be in ascending order. 'A' should be before '_'.",
+        "Expected object keys to be in ascending order. '_' should be after 'A'.",
       ],
     },
     {
@@ -322,15 +322,15 @@ tester.run("sort-keys", rule, {
       output: "{$:1, _:2, A:3, a:4}",
       options: ["asc", { natural: true }],
       errors: [
-        "Expected object keys to be in natural ascending order. '_' should be before 'A'.",
+        "Expected object keys to be in natural ascending order. 'A' should be after '_'.",
       ],
     },
 
     {
       code: "{a:1, A: 2, B:3, b:4}",
-      output: "{ A: 2,a:1, B:3, b:4}",
+      output: `{ A: 2, B:3,a:1, b:4}`,
       errors: [
-        "Expected object keys to be in ascending order. 'A' should be before 'a'.",
+        "Expected object keys to be in ascending order. 'a' should be after 'B'.",
       ],
     },
     {
@@ -338,24 +338,24 @@ tester.run("sort-keys", rule, {
       output: "{a:1, A: 2, B:3, b:4, c: 5, C: 6}",
       options: ["asc", { caseSensitive: false }],
       errors: [
-        "Expected object keys to be in insensitive ascending order. 'A' should be before 'b'.",
+        "Expected object keys to be in insensitive ascending order. 'A' should be before 'B'.",
       ],
     },
     {
       code: '{"a": 1, "b": 2, "c": 3}',
-      output: '{ "b": 2,"a": 1, "c": 3}',
+      output: `{ "b": 2, "c": 3,"a": 1}`,
       options: ["desc"],
       errors: [
-        "Expected object keys to be in descending order. 'b' should be before 'a'.",
-        "Expected object keys to be in descending order. 'c' should be before 'b'.",
+        "Expected object keys to be in descending order. 'a' should be after 'c'.",
+        "Expected object keys to be in descending order. 'b' should be after 'c'.",
       ],
     },
     {
       filename: "test.vue",
       code: `<custom-block lang="json">{a:1, A: 2, B:3, b:4}</custom-block>`,
-      output: `<custom-block lang="json">{ A: 2,a:1, B:3, b:4}</custom-block>`,
+      output: `<custom-block lang="json">{ A: 2, B:3,a:1, b:4}</custom-block>`,
       errors: [
-        "Expected object keys to be in ascending order. 'A' should be before 'a'.",
+        "Expected object keys to be in ascending order. 'a' should be after 'B'.",
       ],
       ...({
         languageOptions: {
@@ -395,9 +395,9 @@ tester.run("sort-keys", rule, {
             }`,
       options: OPTIONS_FOR_PACKAGE_JSON,
       errors: [
-        "Expected object keys to be in specified order. 'name' should be before 'version'.",
-        "Expected object keys to be in specified order. 'plugins' should be before 'extends'.",
-        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+        "Expected object keys to be in specified order. 'version' should be after 'name'.",
+        "Expected object keys to be in specified order. 'extends' should be after 'plugins'.",
+        "Expected object keys to be in ascending order. 'b' should be after 'a'.",
       ],
     },
 
@@ -427,8 +427,8 @@ tester.run("sort-keys", rule, {
             }`,
       options: OPTIONS_FOR_JSON_SCHEMA,
       errors: [
-        "Expected object keys to be in specified order. 'properties' should be before 'additionalProperties'.",
-        "Expected object keys to be in specified order. 'type' should be before 'minItems'.",
+        "Expected object keys to be in specified order. 'additionalProperties' should be after 'properties'.",
+        "Expected object keys to be in specified order. 'minItems' should be after 'type'.",
       ],
     },
     {
@@ -456,7 +456,7 @@ tester.run("sort-keys", rule, {
             }`,
       options: OPTIONS_FOR_JSON_SCHEMA,
       errors: [
-        "Expected object keys to be in specified order. 'type' should be before 'minItems'.",
+        "Expected object keys to be in specified order. 'minItems' should be after 'type'.",
       ],
     },
 
@@ -507,8 +507,8 @@ tester.run("sort-keys", rule, {
         },
       ],
       errors: [
-        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
-        "Expected object keys to be in ascending order. 'e' should be before 'f'.",
+        "Expected object keys to be in ascending order. 'b' should be after 'a'.",
+        "Expected object keys to be in ascending order. 'f' should be after 'e'.",
       ],
     },
 
@@ -557,7 +557,7 @@ tester.run("sort-keys", rule, {
         },
       ],
       errors: [
-        "Expected object keys to be in specified order. 'c' should be before 'd'.",
+        "Expected object keys to be in specified order. 'd' should be after 'c'.",
         "Expected object keys to be in specified order. 'f' should be before 'g'.",
       ],
     },
@@ -579,11 +579,11 @@ tester.run("sort-keys", rule, {
                 "a":1,
                 "b":2,
                 "c":3,
-                "z":26,
                 "d":4,
                 "e":5,
                 "f":6,
-                "g":7
+                "g":7,
+                "z":26
             }
             `,
       options: [
@@ -605,7 +605,7 @@ tester.run("sort-keys", rule, {
         },
       ],
       errors: [
-        "Expected object keys to be in specified order. 'c' should be before 'z'.",
+        "Expected object keys to be in specified order. 'z' should be after 'g'.",
       ],
     },
     {
@@ -628,9 +628,9 @@ tester.run("sort-keys", rule, {
                 "c":3,
                 "d":4,
                 "e":5,
-                "z":26,
                 "f":6,
-                "g":7
+                "g":7,
+                "z":26
             }
             `,
       options: [
@@ -652,7 +652,7 @@ tester.run("sort-keys", rule, {
         },
       ],
       errors: [
-        "Expected object keys to be in specified order. 'e' should be before 'z'.",
+        "Expected object keys to be in specified order. 'z' should be after 'g'.",
       ],
     },
 
@@ -674,7 +674,7 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'a' should be before 'c'.",
+            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
           line: 5,
           column: 11,
         },
@@ -697,9 +697,9 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
-          line: 5,
-          column: 10,
+            "Expected object keys to be in ascending order. 'b' should be after 'a'.",
+          line: 3,
+          column: 9,
         },
       ],
     },
@@ -726,7 +726,7 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'a' should be before 'c'.",
+            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
           line: 7,
           column: 9,
         },
@@ -747,8 +747,8 @@ tester.run("sort-keys", rule, {
       {
         "a": 1,
         "b": 2,
-
         "y": 3,
+
         "z": {
 
         }
@@ -757,8 +757,8 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'y' should be before 'z'.",
-          line: 9,
+            "Expected object keys to be in ascending order. 'z' should be after 'y'.",
+          line: 6,
           column: 9,
         },
       ],
@@ -784,7 +784,7 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'a' should be before 'c'.",
+            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
           line: 7,
           column: 9,
         },
@@ -800,23 +800,23 @@ tester.run("sort-keys", rule, {
       output: `
       {
         "ab": 1,
-        "b": 42,
-        "a": 42 // sort-keys: 'a' should be before 'b'
+        "a": 42, // sort-keys: 'a' should be before 'b'
+        "b": 42
       }`,
       options: ["asc", { allowLineSeparatedGroups: true }],
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'ab' should be before 'b'.",
+            "Expected object keys to be in ascending order. 'b' should be after 'a'.",
+          line: 3,
+          column: 9,
+        },
+        {
+          message:
+            "Expected object keys to be in ascending order. 'ab' should be after 'a'.",
           line: 4,
           column: 9,
         },
-        {
-          message:
-            "Expected object keys to be in ascending order. 'a' should be before 'ab'.",
-          line: 5,
-          column: 9,
-        },
       ],
     },
     {
@@ -844,7 +844,7 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'b' should be before 'd'.",
+            "Expected object keys to be in ascending order. 'b' should be before 'c'.",
           line: 7,
           column: 9,
         },
@@ -871,32 +871,32 @@ tester.run("sort-keys", rule, {
       {
         "c": 1,
         "d": 2,
-
         "f": 3,
-        "z": {
-
-        },
         /*
 
         */
         "ab": 1,
         "b": 1,
-        "e": 2
+        "e": 2,
+
+        "z": {
+
+        }
       }`,
       options: ["asc", { allowLineSeparatedGroups: true }],
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'f' should be before 'z'.",
+            "Expected object keys to be in ascending order. 'z' should be after 'e'.",
+          line: 6,
+          column: 9,
+        },
+        {
+          message:
+            "Expected object keys to be in ascending order. 'f' should be after 'e'.",
           line: 9,
           column: 9,
         },
-        {
-          message:
-            "Expected object keys to be in ascending order. 'ab' should be before 'f'.",
-          line: 13,
-          column: 9,
-        },
       ],
     },
     {
@@ -914,8 +914,8 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
-          line: 4,
+            "Expected object keys to be in ascending order. 'b' should be after 'a'.",
+          line: 3,
           column: 9,
         },
       ],
@@ -937,9 +937,9 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
-          line: 5,
-          column: 11,
+            "Expected object keys to be in ascending order. 'b' should be after 'a'.",
+          line: 3,
+          column: 9,
         },
       ],
     },
@@ -966,7 +966,7 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'a' should be before 'foo'.",
+            "Expected object keys to be in ascending order. 'a' should be before 'b'.",
           line: 8,
           column: 9,
         },
@@ -991,8 +991,8 @@ tester.run("sort-keys", rule, {
       errors: [
         {
           message:
-            "Expected object keys to be in ascending order. 'strict' should be before 'target'.",
-          line: 5,
+            "Expected object keys to be in ascending order. 'target' should be after 'strict'.",
+          line: 4,
         },
       ],
     },
@@ -1011,7 +1011,7 @@ tester.run("sort-keys", rule, {
       }`,
       options: ["asc"],
       errors: [
-        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+        "Expected object keys to be in ascending order. 'b' should be after 'a'.",
       ],
     },
     {
@@ -1021,7 +1021,7 @@ tester.run("sort-keys", rule, {
       { /* c2 */ "a": "bar", /* c3 */ "b": "foo" /* c1 */  }`,
       options: ["asc"],
       errors: [
-        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+        "Expected object keys to be in ascending order. 'b' should be after 'a'.",
       ],
     },
     {
@@ -1035,7 +1035,7 @@ tester.run("sort-keys", rule, {
       }`,
       options: ["asc"],
       errors: [
-        "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+        "Expected object keys to be in ascending order. 'b' should be after 'a'.",
       ],
     },
     {
@@ -1053,7 +1053,27 @@ tester.run("sort-keys", rule, {
       }`,
       options: ["asc"],
       errors: [
-        "Expected object keys to be in ascending order. 'b' should be before 'c'.",
+        "Expected object keys to be in ascending order. 'c' should be after 'b'.",
+      ],
+    },
+    {
+      code: `
+      {
+        "d": 1,
+        "a": 1,
+        "b": 1,
+        "c": 1
+      }`,
+      output: `
+      {
+        "a": 1,
+        "b": 1,
+        "c": 1,
+        "d": 1
+      }`,
+      options: ["asc"],
+      errors: [
+        "Expected object keys to be in ascending order. 'd' should be after 'c'.",
       ],
     },
   ],

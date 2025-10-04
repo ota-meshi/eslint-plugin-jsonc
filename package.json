@@ -26,7 +26,7 @@
     "clean": "rimraf .nyc_output dist coverage",
     "lint": "eslint .",
     "eslint-fix": "eslint . --fix",
-    "test:base": "env-cmd -e test mocha --require @swc-node/register \"tests/lib/**/*.ts\" --reporter dot --timeout 60000",
+    "test:base": "env-cmd -e test -- mocha --require @swc-node/register \"tests/lib/**/*.ts\" --reporter dot --timeout 60000",
     "test": "npm run test:base",
     "test:nyc": "nyc --reporter=lcov npm run test:base",
     "pretest:integrations": "npm run build:ts && npm pack",
@@ -40,9 +40,9 @@
     "prerelease": "npm run test && npm run build",
     "release": "changeset publish",
     "preversion": "npm test && git add .",
-    "version": "env-cmd -e version npm run update && git add .",
+    "version": "env-cmd -e version -- npm run update && git add .",
     "preversion:ci": "npm run build",
-    "version:ci": "env-cmd -e version-ci npm run update && changeset version"
+    "version:ci": "env-cmd -e version-ci -- npm run update && changeset version"
   },
   "repository": {
     "type": "git",
@@ -66,6 +66,7 @@
   "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
   "dependencies": {
     "@eslint-community/eslint-utils": "^4.5.1",
+    "diff-sequences": "^27.5.1",
     "eslint-compat-utils": "^0.6.4",
     "eslint-json-compat-utils": "^0.2.1",
     "espree": "^9.6.1 || ^10.3.0",
@@ -123,6 +124,7 @@
     "stylelint-config-standard": "^38.0.0",
     "stylelint-config-standard-vue": "^1.0.0",
     "stylelint-stylus": "^1.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.28.0",
     "vite-plugin-eslint4b": "^0.5.1",
