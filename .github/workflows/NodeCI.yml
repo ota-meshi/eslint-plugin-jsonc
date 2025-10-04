@@ -76,7 +76,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Target Packages
         run: |+
-          npm i -D eslint@8
+          npm i -D eslint@8 vue-eslint-parser@9
           npx rimraf node_modules
           npm install
       - name: Install Packages
@@ -96,7 +96,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Target Packages
         run: |+
-          npm i -D eslint@6 mocha@7
+          npm i -D eslint@6 mocha@7 vue-eslint-parser@9
           npx rimraf node_modules
           npm install
       - name: Test
@@ -114,7 +114,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Target Packages
         run: |+
-          npm i -D eslint@7
+          npm i -D eslint@7 vue-eslint-parser@9
           npx rimraf node_modules
           npm install
       - name: Test
