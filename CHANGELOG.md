@@ -1,5 +1,13 @@
 # eslint-plugin-jsonc
 
+## 2.21.0
+
+### Minor Changes
+
+- [#426](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/426) [`efc00a6`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/efc00a613a78f2f15b6b9815b783bf92a3f838a5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat(sort-array-values): improve to calculate the minimum edit distance for sorting and report the optimal sorting direction
+
+- [#426](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/426) [`efc00a6`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/efc00a613a78f2f15b6b9815b783bf92a3f838a5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat(sort-keys): improve to calculate the minimum edit distance for sorting and report the optimal sorting direction
+
 ## 2.20.1
 
 ### Patch Changes
