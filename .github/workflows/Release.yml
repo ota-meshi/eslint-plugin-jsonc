@@ -23,6 +23,8 @@ jobs:
           fetch-depth: 0
       - name: Setup Node.js
         uses: actions/setup-node@v5
+        with:
+          node-version: 24
       - name: Install Dependencies
         run: npm install -f
       - name: Create Release Pull Request or Publish to npm
