@@ -11,7 +11,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
       - name: Install deps
         run: npm install -f
       - name: Format
