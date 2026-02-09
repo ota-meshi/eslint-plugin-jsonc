@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 2.21.1
+
+### Patch Changes
+
+- [#447](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/447) [`a8e405a`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/a8e405a49458d94efe6cd6f356a23cb6a27d0564) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: compatibility with ESLint v10
+
 ## 2.21.0
 
 ### Minor Changes
