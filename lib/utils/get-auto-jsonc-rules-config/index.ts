@@ -30,7 +30,7 @@ function getConfigResolver(
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
   const plugin = require("../..");
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, n/no-missing-require -- special
     const eslintrc = require("@eslint/eslintrc");
     const configArrayFactory = new eslintrc.Legacy.CascadingConfigArrayFactory({
       additionalPluginPool: new Map([["eslint-plugin-jsonc", plugin]]),
