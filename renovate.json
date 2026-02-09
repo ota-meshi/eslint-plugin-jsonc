@@ -1,30 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":preserveSemverRanges"
-  ],
+  "extends": ["config:recommended", ":preserveSemverRanges"],
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
     {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
+      "matchDepTypes": ["devDependencies"],
       "automerge": true
     },
     {
-      "matchManagers": [
-        "github-actions",
-        "devcontainer"
-      ],
+      "matchManagers": ["github-actions", "devcontainer"],
       "automerge": true
     }
   ]
