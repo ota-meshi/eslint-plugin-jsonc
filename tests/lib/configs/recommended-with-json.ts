@@ -1,10 +1,16 @@
 import assert from "assert";
 import plugin from "../../../lib/index";
 import { LegacyESLint, ESLint } from "../test-lib/eslint-compat";
+import * as eslint from "eslint";
+import semver from "semver";
 
 const code = `{ foo: 42 }`;
 describe("`recommended-with-json` config", () => {
   it("legacy `recommended-with-json` config should work. ", async () => {
+    if (semver.satisfies(eslint.Linter.version, ">=10.0.0")) {
+      // ESLint 10+ cannot use Legacy Config
+      return;
+    }
     const linter = new LegacyESLint({
       plugins: {
         svelte: plugin as never,
@@ -17,7 +23,10 @@ describe("`recommended-with-json` config", () => {
       },
       useEslintrc: false,
     });
-    const result = await linter.lintText(code, { filePath: "test.json" });
+    const result: readonly eslint.ESLint.LintResult[] = await linter.lintText(
+      code,
+      { filePath: "test.json" },
+    );
     const messages = result[0].messages;
 
     assert.deepStrictEqual(

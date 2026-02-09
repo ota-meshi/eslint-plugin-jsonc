@@ -112,9 +112,9 @@ class TokenInfo {
   public constructor(sourceCode: SourceCode) {
     this.sourceCode = sourceCode;
     this.firstTokensByLineNumber = new Map();
-    const tokens = sourceCode.getTokens(sourceCode.ast, {
-      includeComments: true,
-    });
+    const tokens = [...sourceCode.ast.comments, ...sourceCode.ast.tokens].sort(
+      (a, b) => a.range![0] - b.range![0],
+    );
 
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
