@@ -48,6 +48,7 @@ export default [
       sourceType: "script",
       parserOptions: {
         projectService: true,
+        project: null,
       },
     },
     rules: {

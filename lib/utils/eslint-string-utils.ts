@@ -20,6 +20,7 @@ export function getGraphemeCount(value: string): number {
   if (ASCII_REGEX.test(value)) return value.length;
 
   try {
+    // eslint-disable-next-line n/no-unsupported-features/es-builtins -- OK because of the try-catch
     if (!segmenter) segmenter = new Intl.Segmenter();
 
     return [...segmenter.segment(value)].length;

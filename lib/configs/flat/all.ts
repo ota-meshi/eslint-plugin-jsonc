@@ -7,11 +7,12 @@ for (const rule of rules) {
   all[rule.meta.docs.ruleId] = "error";
 }
 
-export default [
+const config: Linter.Config[] = [
   ...base,
   {
     rules: {
       ...all,
     },
   },
-] satisfies Linter.FlatConfig[];
+];
+export default config;

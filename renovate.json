@@ -1,9 +1,6 @@
 {
-  "extends": [
-    "config:base",
-    ":preserveSemverRanges",
-    ":disableDependencyDashboard"
-  ],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":preserveSemverRanges"],
   "packageRules": [
     {
       "updateTypes": ["minor", "patch", "pin", "digest"],
@@ -11,6 +8,10 @@
     },
     {
       "depTypeList": ["devDependencies"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions", "devcontainer"],
       "automerge": true
     }
   ]

@@ -36,17 +36,16 @@ function getConfigResolver(
       additionalPluginPool: new Map([["eslint-plugin-jsonc", plugin]]),
       getEslintRecommendedConfig() {
         // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
-        return require("../../../conf/eslint-recommended.js");
+        return require("../../../conf/eslint-recommended");
       },
       getEslintAllConfig() {
         // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
-        return require("../../../conf/eslint-all.js");
+        return require("../../../conf/eslint-all");
       },
       // for v1.1.0
-      eslintRecommendedPath: require.resolve(
-        "../../../conf/eslint-recommended.js",
-      ),
-      eslintAllPath: require.resolve("../../../conf/eslint-all.js"),
+      eslintRecommendedPath:
+        require.resolve("../../../conf/eslint-recommended"),
+      eslintAllPath: require.resolve("../../../conf/eslint-all"),
       // other plugins should be resolved as siblings to this one
       resolvePluginsRelativeTo: resolve(__dirname, "../../../../../"),
     });

@@ -22,22 +22,25 @@ import {
   AST,
   getStaticJSONValue,
 } from "jsonc-eslint-parser";
+import type { Linter } from "eslint";
 
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
 const configs = {
-  base,
-  "auto-config": autoConfig,
-  "recommended-with-json": recommendedWithJson,
-  "recommended-with-jsonc": recommendedWithJsonc,
-  "recommended-with-json5": recommendedWithJson5,
-  prettier,
-  all,
-  "flat/base": flatBase,
-  "flat/recommended-with-json": flatRecommendedWithJson,
-  "flat/recommended-with-jsonc": flatRecommendedWithJsonc,
-  "flat/recommended-with-json5": flatRecommendedWithJson5,
-  "flat/prettier": flatPrettier,
-  "flat/all": flatAll,
+  base: base as Linter.LegacyConfig,
+  "auto-config": autoConfig as Linter.LegacyConfig,
+  "recommended-with-json": recommendedWithJson as Linter.LegacyConfig,
+  "recommended-with-jsonc": recommendedWithJsonc as Linter.LegacyConfig,
+  "recommended-with-json5": recommendedWithJson5 as Linter.LegacyConfig,
+  prettier: prettier as Linter.LegacyConfig,
+  all: all as Linter.LegacyConfig,
+  "flat/base": flatBase as Linter.Config[],
+  "flat/recommended-with-json": flatRecommendedWithJson as Linter.Config[],
+  "flat/recommended-with-jsonc": flatRecommendedWithJsonc as Linter.Config[],
+  "flat/recommended-with-json5": flatRecommendedWithJson5 as Linter.Config[],
+  "flat/prettier": flatPrettier as Linter.Config[],
+  "flat/all": flatAll as Linter.Config[],
 };
+/* eslint-enable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will.  */
 
 const rules = ruleList.reduce(
   (obj, r) => {
