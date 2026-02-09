@@ -1,0 +1,32 @@
+const js = require("@eslint/js");
+
+module.exports = [
+  {
+    ...js.configs.recommended,
+    "files": ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
+  },
+  {
+    "files": ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
+    "rules": {
+      "array-bracket-newline": "error",
+      "array-bracket-spacing": "error",
+      "array-element-newline": "error",
+      "comma-dangle": "error",
+      "comma-style": "error",
+      "indent": "error",
+      "key-spacing": "error",
+      "no-dupe-keys": "error",
+      "no-multi-str": "error",
+      "no-octal-escape": "error",
+      "no-sparse-arrays": "error",
+      "no-useless-escape": "error",
+      "object-curly-newline": "error",
+      "object-curly-spacing": "error",
+      "object-property-newline": "error",
+      "quote-props": "error",
+      "quotes": "error",
+      "sort-keys": "error",
+      "space-unary-ops": "error"
+    }
+  }
+]

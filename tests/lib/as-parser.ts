@@ -2,7 +2,8 @@ import path from "path";
 import assert from "assert";
 import plugin from "../../lib/index";
 import { getLegacyESLint } from "eslint-compat-utils/eslint";
-const ESLint = getLegacyESLint();
+import * as eslint from "eslint";
+import semver from "semver";
 
 // -----------------------------------------------------------------------------
 // Tests
@@ -12,6 +13,11 @@ const TEST_CWD = path.join(__dirname, "../fixtures/integrations/eslint-plugin");
 
 describe("eslint-plugin-jsonc as parser", () => {
   it("should parse '.json6'", async () => {
+    if (semver.satisfies(eslint.Linter.version, ">=10.0.0")) {
+      // ESLint 10+ cannot use Legacy Config
+      return;
+    }
+    const ESLint = getLegacyESLint();
     const engine = new ESLint({
       cwd: TEST_CWD,
       extensions: [".js", ".json6"],

@@ -2,23 +2,75 @@ import assert from "assert";
 import path from "path";
 import rule from "../../../lib/rules/auto";
 import { getLegacyESLint } from "eslint-compat-utils/eslint";
+import * as eslint from "eslint";
+import semver from "semver";
+import * as jsonParser from "jsonc-eslint-parser";
 
 const ROOT_DIR = path.join(__dirname, "../../fixtures/auto");
 
-function run(tests: {
-  valid: {
-    code: string;
-    filename: string;
-    languageOptions?: { parser: string };
-  }[];
-  invalid: {
-    code: string;
-    filename: string;
-    errors: string[];
-    output: string;
-    languageOptions: { parser: string };
-  }[];
-}) {
+type LinterFunction = (
+  code: string,
+  filePath: string,
+  parser: string | undefined,
+) => Promise<{
+  messages: eslint.Linter.LintMessage[];
+  output: string | undefined;
+}>;
+
+function buildLinter(): LinterFunction {
+  if (semver.satisfies(eslint.Linter.version, "<10.0.0")) {
+    return buildLegacyLinter();
+  }
+
+  const plugin = { rules: { auto: rule } };
+  const config: eslint.Linter.Config = {
+    files: ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
+    plugins: {
+      jsonc: plugin as any,
+    },
+    rules: {
+      "jsonc/auto": "error",
+    } as const,
+  };
+
+  return async function lint(
+    code: string,
+    filePath: string,
+    parser: string | undefined,
+  ): Promise<{
+    messages: eslint.Linter.LintMessage[];
+    output: string | undefined;
+  }> {
+    const parserConfig = {
+      files: config.files,
+      languageOptions: {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports -- For test
+        parser: parser ? require(parser) : jsonParser,
+      },
+    };
+    const engine = new eslint.ESLint({
+      cwd: path.dirname(filePath),
+      overrideConfig: [config, parserConfig],
+    });
+    const fixEngine = new eslint.ESLint({
+      cwd: path.dirname(filePath),
+      fix: true,
+      overrideConfig: [config, parserConfig],
+    });
+
+    const resultFixBefore = await engine.lintText(code, { filePath });
+    assert.strictEqual(resultFixBefore.length, 1);
+
+    const resultFixAfter = await fixEngine.lintText(code, { filePath });
+    assert.strictEqual(resultFixAfter.length, 1);
+    return {
+      messages: resultFixBefore[0].messages,
+      output: resultFixAfter[0].output,
+    };
+  };
+}
+
+function buildLegacyLinter(): LinterFunction {
   const ESLint = getLegacyESLint();
   const plugin = { rules: { auto: rule } };
   const config = {
@@ -29,43 +81,14 @@ function run(tests: {
     } as const,
   };
 
-  describe("auto", () => {
-    describe("valid", () => {
-      for (const test of tests.valid) {
-        it(`should pass ${test.filename}`, async () => {
-          const { messages, output } = await lint(
-            test.code,
-            test.filename,
-            test.languageOptions?.parser,
-          );
-          assert.deepStrictEqual(messages, []);
-          assert.strictEqual(output || "", "");
-        });
-      }
-    });
-    describe("invalid", () => {
-      for (const test of tests.invalid) {
-        it(`should fail ${test.filename}`, async () => {
-          const { messages, output } = await lint(
-            test.code,
-            test.filename,
-            test.languageOptions?.parser,
-          );
-          assert.deepStrictEqual(
-            messages.map((m) => m.message),
-            test.errors,
-          );
-          assert.strictEqual(output, test.output);
-        });
-      }
-    });
-  });
-
-  async function lint(
+  return async function lint(
     code: string,
     filePath: string,
     parser: string | undefined,
-  ) {
+  ): Promise<{
+    messages: eslint.Linter.LintMessage[];
+    output: string | undefined;
+  }> {
     const engine = new ESLint({
       cwd: path.dirname(filePath),
       extensions: [".js", ".json"],
@@ -110,7 +133,58 @@ function run(tests: {
       // eslint-disable-next-line no-process-env -- Legacy config test
       delete process.env.ESLINT_USE_FLAT_CONFIG;
     }
-  }
+  };
+}
+
+function run(tests: {
+  valid: {
+    code: string;
+    filename: string;
+    languageOptions?: { parser: string };
+    only?: boolean;
+  }[];
+  invalid: {
+    code: string;
+    filename: string;
+    errors: string[];
+    output: string;
+    languageOptions: { parser: string };
+    only?: boolean;
+  }[];
+}) {
+  const lint = buildLinter();
+
+  describe("auto", () => {
+    describe("valid", () => {
+      for (const test of tests.valid) {
+        (test.only ? it.only : it)(`should pass ${test.filename}`, async () => {
+          const { messages, output } = await lint(
+            test.code,
+            test.filename,
+            test.languageOptions?.parser,
+          );
+          assert.deepStrictEqual(messages, []);
+          assert.strictEqual(output || "", "");
+        });
+      }
+    });
+    describe("invalid", () => {
+      for (const test of tests.invalid) {
+        (test.only ? it.only : it)(`should fail ${test.filename}`, async () => {
+          const { messages, output } = await lint(
+            test.code,
+            test.filename,
+            test.languageOptions?.parser,
+          );
+          assert.deepStrictEqual(
+            messages.map((m) => m.message),
+            test.errors,
+          );
+          assert.strictEqual(output, test.output);
+        });
+      }
+    });
+  });
 }
 
 run({

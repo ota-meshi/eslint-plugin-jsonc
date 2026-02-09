@@ -52,6 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        eslint-version: [9, 10]
         node-version: [18, 20, 22]
     steps:
       - uses: actions/checkout@v4
@@ -59,6 +60,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install Target ESLint Version
+        run: npm install -D "eslint@${{ matrix.eslint-version }}"
       - name: Install Packages
         run: npm install
       - name: Test

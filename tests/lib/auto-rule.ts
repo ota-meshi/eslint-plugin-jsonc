@@ -4,11 +4,16 @@ import assert from "assert";
 import plugin from "../../lib/index";
 import { getLegacyESLint, getESLint } from "eslint-compat-utils/eslint";
 import semver from "semver";
+import * as eslint from "eslint";
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 
 describe("auto rule", () => {
+  if (semver.satisfies(eslint.Linter.version, ">=10.0.0")) {
+    // ESLint 10+ cannot use Legacy Config
+    return;
+  }
   const ESLint = getLegacyESLint();
   const TEST_CWD = path.join(
     __dirname,
@@ -45,13 +50,15 @@ describe("auto rule", () => {
     // eslint-disable-next-line no-process-env -- Legacy config test
     process.env.ESLINT_USE_FLAT_CONFIG = "false";
     try {
-      const resultFixBefore = await engine.lintFiles(["src"]);
+      const resultFixBefore: readonly eslint.ESLint.LintResult[] =
+        await engine.lintFiles(["src"]);
       assert.strictEqual(
         resultFixBefore.reduce((s, m) => s + m.errorCount, 0),
         2,
       );
 
-      const resultFixAfter = await fixEngine.lintFiles(["src"]);
+      const resultFixAfter: readonly eslint.ESLint.LintResult[] =
+        await fixEngine.lintFiles(["src"]);
       assert.strictEqual(
         resultFixAfter.reduce((s, m) => s + m.errorCount, 0),
         0,
@@ -70,7 +77,9 @@ describe("auto rule", () => {
 });
 
 describe("auto rule with flat config", () => {
-  const ESLint = getESLint();
+  const ESLint = semver.satisfies(eslint.Linter.version, "<10.0.0")
+    ? getESLint()
+    : eslint.ESLint;
   if (semver.satisfies(ESLint.version, "<8.0.0")) return;
   const TEST_CWD = path.join(
     __dirname,
