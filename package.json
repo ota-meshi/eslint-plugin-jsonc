@@ -97,7 +97,7 @@
     "@typescript-eslint/parser": "^8.28.0",
     "dts-bundle": "^0.7.3",
     "env-cmd": "^10.1.0",
-    "esbuild": "^0.25.1",
+    "esbuild": "^0.27.0",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-eslint-plugin": "^7.0.0",
