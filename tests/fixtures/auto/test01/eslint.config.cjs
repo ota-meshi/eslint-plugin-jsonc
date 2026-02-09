@@ -2,6 +2,11 @@ const js = require("@eslint/js");
 
 module.exports = [
   {
+    ignores: [
+      ".eslintrc.json"
+    ]
+  },
+  {
     ...js.configs.recommended,
     "files": ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
   },
