@@ -86,7 +86,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 > **Requirements**
 >
 > - ESLint v6.0.0 and above
-> - Node.js v20.19.x, v22.13.x, v24.x and above
+> - Node.js v20.x (>=20.19.0), v22.x (>=22.13.0), v24.x and above
 
 <!--DOCS_IGNORE_END-->
 
