@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       espree: null,
-      jsoncESLintParser: null,
+      jsoncLanguage: null,
       vueESLintParser: null,
       format: {
         insertSpaces: true,
@@ -78,6 +78,9 @@ export default {
               rules: Object.fromEntries(
                 rules.map((rule) => [rule.meta.docs.ruleName, rule]),
               ),
+              languages: {
+                jsonc: this.jsoncLanguage,
+              },
             },
           },
           rules: this.rules,
@@ -116,9 +119,15 @@ export default {
         },
         {
           files: ["*.{json,jsonc,json5}", "**/*.{json,jsonc,json5}"],
-          languageOptions: {
-            parser: this.jsoncESLintParser,
-          },
+          language: "jsonc/jsonc",
+          // languageOptions: {
+          //   parser: {
+          //     parseForESLint: (...args) => {
+          //       debugger;
+          //       return this.jsoncESLintParser.parseForESLint(...args);
+          //     },
+          //   },
+          // },
         },
         {
           files: ["*.vue", "**/*.vue"],
@@ -129,7 +138,7 @@ export default {
       ];
     },
     linter() {
-      if (!this.jsoncESLintParser || !this.vueESLintParser) {
+      if (!this.jsoncLanguage || !this.vueESLintParser) {
         return null;
       }
       const linter = new Linter();
@@ -139,13 +148,13 @@ export default {
 
   async mounted() {
     // Load parser asynchronously.
-    const [espree, jsoncESLintParser, vueESLintParser] = await Promise.all([
+    const [espree, { JSONCLanguage }, vueESLintParser] = await Promise.all([
       import("espree"),
-      import("jsonc-eslint-parser"),
+      import("../../../../../lib/language/index.ts"),
       import("vue-eslint-parser"),
     ]);
     this.espree = espree;
-    this.jsoncESLintParser = jsoncESLintParser;
+    this.jsoncLanguage = new JSONCLanguage();
     this.vueESLintParser = vueESLintParser;
 
     const monaco = await loadMonacoEditor();
