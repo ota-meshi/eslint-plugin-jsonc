@@ -3,7 +3,6 @@
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import type { Comment, Token } from "../types.ts";
-// @ts-expect-error missing types
 import { latestEcmaVersion, tokenize } from "espree";
 
 export const LINEBREAKS = new Set(["\r\n", "\r", "\n", "\u2028", "\u2029"]);
@@ -46,13 +45,13 @@ export function canTokensBeAdjacent(
       return false;
     }
 
-    const comments = tokens.comments;
+    const comments = tokens.comments!;
 
     leftToken = tokens[tokens.length - 1];
     if (comments.length) {
       const lastComment = comments[comments.length - 1];
 
-      if (!leftToken || lastComment.range[0] > leftToken.range[0])
+      if (!leftToken || lastComment.range![0] > leftToken.range![0])
         leftToken = lastComment;
     }
   } else {
@@ -79,13 +78,13 @@ export function canTokensBeAdjacent(
       return false;
     }
 
-    const comments = tokens.comments;
+    const comments = tokens.comments!;
 
     rightToken = tokens[0];
     if (comments.length) {
       const firstComment = comments[0];
 
-      if (!rightToken || firstComment.range[0] < rightToken.range[0])
+      if (!rightToken || firstComment.range![0] < rightToken.range![0])
         rightToken = firstComment;
     }
   } else {
