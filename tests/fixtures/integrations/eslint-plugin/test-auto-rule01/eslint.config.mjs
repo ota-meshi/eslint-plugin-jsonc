@@ -1,13 +1,14 @@
+import * as parser from "jsonc-eslint-parser";
+
 let plugin;
 try {
-  plugin = require("../../../../../lib/index");
+  plugin = await import("../../../../../lib/index.ts");
 } catch (e) {
   // @ts-ignore -- ignore
-  plugin = require("../../../../../dist/index");
+  plugin = await import("../../../../../dist/index.js");
 }
-const parser = require("jsonc-eslint-parser");
 
-module.exports = [
+export default [
   {
     plugins: {
       jsonc: plugin,

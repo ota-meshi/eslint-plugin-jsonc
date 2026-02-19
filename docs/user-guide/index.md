@@ -18,7 +18,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 
 ### Configuration
 
-#### New Config (`eslint.config.js`)
+#### Configuration (`eslint.config.js`)
 
 Use `eslint.config.js` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/configuration-files-new>.
 
@@ -29,7 +29,7 @@ import eslintPluginJsonc from 'eslint-plugin-jsonc';
 export default [
   // add more generic rule sets here, such as:
   // js.configs.recommended,
-  ...eslintPluginJsonc.configs['flat/recommended-with-jsonc'],
+  ...eslintPluginJsonc.configs['recommended-with-jsonc'],
   {
     rules: {
       // override/add rules settings here, such as:
@@ -41,72 +41,20 @@ export default [
 
 This plugin provides configs:
 
-- `*.configs['flat/base']` ... Configuration to enable correct JSON parsing.
-- `*.configs['flat/recommended-with-json']` ... Recommended configuration for JSON.
-- `*.configs['flat/recommended-with-jsonc']` ... Recommended configuration for JSONC.
-- `*.configs['flat/recommended-with-json5']` ... Recommended configuration for JSON5.
-- `*.configs['flat/prettier']` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
-- `*.configs['flat/all']` ... Enables all rules. It's meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
+- `*.configs.base` ... Configuration to enable correct JSON parsing.
+- `*.configs['recommended-with-json']` ... Recommended configuration for JSON.
+- `*.configs['recommended-with-jsonc']` ... Recommended configuration for JSONC.
+- `*.configs['recommended-with-json5']` ... Recommended configuration for JSON5.
+- `*.configs.prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
+- `*.configs.all` ... Enables all rules. It's meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
+
+For backward compatibility, the `flat/*` prefix is still supported:
+
+- `*.configs['flat/base']`, `*.configs['flat/recommended-with-json']`, etc.
 
 This plugin will parse `.json`, `.jsonc` and `.json5` by default using the configuration provided by the plugin (unless you already have a parser configured - see below).
 
 See [the rule list](../rules/index.md) to get the `rules` that this plugin provides.
-
-#### Legacy Config (`.eslintrc`)
-
-Use `.eslintrc.*` file to configure rules. See also: <https://eslint.org/docs/latest/use/configure/>.
-
-Example **.eslintrc.js**:
-
-```js
-module.exports = {
-  extends: [
-    // add more generic rulesets here, such as:
-    // 'eslint:recommended',
-    "plugin:jsonc/recommended-with-jsonc",
-  ],
-  rules: {
-    // override/add rules settings here, such as:
-    // 'jsonc/rule-name': 'error'
-  },
-};
-```
-
-This plugin provides configs:
-
-- `plugin:jsonc/base` ... Configuration to enable correct JSON parsing.
-- `plugin:jsonc/recommended-with-json` ... Recommended configuration for JSON.
-- `plugin:jsonc/recommended-with-jsonc` ... Recommended configuration for JSONC.
-- `plugin:jsonc/recommended-with-json5` ... Recommended configuration for JSON5.
-- `plugin:jsonc/prettier` ... Turn off rules that may conflict with [Prettier](https://prettier.io/).
-- `plugin:jsonc/all` ... Enables all rules. It's meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
-
-This plugin will parse `.json`, `.jsonc` and `.json5` by default using the configuration provided by the plugin (unless you already have a parser configured - see below).
-
-See [the rule list](../rules/index.md) to get the `rules` that this plugin provides.
-
-#### Parser Configuration
-
-If you have already specified a parser in your `.eslintrc`, you will also need to manually configure the parser for JSON files (your parser config takes priority over that defined by `extends` shared configs).
-
-For example, if you are using the `"@babel/eslint-parser"`, configure it as follows:
-
-```js
-module.exports = {
-  // ...
-  extends: ["plugin:jsonc/recommended-with-jsonc"],
-  // ...
-  parser: "@babel/eslint-parser",
-  // Add an `overrides` section to add a parser configuration for json.
-  overrides: [
-    {
-      files: ["*.json", "*.json5", "*.jsonc"],
-      parser: "jsonc-eslint-parser",
-    },
-  ],
-  // ...
-};
-```
 
 #### **Experimental** support for `@eslint/json`
 

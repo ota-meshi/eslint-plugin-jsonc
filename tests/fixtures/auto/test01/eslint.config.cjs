@@ -2,23 +2,21 @@ const js = require("@eslint/js");
 
 module.exports = [
   {
-    ignores: [
-      ".eslintrc.json"
-    ]
+    ignores: [".eslintrc.json"],
   },
   {
     ...js.configs.recommended,
-    "files": ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
+    files: ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
   },
   {
-    "files": ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
-    "rules": {
+    files: ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
+    rules: {
       "array-bracket-newline": "error",
       "array-bracket-spacing": "error",
       "array-element-newline": "error",
       "comma-dangle": "error",
       "comma-style": "error",
-      "indent": "error",
+      indent: "error",
       "key-spacing": "error",
       "no-dupe-keys": "error",
       "no-multi-str": "error",
@@ -29,9 +27,9 @@ module.exports = [
       "object-curly-spacing": "error",
       "object-property-newline": "error",
       "quote-props": "error",
-      "quotes": "error",
+      quotes: "error",
       "sort-keys": "error",
-      "space-unary-ops": "error"
-    }
-  }
-]
+      "space-unary-ops": "error",
+    },
+  },
+];

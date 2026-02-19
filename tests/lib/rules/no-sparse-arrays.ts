@@ -1,9 +1,9 @@
-import { ESLint } from "../test-lib/eslint-compat";
 import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/no-sparse-arrays";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
 import semver from "semver";
+import { ESLint } from "eslint";
 
 const tester = new RuleTester({
   languageOptions: {

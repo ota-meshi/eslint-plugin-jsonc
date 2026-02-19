@@ -1,12 +1,5 @@
 import type { RuleModule } from "./types";
 import { rules as ruleList } from "./utils/rules";
-import base from "./configs/base";
-import autoConfig from "./configs/auto-config";
-import recommendedWithJson from "./configs/recommended-with-json";
-import recommendedWithJsonc from "./configs/recommended-with-jsonc";
-import recommendedWithJson5 from "./configs/recommended-with-json5";
-import prettier from "./configs/prettier";
-import all from "./configs/all";
 import flatBase from "./configs/flat/base";
 import flatRecommendedWithJson from "./configs/flat/recommended-with-json";
 import flatRecommendedWithJsonc from "./configs/flat/recommended-with-jsonc";
@@ -26,13 +19,14 @@ import type { Linter } from "eslint";
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
 const configs = {
-  base: base as Linter.LegacyConfig,
-  "auto-config": autoConfig as Linter.LegacyConfig,
-  "recommended-with-json": recommendedWithJson as Linter.LegacyConfig,
-  "recommended-with-jsonc": recommendedWithJsonc as Linter.LegacyConfig,
-  "recommended-with-json5": recommendedWithJson5 as Linter.LegacyConfig,
-  prettier: prettier as Linter.LegacyConfig,
-  all: all as Linter.LegacyConfig,
+  // Primary configs
+  base: flatBase as Linter.Config[],
+  "recommended-with-json": flatRecommendedWithJson as Linter.Config[],
+  "recommended-with-jsonc": flatRecommendedWithJsonc as Linter.Config[],
+  "recommended-with-json5": flatRecommendedWithJson5 as Linter.Config[],
+  prettier: flatPrettier as Linter.Config[],
+  all: flatAll as Linter.Config[],
+  // Backward compatibility - flat/* prefix
   "flat/base": flatBase as Linter.Config[],
   "flat/recommended-with-json": flatRecommendedWithJson as Linter.Config[],
   "flat/recommended-with-jsonc": flatRecommendedWithJsonc as Linter.Config[],

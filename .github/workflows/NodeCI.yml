@@ -69,6 +69,8 @@ jobs:
         run: npm install -D "eslint@${{ matrix.eslint-version }}"
       - name: Install Packages
         run: npm install
+      - name: Build
+        run: npm run build
       - name: Test
         run: npm test
   test-and-coverage:
@@ -78,6 +80,8 @@ jobs:
       - uses: actions/setup-node@v6
       - name: Install Packages
         run: npm install
+      - name: Build
+        run: npm run build
       - name: Test
         run: npm run test:nyc
       - name: Coveralls GitHub Action

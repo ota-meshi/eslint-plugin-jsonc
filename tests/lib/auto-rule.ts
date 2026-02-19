@@ -1,89 +1,14 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import plugin from "../../lib/index";
-import { getLegacyESLint, getESLint } from "eslint-compat-utils/eslint";
-import semver from "semver";
-import * as eslint from "eslint";
+import { ESLint } from "eslint";
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
-
-describe("auto rule", () => {
-  if (semver.satisfies(eslint.Linter.version, ">=10.0.0")) {
-    // ESLint 10+ cannot use Legacy Config
-    return;
-  }
-  const ESLint = getLegacyESLint();
+describe("auto rule with flat config", () => {
   const TEST_CWD = path.join(
     __dirname,
     "../fixtures/integrations/eslint-plugin/test-auto-rule01",
-  );
-  const FIXTURE_ROOT = path.join(TEST_CWD, "./src");
-  it("should auto rule enable", async () => {
-    const fixtures: { [name: string]: string } = {};
-    for (const filename of fs.readdirSync(FIXTURE_ROOT)) {
-      const code = fs.readFileSync(path.join(FIXTURE_ROOT, filename), "utf8");
-      fixtures[filename] = code;
-      const invalidCode = code
-        .split("\n")
-        .map((line) => line.replace(/^[\t ]+/u, ""))
-        .join("\n");
-      fs.writeFileSync(path.join(FIXTURE_ROOT, filename), invalidCode, "utf8");
-    }
-
-    const engine = new ESLint({
-      cwd: TEST_CWD,
-      extensions: [".js", ".json"],
-      plugins: {
-        "eslint-plugin-jsonc": plugin as never,
-      },
-    });
-    const fixEngine = new ESLint({
-      cwd: TEST_CWD,
-      extensions: [".js", ".json"],
-      plugins: {
-        "eslint-plugin-jsonc": plugin as never,
-      },
-      fix: true,
-    });
-    // eslint-disable-next-line no-process-env -- Legacy config test
-    process.env.ESLINT_USE_FLAT_CONFIG = "false";
-    try {
-      const resultFixBefore: readonly eslint.ESLint.LintResult[] =
-        await engine.lintFiles(["src"]);
-      assert.strictEqual(
-        resultFixBefore.reduce((s, m) => s + m.errorCount, 0),
-        2,
-      );
-
-      const resultFixAfter: readonly eslint.ESLint.LintResult[] =
-        await fixEngine.lintFiles(["src"]);
-      assert.strictEqual(
-        resultFixAfter.reduce((s, m) => s + m.errorCount, 0),
-        0,
-      );
-      await ESLint.outputFixes(resultFixAfter);
-    } finally {
-      // eslint-disable-next-line no-process-env -- Legacy config test
-      delete process.env.ESLINT_USE_FLAT_CONFIG;
-    }
-
-    for (const filename of Object.keys(fixtures)) {
-      const code = fs.readFileSync(path.join(FIXTURE_ROOT, filename), "utf8");
-      assert.strictEqual(code, fixtures[filename]);
-    }
-  });
-});
-
-describe("auto rule with flat config", () => {
-  const ESLint = semver.satisfies(eslint.Linter.version, "<10.0.0")
-    ? getESLint()
-    : eslint.ESLint;
-  if (semver.satisfies(ESLint.version, "<8.0.0")) return;
-  const TEST_CWD = path.join(
-    __dirname,
-    "../fixtures/integrations/eslint-plugin/test-auto-rule-with-flat-config01",
   );
   const FIXTURE_ROOT = path.join(TEST_CWD, "./src");
   it("should auto rule enable", async () => {

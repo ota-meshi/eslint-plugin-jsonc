@@ -12,6 +12,7 @@ export default [
       "tests/fixtures/integrations",
       "tests/fixtures/**/*.vue",
       "tests/fixtures/**/*.json",
+      "tests/fixtures/**/eslint.config.cjs",
       "tests-integrations/fixtures/eslint-plugin-markdown/test.md",
       "tests-integrations/fixtures/vue-eslint-parser-option/test.json",
       "tests-integrations/fixtures/eslint-plugin-markdown-nest/test.md",
