@@ -17,7 +17,10 @@ import type { AST } from "jsonc-eslint-parser";
 import type { Linter } from "eslint";
 import { getRules } from "./utils/rules.ts";
 import { JSONCLanguage } from "./language/index.ts";
-import type { JSONCLanguageOptions, JSONCSourceCode } from "./language/index.ts";
+import type {
+  JSONCLanguageOptions,
+  JSONCSourceCode,
+} from "./language/index.ts";
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
 const configs = {

@@ -57,10 +57,7 @@ export type JSONCComment = Comment & {
 /**
  * JSONC-specific syntax element type
  */
-export type JSONCSyntaxElement =
-  | AST.JSONNode
-  | ESLintAST.Token
-  | JSONCComment;
+export type JSONCSyntaxElement = AST.JSONNode | ESLintAST.Token | JSONCComment;
 export type JSONCToken = ESLintAST.Token | JSONCComment;
 
 /**
@@ -113,7 +110,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
       JSONCComment
     >({
       tokens: [
-        ...(config.ast.tokens as Array<ESLintAST.Token | JSONCComment>),
+        ...(config.ast.tokens as (ESLintAST.Token | JSONCComment)[]),
         ...(config.ast.comments as JSONCComment[]),
       ],
       isComment: (token): token is JSONCComment =>
@@ -174,7 +171,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    */
   public get tokensAndComments(): JSONCToken[] {
     return (this.#cacheTokensAndComments ??= [
-      ...(this.ast.tokens as ESLintAST.Token[]),
+      ...this.ast.tokens,
       ...(this.ast.comments as JSONCComment[]),
     ].sort((a, b) => a.range[0] - b.range[0]));
   }
@@ -194,9 +191,9 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    */
   public getInlineConfigNodes(): JSONCComment[] {
     if (!this.#inlineConfigComments) {
-      this.#inlineConfigComments = (
-        this.ast.comments as JSONCComment[]
-      ).filter((comment) => INLINE_CONFIG.test(comment.value));
+      this.#inlineConfigComments = (this.ast.comments as JSONCComment[]).filter(
+        (comment) => INLINE_CONFIG.test(comment.value),
+      );
     }
 
     return this.#inlineConfigComments;
@@ -371,11 +368,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    */
   public getFirstToken<R extends ESLintAST.Token | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
   ): R | null;
 
   public getFirstToken(
@@ -452,11 +445,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    */
   public getLastToken<R extends ESLintAST.Token | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
   ): R | null;
 
   public getLastToken(
@@ -528,11 +517,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    */
   public getTokenBefore<R extends ESLintAST.Token | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
   ): R | null;
 
   public getTokenBefore(
@@ -604,11 +589,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    */
   public getTokenAfter<R extends ESLintAST.Token | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
   ): R | null;
 
   public getTokenAfter(
@@ -683,11 +664,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getFirstTokenBetween<R extends ESLintAST.Token | JSONCComment>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
   ): R | null;
 
   public getFirstTokenBetween(
@@ -775,11 +752,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getLastTokenBetween<R extends ESLintAST.Token | JSONCComment>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
   ): R | null;
 
   public getLastTokenBetween(
@@ -927,9 +900,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     );
   }
 
-  public getCommentsInside(
-    nodeOrToken: JSONCSyntaxElement,
-  ): JSONCComment[] {
+  public getCommentsInside(nodeOrToken: JSONCSyntaxElement): JSONCComment[] {
     return this.tokenStore.getCommentsInside(nodeOrToken as never);
   }
 
@@ -987,10 +958,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    * Compatibility for ESLint's SourceCode API
    * @deprecated
    */
-  public isSpaceBetweenTokens(
-    first: JSONCToken,
-    second: JSONCToken,
-  ): boolean {
+  public isSpaceBetweenTokens(first: JSONCToken, second: JSONCToken): boolean {
     return this.isSpaceBetween(first, second);
   }
 

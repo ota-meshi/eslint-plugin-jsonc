@@ -80,12 +80,8 @@ class JSONRuleTester {
       invalid: InvalidTestCase[];
     },
   ): void {
-    const nonVueValid = tests.valid.filter(
-      (test) => !isUseVueParser(test),
-    );
-    const nonVueInvalid = tests.invalid.filter(
-      (test) => !isUseVueParser(test),
-    );
+    const nonVueValid = tests.valid.filter((test) => !isUseVueParser(test));
+    const nonVueInvalid = tests.invalid.filter((test) => !isUseVueParser(test));
     const vueValid = tests.valid.filter((test) => isUseVueParser(test));
     const vueInvalid = tests.invalid.filter((test) => isUseVueParser(test));
 
@@ -206,4 +202,3 @@ function isUseVueParser(
     | undefined;
   return parser?.meta?.name === "vue-eslint-parser";
 }
-

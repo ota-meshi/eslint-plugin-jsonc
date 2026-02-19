@@ -24,15 +24,12 @@ export type JSONCLanguageOptions = {
 /**
  * The JSONC language implementation for ESLint.
  */
-export class JSONCLanguage
-  implements
-    Language<{
-      LangOptions: JSONCLanguageOptions;
-      Code: JSONCSourceCode;
-      RootNode: AST.JSONProgram;
-      Node: AST.JSONNode;
-    }>
-{
+export class JSONCLanguage implements Language<{
+  LangOptions: JSONCLanguageOptions;
+  Code: JSONCSourceCode;
+  RootNode: AST.JSONProgram;
+  Node: AST.JSONNode;
+}> {
   /**
    * The type of file to read.
    */
@@ -56,9 +53,7 @@ export class JSONCLanguage
   /**
    * Validates the language options.
    */
-  public validateLanguageOptions(
-    _languageOptions: JSONCLanguageOptions,
-  ): void {
+  public validateLanguageOptions(_languageOptions: JSONCLanguageOptions): void {
     // Currently no validation needed
   }
 
