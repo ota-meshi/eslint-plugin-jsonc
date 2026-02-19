@@ -9,7 +9,7 @@ npm install --save-dev eslint eslint-plugin-jsonc
 ::: tip Requirements
 
 - ESLint v6.0.0 and above
-- Node.js v12.22.x, v14.17.x, v16.x and above
+- Node.js v20.x (>=20.19.0), v22.x (>=22.13.0), v24.x and above
 :::
 
 ## :book: Usage
