@@ -1,5 +1,4 @@
 import type { ESLint, Linter } from "eslint";
-import * as parser from "jsonc-eslint-parser";
 import plugin from "../../index.ts";
 
 export default [
@@ -19,9 +18,7 @@ export default [
       "*.jsonc",
       "**/*.jsonc",
     ],
-    languageOptions: {
-      parser,
-    },
+    language: "jsonc/jsonc",
     rules: {
       // ESLint core rules known to cause problems with JSON.
       strict: "off",
@@ -29,4 +26,4 @@ export default [
       "no-unused-vars": "off",
     },
   },
-] satisfies Linter.FlatConfig[];
+] satisfies Linter.Config[];

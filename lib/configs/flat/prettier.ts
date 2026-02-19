@@ -24,4 +24,4 @@ export default [
       "jsonc/space-unary-ops": "off",
     },
   },
-] satisfies Linter.FlatConfig[];
+] satisfies Linter.Config[];
