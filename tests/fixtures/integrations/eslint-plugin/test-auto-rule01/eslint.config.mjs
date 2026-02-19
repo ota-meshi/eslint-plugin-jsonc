@@ -2,10 +2,10 @@ import * as parser from "jsonc-eslint-parser";
 
 let plugin;
 try {
-  plugin = await import("../../../../../lib/index.ts");
+  plugin = await import("../../../../../src/index.ts");
 } catch (e) {
   // @ts-ignore -- ignore
-  plugin = await import("../../../../../dist/index.js");
+  plugin = await import("../../../../../lib/index.mjs");
 }
 
 export default [
