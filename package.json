@@ -21,7 +21,7 @@
     "prebuild": "npm run -s clean",
     "build": "npm run build:ts",
     "build:ts": "tsdown",
-    "clean": "node -e \"const fs=require('fs');['dist','coverage'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true})}catch(e){}})\"",
+    "clean": "node -e \"import('fs').then(fs=>['dist','coverage'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true})}catch(e){}}))\"",
     "lint": "npm run eslint && npm run tsc",
     "tsc": "tsc --noEmit",
     "eslint": "eslint . --config=./eslint.config.mjs --no-config-lookup",
