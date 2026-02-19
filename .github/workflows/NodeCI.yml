@@ -58,7 +58,7 @@ jobs:
     strategy:
       matrix:
         eslint-version: [9, 10]
-        node-version: [18, 20, 22]
+        node-version: [20, 22, 24]
     steps:
       - uses: actions/checkout@v6
       - name: Use Node.js ${{ matrix.node-version }}
@@ -71,62 +71,6 @@ jobs:
         run: npm install
       - name: Test
         run: npm test
-  test-with-eslint8:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 16.x, 17.x]
-    steps:
-      - uses: actions/checkout@v6
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Target Packages
-        run: |+
-          npm i -D eslint@8 vue-eslint-parser@9
-          npx rimraf node_modules
-          npm install
-      - name: Install Packages
-        run: npm install
-      - name: Test
-        run: npm run test
-  test-with-eslint6:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    steps:
-      - uses: actions/checkout@v6
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Target Packages
-        run: |+
-          npm i -D eslint@6 mocha@7 vue-eslint-parser@9
-          npx rimraf node_modules
-          npm install
-      - name: Test
-        run: npm run test
-  test-with-eslint7:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 16.x]
-    steps:
-      - uses: actions/checkout@v6
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Target Packages
-        run: |+
-          npm i -D eslint@7 vue-eslint-parser@9
-          npx rimraf node_modules
-          npm install
-      - name: Test
-        run: npm run test
   test-and-coverage:
     runs-on: ubuntu-latest
     steps:
