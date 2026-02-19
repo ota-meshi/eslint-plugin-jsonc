@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
-import { rules } from "../lib/utils/rules";
-import type { RuleModule } from "../lib/types";
+import { rules } from "../src/utils/rules";
+import type { RuleModule } from "../src/types";
 import { getNewVersion } from "./lib/changesets-util";
 
 //eslint-disable-next-line jsdoc/require-jsdoc -- tools
@@ -152,8 +152,8 @@ This rule was introduced in eslint-plugin-jsonc ${await this.since}
         : ""
     }## :mag: Implementation
 
-- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/lib/rules/${ruleName}.ts)
-- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/lib/rules/${ruleName}.ts)
+- [Rule source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/src/rules/${ruleName}.ts)
+- [Test source](https://github.com/ota-meshi/eslint-plugin-jsonc/blob/master/tests/src/rules/${ruleName}.ts)
 ${
   extensionRule
     ? typeof extensionRule === "boolean"

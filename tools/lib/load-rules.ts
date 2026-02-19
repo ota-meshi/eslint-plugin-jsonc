@@ -7,7 +7,7 @@ import fs from "fs";
  */
 function readRules() {
   const rules = [];
-  const rulesLibRoot = path.resolve(__dirname, "../../lib/rules");
+  const rulesLibRoot = path.resolve(__dirname, "../../src/rules");
   for (const name of fs
     .readdirSync(rulesLibRoot)
     .filter((n) => n.endsWith(".ts"))) {
@@ -23,7 +23,7 @@ function readRules() {
   }
   const vueCustomBlockRulesLibRoot = path.resolve(
     __dirname,
-    "../../lib/rules/vue-custom-block",
+    "../../src/rules/vue-custom-block",
   );
   for (const name of fs.readdirSync(vueCustomBlockRulesLibRoot)) {
     const ruleName = `vue-custom-block/${name.replace(/\.ts$/u, "")}`;

@@ -4,7 +4,7 @@ import { ESLint } from "eslint";
 import { name, version } from "../package.json";
 import { getNewVersion } from "./lib/changesets-util";
 
-const META_PATH = path.join(__dirname, "../lib/meta.ts");
+const META_PATH = path.join(__dirname, "../src/meta.ts");
 
 void main();
 

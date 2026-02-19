@@ -3,7 +3,7 @@ import fs from "fs";
 import os from "os";
 // import eslint from "eslint"
 import { rules } from "./lib/load-rules";
-import type { RuleModule } from "../lib/types";
+import type { RuleModule } from "../src/types";
 const isWin = os.platform().startsWith("win");
 
 const CONFIGS = {

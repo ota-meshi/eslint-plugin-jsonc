@@ -1,0 +1,388 @@
+import { RuleTester } from "../test-lib/tester";
+import rule from "../../../src/rules/sort-array-values";
+import * as jsonParser from "jsonc-eslint-parser";
+
+const tester = new RuleTester({
+  languageOptions: {
+    parser: jsonParser,
+    ecmaVersion: 2020,
+  },
+});
+
+tester.run("sort-array-values", rule, {
+  valid: [
+    {
+      code: '{"key": ["a", "b", "c"] }',
+      options: [{ pathPattern: "^key$", order: { type: "asc" } }],
+    },
+    {
+      code: '{"key": ["c", "b", "a"] }',
+      options: [{ pathPattern: "^key$", order: { type: "desc" } }],
+    },
+    {
+      code: '{"key": ["c", "a", "b"] }',
+      options: [{ pathPattern: "^key$", order: ["c", "a", "b"] }],
+    },
+    {
+      code: '{"key": ["c", "z", "a", "x", "b", "y"] }',
+      options: [{ pathPattern: "^key$", order: ["c", "a", "b"] }],
+    },
+    {
+      code: '{"key": [ "c","a", "b", "x", "y", "z"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: ["c", "a", "b", { order: { type: "asc" } }],
+        },
+      ],
+    },
+    {
+      code: '{"not target": ["c", "b", "a"] }',
+      options: [{ pathPattern: "^key$", order: { type: "asc" } }],
+    },
+    {
+      code: '{"key": ["A", "a", "b", "B"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "asc", caseSensitive: false },
+        },
+      ],
+    },
+    {
+      code: '{"key": [["b"], ["a"], "c"] }',
+      options: [{ pathPattern: "^key$", order: { type: "asc" } }],
+    },
+  ],
+  invalid: [
+    {
+      code: '{"key": ["c", "b", "a"] }',
+      output: `{"key": [ "b", "a","c"] }`,
+      options: [{ pathPattern: "^key$", order: { type: "asc" } }],
+      errors: [
+        {
+          message:
+            "Expected array values to be in ascending order. 'c' should be after 'a'.",
+          line: 1,
+          column: 10,
+        },
+        {
+          message:
+            "Expected array values to be in ascending order. 'b' should be after 'a'.",
+          line: 1,
+          column: 15,
+        },
+      ],
+    },
+    {
+      code: '{"key": ["a", "b", "c"] }',
+      output: `{"key": [ "b", "c","a"] }`,
+      options: [{ pathPattern: "^key$", order: { type: "desc" } }],
+      errors: [
+        {
+          message:
+            "Expected array values to be in descending order. 'a' should be after 'c'.",
+          line: 1,
+          column: 10,
+        },
+        {
+          message:
+            "Expected array values to be in descending order. 'b' should be after 'c'.",
+          line: 1,
+          column: 15,
+        },
+      ],
+    },
+    {
+      code: '{"key": ["b", "a", "c"] }',
+      output: `{"key": [ "a", "c","b"] }`,
+      options: [{ pathPattern: "^key$", order: ["c", "a", "b"] }],
+      errors: [
+        {
+          message:
+            "Expected array values to be in specified order. 'b' should be after 'c'.",
+          line: 1,
+          column: 10,
+        },
+        {
+          message:
+            "Expected array values to be in specified order. 'a' should be after 'c'.",
+          line: 1,
+          column: 15,
+        },
+      ],
+    },
+    {
+      code: '{"key": ["a", "b", "c"] }',
+      output: '{"key": [ "c","a", "b"] }',
+      options: [{ pathPattern: "^key$", order: ["c", "a", "b"] }],
+      errors: [
+        {
+          message:
+            "Expected array values to be in specified order. 'c' should be before 'a'.",
+          line: 1,
+          column: 20,
+        },
+      ],
+    },
+    {
+      code: '{"key": ["a", "z", "b", "y", "c", "x"] }',
+      output: '{"key": [ "c","a", "z", "b", "y", "x"] }',
+      options: [{ pathPattern: "^key$", order: ["c", "a", "b"] }],
+      errors: [
+        {
+          message:
+            "Expected array values to be in specified order. 'c' should be before 'a'.",
+          line: 1,
+          column: 30,
+        },
+      ],
+    },
+    {
+      code: '{"key": ["a", "z", "b", "y", "c", "x"] }',
+      output: '{"key": [ "c","a", "z", "b", "y", "x"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: ["c", "a", "b", { order: { type: "asc" } }],
+        },
+      ],
+      errors: [
+        {
+          message:
+            "Expected array values to be in specified order. 'z' should be after 'x'.",
+          line: 1,
+          column: 15,
+        },
+        {
+          message:
+            "Expected array values to be in specified order. 'y' should be after 'x'.",
+          line: 1,
+          column: 25,
+        },
+        {
+          message:
+            "Expected array values to be in specified order. 'c' should be before 'a'.",
+          line: 1,
+          column: 30,
+        },
+      ],
+    },
+    {
+      code: '{"key": [ "c","a", "z", "b", "y", "x"] }',
+      output: `{"key": [ "c","a", "b", "y", "x", "z"] }`,
+      options: [
+        {
+          pathPattern: "^key$",
+          order: ["c", "a", "b", { order: { type: "asc" } }],
+        },
+      ],
+      errors: [
+        "Expected array values to be in specified order. 'z' should be after 'x'.",
+        "Expected array values to be in specified order. 'y' should be after 'x'.",
+      ],
+    },
+    {
+      code: '{"key": [ "c","a", "b", "z", "y", "x"] }',
+      output: `{"key": [ "c","a", "b", "y", "x", "z"] }`,
+      options: [
+        {
+          pathPattern: "^key$",
+          order: ["c", "a", "b", { order: { type: "asc" } }],
+        },
+      ],
+      errors: [
+        "Expected array values to be in specified order. 'z' should be after 'x'.",
+        "Expected array values to be in specified order. 'y' should be after 'x'.",
+      ],
+    },
+    {
+      code: '{"key": [ "c","a", "b", "y", "z", "x"] }',
+      output: '{"key": [ "c","a", "b", "x", "y", "z"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: ["c", "a", "b", { order: { type: "asc" } }],
+        },
+      ],
+      errors: [
+        "Expected array values to be in specified order. 'x' should be before 'y'.",
+      ],
+    },
+    {
+      code: '{"key": [,2,1] }',
+      output: '{"key": [,1,2] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        {
+          message:
+            "Expected array values to be in ascending order. '2' should be after '1'.",
+          line: 1,
+          column: 11,
+        },
+      ],
+      ignoreMomoa: true,
+    },
+    {
+      code: '{"key": ["b", "a", "c", 2, 1] }',
+      output: '{"key": [ "a","b", "c", 1, 2] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        {
+          message:
+            "Expected array values to be in ascending order. 'b' should be after 'a'.",
+          line: 1,
+          column: 10,
+        },
+        {
+          message:
+            "Expected array values to be in ascending order. '1' should be before '2'.",
+          line: 1,
+          column: 28,
+        },
+      ],
+    },
+    {
+      code: '{"key": ["b", "c", "a", 1, 2] }',
+      output: '{"key": [ "c","b", "a", 2, 1] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "desc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in descending order. 'b' should be after 'c'.",
+        "Expected array values to be in descending order. '2' should be before '1'.",
+      ],
+    },
+    {
+      code: '{"key": ["A", "b", "a", "B"] }',
+      output: '{"key": ["A", "a", "b", "B"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "asc", caseSensitive: false },
+        },
+      ],
+      errors: [
+        "Expected array values to be in insensitive ascending order. 'b' should be after 'a'.",
+      ],
+    },
+    {
+      code: '{"key": ["A", "a", "b", "B"] }',
+      output: '{"key": ["A", "B", "a", "b"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "asc", caseSensitive: true },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'B' should be before 'a'.",
+      ],
+    },
+    {
+      code: '{"key": ["A", "a", "b", "B"] }',
+      output: '{"key": ["A", "B", "a", "b"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'B' should be before 'a'.",
+      ],
+    },
+    {
+      code: '{"key": ["A", "a", "b", "B"] }',
+      output: '{"key": ["A", "B", "a", "b"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: { type: "asc", natural: true },
+        },
+      ],
+      errors: [
+        "Expected array values to be in natural ascending order. 'B' should be before 'a'.",
+      ],
+    },
+    {
+      code: '["b", "a"]',
+      output: '[ "a","b"]',
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
+      ],
+    },
+    {
+      code: '[/*c1*/,/*c2*/,"b"/*c3*/,/*c4*/"a"/*c5*/,/*c6*/,/*c7*/]',
+      output: '[/*c1*/,/*c2*/,/*c4*/"a"/*c5*/,"b"/*c3*/,/*c6*/,/*c7*/]',
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
+      ],
+      ignoreMomoa: true,
+    },
+    {
+      code: `[
+        "b", // B
+        "a" // A
+      ]`,
+      output: `[
+        "a", // A
+        "b" // B
+      ]`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
+      ],
+    },
+    {
+      code: `[
+        ("b"), // B
+        ("a") // A
+      ]`,
+      output: `[
+        ("a"), // A
+        ("b") // B
+      ]`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected array values to be in ascending order. 'b' should be after 'a'.",
+      ],
+      ignoreMomoa: true,
+    },
+  ],
+});
