@@ -19,13 +19,14 @@ import type { Linter } from "eslint";
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
 const configs = {
+  // Primary configs
   base: flatBase as Linter.Config[],
   "recommended-with-json": flatRecommendedWithJson as Linter.Config[],
   "recommended-with-jsonc": flatRecommendedWithJsonc as Linter.Config[],
   "recommended-with-json5": flatRecommendedWithJson5 as Linter.Config[],
   prettier: flatPrettier as Linter.Config[],
   all: flatAll as Linter.Config[],
-  // Backward compatibility
+  // Backward compatibility - flat/* prefix
   "flat/base": flatBase as Linter.Config[],
   "flat/recommended-with-json": flatRecommendedWithJson as Linter.Config[],
   "flat/recommended-with-jsonc": flatRecommendedWithJsonc as Linter.Config[],
