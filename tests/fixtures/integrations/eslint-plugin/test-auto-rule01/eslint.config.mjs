@@ -1,5 +1,3 @@
-import * as parser from "jsonc-eslint-parser";
-
 let plugin;
 try {
   plugin = await import("../../../../../lib/index.ts");
@@ -24,8 +22,6 @@ export default [
   },
   {
     files: ["**/*.json"],
-    languageOptions: {
-      parser,
-    },
+    language: "jsonc/jsonc",
   },
 ];

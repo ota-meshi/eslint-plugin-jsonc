@@ -458,6 +458,7 @@ export default createRule("key-spacing", {
       return getStaticPropertyName(property);
     }
 
+    /* eslint-disable complexity -- report function is complex but it's necessary to handle all the cases and provide accurate fixes and messages. */
     /**
      * Reports an appropriately-formatted error if spacing is incorrect on one
      * side of the colon.
@@ -468,6 +469,7 @@ export default createRule("key-spacing", {
      * @param mode Value of the mode as "strict" or "minimum"
      */
     function report(
+      /* eslint-enable complexity -- Enabled after report function */
       property: AST.JSONProperty,
       side: "key" | "value",
       whitespace: string,

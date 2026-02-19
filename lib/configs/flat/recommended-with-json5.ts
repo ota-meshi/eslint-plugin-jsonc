@@ -28,4 +28,4 @@ export default [
       "jsonc/vue-custom-block/no-parsing-error": "error",
     },
   },
-] satisfies Linter.FlatConfig[];
+] satisfies Linter.Config[];

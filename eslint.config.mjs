@@ -156,6 +156,7 @@ export default [
       "no-console": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-misused-promises": "off",
+      "max-nested-callbacks": ["error", 7],
     },
   },
   {

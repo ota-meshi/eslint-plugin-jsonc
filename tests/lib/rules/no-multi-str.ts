@@ -14,20 +14,20 @@ tester.run("no-multi-str", rule, {
   invalid: [
     {
       code: '{"GOOD": "Line 1 \\\nLine 2"}',
-      errors: 1, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
+      errors: ["Multiline support is limited to JSON5 only."],
     },
     {
       filename: "test.json",
       code: '"Line 1 \\\nLine 2"',
-      errors: 1, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
+      errors: ["Multiline support is limited to JSON5 only."],
     },
     {
       filename: "test.vue",
       code: `<custom-block lang="json">"Line 1 \\\nLine 2"</custom-block>`,
-      errors: 1,
+      errors: ["Multiline support is limited to JSON5 only."],
       languageOptions: {
         parser: vueParser,
-      }, // FIXME:  drop supports eslint6 ["Multiline support is limited to JSON5 only."],
+      },
     },
   ],
 });

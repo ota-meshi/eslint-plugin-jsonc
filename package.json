@@ -66,6 +66,9 @@
   "homepage": "https://ota-meshi.github.io/eslint-plugin-jsonc/",
   "dependencies": {
     "@eslint-community/eslint-utils": "^4.5.1",
+    "@eslint/core": "^1.0.1",
+    "@eslint/plugin-kit": "^0.6.0",
+    "@ota-meshi/ast-token-store": "^0.2.1",
     "diff-sequences": "^29.6.3",
     "eslint-json-compat-utils": "^0.2.1",
     "espree": "^10.3.0",
@@ -84,6 +87,7 @@
     "@eslint/json": "^1.0.0",
     "@ota-meshi/eslint-plugin": "^0.20.0",
     "@ota-meshi/site-kit-eslint-editor-vue": "^0.2.4",
+    "@stylistic/eslint-plugin": "^5.7.1",
     "@swc-node/register": "^1.11.1",
     "@types/mocha": "^10.0.10",
     "@types/natural-compare": "^1.4.3",
