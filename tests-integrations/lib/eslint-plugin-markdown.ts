@@ -27,13 +27,7 @@ describe("Integration with eslint-plugin-markdown", () => {
 
   it("should lint errors", () => {
     try {
-      const res = cp.execSync(`${ESLINT} "./test.md" --format json`, {
-        env: {
-          // eslint-disable-next-line no-process-env -- Legacy Config test
-          ...process.env,
-          ESLINT_USE_FLAT_CONFIG: "false",
-        },
-      });
+      const res = cp.execSync(`${ESLINT} "./test.md" --format json`);
       console.log(`${res}`);
     } catch (e: any) {
       const results = JSON.parse(`${e.stdout}`);

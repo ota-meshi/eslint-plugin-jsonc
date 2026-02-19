@@ -1,15 +1,1 @@
-{
-  "root": true,
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 2015
-  },
-  "extends": [
-    "plugin:markdown/recommended",
-    "plugin:jsonc/recommended-with-json"
-  ],
-  "rules": {
-    "array-bracket-newline": "error",
-    "jsonc/auto": "error"
-  }
-}
+// This file is no longer used. See eslint.config.js instead.

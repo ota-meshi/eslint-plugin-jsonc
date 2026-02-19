@@ -23,54 +23,41 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
     cp.execSync(`npm i -D ../../../eslint-plugin-jsonc-${version}.tgz`, {
       stdio: "inherit",
     });
+    cp.execSync("npm i", { stdio: "inherit" });
   });
   after(() => {
     process.chdir(originalCwd);
   });
 
-  for (const eslintVersion of [7, 8]) {
-    it(`should lint errors with ESLint v${eslintVersion}`, () => {
-      cp.execSync(`npm i -D eslint@${eslintVersion}`, {
-        stdio: "inherit",
-      });
-      cp.execSync("npm i", { stdio: "inherit" });
-
-      try {
-        const res = cp.execSync(
-          `${ESLINT} "./test.md" --format json --ext .md,.json`,
+  it(`should lint errors`, () => {
+    try {
+      const res = cp.execSync(
+        `${ESLINT} "./test.md" --format json`,
+      );
+      console.log(`${res}`);
+    } catch (e: any) {
+      const results: ESLint.LintResult[] = JSON.parse(`${e.stdout}`);
+      assert.deepStrictEqual(
+        results[0].messages.map((message) => ({
+          message: message.message,
+          ruleId: message.ruleId,
+          line: message.line,
+        })),
+        [
           {
-            env: {
-              // eslint-disable-next-line no-process-env -- Legacy Config test
-              ...process.env,
-              ESLINT_USE_FLAT_CONFIG: "false",
-            },
+            message: "Strings must use doublequote.",
+            ruleId: "jsonc/quotes",
+            line: 3,
           },
-        );
-        console.log(`${res}`);
-      } catch (e: any) {
-        const results: ESLint.LintResult[] = JSON.parse(`${e.stdout}`);
-        assert.deepStrictEqual(
-          results[0].messages.map((message) => ({
-            message: message.message,
-            ruleId: message.ruleId,
-            line: message.line,
-          })),
-          [
-            {
-              message: "Strings must use doublequote.",
-              ruleId: "jsonc/quotes",
-              line: 3,
-            },
-            {
-              message: "Strings must use doublequote.",
-              ruleId: "jsonc/quotes",
-              line: 10,
-            },
-          ],
-        );
-        return;
-      }
-      assert.fail("Expect error");
-    });
-  }
+          {
+            message: "Strings must use doublequote.",
+            ruleId: "jsonc/quotes",
+            line: 10,
+          },
+        ],
+      );
+      return;
+    }
+    assert.fail("Expect error");
+  });
 });
