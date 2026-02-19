@@ -68,7 +68,6 @@
   "dependencies": {
     "@eslint-community/eslint-utils": "^4.5.1",
     "diff-sequences": "^27.5.1",
-    "eslint-compat-utils": "^0.6.4",
     "eslint-json-compat-utils": "^0.2.1",
     "espree": "^9.6.1 || ^10.3.0",
     "graphemer": "^1.4.0",

@@ -4,7 +4,6 @@ import type { AST } from "jsonc-eslint-parser";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
-import { getCwd, getFilename, getSourceCode } from "eslint-compat-utils";
 import { toCompatCreate } from "eslint-json-compat-utils";
 
 /**
@@ -72,13 +71,13 @@ function getCompatContext<T extends Rule.RuleContext>(context: T): T {
   return {
     __proto__: context,
     get sourceCode() {
-      return getSourceCode(context);
+      return context.sourceCode;
     },
     get filename() {
-      return getFilename(context);
+      return context.filename;
     },
     get cwd() {
-      return getCwd(context);
+      return context.cwd;
     },
   } as unknown as T;
 }

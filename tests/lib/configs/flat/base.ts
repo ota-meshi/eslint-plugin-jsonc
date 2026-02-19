@@ -1,6 +1,6 @@
 import assert from "assert";
 import plugin from "../../../../lib/index";
-import { ESLint } from "../../test-lib/eslint-compat";
+import { ESLint } from "eslint";
 
 const code = `{ foo: 42 }`;
 describe("`flat/base` config", () => {

@@ -1,9 +1,7 @@
 import assert from "assert";
 import path from "path";
 import rule from "../../../lib/rules/auto";
-import { getLegacyESLint } from "eslint-compat-utils/eslint";
 import * as eslint from "eslint";
-import semver from "semver";
 import * as jsonParser from "jsonc-eslint-parser";
 
 const ROOT_DIR = path.join(__dirname, "../../fixtures/auto");
@@ -18,10 +16,6 @@ type LinterFunction = (
 }>;
 
 function buildLinter(): LinterFunction {
-  if (semver.satisfies(eslint.Linter.version, "<10.0.0")) {
-    return buildLegacyLinter();
-  }
-
   const plugin = { rules: { auto: rule } };
   const config: eslint.Linter.Config = {
     files: ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
@@ -67,72 +61,6 @@ function buildLinter(): LinterFunction {
       messages: resultFixBefore[0].messages,
       output: resultFixAfter[0].output,
     };
-  };
-}
-
-function buildLegacyLinter(): LinterFunction {
-  const ESLint = getLegacyESLint();
-  const plugin = { rules: { auto: rule } };
-  const config = {
-    plugins: ["jsonc"],
-    parser: "jsonc-eslint-parser",
-    rules: {
-      "jsonc/auto": "error",
-    } as const,
-  };
-
-  return async function lint(
-    code: string,
-    filePath: string,
-    parser: string | undefined,
-  ): Promise<{
-    messages: eslint.Linter.LintMessage[];
-    output: string | undefined;
-  }> {
-    const engine = new ESLint({
-      cwd: path.dirname(filePath),
-      extensions: [".js", ".json"],
-      plugins: {
-        "eslint-plugin-jsonc": plugin as any,
-      },
-      overrideConfig: parser
-        ? {
-            ...config,
-            parser,
-          }
-        : config,
-    });
-    const fixEngine = new ESLint({
-      cwd: path.dirname(filePath),
-      extensions: [".js", ".json"],
-      plugins: {
-        "eslint-plugin-jsonc": plugin as any,
-      },
-      fix: true,
-      overrideConfig: parser
-        ? {
-            ...config,
-            parser,
-          }
-        : config,
-    });
-
-    // eslint-disable-next-line no-process-env -- Legacy config test
-    process.env.ESLINT_USE_FLAT_CONFIG = "false";
-    try {
-      const resultFixBefore = await engine.lintText(code, { filePath });
-      assert.strictEqual(resultFixBefore.length, 1);
-
-      const resultFixAfter = await fixEngine.lintText(code, { filePath });
-      assert.strictEqual(resultFixAfter.length, 1);
-      return {
-        messages: resultFixBefore[0].messages,
-        output: resultFixAfter[0].output,
-      };
-    } finally {
-      // eslint-disable-next-line no-process-env -- Legacy config test
-      delete process.env.ESLINT_USE_FLAT_CONFIG;
-    }
   };
 }
 

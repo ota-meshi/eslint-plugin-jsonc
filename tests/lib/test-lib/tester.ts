@@ -1,11 +1,7 @@
-import type * as eslint from "eslint";
-import { getRuleTester } from "eslint-compat-utils/rule-tester";
+import * as eslint from "eslint";
 import * as jsonParser from "jsonc-eslint-parser";
 import semver from "semver";
-import { getESLint } from "eslint-compat-utils/eslint";
 import type { RuleModule } from "../../../lib/types";
-const RuleTester = getRuleTester();
-const ESLint = getESLint();
 
 let jsonPlugin: any;
 try {
@@ -35,10 +31,10 @@ class JSONRuleTester {
   public constructor(options?: Options) {
     this._testerOptions = options;
     const { ignoreMomoa, ...rest } = options || {};
-    this.testerForBase = new RuleTester(rest);
+    this.testerForBase = new eslint.RuleTester(rest);
     this.testerForMomoa =
-      !ignoreMomoa && semver.satisfies(ESLint.version, ">=9.6.0")
-        ? new RuleTester({
+      !ignoreMomoa && semver.satisfies(eslint.ESLint.version, ">=9.6.0")
+        ? new eslint.RuleTester({
             ...rest,
             plugins: {
               json: jsonPlugin,
@@ -143,6 +139,8 @@ function isUseJsoncESLintParser(
 ): boolean {
   const testParser =
     typeof test === "string" ? undefined : test.languageOptions?.parser;
-  const parser = testParser ?? testerOptions?.languageOptions?.parser;
+  const parser = (testParser ?? testerOptions?.languageOptions?.parser) as
+    | { meta?: unknown }
+    | undefined;
   return parser?.meta === jsonParser.meta;
 }
