@@ -1,13 +1,11 @@
 module.exports = [
   {
-    ignores: [
-      ".eslintrc.json"
-    ]
+    ignores: [".eslintrc.json"],
   },
   {
-    "files": ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
-    "rules": {
-      "indent": "error"
-    }
-  }
-]
+    files: ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
+    rules: {
+      indent: "error",
+    },
+  },
+];

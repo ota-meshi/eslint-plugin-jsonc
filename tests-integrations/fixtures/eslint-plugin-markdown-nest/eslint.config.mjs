@@ -1,14 +1,14 @@
-const markdown = require("eslint-plugin-markdown");
-const jsonc = require("eslint-plugin-jsonc");
+import markdown from "eslint-plugin-markdown";
+import jsonc from "eslint-plugin-jsonc";
 
-module.exports = [
+export default [
   ...markdown.configs.recommended,
   {
     rules: {
       quotes: ["error", "single"],
     },
   },
-  ...jsonc.configs["recommended-with-json"],
+  ...jsonc.configs["flat/recommended-with-json"],
   {
     files: ["*.json"],
     rules: {

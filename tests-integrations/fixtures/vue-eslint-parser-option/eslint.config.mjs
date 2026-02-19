@@ -1,8 +1,8 @@
-const vueParser = require("vue-eslint-parser");
-const jsoncParser = require("jsonc-eslint-parser");
-const jsonc = require("eslint-plugin-jsonc");
+import vueParser from "vue-eslint-parser";
+import * as jsoncParser from "jsonc-eslint-parser";
+import jsonc from "eslint-plugin-jsonc";
 
-module.exports = [
+export default [
   {
     files: ["**/*.json"],
     plugins: {

@@ -31,9 +31,7 @@ describe("Integration with eslint-plugin-markdown with nesting config", () => {
 
   it(`should lint errors`, () => {
     try {
-      const res = cp.execSync(
-        `${ESLINT} "./test.md" --format json`,
-      );
+      const res = cp.execSync(`${ESLINT} "./test.md" --format json`);
       console.log(`${res}`);
     } catch (e: any) {
       const results: ESLint.LintResult[] = JSON.parse(`${e.stdout}`);
