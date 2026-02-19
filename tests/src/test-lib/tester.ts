@@ -1,7 +1,10 @@
 import * as eslint from "eslint";
 import * as jsonParser from "jsonc-eslint-parser";
 import semver from "semver";
+import { createRequire } from "node:module";
 import type { RuleModule } from "../../../src/types";
+
+const require = createRequire(import.meta.url);
 
 let jsonPlugin: any;
 try {

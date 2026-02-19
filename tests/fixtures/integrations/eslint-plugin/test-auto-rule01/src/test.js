@@ -1,3 +1,3 @@
 var a = {
-    foo: 'bar'
+foo: 'bar'
 }

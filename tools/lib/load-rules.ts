@@ -1,5 +1,8 @@
 import path from "path";
 import fs from "fs";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
 
 /**
  * Get the all rules
@@ -7,7 +10,7 @@ import fs from "fs";
  */
 function readRules() {
   const rules = [];
-  const rulesLibRoot = path.resolve(__dirname, "../../src/rules");
+  const rulesLibRoot = path.resolve(import.meta.dirname, "../../src/rules");
   for (const name of fs
     .readdirSync(rulesLibRoot)
     .filter((n) => n.endsWith(".ts"))) {
@@ -22,7 +25,7 @@ function readRules() {
     rules.push(rule);
   }
   const vueCustomBlockRulesLibRoot = path.resolve(
-    __dirname,
+    import.meta.dirname,
     "../../src/rules/vue-custom-block",
   );
   for (const name of fs.readdirSync(vueCustomBlockRulesLibRoot)) {

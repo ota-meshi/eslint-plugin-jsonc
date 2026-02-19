@@ -12,9 +12,9 @@ import {
   parseForESLint,
   parseJSON,
   traverseNodes,
-  AST,
   getStaticJSONValue,
 } from "jsonc-eslint-parser";
+import type { AST } from "jsonc-eslint-parser";
 import type { Linter } from "eslint";
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
@@ -59,12 +59,14 @@ export {
   meta,
   configs,
   rules,
-  // types
-  AST,
 
   // backward compatibility
   parseForESLint,
   parseJSON,
   traverseNodes,
   getStaticJSONValue,
+};
+export type {
+  // types
+  AST,
 };

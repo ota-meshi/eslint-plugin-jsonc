@@ -1,10 +1,13 @@
 import assert from "assert";
 import path from "path";
+import { createRequire } from "node:module";
 import rule from "../../../src/rules/auto";
 import * as eslint from "eslint";
 import * as jsonParser from "jsonc-eslint-parser";
 
-const ROOT_DIR = path.join(__dirname, "../../fixtures/auto");
+const require = createRequire(import.meta.url);
+
+const ROOT_DIR = path.join(import.meta.dirname, "../../fixtures/auto");
 
 type LinterFunction = (
   code: string,

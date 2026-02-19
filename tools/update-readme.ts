@@ -16,7 +16,7 @@ if (isWin) {
     .replace(/\n/gu, "\r\n");
 }
 
-const readmeFilePath = path.resolve(__dirname, "../README.md");
+const readmeFilePath = path.resolve(import.meta.dirname, "../README.md");
 const newReadme = fs
   .readFileSync(readmeFilePath, "utf8")
   .replace(
@@ -25,7 +25,7 @@ const newReadme = fs
   );
 fs.writeFileSync(readmeFilePath, newReadme, "utf8");
 
-const docsReadmeFilePath = path.resolve(__dirname, "../docs/index.md");
+const docsReadmeFilePath = path.resolve(import.meta.dirname, "../docs/index.md");
 
 fs.writeFileSync(
   docsReadmeFilePath,
@@ -54,7 +54,7 @@ fs.writeFileSync(
 );
 
 const docsUserGuideFilePath = path.resolve(
-  __dirname,
+  import.meta.dirname,
   "../docs/user-guide/index.md",
 );
 const docsUserGuide = fs.readFileSync(docsUserGuideFilePath, "utf8");

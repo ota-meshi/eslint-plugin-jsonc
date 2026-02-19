@@ -7,7 +7,7 @@ import { ESLint } from "eslint";
 // -----------------------------------------------------------------------------
 describe("auto rule with flat config", () => {
   const TEST_CWD = path.join(
-    __dirname,
+    import.meta.dirname,
     "../fixtures/integrations/eslint-plugin/test-auto-rule01",
   );
   const FIXTURE_ROOT = path.join(TEST_CWD, "./src");

@@ -2,8 +2,11 @@ import type { RuleModule } from "../../../src/types";
 import assert from "assert";
 import path from "path";
 import fs from "fs";
+import { createRequire } from "node:module";
 
 import { rules as allRules } from "../../../src/utils/rules";
+
+const require = createRequire(import.meta.url);
 
 /**
  * @returns {Array} Get the list of rules placed in the directory.
@@ -11,7 +14,7 @@ import { rules as allRules } from "../../../src/utils/rules";
 function getDirRules() {
   const rules: { [key: string]: RuleModule } = {};
 
-  const rulesRoot = path.resolve(__dirname, "../../../src/rules");
+  const rulesRoot = path.resolve(import.meta.dirname, "../../../src/rules");
   for (const filename of fs
     .readdirSync(rulesRoot)
     .filter((n) => n.endsWith(".ts"))) {
@@ -24,7 +27,7 @@ function getDirRules() {
   }
 
   const vueCustomBlockRulesLibRoot = path.resolve(
-    __dirname,
+    import.meta.dirname,
     "../../../src/rules/vue-custom-block",
   );
   for (const filename of fs.readdirSync(vueCustomBlockRulesLibRoot)) {

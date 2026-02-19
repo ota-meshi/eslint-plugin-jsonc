@@ -5,6 +5,8 @@ import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
 import { toCompatCreate } from "eslint-json-compat-utils";
+import { Linter } from "eslint";
+import { builtinRules } from "eslint/use-at-your-own-risk";
 
 /**
  * Define the rule.
@@ -173,16 +175,12 @@ export function getCoreRule(
     | "no-sparse-arrays"
     | "no-useless-escape",
 ): Rule.RuleModule {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- load eslint
-  const eslint = require("eslint");
   try {
-    const map = ruleMap || (ruleMap = new eslint.Linter().getRules());
+    const map = ruleMap || (ruleMap = new Linter().getRules());
     return map.get(name) || null;
   } catch {
     // getRules() is no longer available in flat config.
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- load eslint
-  const { builtinRules } = require("eslint/use-at-your-own-risk");
   return /** @type {any} */ builtinRules.get(name) || null;
 }

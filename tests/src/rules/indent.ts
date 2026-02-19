@@ -1,15 +1,18 @@
 import fs from "fs";
 import path from "path";
+import { createRequire } from "node:module";
 import { RuleTester } from "../test-lib/tester";
 import type { RuleTester as ESLintRuleTester } from "eslint";
 import rule from "../../../src/rules/indent";
 import * as jsonParser from "jsonc-eslint-parser";
 
+const require = createRequire(import.meta.url);
+
 // ------------------------------------------------------------------------------
 // Helpers
 // ------------------------------------------------------------------------------
 
-const FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/indent/");
+const FIXTURE_ROOT = path.resolve(import.meta.dirname, "../../fixtures/indent/");
 
 /**
  * Load test patterns from fixtures.

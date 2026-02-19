@@ -1,5 +1,5 @@
 import assert from "assert";
-import plugin from "../../../../lib/index";
+import plugin from "../../../../src/index";
 import { ESLint } from "eslint";
 
 const code = `{ foo: 42 }`;

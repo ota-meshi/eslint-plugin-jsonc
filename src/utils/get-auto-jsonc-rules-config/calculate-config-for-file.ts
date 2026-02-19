@@ -1,7 +1,10 @@
 import type { Linter } from "eslint";
 import { createSyncFn } from "synckit";
+import { fileURLToPath } from "node:url";
 
-const getSync = createSyncFn(require.resolve("./worker"));
+const getSync = createSyncFn(
+  fileURLToPath(import.meta.resolve("./worker.js")),
+);
 
 /**
  * Synchronously calculateConfigForFile

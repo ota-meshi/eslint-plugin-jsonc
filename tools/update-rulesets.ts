@@ -82,7 +82,7 @@ export = {
 `;
 
   const filePath = path.resolve(
-    __dirname,
+    import.meta.dirname,
     `../lib/configs/${CONFIGS[rec].config}.ts`,
   );
 
@@ -122,7 +122,7 @@ export default [
 `;
 
   const filePath = path.resolve(
-    __dirname,
+    import.meta.dirname,
     `../lib/configs/flat/${CONFIGS[rec].config}.ts`,
   );
 
