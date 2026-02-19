@@ -1,9 +1,9 @@
-import type { RuleListener, RuleModule, PartialRuleModule } from "../types";
+import type { RuleListener, RuleModule, PartialRuleModule } from "../types.ts";
 import type { Rule } from "eslint";
 import type { AST } from "jsonc-eslint-parser";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
-import path from "path";
+import path from "node:path";
 import { toCompatCreate } from "eslint-json-compat-utils";
 import { builtinRules } from "eslint/use-at-your-own-risk";
 

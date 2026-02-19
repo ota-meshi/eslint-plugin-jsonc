@@ -1,5 +1,5 @@
-import { RuleTester } from "../test-lib/tester";
-import rule from "../../../lib/rules/no-numeric-separators";
+import { RuleTester } from "../test-lib/tester.ts";
+import rule from "../../../lib/rules/no-numeric-separators.ts";
 import { Linter } from "eslint";
 import semver from "semver";
 import * as jsonParser from "jsonc-eslint-parser";

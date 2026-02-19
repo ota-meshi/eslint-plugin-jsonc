@@ -1,6 +1,6 @@
-import { createRule } from "../utils";
-import type { CasingKind } from "../utils/casing";
-import { getChecker, allowedCaseOptions } from "../utils/casing";
+import { createRule } from "../utils/index.ts";
+import type { CasingKind } from "../utils/casing.ts";
+import { getChecker, allowedCaseOptions } from "../utils/casing.ts";
 
 export type RuleOptions = {
   [key in CasingKind]?: boolean;

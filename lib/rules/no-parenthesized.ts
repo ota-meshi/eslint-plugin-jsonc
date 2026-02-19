@@ -2,7 +2,7 @@ import type { Rule } from "eslint";
 import { isParenthesized } from "@eslint-community/eslint-utils";
 import type { AST } from "jsonc-eslint-parser";
 import { isExpression } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 
 export default createRule("no-parenthesized", {
   meta: {

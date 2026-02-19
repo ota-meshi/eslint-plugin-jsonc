@@ -1,6 +1,6 @@
 import type { Linter } from "eslint";
-import { calculateConfigForFile } from "./calculate-config-for-file";
-import { ruleNames } from "../rule-names";
+import { calculateConfigForFile } from "./calculate-config-for-file.ts";
+import { ruleNames } from "../rule-names.ts";
 
 const configResolvers: Record<
   string,

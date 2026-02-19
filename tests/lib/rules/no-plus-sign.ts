@@ -1,5 +1,5 @@
-import { RuleTester } from "../test-lib/tester";
-import rule from "../../../lib/rules/no-plus-sign";
+import { RuleTester } from "../test-lib/tester.ts";
+import rule from "../../../lib/rules/no-plus-sign.ts";
 import * as jsonParser from "jsonc-eslint-parser";
 
 const tester = new RuleTester({

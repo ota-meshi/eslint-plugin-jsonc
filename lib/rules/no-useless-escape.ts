@@ -1,4 +1,8 @@
-import { createRule, defineWrapperListener, getCoreRule } from "../utils";
+import {
+  createRule,
+  defineWrapperListener,
+  getCoreRule,
+} from "../utils/index.ts";
 const coreRule = getCoreRule("no-useless-escape");
 
 export default createRule("no-useless-escape", {

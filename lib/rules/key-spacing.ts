@@ -1,15 +1,15 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 import {
   LINEBREAK_MATCHER,
   getStaticPropertyName,
-} from "../utils/eslint-ast-utils";
+} from "../utils/eslint-ast-utils.ts";
 import { isColonToken } from "@eslint-community/eslint-utils";
 import type { Rule } from "eslint";
-import type { Token } from "../types";
-import { getGraphemeCount } from "../utils/eslint-string-utils";
+import type { Token } from "../types.ts";
+import { getGraphemeCount } from "../utils/eslint-string-utils.ts";
 
 /**
  * Checks whether a string contains a line terminator as defined in

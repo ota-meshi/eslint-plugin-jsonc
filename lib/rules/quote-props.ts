@@ -1,11 +1,11 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 // @ts-expect-error missing types
 import { tokenize } from "espree";
-import { keywords } from "../utils/eslint-keywords";
-import { isNumericLiteral } from "../utils/eslint-ast-utils";
+import { keywords } from "../utils/eslint-keywords.ts";
+import { isNumericLiteral } from "../utils/eslint-ast-utils.ts";
 
 export type RulePresetOption =
   | "always"

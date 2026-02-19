@@ -1,10 +1,10 @@
-import type { RuleModule } from "../../../lib/types";
-import assert from "assert";
-import path from "path";
-import fs from "fs";
+import type { RuleModule } from "../../../lib/types.ts";
+import assert from "node:assert";
+import path from "node:path";
+import fs from "node:fs";
 import { createRequire } from "node:module";
 
-import { getRules } from "../../../lib/utils/rules";
+import { getRules } from "../../../lib/utils/rules.ts";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);

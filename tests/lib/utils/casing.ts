@@ -1,5 +1,5 @@
-import * as casing from "../../../lib/utils/casing";
-import assert from "assert";
+import * as casing from "../../../lib/utils/casing.ts";
+import assert from "node:assert";
 
 describe("getConverter()", () => {
   it("should convert string to camelCase", () => {

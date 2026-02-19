@@ -1,5 +1,5 @@
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 import { PatternMatcher } from "@eslint-community/eslint-utils";
 
 export default createRule("no-unicode-codepoint-escapes", {

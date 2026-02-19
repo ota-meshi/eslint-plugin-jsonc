@@ -1,7 +1,7 @@
 import type { DefaultTheme, UserConfig } from "vitepress";
 import { defineConfig } from "vitepress";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import eslint4b from "vite-plugin-eslint4b";
 import type { RuleModule } from "../../lib/types.js";
 import { viteCommonjs, vitePluginAutoRule } from "./vite-plugin.mjs";

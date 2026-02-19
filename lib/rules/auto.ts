@@ -1,7 +1,11 @@
-import type { BaseRuleListener, PartialRuleModule, RuleModule } from "../types";
-import { createRule } from "../utils";
-import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config";
-import { getRules } from "../utils/rules";
+import type {
+  BaseRuleListener,
+  PartialRuleModule,
+  RuleModule,
+} from "../types.ts";
+import { createRule } from "../utils/index.ts";
+import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config/index.ts";
+import { getRules } from "../utils/rules.ts";
 
 export default createRule("auto", {
   meta: {

@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { ESLint } from "eslint";
 import { name, version } from "../package.json";
-import { getNewVersion } from "./lib/changesets-util";
-import { fileURLToPath } from "url";
+import { getNewVersion } from "./lib/changesets-util.ts";
+import { fileURLToPath } from "node:url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const META_PATH = path.join(dirname, "../lib/meta.ts");

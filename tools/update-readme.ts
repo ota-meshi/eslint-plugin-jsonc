@@ -1,8 +1,8 @@
-import path from "path";
-import fs from "fs";
-import os from "os";
-import renderRulesTableContent from "./render-rules";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import fs from "node:fs";
+import os from "node:os";
+import renderRulesTableContent from "./render-rules.ts";
+import { fileURLToPath } from "node:url";
 const isWin = os.platform().startsWith("win");
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));

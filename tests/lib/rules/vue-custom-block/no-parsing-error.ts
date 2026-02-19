@@ -1,5 +1,5 @@
-import rule from "../../../../lib/rules/vue-custom-block/no-parsing-error";
-import { RuleTester } from "../../test-lib/tester";
+import rule from "../../../../lib/rules/vue-custom-block/no-parsing-error.ts";
+import { RuleTester } from "../../test-lib/tester.ts";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
 

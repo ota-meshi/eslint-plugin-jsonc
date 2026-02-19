@@ -1,5 +1,5 @@
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 
 export default createRule("no-binary-expression", {
   meta: {

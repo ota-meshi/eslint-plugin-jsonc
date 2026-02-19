@@ -1,4 +1,4 @@
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 
 export default createRule("no-template-literals", {
   meta: {

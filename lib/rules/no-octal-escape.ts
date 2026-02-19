@@ -1,4 +1,8 @@
-import { createRule, defineWrapperListener, getCoreRule } from "../utils";
+import {
+  createRule,
+  defineWrapperListener,
+  getCoreRule,
+} from "../utils/index.ts";
 const coreRule = getCoreRule("no-octal-escape");
 
 export default createRule("no-octal-escape", {

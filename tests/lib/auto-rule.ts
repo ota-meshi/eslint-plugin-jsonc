@@ -1,8 +1,8 @@
-import path from "path";
-import fs from "fs";
-import assert from "assert";
+import path from "node:path";
+import fs from "node:fs";
+import assert from "node:assert";
 import { ESLint } from "eslint";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 // -----------------------------------------------------------------------------

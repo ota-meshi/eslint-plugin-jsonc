@@ -1,9 +1,9 @@
-import cp from "child_process";
-import assert from "assert";
-import path from "path";
+import cp from "node:child_process";
+import assert from "node:assert";
+import path from "node:path";
 import { version } from "../../package.json";
 import type { ESLint } from "eslint";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 

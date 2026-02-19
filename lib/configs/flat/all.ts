@@ -1,5 +1,5 @@
-import { getRules } from "../../utils/rules";
-import base from "./base";
+import { getRules } from "../../utils/rules.ts";
+import base from "./base.ts";
 import type { Linter } from "eslint";
 const all: Linter.RulesRecord = {};
 for (const rule of getRules()) {

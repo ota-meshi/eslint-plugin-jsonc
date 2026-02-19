@@ -2,7 +2,7 @@ import * as eslint from "eslint";
 import * as jsonParser from "jsonc-eslint-parser";
 import semver from "semver";
 import { createRequire } from "node:module";
-import type { RuleModule } from "../../../lib/types";
+import type { RuleModule } from "../../../lib/types.ts";
 
 const require = createRequire(import.meta.url);
 

@@ -1,12 +1,12 @@
 import naturalCompare from "natural-compare";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import {
   fixToMoveDownForSorting,
   fixToMoveUpForSorting,
-} from "../utils/fix-sort-elements";
-import { calcShortestEditScript } from "../utils/calc-shortest-edit-script";
+} from "../utils/fix-sort-elements.ts";
+import { calcShortestEditScript } from "../utils/calc-shortest-edit-script.ts";
 
 //------------------------------------------------------------------------------
 // Helpers
