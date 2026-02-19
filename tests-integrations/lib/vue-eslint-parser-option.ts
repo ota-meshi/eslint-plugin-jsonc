@@ -2,12 +2,15 @@ import cp from "child_process";
 import assert from "assert";
 import path from "path";
 import { version } from "../../package.json";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 
-const TEST_CWD = path.join(__dirname, "../fixtures/vue-eslint-parser-option");
+const TEST_CWD = path.join(dirname, "../fixtures/vue-eslint-parser-option");
 const ESLINT = path.join(TEST_CWD, `./node_modules/.bin/eslint`);
 
 describe("Integration with vue-eslint-parser with option", () => {
