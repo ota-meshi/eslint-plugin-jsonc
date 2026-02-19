@@ -2,4 +2,4 @@
 "eslint-plugin-jsonc": major
 ---
 
-Drop support for legacy config. The flat configuration is now exported as the primary namespace, with the `flat/*` prefix maintained for backward compatibility.
+Drop support for legacy config. The plugin now exports flat configs as the main configuration format. The previous `flat/*` namespace is kept for backward compatibility.
