@@ -13,6 +13,7 @@ export default [
       "jsonc/no-binary-numeric-literals": "error",
       "jsonc/no-dupe-keys": "error",
       "jsonc/no-escape-sequence-in-identifier": "error",
+      "jsonc/no-irregular-whitespace": "error",
       "jsonc/no-number-props": "error",
       "jsonc/no-numeric-separators": "error",
       "jsonc/no-octal-numeric-literals": "error",
