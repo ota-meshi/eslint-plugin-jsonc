@@ -196,7 +196,8 @@ describe("JSONCSourceCode", () => {
       const sourceCode = createSourceCode(code);
 
       const expr = sourceCode.ast.body[0].expression;
-      if (expr.type !== "JSONObjectExpression") throw new Error("Expected object");
+      if (expr.type !== "JSONObjectExpression")
+        throw new Error("Expected object");
       const prop = expr.properties[0];
       const text = sourceCode.getText(prop.key as never);
 
@@ -248,14 +249,8 @@ describe("JSONCSourceCode", () => {
 
       const stmt = sourceCode.ast.body[0];
 
-      assert.strictEqual(
-        sourceCode.getCommentsBefore(stmt as never).length,
-        0,
-      );
-      assert.strictEqual(
-        sourceCode.getCommentsAfter(stmt as never).length,
-        0,
-      );
+      assert.strictEqual(sourceCode.getCommentsBefore(stmt as never).length, 0);
+      assert.strictEqual(sourceCode.getCommentsAfter(stmt as never).length, 0);
     });
   });
 

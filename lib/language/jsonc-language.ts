@@ -1,7 +1,12 @@
 /**
  * @fileoverview The JSONC language implementation for ESLint.
  */
-import type { Language, File, OkParseResult, NotOkParseResult } from "@eslint/core";
+import type {
+  Language,
+  File,
+  OkParseResult,
+  NotOkParseResult,
+} from "@eslint/core";
 import { parseForESLint, VisitorKeys } from "jsonc-eslint-parser";
 import type { AST, JSONParserOptions } from "jsonc-eslint-parser";
 import { JSONCSourceCode } from "./jsonc-source-code.ts";
@@ -16,15 +21,12 @@ export type JSONCLanguageOptions = {
 /**
  * The JSONC language implementation for ESLint.
  */
-export class JSONCLanguage
-  implements
-    Language<{
-      LangOptions: JSONCLanguageOptions;
-      Code: JSONCSourceCode;
-      RootNode: AST.JSONProgram;
-      Node: AST.JSONNode;
-    }>
-{
+export class JSONCLanguage implements Language<{
+  LangOptions: JSONCLanguageOptions;
+  Code: JSONCSourceCode;
+  RootNode: AST.JSONProgram;
+  Node: AST.JSONNode;
+}> {
   /**
    * The type of file to read.
    */
@@ -48,9 +50,7 @@ export class JSONCLanguage
   /**
    * Validates the language options.
    */
-  public validateLanguageOptions(
-    _languageOptions: JSONCLanguageOptions,
-  ): void {
+  public validateLanguageOptions(_languageOptions: JSONCLanguageOptions): void {
     // Currently no validation needed
   }
 
@@ -90,8 +90,7 @@ export class JSONCLanguage
         ast: result.ast,
       };
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
       const parseError = error as {
         lineNumber?: number;
         column?: number;

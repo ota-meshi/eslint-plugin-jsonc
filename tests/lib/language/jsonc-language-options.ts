@@ -14,7 +14,8 @@ function createConfig(
       files: ["**/*.json", "**/*.jsonc", "**/*.json5"],
       plugins: { jsonc: plugin },
       language: "jsonc/jsonc",
-      languageOptions: jsonSyntax != null ? { parserOptions: { jsonSyntax } } : {},
+      languageOptions:
+        jsonSyntax != null ? { parserOptions: { jsonSyntax } } : {},
       rules,
     },
   ];
@@ -54,7 +55,11 @@ describe("JSONC Language Options", () => {
         const messages = linter.verify(code, createConfig("JSON"), "test.json");
         const fatalErrors = messages.filter((m) => m.fatal);
 
-        assert.strictEqual(fatalErrors.length, 0, "Should not have parse errors");
+        assert.strictEqual(
+          fatalErrors.length,
+          0,
+          "Should not have parse errors",
+        );
       });
     });
 
@@ -191,10 +196,7 @@ describe("JSONC Language Options", () => {
 
   describe("language plugin integration", () => {
     it("should expose languages.jsonc", () => {
-      assert.ok(
-        plugin.languages?.jsonc,
-        "Plugin should have a jsonc language",
-      );
+      assert.ok(plugin.languages?.jsonc, "Plugin should have a jsonc language");
     });
 
     it("should produce correct parse results via ESLint", async () => {
@@ -233,10 +235,9 @@ describe("JSONC Language Options", () => {
         ],
       });
 
-      const results = await eslint.lintText(
-        "/* comment */ {}",
-        { filePath: "test.json" },
-      );
+      const results = await eslint.lintText("/* comment */ {}", {
+        filePath: "test.json",
+      });
 
       assert.ok(Array.isArray(results));
       assert.strictEqual(results.length, 1);
@@ -264,10 +265,9 @@ describe("JSONC Language Options", () => {
         overrideConfig: plugin.configs["recommended-with-jsonc"] as never,
       });
 
-      const results = await eslint.lintText(
-        '/* comment */ {"key": "value"}',
-        { filePath: "test.jsonc" },
-      );
+      const results = await eslint.lintText('/* comment */ {"key": "value"}', {
+        filePath: "test.jsonc",
+      });
 
       assert.ok(Array.isArray(results));
       assert.strictEqual(results.length, 1);
