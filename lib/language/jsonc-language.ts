@@ -1,35 +1,30 @@
 /**
  * @fileoverview The JSONC language implementation for ESLint.
  */
-import type { Language, File, OkParseResult } from "@eslint/core";
+import type { Language, File, OkParseResult, NotOkParseResult } from "@eslint/core";
 import { parseForESLint, VisitorKeys } from "jsonc-eslint-parser";
-import type { AST } from "jsonc-eslint-parser";
+import type { AST, JSONParserOptions } from "jsonc-eslint-parser";
 import { JSONCSourceCode } from "./jsonc-source-code.ts";
-
-/**
- * Parse result
- */
-interface JSONCParseResult {
-  ok: true;
-  ast: AST.JSONProgram;
-}
 
 /**
  * Language options for JSONC.
  */
 export type JSONCLanguageOptions = {
-  parserOptions?: Record<string, unknown>;
+  parserOptions?: JSONParserOptions;
 };
 
 /**
  * The JSONC language implementation for ESLint.
  */
-export class JSONCLanguage implements Language<{
-  LangOptions: JSONCLanguageOptions;
-  Code: JSONCSourceCode;
-  RootNode: AST.JSONProgram;
-  Node: AST.JSONNode;
-}> {
+export class JSONCLanguage
+  implements
+    Language<{
+      LangOptions: JSONCLanguageOptions;
+      Code: JSONCSourceCode;
+      RootNode: AST.JSONProgram;
+      Node: AST.JSONNode;
+    }>
+{
   /**
    * The type of file to read.
    */
@@ -53,7 +48,9 @@ export class JSONCLanguage implements Language<{
   /**
    * Validates the language options.
    */
-  public validateLanguageOptions(_languageOptions: JSONCLanguageOptions): void {
+  public validateLanguageOptions(
+    _languageOptions: JSONCLanguageOptions,
+  ): void {
     // Currently no validation needed
   }
 
@@ -77,19 +74,39 @@ export class JSONCLanguage implements Language<{
    */
   public parse(
     file: File,
-    _context: { languageOptions?: JSONCLanguageOptions },
-  ): OkParseResult<AST.JSONProgram> | JSONCParseResult {
+    context: { languageOptions?: JSONCLanguageOptions },
+  ): OkParseResult<AST.JSONProgram> | NotOkParseResult {
     // Note: BOM already removed
     const text = file.body as string;
 
-    const result = parseForESLint(text, {
-      filePath: file.path,
-    });
+    try {
+      const result = parseForESLint(text, {
+        filePath: file.path,
+        jsonSyntax: context.languageOptions?.parserOptions?.jsonSyntax,
+      });
 
-    return {
-      ok: true,
-      ast: result.ast,
-    };
+      return {
+        ok: true,
+        ast: result.ast,
+      };
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : String(error);
+      const parseError = error as {
+        lineNumber?: number;
+        column?: number;
+      };
+      return {
+        ok: false,
+        errors: [
+          {
+            message,
+            line: parseError.lineNumber ?? 1,
+            column: parseError.column ?? 1,
+          },
+        ],
+      };
+    }
   }
 
   /**
@@ -97,7 +114,7 @@ export class JSONCLanguage implements Language<{
    */
   public createSourceCode(
     file: File,
-    parseResult: OkParseResult<AST.JSONProgram> | JSONCParseResult,
+    parseResult: OkParseResult<AST.JSONProgram>,
   ): JSONCSourceCode {
     return new JSONCSourceCode({
       text: file.body as string,
