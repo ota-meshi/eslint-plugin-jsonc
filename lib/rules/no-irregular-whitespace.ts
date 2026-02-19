@@ -10,9 +10,7 @@ export default createRule("no-irregular-whitespace", {
     ...coreRule.meta,
     docs: {
       description: "disallow irregular whitespace",
-      // TODO: We will switch this in the next major version.
-      recommended: null,
-      // recommended: ["json", "jsonc", "json5"], // TODO: We need to turn off core `no-irregular-whitespace` rule in shared config.
+      recommended: ["json", "jsonc", "json5"],
       extensionRule: true,
       layout: false,
     },

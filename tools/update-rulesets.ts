@@ -81,7 +81,7 @@ export default [
           .join(",\n")}
     },
   }
-] satisfies Linter.FlatConfig[]
+] satisfies Linter.Config[]
 `;
 
   const filePath = path.resolve(

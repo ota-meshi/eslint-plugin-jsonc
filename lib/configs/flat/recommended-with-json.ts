@@ -18,6 +18,7 @@ export default [
       "jsonc/no-floating-decimal": "error",
       "jsonc/no-hexadecimal-numeric-literals": "error",
       "jsonc/no-infinity": "error",
+      "jsonc/no-irregular-whitespace": "error",
       "jsonc/no-multi-str": "error",
       "jsonc/no-nan": "error",
       "jsonc/no-number-props": "error",
