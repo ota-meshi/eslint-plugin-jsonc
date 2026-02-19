@@ -1,7 +1,7 @@
-import path from "path";
-import fs from "fs";
-import cp from "child_process";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import fs from "node:fs";
+import cp from "node:child_process";
+import { fileURLToPath } from "node:url";
 const logger = console;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 

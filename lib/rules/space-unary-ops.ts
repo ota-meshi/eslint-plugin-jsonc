@@ -1,9 +1,9 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
-import type { Token } from "../types";
-import { canTokensBeAdjacent } from "../utils/eslint-ast-utils";
+import { createRule } from "../utils/index.ts";
+import type { Token } from "../types.ts";
+import { canTokensBeAdjacent } from "../utils/eslint-ast-utils.ts";
 
 export interface RuleOptions {
   words?: boolean;

@@ -1,7 +1,7 @@
 import type { AST } from "jsonc-eslint-parser";
 import type { AST as VueAST } from "vue-eslint-parser";
-import { createRule } from "../../utils";
-import type { RuleListener } from "../../types";
+import { createRule } from "../../utils/index.ts";
+import type { RuleListener } from "../../types.ts";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { Rule } from "eslint";
 

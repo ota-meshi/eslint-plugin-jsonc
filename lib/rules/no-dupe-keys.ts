@@ -1,4 +1,8 @@
-import { createRule, defineWrapperListener, getCoreRule } from "../utils";
+import {
+  createRule,
+  defineWrapperListener,
+  getCoreRule,
+} from "../utils/index.ts";
 const coreRule = getCoreRule("no-dupe-keys");
 
 export default createRule("no-dupe-keys", {

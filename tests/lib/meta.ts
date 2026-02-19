@@ -1,5 +1,5 @@
-import assert from "assert";
-import plugin from "../../lib";
+import assert from "node:assert";
+import plugin from "../../lib/index.ts";
 import { version } from "../../package.json";
 const expectedMeta = {
   name: "eslint-plugin-jsonc",

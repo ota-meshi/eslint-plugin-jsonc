@@ -1,7 +1,7 @@
-import fs from "fs";
+import fs from "node:fs";
 import { createRequire } from "node:module";
-import { RuleTester } from "../test-lib/tester";
-import rule from "../../../lib/rules/sort-keys";
+import { RuleTester } from "../test-lib/tester.ts";
+import rule from "../../../lib/rules/sort-keys.ts";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
 

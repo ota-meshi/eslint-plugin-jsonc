@@ -1,5 +1,6 @@
 import myPlugin from "@ota-meshi/eslint-plugin";
 import globals from "globals";
+import n from "eslint-plugin-n";
 
 export default [
   {
@@ -117,12 +118,25 @@ export default [
     },
   },
   {
+    plugins: {
+      n,
+    },
+    files: ["**/*.{js,ts,mjc,mts,cjs,cts,vue}"],
+    rules: {
+      "n/prefer-node-protocol": "error",
+      "n/file-extension-in-import": ["error", "always"],
+      "@typescript-eslint/naming-convention": "off",
+    },
+    settings: {
+      n: {
+        typescriptExtensionMap: [],
+      },
+    },
+  },
+  {
     files: ["**/*.{ts,mts,mjs,vue}"],
     languageOptions: {
       sourceType: "module",
-    },
-    rules: {
-      "@typescript-eslint/naming-convention": "off",
     },
   },
   {

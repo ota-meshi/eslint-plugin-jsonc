@@ -1,11 +1,11 @@
-import type { RuleModule } from "./types";
-import flatBase from "./configs/flat/base";
-import flatRecommendedWithJson from "./configs/flat/recommended-with-json";
-import flatRecommendedWithJsonc from "./configs/flat/recommended-with-jsonc";
-import flatRecommendedWithJson5 from "./configs/flat/recommended-with-json5";
-import flatPrettier from "./configs/flat/prettier";
-import flatAll from "./configs/flat/all";
-import * as meta from "./meta";
+import type { RuleModule } from "./types.ts";
+import flatBase from "./configs/flat/base.ts";
+import flatRecommendedWithJson from "./configs/flat/recommended-with-json.ts";
+import flatRecommendedWithJsonc from "./configs/flat/recommended-with-jsonc.ts";
+import flatRecommendedWithJson5 from "./configs/flat/recommended-with-json5.ts";
+import flatPrettier from "./configs/flat/prettier.ts";
+import flatAll from "./configs/flat/all.ts";
+import * as meta from "./meta.ts";
 
 import {
   parseForESLint,
@@ -15,7 +15,7 @@ import {
 } from "jsonc-eslint-parser";
 import type { AST } from "jsonc-eslint-parser";
 import type { Linter } from "eslint";
-import { getRules } from "./utils/rules";
+import { getRules } from "./utils/rules.ts";
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
 const configs = {

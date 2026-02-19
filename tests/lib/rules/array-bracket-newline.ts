@@ -1,5 +1,5 @@
-import { RuleTester } from "../test-lib/tester";
-import rule from "../../../lib/rules/array-bracket-newline";
+import { RuleTester } from "../test-lib/tester.ts";
+import rule from "../../../lib/rules/array-bracket-newline.ts";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
 

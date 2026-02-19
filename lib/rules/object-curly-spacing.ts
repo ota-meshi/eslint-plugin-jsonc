@@ -1,9 +1,9 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
-import type { Comment, Token } from "../types";
-import { isTokenOnSameLine } from "../utils/eslint-ast-utils";
+import { createRule } from "../utils/index.ts";
+import type { Comment, Token } from "../types.ts";
+import { isTokenOnSameLine } from "../utils/eslint-ast-utils.ts";
 import {
   isClosingBraceToken,
   isClosingBracketToken,

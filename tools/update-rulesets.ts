@@ -1,10 +1,10 @@
-import path from "path";
-import fs from "fs";
-import os from "os";
+import path from "node:path";
+import fs from "node:fs";
+import os from "node:os";
 // import eslint from "eslint"
-import { rules } from "./lib/load-rules";
-import type { RuleModule } from "../lib/types";
-import { fileURLToPath } from "url";
+import { rules } from "./lib/load-rules.ts";
+import type { RuleModule } from "../lib/types.ts";
+import { fileURLToPath } from "node:url";
 const isWin = os.platform().startsWith("win");
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));

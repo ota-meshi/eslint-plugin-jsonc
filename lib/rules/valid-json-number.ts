@@ -1,7 +1,7 @@
 import type { Rule } from "eslint";
 import type { AST } from "jsonc-eslint-parser";
 import { isNumberIdentifier } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 
 const nonDecimalNumericLiteralPattern = /^0[\dbox]/iu;
 

@@ -1,5 +1,5 @@
-import { RuleTester } from "../test-lib/tester";
-import rule from "../../../lib/rules/no-nan";
+import { RuleTester } from "../test-lib/tester.ts";
+import rule from "../../../lib/rules/no-nan.ts";
 import * as jsonParser from "jsonc-eslint-parser";
 
 const tester = new RuleTester({

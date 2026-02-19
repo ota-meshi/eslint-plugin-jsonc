@@ -1,10 +1,10 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
-import type { Token } from "../types";
+import { createRule } from "../utils/index.ts";
+import type { Token } from "../types.ts";
 import { isCommaToken, isCommentToken } from "@eslint-community/eslint-utils";
-import { isTokenOnSameLine } from "../utils/eslint-ast-utils";
+import { isTokenOnSameLine } from "../utils/eslint-ast-utils.ts";
 
 type BasicConfig =
   | ("always" | "never" | "consistent")

@@ -2,7 +2,7 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import type { Comment, Token } from "../types";
+import type { Comment, Token } from "../types.ts";
 // @ts-expect-error missing types
 import { latestEcmaVersion, tokenize } from "espree";
 

@@ -1,7 +1,7 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST, RuleListener } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 import {
   isCommaToken,
   isNotClosingParenToken,
@@ -9,8 +9,8 @@ import {
 import {
   LINEBREAK_MATCHER,
   isTokenOnSameLine,
-} from "../utils/eslint-ast-utils";
-import type { Comment, Token } from "../types";
+} from "../utils/eslint-ast-utils.ts";
+import type { Comment, Token } from "../types.ts";
 import type { Rule } from "eslint";
 
 export interface RuleOptions {

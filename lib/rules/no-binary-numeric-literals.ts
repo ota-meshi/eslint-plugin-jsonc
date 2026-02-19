@@ -1,4 +1,4 @@
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 
 const binaryNumericLiteralPattern = /^0b/iu;
 

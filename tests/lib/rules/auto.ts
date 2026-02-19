@@ -1,7 +1,7 @@
-import assert from "assert";
-import path from "path";
+import assert from "node:assert";
+import path from "node:path";
 import { createRequire } from "node:module";
-import rule from "../../../lib/rules/auto";
+import rule from "../../../lib/rules/auto.ts";
 import * as eslint from "eslint";
 import * as jsonParser from "jsonc-eslint-parser";
 import { fileURLToPath } from "node:url";

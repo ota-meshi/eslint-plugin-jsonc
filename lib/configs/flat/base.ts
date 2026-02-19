@@ -1,6 +1,6 @@
 import type { ESLint, Linter } from "eslint";
 import * as parser from "jsonc-eslint-parser";
-import plugin from "../../index";
+import plugin from "../../index.ts";
 
 export default [
   {

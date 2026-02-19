@@ -1,8 +1,8 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
-import { createRule } from "../utils";
-import { LINEBREAKS, isSurroundedBy } from "../utils/eslint-ast-utils";
+import { createRule } from "../utils/index.ts";
+import { LINEBREAKS, isSurroundedBy } from "../utils/eslint-ast-utils.ts";
 
 /**
  * Switches quoting of javascript string between ' " and `

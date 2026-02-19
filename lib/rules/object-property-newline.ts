@@ -1,6 +1,6 @@
 // Most source code was copied from ESLint v8.
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
-import { createRule } from "../utils";
+import { createRule } from "../utils/index.ts";
 
 export interface RuleOptions {
   allowAllPropertiesOnSameLine?: boolean;

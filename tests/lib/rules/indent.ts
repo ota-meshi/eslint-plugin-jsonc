@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { createRequire } from "node:module";
-import { RuleTester } from "../test-lib/tester";
+import { RuleTester } from "../test-lib/tester.ts";
 import type { RuleTester as ESLintRuleTester } from "eslint";
-import rule from "../../../lib/rules/indent";
+import rule from "../../../lib/rules/indent.ts";
 import * as jsonParser from "jsonc-eslint-parser";
 import { fileURLToPath } from "node:url";
 

@@ -1,10 +1,10 @@
-import path from "path";
-import fs from "fs";
-import { getRules } from "../lib/utils/rules";
-import type { RuleModule } from "../lib/types";
-import { getNewVersion } from "./lib/changesets-util";
+import path from "node:path";
+import fs from "node:fs";
+import { getRules } from "../lib/utils/rules.ts";
+import type { RuleModule } from "../lib/types.ts";
+import { getNewVersion } from "./lib/changesets-util.ts";
 import packageJson from "../package.json" with { type: "json" };
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 

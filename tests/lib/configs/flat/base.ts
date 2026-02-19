@@ -1,5 +1,5 @@
-import assert from "assert";
-import plugin from "../../../../lib/index";
+import assert from "node:assert";
+import plugin from "../../../../lib/index.ts";
 import { ESLint } from "eslint";
 
 const code = `{ foo: 42 }`;

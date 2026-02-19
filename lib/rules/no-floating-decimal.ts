@@ -1,4 +1,8 @@
-import { createRule, defineWrapperListener, getCoreRule } from "../utils";
+import {
+  createRule,
+  defineWrapperListener,
+  getCoreRule,
+} from "../utils/index.ts";
 const coreRule = getCoreRule("no-floating-decimal");
 
 export default createRule("no-floating-decimal", {
