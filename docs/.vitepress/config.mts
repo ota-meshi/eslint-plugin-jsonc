@@ -3,7 +3,7 @@ import { defineConfig } from "vitepress";
 import path from "path";
 import { fileURLToPath } from "url";
 import eslint4b from "vite-plugin-eslint4b";
-import type { RuleModule } from "../../src/types.js";
+import type { RuleModule } from "../../lib/types.js";
 import { viteCommonjs, vitePluginAutoRule } from "./vite-plugin.mjs";
 
 import "./build-system/build.js";

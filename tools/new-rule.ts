@@ -16,8 +16,8 @@ const logger = console;
     return;
   }
 
-  const ruleFile = path.resolve(import.meta.dirname, `../src/rules/${ruleId}.ts`);
-  const testFile = path.resolve(import.meta.dirname, `../tests/src/rules/${ruleId}.ts`);
+  const ruleFile = path.resolve(import.meta.dirname, `../lib/rules/${ruleId}.ts`);
+  const testFile = path.resolve(import.meta.dirname, `../tests/lib/rules/${ruleId}.ts`);
   const docFile = path.resolve(import.meta.dirname, `../docs/rules/${ruleId}.md`);
 
   fs.writeFileSync(
@@ -55,7 +55,7 @@ export default createRule("${ruleId}", {
   fs.writeFileSync(
     testFile,
     `import { RuleTester } from "../test-lib/tester"
-import rule from "../../../src/rules/${ruleId}"
+import rule from "../../../lib/rules/${ruleId}"
 import * as jsonParser from "jsonc-eslint-parser";
 
 const tester = new RuleTester({

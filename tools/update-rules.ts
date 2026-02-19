@@ -32,7 +32,7 @@ export const rules = [
 ] as RuleModule[]
 `;
 
-const filePath = path.resolve(import.meta.dirname, "../src/utils/rules.ts");
+const filePath = path.resolve(import.meta.dirname, "../lib/utils/rules.ts");
 
 if (isWin) {
   content = content

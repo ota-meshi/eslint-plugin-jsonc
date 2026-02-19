@@ -1,10 +1,10 @@
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
+  entry: ["lib/index.ts"],
   format: ["esm"],
   dts: true,
   clean: true,
-  outDir: "lib",
+  outDir: "dist",
   inlineOnly: false,
 });

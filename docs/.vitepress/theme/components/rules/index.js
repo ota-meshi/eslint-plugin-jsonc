@@ -1,5 +1,5 @@
 import { builtinRules } from "eslint/use-at-your-own-risk";
-import { rules } from "../../../../../src/utils/rules.ts";
+import { rules } from "../../../../../lib/utils/rules.ts";
 
 const CATEGORY_TITLES = {
   jsonc: "eslint-plugin-jsonc",

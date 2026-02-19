@@ -1,5 +1,5 @@
-import type { RuleModule } from "../src/types";
-import { rules } from "../src/utils/rules";
+import type { RuleModule } from "../lib/types";
+import { rules } from "../lib/utils/rules";
 
 //eslint-disable-next-line jsdoc/require-jsdoc, @typescript-eslint/explicit-module-boundary-types -- tools
 export default function renderRulesTableContent(

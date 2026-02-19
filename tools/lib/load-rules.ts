@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
  */
 function readRules() {
   const rules = [];
-  const rulesLibRoot = path.resolve(import.meta.dirname, "../../src/rules");
+  const rulesLibRoot = path.resolve(import.meta.dirname, "../../lib/rules");
   for (const name of fs
     .readdirSync(rulesLibRoot)
     .filter((n) => n.endsWith(".ts"))) {

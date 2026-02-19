@@ -5,14 +5,14 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./lib/index.d.mts",
-      "import": "./lib/index.mjs",
-      "default": "./lib/index.mjs"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
     },
     "./package.json": "./package.json"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "engines": {
     "node": "^20.19.0 || ^22.13.0 || >=24"
@@ -21,11 +21,11 @@
     "prebuild": "npm run -s clean",
     "build": "npm run build:ts",
     "build:ts": "tsdown",
-    "clean": "rimraf .nyc_output dist coverage lib",
+    "clean": "rimraf .nyc_output dist coverage",
     "lint": "npm run eslint",
     "eslint": "eslint . --config=./eslint.config.mjs --no-config-lookup",
     "eslint-fix": "npm run eslint -- --fix",
-    "test:base": "env-cmd -e test -- mocha --import=tsx/esm \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "test:base": "env-cmd -e test -- mocha --import=tsx/esm \"tests/lib/**/*.ts\" --reporter dot --timeout 60000",
     "test": "npm run test:base",
     "test:nyc": "nyc --reporter=lcov npm run test:base",
     "pretest:integrations": "npm run build:ts && npm pack",

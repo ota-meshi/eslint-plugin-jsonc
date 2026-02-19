@@ -16,7 +16,7 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "esModuleInterop": true,
-    "outDir": "lib",
+    "outDir": "dist",
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
@@ -24,10 +24,10 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*",
-    "tests/src/**/*",
+    "lib/**/*",
+    "tests/lib/**/*",
     "tools/**/*",
     "tsdown.config.ts"
   ],
-  "exclude": ["lib/**/*"]
+  "exclude": ["dist/**/*"]
 }
