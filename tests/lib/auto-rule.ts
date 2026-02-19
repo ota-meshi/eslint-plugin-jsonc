@@ -2,12 +2,15 @@ import path from "path";
 import fs from "fs";
 import assert from "assert";
 import { ESLint } from "eslint";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 describe("auto rule with flat config", () => {
   const TEST_CWD = path.join(
-    import.meta.dirname,
+    dirname,
     "../fixtures/integrations/eslint-plugin/test-auto-rule01",
   );
   const FIXTURE_ROOT = path.join(TEST_CWD, "./src");

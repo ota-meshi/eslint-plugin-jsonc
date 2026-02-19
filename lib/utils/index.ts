@@ -5,7 +5,6 @@ import * as jsoncESLintParser from "jsonc-eslint-parser";
 import type { AST as V } from "vue-eslint-parser";
 import path from "path";
 import { toCompatCreate } from "eslint-json-compat-utils";
-import { Linter } from "eslint";
 import { builtinRules } from "eslint/use-at-your-own-risk";
 
 /**
@@ -159,8 +158,6 @@ export function defineWrapperListener(
   return jsonListener;
 }
 
-let ruleMap: Map<string, Rule.RuleModule> | null = null;
-
 /**
  * Get the core rule implementation from the rule name
  */
@@ -175,12 +172,5 @@ export function getCoreRule(
     | "no-sparse-arrays"
     | "no-useless-escape",
 ): Rule.RuleModule {
-  try {
-    const map = ruleMap || (ruleMap = new Linter().getRules());
-    return map.get(name) || null;
-  } catch {
-    // getRules() is no longer available in flat config.
-  }
-
-  return /** @type {any} */ builtinRules.get(name) || null;
+  return /** @type {any} */ builtinRules.get(name)! || null;
 }

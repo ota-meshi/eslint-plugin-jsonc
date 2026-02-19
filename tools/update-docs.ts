@@ -1,9 +1,12 @@
 import path from "path";
 import fs from "fs";
-import { rules } from "../lib/utils/rules";
+import { getRules } from "../lib/utils/rules";
 import type { RuleModule } from "../lib/types";
 import { getNewVersion } from "./lib/changesets-util";
 import packageJson from "../package.json" with { type: "json" };
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 //eslint-disable-next-line jsdoc/require-jsdoc -- tools
 function formatItems(items: string[]) {
@@ -23,7 +26,7 @@ function yamlValue(val: unknown) {
   return val;
 }
 
-const ROOT = path.resolve(import.meta.dirname, "../docs/rules");
+const ROOT = path.resolve(dirname, "../docs/rules");
 
 //eslint-disable-next-line jsdoc/require-jsdoc -- tools
 function pickSince(content: string): string | null | Promise<string> {
@@ -254,6 +257,7 @@ void main();
 
 /** main */
 async function main() {
+  const rules = getRules();
   for (const rule of rules) {
     const doc = DocFile.read(rule);
     doc.updateHeader();

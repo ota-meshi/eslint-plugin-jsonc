@@ -3,8 +3,10 @@ import path from "path";
 import { ESLint } from "eslint";
 import { name, version } from "../package.json";
 import { getNewVersion } from "./lib/changesets-util";
+import { fileURLToPath } from "url";
 
-const META_PATH = path.join(import.meta.dirname, "../lib/meta.ts");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const META_PATH = path.join(dirname, "../lib/meta.ts");
 
 void main();
 

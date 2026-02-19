@@ -9,9 +9,6 @@
     "markdown",
     "yaml"
   ],
-  "eslint.options": {
-    "overrideConfigFile": "./.eslintrc.for-vscode.mjs"
-  },
   "typescript.validate.enable": true,
   "javascript.validate.enable": false,
   "vetur.validation.script": false,

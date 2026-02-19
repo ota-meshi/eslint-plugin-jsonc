@@ -8,7 +8,6 @@ const require = createRequire(import.meta.url);
 
 let jsonPlugin: any;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- ignore
   jsonPlugin = require("@eslint/json").default;
 } catch {
   // ignore

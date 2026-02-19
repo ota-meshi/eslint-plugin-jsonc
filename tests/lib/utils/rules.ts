@@ -4,9 +4,11 @@ import path from "path";
 import fs from "fs";
 import { createRequire } from "node:module";
 
-import { rules as allRules } from "../../../lib/utils/rules";
+import { getRules } from "../../../lib/utils/rules";
+import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @returns {Array} Get the list of rules placed in the directory.
@@ -14,27 +16,25 @@ const require = createRequire(import.meta.url);
 function getDirRules() {
   const rules: { [key: string]: RuleModule } = {};
 
-  const rulesRoot = path.resolve(import.meta.dirname, "../../../lib/rules");
+  const rulesRoot = path.resolve(dirname, "../../../lib/rules");
   for (const filename of fs
     .readdirSync(rulesRoot)
     .filter((n) => n.endsWith(".ts"))) {
     const ruleName = filename.replace(/\.ts$/u, "");
     const ruleId = `jsonc/${ruleName}`;
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- for test
     const rule = require(path.join(rulesRoot, filename)).default;
     rules[ruleId] = rule;
   }
 
   const vueCustomBlockRulesLibRoot = path.resolve(
-    import.meta.dirname,
-    "../../../src/rules/vue-custom-block",
+    dirname,
+    "../../../lib/rules/vue-custom-block",
   );
   for (const filename of fs.readdirSync(vueCustomBlockRulesLibRoot)) {
     const ruleName = `vue-custom-block/${filename.replace(/\.ts$/u, "")}`;
     const ruleId = `jsonc/${ruleName}`;
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports -- for test
     const rule = require(
       path.join(vueCustomBlockRulesLibRoot, filename),
     ).default;
@@ -57,14 +57,14 @@ describe("Check that all the rules have the correct names.", () => {
 describe("Check if the strict of all rules is correct", () => {
   it("rule count equals", () => {
     assert.ok(
-      allRules.length === Object.keys(dirRules).length,
+      getRules().length === Object.keys(dirRules).length,
       `Did not equal the number of rules. expect:${
         Object.keys(dirRules).length
-      } actual:${allRules.length}`,
+      } actual:${getRules().length}`,
     );
   });
 
-  for (const rule of allRules) {
+  for (const rule of getRules()) {
     it(rule.meta.docs.ruleId, () => {
       assert.ok(Boolean(rule.meta.docs.ruleId), "Did not set `ruleId`");
       assert.ok(Boolean(rule.meta.docs.ruleName), "Did not set `ruleName`");

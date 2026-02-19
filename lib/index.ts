@@ -1,5 +1,4 @@
 import type { RuleModule } from "./types";
-import { rules as ruleList } from "./utils/rules";
 import flatBase from "./configs/flat/base";
 import flatRecommendedWithJson from "./configs/flat/recommended-with-json";
 import flatRecommendedWithJsonc from "./configs/flat/recommended-with-jsonc";
@@ -16,6 +15,7 @@ import {
 } from "jsonc-eslint-parser";
 import type { AST } from "jsonc-eslint-parser";
 import type { Linter } from "eslint";
+import { getRules } from "./utils/rules";
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
 const configs = {
@@ -36,7 +36,7 @@ const configs = {
 };
 /* eslint-enable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will.  */
 
-const rules = ruleList.reduce(
+const rules = getRules().reduce(
   (obj, r) => {
     obj[r.meta.docs.ruleName] = r;
     return obj;

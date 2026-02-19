@@ -5,14 +5,16 @@ import { RuleTester } from "../test-lib/tester";
 import type { RuleTester as ESLintRuleTester } from "eslint";
 import rule from "../../../lib/rules/indent";
 import * as jsonParser from "jsonc-eslint-parser";
+import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ------------------------------------------------------------------------------
 // Helpers
 // ------------------------------------------------------------------------------
 
-const FIXTURE_ROOT = path.resolve(import.meta.dirname, "../../fixtures/indent/");
+const FIXTURE_ROOT = path.resolve(dirname, "../../fixtures/indent/");
 
 /**
  * Load test patterns from fixtures.
@@ -40,14 +42,12 @@ function loadPatterns(
     );
     baseObj.languageOptions ??= {};
     if ("parser" in baseObj.languageOptions) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
       baseObj.languageOptions.parser = require(baseObj.languageOptions.parser);
     }
     if (
       baseObj.languageOptions.parserOptions &&
       "parser" in baseObj.languageOptions.parserOptions
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
       baseObj.languageOptions.parserOptions.parser = require(
         baseObj.languageOptions.parserOptions.parser,
       );

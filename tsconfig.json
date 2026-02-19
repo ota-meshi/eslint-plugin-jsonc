@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2024",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ES2020"],
+    "lib": ["ES2024"],
     "allowJs": true,
     "checkJs": true,
     "declaration": true,
@@ -26,8 +26,15 @@
   "include": [
     "lib/**/*",
     "tests/lib/**/*",
-    "tools/**/*",
-    "tsdown.config.ts"
+    "tools/**/*.ts",
+    "tools/**/*.mts",
+    "tsdown.config.ts",
+    "typings/**/*",
+    "tests-integrations/**/*.ts",
+    "tests-integrations/**/*.mts",
+    "docs/.vitepress/**/*.ts",
+    "docs/.vitepress/**/*.mts",
+    "docs/.vitepress/**/*.vue"
   ],
   "exclude": ["dist/**/*"]
 }
