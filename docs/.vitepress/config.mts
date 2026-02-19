@@ -49,6 +49,7 @@ export default async (): Promise<UserConfig<DefaultTheme.Config>> => {
             "./build-system/shim/vue-eslint-parser.mjs",
           ),
           module: path.join(dirname, "./shim/module.mjs"),
+          "node:module": path.join(dirname, "./shim/module.mjs"),
           events: path.join(dirname, "./build-system/shim/events.mjs"),
         },
       },
