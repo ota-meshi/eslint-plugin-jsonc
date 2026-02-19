@@ -21,8 +21,9 @@ function ruleToSidebarItem({
 }
 
 export default async (): Promise<UserConfig<DefaultTheme.Config>> => {
-  const a = "../../dist/utils/rules.js";
-  const { rules } = (await import(a)) as { rules: RuleModule[] };
+  const a = "../../dist/rules.mjs";
+  const { getRules } = (await import(a)) as { getRules: () => RuleModule[] };
+  const rules = getRules();
   return defineConfig({
     base: "/eslint-plugin-jsonc/",
     title: "eslint-plugin-jsonc",

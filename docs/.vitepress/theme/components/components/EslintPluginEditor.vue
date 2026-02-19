@@ -19,7 +19,8 @@
 import EslintEditor from "@ota-meshi/site-kit-eslint-editor-vue";
 import { loadMonacoEditor } from "@ota-meshi/site-kit-monaco-editor";
 import { Linter } from "eslint";
-import { rules } from "../../../../../lib/utils/rules";
+import { getRules } from "../../../../../lib/utils/rules.ts";
+const rules = getRules();
 
 export default {
   name: "EslintPluginEditor",
