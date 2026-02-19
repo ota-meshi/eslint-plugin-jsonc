@@ -1,8 +1,11 @@
 import fs from "fs";
+import { createRequire } from "node:module";
 import { RuleTester } from "../test-lib/tester";
 import rule from "../../../lib/rules/sort-keys";
 import * as jsonParser from "jsonc-eslint-parser";
 import * as vueParser from "vue-eslint-parser";
+
+const require = createRequire(import.meta.url);
 
 const tester = new RuleTester({
   languageOptions: {

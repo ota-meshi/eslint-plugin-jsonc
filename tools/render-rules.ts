@@ -1,11 +1,12 @@
 import type { RuleModule } from "../lib/types";
-import { rules } from "../lib/utils/rules";
+import { getRules } from "../lib/utils/rules";
 
 //eslint-disable-next-line jsdoc/require-jsdoc, @typescript-eslint/explicit-module-boundary-types -- tools
 export default function renderRulesTableContent(
   categoryLevel: number,
   buildRulePath = (ruleName: string) => `./${ruleName}.md`,
 ) {
+  const rules = getRules();
   const pluginRules = rules.filter(
     (rule) => !rule.meta.deprecated && !rule.meta.docs.extensionRule,
   );

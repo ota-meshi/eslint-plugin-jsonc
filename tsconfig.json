@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "node16",
-    "lib": ["es2022"],
+    "target": "ES2024",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2024"],
     "allowJs": true,
     "checkJs": true,
-    "outDir": "./dist",
+    "declaration": true,
     "strict": true,
     "noImplicitAny": true,
 
@@ -14,21 +15,26 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
-    "paths": {
-      "*": ["typings/*"]
-    },
     "esModuleInterop": true,
+    "outDir": "dist",
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
 
     "skipLibCheck": true
   },
   "include": [
     "lib/**/*",
     "tests/lib/**/*",
-    "tests-integrations/lib/**/*",
-    "tools/**/*",
+    "tools/**/*.ts",
+    "tools/**/*.mts",
+    "tsdown.config.ts",
     "typings/**/*",
-    "docs/.vitepress/**/*"
+    "tests-integrations/**/*.ts",
+    "tests-integrations/**/*.mts",
+    "docs/.vitepress/**/*.ts",
+    "docs/.vitepress/**/*.mts",
+    "docs/.vitepress/**/*.vue"
   ],
   "exclude": ["dist/**/*"]
 }

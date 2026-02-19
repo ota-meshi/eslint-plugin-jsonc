@@ -3,7 +3,10 @@ import fs from "fs";
 import os from "os";
 // import eslint from "eslint"
 import { rules } from "./lib/load-rules";
+import { fileURLToPath } from "url";
 const isWin = os.platform().startsWith("win");
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Convert text to camelCase
@@ -27,12 +30,17 @@ ${rules
   )
   .join("\n")}
 
-export const rules = [
-    ${rules.map((rule) => camelCase(rule.meta.docs.ruleName)).join(",")}
-] as RuleModule[]
+let rules: RuleModule[] | null = null;
+export function getRules(): RuleModule[] {
+  if (rules) {
+    return rules;
+  }
+  rules = [
+    ${rules.map((rule) => camelCase(rule.meta.docs.ruleName)).join(",\n    ")}
+  ] as RuleModule[]
+  return rules;
+}
 `;
-
-const filePath = path.resolve(__dirname, "../lib/utils/rules.ts");
 
 if (isWin) {
   content = content
@@ -42,4 +50,27 @@ if (isWin) {
 }
 
 // Update file.
-fs.writeFileSync(filePath, content);
+fs.writeFileSync(path.resolve(dirname, "../lib/utils/rules.ts"), content);
+
+let namesContent = `/*
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "npm run update"
+ */
+export const ruleNames = [
+  ${rules.map((rule) => JSON.stringify(rule.meta.docs.ruleName)).join(",\n  ")}
+] as const
+`;
+
+if (isWin) {
+  namesContent = namesContent
+    .replace(/\r?\n/gu, "\n")
+    .replace(/\r/gu, "\n")
+    .replace(/\n/gu, "\r\n");
+}
+
+// Update file.
+fs.writeFileSync(
+  path.resolve(dirname, "../lib/utils/rule-names.ts"),
+  namesContent,
+);

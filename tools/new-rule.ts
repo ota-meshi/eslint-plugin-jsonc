@@ -1,7 +1,9 @@
 import path from "path";
 import fs from "fs";
 import cp from "child_process";
+import { fileURLToPath } from "url";
 const logger = console;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // main
 ((ruleId) => {
@@ -16,9 +18,9 @@ const logger = console;
     return;
   }
 
-  const ruleFile = path.resolve(__dirname, `../lib/rules/${ruleId}.ts`);
-  const testFile = path.resolve(__dirname, `../tests/lib/rules/${ruleId}.ts`);
-  const docFile = path.resolve(__dirname, `../docs/rules/${ruleId}.md`);
+  const ruleFile = path.resolve(dirname, `../lib/rules/${ruleId}.ts`);
+  const testFile = path.resolve(dirname, `../tests/lib/rules/${ruleId}.ts`);
+  const docFile = path.resolve(dirname, `../docs/rules/${ruleId}.md`);
 
   fs.writeFileSync(
     ruleFile,

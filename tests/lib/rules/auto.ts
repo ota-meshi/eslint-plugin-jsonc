@@ -1,10 +1,15 @@
 import assert from "assert";
 import path from "path";
+import { createRequire } from "node:module";
 import rule from "../../../lib/rules/auto";
 import * as eslint from "eslint";
 import * as jsonParser from "jsonc-eslint-parser";
+import { fileURLToPath } from "node:url";
 
-const ROOT_DIR = path.join(__dirname, "../../fixtures/auto");
+const require = createRequire(import.meta.url);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const ROOT_DIR = path.join(dirname, "../../fixtures/auto");
 
 type LinterFunction = (
   code: string,
@@ -38,7 +43,6 @@ function buildLinter(): LinterFunction {
     const parserConfig = {
       files: config.files,
       languageOptions: {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports -- For test
         parser: parser ? require(parser) : jsonParser,
       },
     };

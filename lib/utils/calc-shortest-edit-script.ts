@@ -1,4 +1,6 @@
-import diff from "diff-sequences";
+import diffBase from "diff-sequences";
+
+const diff: typeof diffBase = (diffBase as any).default || diffBase;
 
 export type DeleteEntry<E> = {
   type: "delete";

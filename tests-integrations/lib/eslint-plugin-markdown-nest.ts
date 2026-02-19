@@ -3,15 +3,15 @@ import assert from "assert";
 import path from "path";
 import { version } from "../../package.json";
 import type { ESLint } from "eslint";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 
-const TEST_CWD = path.join(
-  __dirname,
-  "../fixtures/eslint-plugin-markdown-nest",
-);
+const TEST_CWD = path.join(dirname, "../fixtures/eslint-plugin-markdown-nest");
 const ESLINT = path.join(TEST_CWD, `./node_modules/.bin/eslint`);
 
 describe("Integration with eslint-plugin-markdown with nesting config", () => {

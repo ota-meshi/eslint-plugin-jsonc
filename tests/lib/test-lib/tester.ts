@@ -1,11 +1,13 @@
 import * as eslint from "eslint";
 import * as jsonParser from "jsonc-eslint-parser";
 import semver from "semver";
+import { createRequire } from "node:module";
 import type { RuleModule } from "../../../lib/types";
+
+const require = createRequire(import.meta.url);
 
 let jsonPlugin: any;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- ignore
   jsonPlugin = require("@eslint/json").default;
 } catch {
   // ignore

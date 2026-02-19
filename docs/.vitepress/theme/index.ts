@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- for VitePress
+// @ts-nocheck
 if (typeof globalThis !== "undefined") {
   if (typeof require === "undefined") {
     (globalThis as any).require = () => {

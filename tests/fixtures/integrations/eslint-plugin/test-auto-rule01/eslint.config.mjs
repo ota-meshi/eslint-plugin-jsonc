@@ -5,7 +5,7 @@ try {
   plugin = await import("../../../../../lib/index.ts");
 } catch (e) {
   // @ts-ignore -- ignore
-  plugin = await import("../../../../../dist/index.js");
+  plugin = await import("../../../../../dist/index.mjs");
 }
 
 export default [

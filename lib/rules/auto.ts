@@ -1,6 +1,7 @@
 import type { BaseRuleListener, PartialRuleModule, RuleModule } from "../types";
 import { createRule } from "../utils";
 import { getAutoConfig } from "../utils/get-auto-jsonc-rules-config";
+import { getRules } from "../utils/rules";
 
 export default createRule("auto", {
   meta: {
@@ -24,10 +25,9 @@ export default createRule("auto", {
 
     const visitor: BaseRuleListener = {};
     for (const ruleId of Object.keys(autoConfig)) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- special rule
-      const rule: RuleModule = require(
-        `./${ruleId.replace(/^jsonc\//u, "")}`,
-      ).default;
+      const rule: RuleModule = getRules().find(
+        (r) => r.meta.docs.ruleId === ruleId,
+      )!;
       const subContext: any = {
         __proto__: context,
         options: getRuleOptions(autoConfig[ruleId], rule.jsoncDefineRule),
