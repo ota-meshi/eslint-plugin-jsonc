@@ -18,7 +18,7 @@ export default [
       "*.jsonc",
       "**/*.jsonc",
     ],
-    language: "jsonc/jsonc",
+    language: "jsonc/x",
     rules: {
       // ESLint core rules known to cause problems with JSON.
       strict: "off",

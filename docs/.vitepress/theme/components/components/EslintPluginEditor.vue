@@ -119,7 +119,7 @@ export default {
         },
         {
           files: ["*.{json,jsonc,json5}", "**/*.{json,jsonc,json5}"],
-          language: "jsonc/jsonc",
+          language: "jsonc/x",
           // languageOptions: {
           //   parser: {
           //     parseForESLint: (...args) => {

@@ -56,6 +56,34 @@ This plugin will parse `.json`, `.jsonc` and `.json5` by default using the confi
 
 See [the rule list](../rules/index.md) to get the `rules` that this plugin provides.
 
+#### Languages
+
+This plugin provides the following language identifiers for use in ESLint configurations:
+
+- `jsonc/json` ... JSON files
+- `jsonc/jsonc` ... JSONC files
+- `jsonc/json5` ... JSON5 files
+- `jsonc/x` ... Extended JSON files that accepts any syntax that represents static values ​​parseable by [jsonc-eslint-parser].
+
+For example, to apply settings specifically to JSON files, you can use the `language` field in your ESLint configuration:
+
+```js
+import eslintPluginJsonc from 'eslint-plugin-jsonc';
+export default [
+  {
+    files: ["*.json", "**/*.json"],
+    plugins: {
+      jsonc: eslintPluginJsonc,
+    },
+    language: "jsonc/x",
+  }
+]
+```
+
+The configuration above is included in the shareable configs provided by this plugin, so using `configs` is generally recommended.
+
+See also <https://eslint.org/docs/latest/use/configure/plugins#specify-a-language>
+
 #### **Experimental** support for `@eslint/json`
 
 We've launched experimental support for [`@eslint/json`].

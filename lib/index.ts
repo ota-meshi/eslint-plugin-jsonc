@@ -50,7 +50,10 @@ const rules = getRules().reduce(
 );
 
 const languages = {
-  jsonc: new JSONCLanguage(),
+  json: new JSONCLanguage({ mode: "JSON" }),
+  jsonc: new JSONCLanguage({ mode: "JSONC" }),
+  json5: new JSONCLanguage({ mode: "JSON5" }),
+  x: new JSONCLanguage({ mode: "EXTENDED" }),
 };
 
 export default {

@@ -3,7 +3,7 @@ import plugin from "../../../lib/index.ts";
 import { ESLint } from "eslint";
 import stylistic from "@stylistic/eslint-plugin";
 
-describe("Test to make sure that ESLint Stylistic rules don't crash with language: 'jsonc/jsonc'", () => {
+describe("Test to make sure that ESLint Stylistic rules don't crash with language: 'jsonc/x'", () => {
   const code = `{"key": "value", "number": 42, "array": [1, 2, 3]}`;
 
   for (const [ruleId, rule] of Object.entries(stylistic.rules)) {
@@ -18,7 +18,7 @@ describe("Test to make sure that ESLint Stylistic rules don't crash with languag
               "@stylistic": stylistic,
             },
             files: ["**/*.json"],
-            language: "jsonc/jsonc",
+            language: "jsonc/x",
             rules: {
               [`@stylistic/${ruleId}`]: "error",
             },

@@ -3,7 +3,7 @@ import plugin from "../../../lib/index.ts";
 import { ESLint } from "eslint";
 import { builtinRules } from "eslint/use-at-your-own-risk";
 
-describe("Test to make sure that ESLint core rules don't crash with language: 'jsonc/jsonc'", () => {
+describe("Test to make sure that ESLint core rules don't crash with language: 'jsonc/x'", () => {
   const code = `{"key": "value", "number": 42, "array": [1, 2, 3]}`;
 
   for (const [ruleId] of builtinRules) {
@@ -16,7 +16,7 @@ describe("Test to make sure that ESLint core rules don't crash with language: 'j
               jsonc: plugin,
             },
             files: ["**/*.json"],
-            language: "jsonc/jsonc",
+            language: "jsonc/x",
             rules: {
               [ruleId]: "error",
             },
