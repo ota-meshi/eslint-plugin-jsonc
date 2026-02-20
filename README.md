@@ -142,7 +142,7 @@ This plugin provides the following language identifiers for use in ESLint config
 - `jsonc/json` ... JSON files
 - `jsonc/jsonc` ... JSONC files
 - `jsonc/json5` ... JSON5 files
-- `jsonc/x` ... Extended JSON files that accepts any syntax that represents static values ​​parseable by [jsonc-eslint-parser].
+- `jsonc/x` ... Extended JSON files that accept any syntax representing static values parseable by [jsonc-eslint-parser].
 
 For example, to apply settings specifically to JSON files, you can use the `language` field in your ESLint configuration:
 
