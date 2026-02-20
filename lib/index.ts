@@ -6,14 +6,6 @@ import flatRecommendedWithJson5 from "./configs/flat/recommended-with-json5.ts";
 import flatPrettier from "./configs/flat/prettier.ts";
 import flatAll from "./configs/flat/all.ts";
 import * as meta from "./meta.ts";
-
-import {
-  parseForESLint,
-  parseJSON,
-  traverseNodes,
-  getStaticJSONValue,
-} from "jsonc-eslint-parser";
-import type { AST } from "jsonc-eslint-parser";
 import type { Linter } from "eslint";
 import { getRules } from "./utils/rules.ts";
 import { JSONCLanguage } from "./language/index.ts";
@@ -63,30 +55,6 @@ export default {
   configs,
   rules,
   languages,
-
-  // backward compatibility
-  parseForESLint,
-  parseJSON,
-  traverseNodes,
-  getStaticJSONValue,
 };
-export {
-  meta,
-  configs,
-  rules,
-  languages,
-
-  // backward compatibility
-  parseForESLint,
-  parseJSON,
-  traverseNodes,
-  getStaticJSONValue,
-};
-export type {
-  // types
-  AST,
-  JSONCLanguageOptions,
-  JSONCSourceCode,
-  JSONCToken,
-  JSONCComment,
-};
+export { meta, configs, rules, languages };
+export type { JSONCLanguageOptions, JSONCSourceCode, JSONCToken, JSONCComment };
