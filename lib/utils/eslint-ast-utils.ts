@@ -3,7 +3,7 @@
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import type { Comment, Token } from "../types.ts";
-import { latestEcmaVersion, tokenize } from "espree";
+import { tokenize } from "jsonc-eslint-parser";
 
 export const LINEBREAKS = new Set(["\r\n", "\r", "\n", "\u2028", "\u2029"]);
 export const LINEBREAK_MATCHER = /\r\n|[\n\r\u2028\u2029]/u;
@@ -17,6 +17,7 @@ export function createGlobalLinebreakMatcher(): RegExp {
   return new RegExp(LINEBREAK_MATCHER.source, "gu");
 }
 
+/* eslint-disable complexity -- ignore */
 /**
  * Determines whether two tokens can safely be placed next to each other without merging into a single token
  * @param leftValue The left token. If this is a string, it will be tokenized and the last token will be used.
@@ -25,47 +26,25 @@ export function createGlobalLinebreakMatcher(): RegExp {
  * next to each other, behavior is undefined (although it should return `true` in most cases).
  */
 export function canTokensBeAdjacent(
+  /* eslint-enable complexity -- ignore */
   leftValue: Token | string,
   rightValue: Token | string,
 ): boolean {
-  const espreeOptions = {
-    comment: true,
-    ecmaVersion: latestEcmaVersion,
-    range: true,
-  };
-
   let leftToken;
 
   if (typeof leftValue === "string") {
     let tokens;
 
     try {
-      tokens = tokenize(leftValue, espreeOptions);
+      tokens = tokenize(leftValue, { includeComments: true });
     } catch {
       return false;
     }
 
-    const comments = tokens.comments!;
-
     leftToken = tokens[tokens.length - 1];
-    if (comments.length) {
-      const lastComment = comments[comments.length - 1];
-
-      if (!leftToken || lastComment.range![0] > leftToken.range![0])
-        leftToken = lastComment;
-    }
   } else {
     leftToken = leftValue;
   }
-
-  /**
-   * If a hashbang comment was passed as a token object from SourceCode,
-   * its type will be "Shebang" because of the way ESLint itself handles hashbangs.
-   * If a hashbang comment was passed in a string and then tokenized in this function,
-   * its type will be "Hashbang" because of the way Espree tokenizes hashbangs.
-   */
-  if (leftToken.type === "Shebang" || leftToken.type === "Hashbang")
-    return false;
 
   let rightToken;
 
@@ -73,20 +52,12 @@ export function canTokensBeAdjacent(
     let tokens;
 
     try {
-      tokens = tokenize(rightValue, espreeOptions);
+      tokens = tokenize(rightValue, { includeComments: true });
     } catch {
       return false;
     }
 
-    const comments = tokens.comments!;
-
     rightToken = tokens[0];
-    if (comments.length) {
-      const firstComment = comments[0];
-
-      if (!rightToken || firstComment.range![0] < rightToken.range![0])
-        rightToken = firstComment;
-    }
   } else {
     rightToken = rightValue;
   }

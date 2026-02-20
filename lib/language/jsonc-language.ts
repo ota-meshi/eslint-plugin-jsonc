@@ -81,7 +81,7 @@ export class JSONCLanguage implements Language<{
 
     try {
       const result = parseForESLint(text, {
-        filePath: file.path,
+        // filePath: file.path,
         jsonSyntax: context.languageOptions?.parserOptions?.jsonSyntax,
       });
 
