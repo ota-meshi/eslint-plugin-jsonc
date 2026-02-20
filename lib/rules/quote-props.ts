@@ -2,7 +2,7 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
-import { tokenize } from "espree";
+import { tokenize } from "jsonc-eslint-parser";
 import { keywords } from "../utils/eslint-keywords.ts";
 import { isNumericLiteral } from "../utils/eslint-ast-utils.ts";
 
