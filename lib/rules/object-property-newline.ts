@@ -64,11 +64,11 @@ export default createRule<[RuleOptions]>("object-property-newline", {
         if (allowSameLine) {
           if (node.properties.length > 1) {
             const firstTokenOfFirstProperty = sourceCode.getFirstToken(
-              node.properties[0] as any,
-            )!;
+              node.properties[0],
+            );
             const lastTokenOfLastProperty = sourceCode.getLastToken(
-              node.properties[node.properties.length - 1] as any,
-            )!;
+              node.properties[node.properties.length - 1],
+            );
 
             if (
               firstTokenOfFirstProperty.loc.end.line ===
@@ -82,18 +82,18 @@ export default createRule<[RuleOptions]>("object-property-newline", {
 
         for (let i = 1; i < node.properties.length; i++) {
           const lastTokenOfPreviousProperty = sourceCode.getLastToken(
-            node.properties[i - 1] as any,
-          )!;
+            node.properties[i - 1],
+          );
           const firstTokenOfCurrentProperty = sourceCode.getFirstToken(
-            node.properties[i] as any,
-          )!;
+            node.properties[i],
+          );
 
           if (
             lastTokenOfPreviousProperty.loc.end.line ===
             firstTokenOfCurrentProperty.loc.start.line
           ) {
             context.report({
-              node: node as any,
+              node,
               loc: firstTokenOfCurrentProperty.loc,
               messageId,
               fix(fixer) {
@@ -103,7 +103,7 @@ export default createRule<[RuleOptions]>("object-property-newline", {
                 const rangeAfterComma = [
                   comma.range[1],
                   firstTokenOfCurrentProperty.range[0],
-                ] as const;
+                ] as [number, number];
 
                 // Don't perform a fix if there are any comments between the comma and the next property.
                 if (
@@ -113,7 +113,7 @@ export default createRule<[RuleOptions]>("object-property-newline", {
                 )
                   return null;
 
-                return fixer.replaceTextRange(rangeAfterComma as any, "\n");
+                return fixer.replaceTextRange(rangeAfterComma, "\n");
               },
             });
           }

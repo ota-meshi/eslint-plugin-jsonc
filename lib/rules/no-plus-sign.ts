@@ -24,7 +24,7 @@ export default createRule("no-plus-sign", {
       JSONUnaryExpression(node) {
         if (node.operator === "+") {
           const operator = sourceCode.getFirstToken(
-            node as any,
+            node,
             (token) =>
               token.type === "Punctuator" && token.value === node.operator,
           );

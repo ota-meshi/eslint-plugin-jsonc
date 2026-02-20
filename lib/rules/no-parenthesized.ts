@@ -46,12 +46,12 @@ export default createRule("no-parenthesized", {
 
     /** Expression handler */
     function handler(node: AST.JSONExpression) {
-      if (!isExpression(node) || !isParenthesized(node, sourceCode)) {
+      if (!isExpression(node) || !isParenthesized(node, sourceCode as never)) {
         return;
       }
 
-      const leftParen = sourceCode.getTokenBefore(node as never)!;
-      const rightParen = sourceCode.getTokenAfter(node as never)!;
+      const leftParen = sourceCode.getTokenBefore(node)!;
+      const rightParen = sourceCode.getTokenAfter(node)!;
 
       context.report({
         loc: leftParen.loc,

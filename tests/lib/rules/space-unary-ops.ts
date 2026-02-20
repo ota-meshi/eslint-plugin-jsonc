@@ -48,11 +48,11 @@ tester.run("space-unary-ops", rule, {
       code: `<custom-block lang="json">- 1</custom-block>`,
       output: `<custom-block lang="json">-1</custom-block>`,
       errors: ["Unexpected space after unary operator '-'."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

@@ -3,8 +3,8 @@
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
 import { isTokenOnSameLine } from "../utils/eslint-ast-utils.ts";
-import type { Token } from "../types.ts";
 import { isCommentToken } from "@eslint-community/eslint-utils";
+import type { JSONCToken } from "../language/jsonc-source-code.ts";
 export type RuleOptions =
   | ("always" | "never" | "consistent")
   | { multiline?: boolean; minItems?: number | null };
@@ -108,9 +108,9 @@ export default createRule<[RuleOptions]>("array-bracket-newline", {
      * @param node The node to report in the event of an error.
      * @param token The token to use for the report.
      */
-    function reportNoBeginningLinebreak(node: AST.JSONNode, token: Token) {
+    function reportNoBeginningLinebreak(node: AST.JSONNode, token: JSONCToken) {
       context.report({
-        node: node as any,
+        node,
         loc: token.loc,
         messageId: "unexpectedOpeningLinebreak",
         fix(fixer) {
@@ -130,9 +130,9 @@ export default createRule<[RuleOptions]>("array-bracket-newline", {
      * @param node The node to report in the event of an error.
      * @param token The token to use for the report.
      */
-    function reportNoEndingLinebreak(node: AST.JSONNode, token: Token) {
+    function reportNoEndingLinebreak(node: AST.JSONNode, token: JSONCToken) {
       context.report({
-        node: node as any,
+        node,
         loc: token.loc,
         messageId: "unexpectedClosingLinebreak",
         fix(fixer) {
@@ -154,10 +154,10 @@ export default createRule<[RuleOptions]>("array-bracket-newline", {
      */
     function reportRequiredBeginningLinebreak(
       node: AST.JSONNode,
-      token: Token,
+      token: JSONCToken,
     ) {
       context.report({
-        node: node as any,
+        node,
         loc: token.loc,
         messageId: "missingOpeningLinebreak",
         fix(fixer) {
@@ -171,9 +171,12 @@ export default createRule<[RuleOptions]>("array-bracket-newline", {
      * @param node The node to report in the event of an error.
      * @param token The token to use for the report.
      */
-    function reportRequiredEndingLinebreak(node: AST.JSONNode, token: Token) {
+    function reportRequiredEndingLinebreak(
+      node: AST.JSONNode,
+      token: JSONCToken,
+    ) {
       context.report({
-        node: node as any,
+        node,
         loc: token.loc,
         messageId: "missingClosingLinebreak",
         fix(fixer) {
@@ -192,8 +195,8 @@ export default createRule<[RuleOptions]>("array-bracket-newline", {
       const normalizedOptions = normalizeOptions(context.options[0]);
       // @ts-expect-error type cast
       const options = normalizedOptions[node.type];
-      const openBracket = sourceCode.getFirstToken(node as any)!;
-      const closeBracket = sourceCode.getLastToken(node as any)!;
+      const openBracket = sourceCode.getFirstToken(node);
+      const closeBracket = sourceCode.getLastToken(node);
       const firstIncComment = sourceCode.getTokenAfter(openBracket, {
         includeComments: true,
       })!;
@@ -206,10 +209,10 @@ export default createRule<[RuleOptions]>("array-bracket-newline", {
         elements.length >= options.minItems ||
         (options.multiline &&
           elements.length > 0 &&
-          firstIncComment.loc!.start.line !== lastIncComment.loc!.end.line) ||
+          firstIncComment.loc.start.line !== lastIncComment.loc.end.line) ||
         (elements.length === 0 &&
           firstIncComment.type === "Block" &&
-          firstIncComment.loc!.start.line !== lastIncComment.loc!.end.line &&
+          firstIncComment.loc.start.line !== lastIncComment.loc.end.line &&
           firstIncComment === lastIncComment) ||
         (options.consistent &&
           openBracket.loc.end.line !== first.loc.start.line);

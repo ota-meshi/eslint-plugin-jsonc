@@ -38,7 +38,7 @@ export default createRule("auto", {
         report(options: any) {
           if (options.messageId) {
             options.message = `[${ruleId}] ${
-              rule.meta.messages[options.messageId]
+              rule.meta.messages?.[options.messageId]
             }`;
             delete options.messageId;
           } else {

@@ -1,16 +1,19 @@
 import type { JSONSchema4 } from "json-schema";
-import type { Rule } from "eslint";
 import type {
   BuiltInRuleListenerExits,
   BuiltInRuleListeners,
   RuleListener,
+  AST,
 } from "jsonc-eslint-parser";
-import type { AST as ESLintAST } from "eslint";
-import type * as ESTree from "estree";
+import type * as core from "@eslint/core";
 import type { AnyNode } from "@humanwhocodes/momoa";
+import type {
+  JSONCLanguageOptions,
+  JSONCSourceCode,
+} from "./language/index.ts";
+import type { JSONCTokenOrComment } from "./language/jsonc-source-code.ts";
 
-export type Token = ESLintAST.Token;
-export type Comment = ESTree.Comment;
+export type JSONCNodeOrToken = AST.JSONNode | JSONCTokenOrComment;
 
 export { RuleListener };
 
@@ -28,47 +31,64 @@ export type BaseRuleListener = MomoaRuleListener &
   BuiltInRuleListeners &
   BuiltInRuleListenerExits;
 
-export interface RuleModule<RuleOptions = unknown[]> {
-  meta: RuleMetaData;
+export interface RuleModule<
+  RuleOptions extends unknown[] = unknown[],
+> extends core.RuleDefinition<{
+  LangOptions: JSONCLanguageOptions;
+  Code: JSONCSourceCode;
+  RuleOptions: RuleOptions;
+  Visitor: RuleListener;
+  Node: AST.JSONNode;
+  MessageIds: string;
+  ExtRuleDocs: RuleMetaDocs;
+}> {
+  meta: RuleMetaData<RuleOptions>;
+  /** @internal */
   jsoncDefineRule: PartialRuleModule<RuleOptions>;
-  create(context: Rule.RuleContext & { options: RuleOptions }): RuleListener;
+}
+export type RuleMetaDocs = {
+  description: string;
+  recommended: ("json" | "jsonc" | "json5")[] | null;
+  url: string;
+  ruleId: string;
+  ruleName: string;
+  default?: "error" | "warn";
+  extensionRule:
+    | boolean
+    | string
+    | {
+        plugin: string;
+        url: string;
+      };
+  layout: boolean;
+};
+
+export type RuleContext<RuleOptions extends unknown[] = unknown[]> =
+  core.RuleContext<{
+    LangOptions: JSONCLanguageOptions;
+    Code: JSONCSourceCode;
+    RuleOptions: RuleOptions;
+    Node: JSONCNodeOrToken;
+    MessageIds: string;
+  }>;
+
+export interface RuleMetaData<
+  RuleOptions extends unknown[] = unknown[],
+> extends core.RulesMeta<string, RuleOptions, RuleMetaDocs> {
+  docs: RuleMetaDocs;
 }
 
-export interface RuleMetaData {
-  docs: {
-    description: string;
-    recommended: ("json" | "jsonc" | "json5")[] | null;
-    url: string;
-    ruleId: string;
-    ruleName: string;
-    default?: "error" | "warn";
-    extensionRule:
-      | boolean
-      | string
-      | {
-          plugin: string;
-          url: string;
-        };
-    layout: boolean;
-  };
-  messages: { [messageId: string]: string };
-  fixable?: "code" | "whitespace";
-  hasSuggestions?: boolean;
-  schema: false | JSONSchema4 | JSONSchema4[];
-  deprecated?: boolean;
-  replacedBy?: [];
-  type: "problem" | "suggestion" | "layout";
-}
-
-export interface PartialRuleModule<RuleOptions = unknown[]> {
-  meta: PartialRuleMetaData;
+export interface PartialRuleModule<RuleOptions extends unknown[] = unknown[]> {
+  meta: PartialRuleMetaData<RuleOptions>;
   create: (
-    context: Rule.RuleContext & { options: RuleOptions },
+    context: RuleContext<RuleOptions>,
     params: { customBlock: boolean },
   ) => BaseRuleListener;
 }
 
-export interface PartialRuleMetaData {
+export interface PartialRuleMetaData<
+  RuleOptions extends unknown[] = unknown[],
+> {
   docs: {
     description: string;
     recommended: ("json" | "jsonc" | "json5")[] | null;
@@ -85,7 +105,7 @@ export interface PartialRuleMetaData {
   messages: { [messageId: string]: string };
   fixable?: "code" | "whitespace";
   hasSuggestions?: boolean;
-  defaultOptions?: any[];
+  defaultOptions?: RuleOptions;
   schema: false | JSONSchema4 | JSONSchema4[];
   deprecated?: boolean;
   replacedBy?: [];

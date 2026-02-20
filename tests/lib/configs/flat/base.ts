@@ -6,8 +6,8 @@ const code = `{ foo: 42 }`;
 describe("`flat/base` config", () => {
   it("`base` config should work. ", async () => {
     const linter = new ESLint({
-      overrideConfigFile: true as never,
-      overrideConfig: plugin.configs.base as never,
+      overrideConfigFile: true,
+      overrideConfig: plugin.configs.base,
     });
     const result = await linter.lintText(code, { filePath: "test.json" });
     const messages = result[0].messages;
@@ -35,8 +35,8 @@ describe("`flat/base` config", () => {
   });
   it("`flat/base` config should work for backward compatibility. ", async () => {
     const linter = new ESLint({
-      overrideConfigFile: true as never,
-      overrideConfig: plugin.configs["flat/base"] as never,
+      overrideConfigFile: true,
+      overrideConfig: plugin.configs["flat/base"],
     });
     const result = await linter.lintText(code, { filePath: "test.json" });
     const messages = result[0].messages;

@@ -53,7 +53,7 @@ export default createRule("valid-json-number", {
           return;
         }
         const operator = sourceCode.getFirstToken(
-          node as any,
+          node,
           (token) =>
             token.type === "Punctuator" && token.value === node.operator,
         );

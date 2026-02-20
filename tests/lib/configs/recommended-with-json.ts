@@ -6,8 +6,8 @@ const code = `{ foo: 42 }`;
 describe("`recommended-with-json` config", () => {
   it("`recommended-with-json` config should work. ", async () => {
     const linter = new ESLint({
-      overrideConfigFile: true as never,
-      overrideConfig: plugin.configs["recommended-with-json"] as never,
+      overrideConfigFile: true,
+      overrideConfig: plugin.configs["recommended-with-json"],
     });
     const result = await linter.lintText(code, { filePath: "test.json" });
     const messages = result[0].messages;
@@ -41,8 +41,8 @@ describe("`recommended-with-json` config", () => {
   });
   it("`flat/recommended-with-json` config should work for backward compatibility. ", async () => {
     const linter = new ESLint({
-      overrideConfigFile: true as never,
-      overrideConfig: plugin.configs["flat/recommended-with-json"] as never,
+      overrideConfigFile: true,
+      overrideConfig: plugin.configs["flat/recommended-with-json"],
     });
     const result = await linter.lintText(code, { filePath: "test.json" });
     const messages = result[0].messages;

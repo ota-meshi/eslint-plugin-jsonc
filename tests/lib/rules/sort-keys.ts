@@ -360,11 +360,11 @@ tester.run("sort-keys", rule, {
       errors: [
         "Expected object keys to be in ascending order. 'a' should be after 'B'.",
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
     // package.json
     {

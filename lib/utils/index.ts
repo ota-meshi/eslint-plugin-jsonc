@@ -1,4 +1,9 @@
-import type { RuleListener, RuleModule, PartialRuleModule } from "../types.ts";
+import type {
+  RuleListener,
+  RuleModule,
+  PartialRuleModule,
+  RuleContext,
+} from "../types.ts";
 import type { Rule } from "eslint";
 import type { AST } from "jsonc-eslint-parser";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
@@ -27,10 +32,10 @@ export function createRule<RuleOptions extends unknown[]>(
       },
     },
     jsoncDefineRule: rule,
-    create(baseContext: Rule.RuleContext & { options: RuleOptions }) {
+    create(baseContext) {
       const context = getCompatContext(baseContext);
       const create = toCompatCreate(rule.create);
-      const sourceCode = context.sourceCode;
+      const sourceCode = (context as unknown as Rule.RuleContext).sourceCode;
       if (
         typeof sourceCode.parserServices?.defineCustomBlocksVisitor ===
           "function" &&
@@ -46,8 +51,8 @@ export function createRule<RuleOptions extends unknown[]>(
               }
               return block.name === "i18n";
             },
-            create(blockContext: Rule.RuleContext & { options: RuleOptions }) {
-              return create(blockContext, {
+            create(blockContext: Rule.RuleContext) {
+              return create(blockContext as any, {
                 customBlock: true,
               });
             },
@@ -64,7 +69,7 @@ export function createRule<RuleOptions extends unknown[]>(
 /**
  * Get the compatible context from the given context.
  */
-function getCompatContext<T extends Rule.RuleContext>(context: T): T {
+function getCompatContext<T extends RuleContext>(context: T): T {
   if (context.sourceCode) {
     return context;
   }
@@ -88,7 +93,7 @@ function getCompatContext<T extends Rule.RuleContext>(context: T): T {
  */
 export function defineWrapperListener(
   coreRule: Rule.RuleModule,
-  context: Rule.RuleContext,
+  context: RuleContext,
   options: any[],
 ): RuleListener {
   if (!context.sourceCode.parserServices.isJSON) {

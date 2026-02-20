@@ -36,11 +36,11 @@ tester.run("quotes", rule, {
       code: `<custom-block lang="json">['element']</custom-block>`,
       output: `<custom-block lang="json">["element"]</custom-block>`,
       errors: ["Strings must use doublequote."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

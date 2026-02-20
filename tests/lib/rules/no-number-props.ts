@@ -23,11 +23,11 @@ tester.run("no-number-props", rule, {
       code: `<custom-block lang="json">{123: 123}</custom-block>`,
       output: `<custom-block lang="json">{"123": 123}</custom-block>`,
       errors: ["The number property keys are not allowed."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

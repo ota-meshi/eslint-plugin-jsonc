@@ -8,8 +8,12 @@ import {
 } from "../utils/eslint-ast-utils.ts";
 import { isColonToken } from "@eslint-community/eslint-utils";
 import type { Rule } from "eslint";
-import type { Token } from "../types.ts";
 import { getGraphemeCount } from "../utils/eslint-string-utils.ts";
+import type {
+  JSONCComment,
+  JSONCToken,
+} from "../language/jsonc-source-code.ts";
+import type { RuleTextEditor } from "@eslint/core";
 
 /**
  * Checks whether a string contains a line terminator as defined in
@@ -372,7 +376,7 @@ export default createRule("key-spacing", {
      * @returns The colon punctuator.
      */
     function getNextColon(node: AST.JSONNode) {
-      return sourceCode.getTokenAfter(node as any, isColonToken);
+      return sourceCode.getTokenAfter(node, isColonToken);
     }
 
     /**
@@ -423,17 +427,17 @@ export default createRule("key-spacing", {
        * last comment is adjacent to the candidate property, and that successive
        * comments are adjacent to each other.
        */
-      const leadingComments = sourceCode.getCommentsBefore(candidate as any);
+      const leadingComments = sourceCode.getCommentsBefore(candidate);
 
       if (
         leadingComments.length &&
-        leadingComments[0].loc!.start.line - groupEndLine <= 1 &&
-        candidateValueStartLine - last(leadingComments).loc!.end.line <= 1
+        leadingComments[0].loc.start.line - groupEndLine <= 1 &&
+        candidateValueStartLine - last(leadingComments).loc.end.line <= 1
       ) {
         for (let i = 1; i < leadingComments.length; i++) {
           if (
-            leadingComments[i].loc!.start.line -
-              leadingComments[i - 1].loc!.end.line >
+            leadingComments[i].loc.start.line -
+              leadingComments[i - 1].loc.end.line >
             1
           )
             return false;
@@ -497,17 +501,19 @@ export default createRule("key-spacing", {
         const spaces = Array(diffAbs + 1).join(" ");
 
         const locStart = isKeySide
-          ? tokenBeforeColon.loc!.end
+          ? tokenBeforeColon.loc.end
           : nextColon.loc.start;
         const locEnd = isKeySide
           ? nextColon.loc.start
-          : tokenAfterColon.loc!.start;
+          : tokenAfterColon.loc.start;
         const missingLoc = isKeySide
-          ? tokenBeforeColon.loc!
-          : tokenAfterColon.loc!;
+          ? tokenBeforeColon.loc
+          : tokenAfterColon.loc;
         const loc = isExtra ? { start: locStart, end: locEnd } : missingLoc;
 
-        let fix: (fixer: Rule.RuleFixer) => Rule.Fix | null;
+        let fix: (
+          fixer: RuleTextEditor<JSONCToken | JSONCComment>,
+        ) => Rule.Fix | null;
 
         if (isExtra) {
           let range: [number, number];
@@ -515,13 +521,13 @@ export default createRule("key-spacing", {
           // Remove whitespace
           if (isKeySide)
             range = [
-              tokenBeforeColon.range![1],
-              tokenBeforeColon.range![1] + diffAbs,
+              tokenBeforeColon.range[1],
+              tokenBeforeColon.range[1] + diffAbs,
             ];
           else
             range = [
-              tokenAfterColon.range![0] - diffAbs,
-              tokenAfterColon.range![0],
+              tokenAfterColon.range[0] - diffAbs,
+              tokenAfterColon.range[0],
             ];
 
           fix = function (fixer) {
@@ -531,11 +537,11 @@ export default createRule("key-spacing", {
           // Add whitespace
           if (isKeySide) {
             fix = function (fixer) {
-              return fixer.insertTextAfter(tokenBeforeColon as Token, spaces);
+              return fixer.insertTextAfter(tokenBeforeColon, spaces);
             };
           } else {
             fix = function (fixer) {
-              return fixer.insertTextBefore(tokenAfterColon as Token, spaces);
+              return fixer.insertTextBefore(tokenAfterColon, spaces);
             };
           }
         }
@@ -550,7 +556,7 @@ export default createRule("key-spacing", {
         else messageId = side === "key" ? "missingKey" : "missingValue";
 
         context.report({
-          node: property[side] as any,
+          node: property[side],
           loc,
           messageId,
           data: {
@@ -569,7 +575,7 @@ export default createRule("key-spacing", {
      * @returns Width of the key.
      */
     function getKeyWidth(property: AST.JSONProperty) {
-      const startToken = sourceCode.getFirstToken(property as any)!;
+      const startToken = sourceCode.getFirstToken(property);
       const endToken = getLastTokenBeforeColon(property.key)!;
 
       return getGraphemeCount(

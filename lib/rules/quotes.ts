@@ -173,16 +173,13 @@ export default createRule<
 
           if (!isValid) {
             context.report({
-              node: node as any,
+              node,
               messageId: "wrongQuotes",
               data: {
                 description: settings.description,
               },
               fix(fixer) {
-                return fixer.replaceText(
-                  node as any,
-                  settings.convert(node.raw),
-                );
+                return fixer.replaceText(node, settings.convert(node.raw));
               },
             });
           }
@@ -195,15 +192,15 @@ export default createRule<
           return;
 
         context.report({
-          node: node as any,
+          node,
           messageId: "wrongQuotes",
           data: {
             description: settings.description,
           },
           fix(fixer) {
             return fixer.replaceText(
-              node as any,
-              settings.convert(sourceCode.getText(node as any)),
+              node,
+              settings.convert(sourceCode.getText(node)),
             );
           },
         });

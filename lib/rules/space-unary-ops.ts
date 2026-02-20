@@ -2,8 +2,8 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
-import type { Token } from "../types.ts";
 import { canTokensBeAdjacent } from "../utils/eslint-ast-utils.ts";
+import type { JSONCToken } from "../language/jsonc-source-code.ts";
 
 export interface RuleOptions {
   words?: boolean;
@@ -88,13 +88,13 @@ export default createRule<[RuleOptions]>("space-unary-ops", {
      */
     function verifyNonWordsHaveSpaces(
       node: AST.JSONUnaryExpression,
-      firstToken: Token,
-      secondToken: Token,
+      firstToken: JSONCToken,
+      secondToken: JSONCToken,
     ) {
       if ("prefix" in node && node.prefix) {
         if (firstToken.range[1] === secondToken.range[0]) {
           context.report({
-            node: node as any,
+            node,
             messageId: "operator",
             data: {
               operator: firstToken.value,
@@ -107,7 +107,7 @@ export default createRule<[RuleOptions]>("space-unary-ops", {
       } else {
         if (firstToken.range[1] === secondToken.range[0]) {
           context.report({
-            node: node as any,
+            node,
             messageId: "beforeUnaryExpressions",
             data: {
               token: secondToken.value,
@@ -128,13 +128,13 @@ export default createRule<[RuleOptions]>("space-unary-ops", {
      */
     function verifyNonWordsDontHaveSpaces(
       node: AST.JSONUnaryExpression,
-      firstToken: Token,
-      secondToken: Token,
+      firstToken: JSONCToken,
+      secondToken: JSONCToken,
     ) {
       if ("prefix" in node && node.prefix) {
         if (secondToken.range[0] > firstToken.range[1]) {
           context.report({
-            node: node as any,
+            node,
             messageId: "unexpectedAfter",
             data: {
               operator: firstToken.value,
@@ -153,7 +153,7 @@ export default createRule<[RuleOptions]>("space-unary-ops", {
       } else {
         if (secondToken.range[0] > firstToken.range[1]) {
           context.report({
-            node: node as any,
+            node,
             messageId: "unexpectedBefore",
             data: {
               operator: secondToken.value,
@@ -174,7 +174,7 @@ export default createRule<[RuleOptions]>("space-unary-ops", {
      * @param node AST node
      */
     function checkForSpaces(node: AST.JSONUnaryExpression) {
-      const tokens = sourceCode.getFirstTokens(node as any, 2);
+      const tokens = sourceCode.getFirstTokens(node, 2);
       const firstToken = tokens[0];
       const secondToken = tokens[1];
 

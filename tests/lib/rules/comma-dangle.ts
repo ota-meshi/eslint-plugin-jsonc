@@ -28,11 +28,11 @@ tester.run("comma-dangle", rule, {
       code: `<i18n>{"key": "value",}</i18n><custom-block>{"key": "value",}</custom-block>`,
       output: `<i18n>{"key": "value"}</i18n><custom-block>{"key": "value",}</custom-block>`,
       errors: ["Unexpected trailing comma."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

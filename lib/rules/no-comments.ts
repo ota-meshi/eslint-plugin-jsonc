@@ -23,7 +23,7 @@ export default createRule("no-comments", {
       Program() {
         for (const comment of sourceCode.getAllComments()) {
           context.report({
-            loc: comment.loc!,
+            loc: comment.loc,
             messageId: "unexpected",
           });
         }

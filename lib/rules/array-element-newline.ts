@@ -2,9 +2,9 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
-import type { Token } from "../types.ts";
 import { isCommaToken, isCommentToken } from "@eslint-community/eslint-utils";
 import { isTokenOnSameLine } from "../utils/eslint-ast-utils.ts";
+import type { JSONCToken } from "../language/jsonc-source-code.ts";
 
 type BasicConfig =
   | ("always" | "never" | "consistent")
@@ -155,14 +155,14 @@ export default createRule<[BasicConfig]>("array-element-newline", {
      * Reports that there shouldn't be a line break after the first token
      * @param token The token to use for the report.
      */
-    function reportNoLineBreak(token: Token): void {
+    function reportNoLineBreak(token: JSONCToken): void {
       const tokenBefore = sourceCode.getTokenBefore(token, {
         includeComments: true,
       })!;
 
       context.report({
         loc: {
-          start: tokenBefore.loc!.end,
+          start: tokenBefore.loc.end,
           end: token.loc.start,
         },
         messageId: "unexpectedLineBreak",
@@ -207,20 +207,20 @@ export default createRule<[BasicConfig]>("array-element-newline", {
      * Reports that there should be a line break after the first token
      * @param token The token to use for the report.
      */
-    function reportRequiredLineBreak(token: Token): void {
+    function reportRequiredLineBreak(token: JSONCToken): void {
       const tokenBefore = sourceCode.getTokenBefore(token, {
         includeComments: true,
       })!;
 
       context.report({
         loc: {
-          start: tokenBefore.loc!.end,
+          start: tokenBefore.loc.end,
           end: token.loc.start,
         },
         messageId: "missingLineBreak",
         fix(fixer) {
           return fixer.replaceTextRange(
-            [tokenBefore.range![1], token.range[0]],
+            [tokenBefore.range[1], token.range[0]],
             "\n",
           );
         },
@@ -269,8 +269,8 @@ export default createRule<[BasicConfig]>("array-element-newline", {
         if (i === 0 || element === null || previousElement === null) continue;
 
         const commaToken = sourceCode.getFirstTokenBetween(
-          previousElement as any,
-          element as any,
+          previousElement,
+          element,
           isCommaToken,
         )!;
         const lastTokenOfPreviousElement =
@@ -299,8 +299,8 @@ export default createRule<[BasicConfig]>("array-element-newline", {
         if (i === 0 || element === null || previousElement === null) return;
 
         const commaToken = sourceCode.getFirstTokenBetween(
-          previousElement as any,
-          element as any,
+          previousElement,
+          element,
           isCommaToken,
         )!;
         const lastTokenOfPreviousElement =

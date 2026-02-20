@@ -3,7 +3,7 @@
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
 import { isTokenOnSameLine } from "../utils/eslint-ast-utils.ts";
-import type { Token } from "../types.ts";
+import type { JSONCToken } from "../language/jsonc-source-code.ts";
 
 export interface RuleOptions {
   singleValue?: boolean;
@@ -115,11 +115,11 @@ export default createRule<["always" | "never", RuleOptions]>(
        * @param node The node to report in the event of an error.
        * @param token The token to use for the report.
        */
-      function reportNoBeginningSpace(node: AST.JSONNode, token: Token) {
+      function reportNoBeginningSpace(node: AST.JSONNode, token: JSONCToken) {
         const nextToken = sourceCode.getTokenAfter(token)!;
 
         context.report({
-          node: node as any,
+          node,
           loc: { start: token.loc.end, end: nextToken.loc.start },
           messageId: "unexpectedSpaceAfter",
           data: {
@@ -136,11 +136,11 @@ export default createRule<["always" | "never", RuleOptions]>(
        * @param node The node to report in the event of an error.
        * @param token The token to use for the report.
        */
-      function reportNoEndingSpace(node: AST.JSONNode, token: Token) {
+      function reportNoEndingSpace(node: AST.JSONNode, token: JSONCToken) {
         const previousToken = sourceCode.getTokenBefore(token)!;
 
         context.report({
-          node: node as any,
+          node,
           loc: { start: previousToken.loc.end, end: token.loc.start },
           messageId: "unexpectedSpaceBefore",
           data: {
@@ -157,9 +157,12 @@ export default createRule<["always" | "never", RuleOptions]>(
        * @param node The node to report in the event of an error.
        * @param token The token to use for the report.
        */
-      function reportRequiredBeginningSpace(node: AST.JSONNode, token: Token) {
+      function reportRequiredBeginningSpace(
+        node: AST.JSONNode,
+        token: JSONCToken,
+      ) {
         context.report({
-          node: node as any,
+          node,
           loc: token.loc,
           messageId: "missingSpaceAfter",
           data: {
@@ -176,9 +179,12 @@ export default createRule<["always" | "never", RuleOptions]>(
        * @param node The node to report in the event of an error.
        * @param token The token to use for the report.
        */
-      function reportRequiredEndingSpace(node: AST.JSONNode, token: Token) {
+      function reportRequiredEndingSpace(
+        node: AST.JSONNode,
+        token: JSONCToken,
+      ) {
         context.report({
-          node: node as any,
+          node,
           loc: token.loc,
           messageId: "missingSpaceBefore",
           data: {
@@ -215,9 +221,9 @@ export default createRule<["always" | "never", RuleOptions]>(
       function validateArraySpacing(node: AST.JSONArrayExpression) {
         if (options.spaced && node.elements.length === 0) return;
 
-        const first = sourceCode.getFirstToken(node as any)!;
-        const second = sourceCode.getFirstToken(node as any, 1)!;
-        const last = sourceCode.getLastToken(node as any)!;
+        const first = sourceCode.getFirstToken(node);
+        const second = sourceCode.getFirstToken(node, 1)!;
+        const last = sourceCode.getLastToken(node);
         const penultimate = sourceCode.getTokenBefore(last)!;
 
         if (isTokenOnSameLine(first, second)) {

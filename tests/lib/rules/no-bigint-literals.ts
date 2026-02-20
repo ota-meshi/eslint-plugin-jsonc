@@ -29,11 +29,11 @@ tester.run("no-bigint-literals", rule, {
       filename: "test.vue",
       code: `<custom-block lang="json">42n</custom-block>`,
       errors: ["BigInt literals are not allowed."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

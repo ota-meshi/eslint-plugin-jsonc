@@ -75,11 +75,11 @@ tester.run("comma-style", rule, {
                 }
             }</custom-block>`,
       errors: ["',' should be placed last.", "',' should be placed last."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

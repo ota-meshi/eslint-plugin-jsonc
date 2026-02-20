@@ -2,12 +2,15 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
-import type { Comment, Token } from "../types.ts";
 import { isTokenOnSameLine } from "../utils/eslint-ast-utils.ts";
 import {
   isClosingBraceToken,
   isClosingBracketToken,
 } from "@eslint-community/eslint-utils";
+import type {
+  JSONCComment,
+  JSONCToken,
+} from "../language/jsonc-source-code.ts";
 
 export interface RuleOptions {
   arraysInObjects?: boolean;
@@ -80,10 +83,12 @@ export default createRule<["always" | "never", RuleOptions]>(
         spaced,
         arraysInObjectsException: isOptionSet("arraysInObjects"),
         objectsInObjectsException: isOptionSet("objectsInObjects"),
-        isOpeningCurlyBraceMustBeSpaced(_second: Token | Comment) {
+        isOpeningCurlyBraceMustBeSpaced(_second: JSONCToken | JSONCComment) {
           return options.spaced;
         },
-        isClosingCurlyBraceMustBeSpaced(penultimate: Token | Comment) {
+        isClosingCurlyBraceMustBeSpaced(
+          penultimate: JSONCToken | JSONCComment,
+        ) {
           const targetPenultimateType =
             options.arraysInObjectsException &&
             isClosingBracketToken(penultimate)
@@ -92,9 +97,7 @@ export default createRule<["always" | "never", RuleOptions]>(
                   isClosingBraceToken(penultimate)
                 ? "JSONObjectExpression"
                 : null;
-          const node = sourceCode.getNodeByRangeIndex(
-            penultimate.range![0],
-          ) as AST.JSONNode | null;
+          const node = sourceCode.getNodeByRangeIndex(penultimate.range[0]);
 
           return targetPenultimateType && node?.type === targetPenultimateType
             ? !options.spaced
@@ -109,21 +112,21 @@ export default createRule<["always" | "never", RuleOptions]>(
        */
       function reportNoBeginningSpace(
         node: AST.JSONObjectExpression,
-        token: Token,
+        token: JSONCToken,
       ) {
         const nextToken = sourceCode.getTokenAfter(token, {
           includeComments: true,
         })!;
 
         context.report({
-          node: node as any,
-          loc: { start: token.loc.end, end: nextToken.loc!.start },
+          node,
+          loc: { start: token.loc.end, end: nextToken.loc.start },
           messageId: "unexpectedSpaceAfter",
           data: {
             token: token.value,
           },
           fix(fixer) {
-            return fixer.removeRange([token.range[1], nextToken.range![0]]);
+            return fixer.removeRange([token.range[1], nextToken.range[0]]);
           },
         });
       }
@@ -135,21 +138,21 @@ export default createRule<["always" | "never", RuleOptions]>(
        */
       function reportNoEndingSpace(
         node: AST.JSONObjectExpression,
-        token: Token,
+        token: JSONCToken,
       ) {
         const previousToken = sourceCode.getTokenBefore(token, {
           includeComments: true,
         })!;
 
         context.report({
-          node: node as any,
-          loc: { start: previousToken.loc!.end, end: token.loc.start },
+          node,
+          loc: { start: previousToken.loc.end, end: token.loc.start },
           messageId: "unexpectedSpaceBefore",
           data: {
             token: token.value,
           },
           fix(fixer) {
-            return fixer.removeRange([previousToken.range![1], token.range[0]]);
+            return fixer.removeRange([previousToken.range[1], token.range[0]]);
           },
         });
       }
@@ -161,10 +164,10 @@ export default createRule<["always" | "never", RuleOptions]>(
        */
       function reportRequiredBeginningSpace(
         node: AST.JSONObjectExpression,
-        token: Token,
+        token: JSONCToken,
       ) {
         context.report({
-          node: node as any,
+          node,
           loc: token.loc,
           messageId: "requireSpaceAfter",
           data: {
@@ -183,10 +186,10 @@ export default createRule<["always" | "never", RuleOptions]>(
        */
       function reportRequiredEndingSpace(
         node: AST.JSONObjectExpression,
-        token: Token,
+        token: JSONCToken,
       ) {
         context.report({
-          node: node as any,
+          node,
           loc: token.loc,
           messageId: "requireSpaceBefore",
           data: {
@@ -208,13 +211,13 @@ export default createRule<["always" | "never", RuleOptions]>(
        */
       function validateBraceSpacing(
         node: AST.JSONObjectExpression,
-        first: Token,
-        second: Token | Comment,
-        penultimate: Token | Comment,
-        last: Token,
+        first: JSONCToken,
+        second: JSONCToken | JSONCComment,
+        penultimate: JSONCToken | JSONCComment,
+        last: JSONCToken,
       ) {
         if (isTokenOnSameLine(first, second)) {
-          const firstSpaced = sourceCode.isSpaceBetween(first, second as any);
+          const firstSpaced = sourceCode.isSpaceBetween(first, second);
 
           if (options.isOpeningCurlyBraceMustBeSpaced(second)) {
             if (!firstSpaced) reportRequiredBeginningSpace(node, first);
@@ -226,10 +229,7 @@ export default createRule<["always" | "never", RuleOptions]>(
         }
 
         if (isTokenOnSameLine(penultimate, last)) {
-          const lastSpaced = sourceCode.isSpaceBetween(
-            penultimate as any,
-            last,
-          );
+          const lastSpaced = sourceCode.isSpaceBetween(penultimate, last);
 
           if (options.isClosingCurlyBraceMustBeSpaced(penultimate)) {
             if (!lastSpaced) reportRequiredEndingSpace(node, last);
@@ -253,10 +253,7 @@ export default createRule<["always" | "never", RuleOptions]>(
       function getClosingBraceOfObject(node: AST.JSONObjectExpression) {
         const lastProperty = node.properties[node.properties.length - 1];
 
-        return sourceCode.getTokenAfter(
-          lastProperty as any,
-          isClosingBraceToken,
-        );
+        return sourceCode.getTokenAfter(lastProperty, isClosingBraceToken);
       }
 
       /**
@@ -266,7 +263,7 @@ export default createRule<["always" | "never", RuleOptions]>(
       function checkForObject(node: AST.JSONObjectExpression) {
         if (node.properties.length === 0) return;
 
-        const first = sourceCode.getFirstToken(node as any)!;
+        const first = sourceCode.getFirstToken(node);
         const last = getClosingBraceOfObject(node)!;
         const second = sourceCode.getTokenAfter(first, {
           includeComments: true,

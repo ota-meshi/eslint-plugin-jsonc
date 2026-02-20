@@ -43,11 +43,11 @@ tester.run("no-undefined-value", rule, {
       filename: "test.vue",
       code: `<custom-block lang="json">undefined</custom-block>`,
       errors: ["`undefined` is not allowed."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

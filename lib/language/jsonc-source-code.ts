@@ -57,8 +57,9 @@ export type JSONCComment = Comment & {
 /**
  * JSONC-specific syntax element type
  */
-export type JSONCSyntaxElement = AST.JSONNode | ESLintAST.Token | JSONCComment;
-export type JSONCToken = ESLintAST.Token | JSONCComment;
+export type JSONCSyntaxElement = AST.JSONNode | JSONCTokenOrComment;
+export type JSONCToken = ESLintAST.Token;
+export type JSONCTokenOrComment = JSONCToken | JSONCComment;
 
 /**
  * JSONC Source Code Object
@@ -71,19 +72,22 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
 }> {
   public readonly hasBOM: boolean;
 
-  public readonly parserServices: { isJSON?: boolean; parseError?: unknown };
+  public readonly parserServices: {
+    isJSON?: boolean;
+    parseError?: unknown;
+  };
 
   public readonly visitorKeys: Record<string, string[]>;
 
   private readonly tokenStore: TokenStore<
     AST.JSONNode,
-    ESLintAST.Token,
+    JSONCToken,
     JSONCComment
   >;
 
   #steps: TraversalStep[] | null = null;
 
-  #cacheTokensAndComments: (ESLintAST.Token | JSONCComment)[] | null = null;
+  #cacheTokensAndComments: (JSONCToken | JSONCComment)[] | null = null;
 
   #inlineConfigComments: JSONCComment[] | null = null;
 
@@ -104,13 +108,9 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     this.hasBOM = Boolean(config.hasBOM);
     this.parserServices = config.parserServices;
     this.visitorKeys = config.visitorKeys || VisitorKeys;
-    this.tokenStore = new TokenStore<
-      AST.JSONNode,
-      ESLintAST.Token,
-      JSONCComment
-    >({
+    this.tokenStore = new TokenStore<AST.JSONNode, JSONCToken, JSONCComment>({
       tokens: [
-        ...(config.ast.tokens as (ESLintAST.Token | JSONCComment)[]),
+        ...(config.ast.tokens as (JSONCToken | JSONCComment)[]),
         ...(config.ast.comments as JSONCComment[]),
       ],
       isComment: (token): token is JSONCComment =>
@@ -169,7 +169,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   /**
    * Gets all tokens and comments.
    */
-  public get tokensAndComments(): JSONCToken[] {
+  public get tokensAndComments(): JSONCTokenOrComment[] {
     return (this.#cacheTokensAndComments ??= [
       ...this.ast.tokens,
       ...(this.ast.comments as JSONCComment[]),
@@ -345,7 +345,7 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   /**
    * Gets the first token of the given node.
    */
-  public getFirstToken(node: JSONCSyntaxElement): ESLintAST.Token;
+  public getFirstToken(node: JSONCSyntaxElement): JSONCToken;
 
   /**
    * Gets the first token of the given node with options.
@@ -353,32 +353,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getFirstToken(
     node: JSONCSyntaxElement,
     options: CursorWithSkipOptionsWithoutFilter,
-  ): ESLintAST.Token | null;
+  ): JSONCToken | null;
 
   /**
    * Gets the first token of the given node with filter options.
    */
-  public getFirstToken<R extends ESLintAST.Token>(
+  public getFirstToken<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithSkipOptionsWithFilter<JSONCToken, R>,
   ): R | null;
 
   /**
    * Gets the first token of the given node with comment options.
    */
-  public getFirstToken<R extends ESLintAST.Token | JSONCComment>(
+  public getFirstToken<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
+    options: CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R | null;
 
   public getFirstToken(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithSkipOptionsWithoutFilter
-      | CursorWithSkipOptionsWithFilter<ESLintAST.Token>
-      | CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): ESLintAST.Token | JSONCComment | null {
-    return this.tokenStore.getFirstToken(node as never, options as never);
+      | CursorWithSkipOptionsWithFilter<JSONCToken>
+      | CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment>,
+  ): JSONCToken | JSONCComment | null {
+    return this.tokenStore.getFirstToken(node, options as never);
   }
 
   /**
@@ -387,42 +387,38 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getFirstTokens(
     node: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Gets the first tokens of the given node with filter options.
    */
-  public getFirstTokens<R extends ESLintAST.Token>(
+  public getFirstTokens<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Gets the first tokens of the given node with comment options.
    */
-  public getFirstTokens<R extends ESLintAST.Token | JSONCComment>(
+  public getFirstTokens<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getFirstTokens(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getFirstTokens(node as never, options as never);
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getFirstTokens(node, options as never);
   }
 
   /**
    * Gets the last token of the given node.
    */
-  public getLastToken(node: JSONCSyntaxElement): ESLintAST.Token;
+  public getLastToken(node: JSONCSyntaxElement): JSONCToken;
 
   /**
    * Gets the last token of the given node with options.
@@ -430,32 +426,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getLastToken(
     node: JSONCSyntaxElement,
     options: CursorWithSkipOptionsWithoutFilter,
-  ): ESLintAST.Token | null;
+  ): JSONCToken | null;
 
   /**
    * Gets the last token of the given node with filter options.
    */
-  public getLastToken<R extends ESLintAST.Token>(
+  public getLastToken<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithSkipOptionsWithFilter<JSONCToken, R>,
   ): R | null;
 
   /**
    * Gets the last token of the given node with comment options.
    */
-  public getLastToken<R extends ESLintAST.Token | JSONCComment>(
+  public getLastToken<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
+    options: CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R | null;
 
   public getLastToken(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithSkipOptionsWithoutFilter
-      | CursorWithSkipOptionsWithFilter<ESLintAST.Token>
-      | CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment) | null {
-    return this.tokenStore.getLastToken(node as never, options as never);
+      | CursorWithSkipOptionsWithFilter<JSONCToken>
+      | CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment) | null {
+    return this.tokenStore.getLastToken(node, options as never);
   }
 
   /**
@@ -464,36 +460,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getLastTokens(
     node: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Get the last tokens of the given node with filter options.
    */
-  public getLastTokens<R extends ESLintAST.Token>(
+  public getLastTokens<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Get the last tokens of the given node with comment options.
    */
-  public getLastTokens<R extends ESLintAST.Token | JSONCComment>(
+  public getLastTokens<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getLastTokens(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getLastTokens(node as never, options as never);
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getLastTokens(node, options as never);
   }
 
   /**
@@ -502,32 +494,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getTokenBefore(
     node: JSONCSyntaxElement,
     options?: CursorWithSkipOptionsWithoutFilter,
-  ): ESLintAST.Token | null;
+  ): JSONCToken | null;
 
   /**
    * Gets the token that precedes a given node or token with filter options.
    */
-  public getTokenBefore<R extends ESLintAST.Token>(
+  public getTokenBefore<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithSkipOptionsWithFilter<JSONCToken, R>,
   ): R | null;
 
   /**
    * Gets the token that precedes a given node or token with comment options.
    */
-  public getTokenBefore<R extends ESLintAST.Token | JSONCComment>(
+  public getTokenBefore<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
+    options: CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R | null;
 
   public getTokenBefore(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithSkipOptionsWithoutFilter
-      | CursorWithSkipOptionsWithFilter<ESLintAST.Token>
-      | CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): ESLintAST.Token | JSONCComment | null {
-    return this.tokenStore.getTokenBefore(node as never, options as never);
+      | CursorWithSkipOptionsWithFilter<JSONCToken>
+      | CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment>,
+  ): JSONCToken | JSONCComment | null {
+    return this.tokenStore.getTokenBefore(node, options as never);
   }
 
   /**
@@ -536,36 +528,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getTokensBefore(
     node: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Gets the `count` tokens that precedes a given node or token with filter options.
    */
-  public getTokensBefore<R extends ESLintAST.Token>(
+  public getTokensBefore<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Gets the `count` tokens that precedes a given node or token with comment options.
    */
-  public getTokensBefore<R extends ESLintAST.Token | JSONCComment>(
+  public getTokensBefore<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getTokensBefore(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getTokensBefore(node as never, options as never);
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getTokensBefore(node, options as never);
   }
 
   /**
@@ -574,32 +562,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getTokenAfter(
     node: JSONCSyntaxElement,
     options?: CursorWithSkipOptionsWithoutFilter,
-  ): ESLintAST.Token | null;
+  ): JSONCToken | null;
 
   /**
    * Gets the token that follows a given node or token with filter options.
    */
-  public getTokenAfter<R extends ESLintAST.Token>(
+  public getTokenAfter<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithSkipOptionsWithFilter<JSONCToken, R>,
   ): R | null;
 
   /**
    * Gets the token that follows a given node or token with comment options.
    */
-  public getTokenAfter<R extends ESLintAST.Token | JSONCComment>(
+  public getTokenAfter<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
+    options: CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R | null;
 
   public getTokenAfter(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithSkipOptionsWithoutFilter
-      | CursorWithSkipOptionsWithFilter<ESLintAST.Token>
-      | CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): ESLintAST.Token | JSONCComment | null {
-    return this.tokenStore.getTokenAfter(node as never, options as never);
+      | CursorWithSkipOptionsWithFilter<JSONCToken>
+      | CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment>,
+  ): JSONCToken | JSONCComment | null {
+    return this.tokenStore.getTokenAfter(node, options as never);
   }
 
   /**
@@ -608,36 +596,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getTokensAfter(
     node: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Gets the `count` tokens that follows a given node or token with filter options.
    */
-  public getTokensAfter<R extends ESLintAST.Token>(
+  public getTokensAfter<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Gets the `count` tokens that follows a given node or token with comment options.
    */
-  public getTokensAfter<R extends ESLintAST.Token | JSONCComment>(
+  public getTokensAfter<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getTokensAfter(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getTokensAfter(node as never, options as never);
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getTokensAfter(node, options as never);
   }
 
   /**
@@ -647,24 +631,24 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
     options?: CursorWithSkipOptionsWithoutFilter,
-  ): ESLintAST.Token | null;
+  ): JSONCToken | null;
 
   /**
    * Gets the first token between two non-overlapping nodes with filter options.
    */
-  public getFirstTokenBetween<R extends ESLintAST.Token>(
+  public getFirstTokenBetween<R extends JSONCToken>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithSkipOptionsWithFilter<JSONCToken, R>,
   ): R | null;
 
   /**
    * Gets the first token between two non-overlapping nodes with comment options.
    */
-  public getFirstTokenBetween<R extends ESLintAST.Token | JSONCComment>(
+  public getFirstTokenBetween<R extends JSONCToken | JSONCComment>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
+    options: CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R | null;
 
   public getFirstTokenBetween(
@@ -672,14 +656,10 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     right: JSONCSyntaxElement,
     options?:
       | CursorWithSkipOptionsWithoutFilter
-      | CursorWithSkipOptionsWithFilter<ESLintAST.Token>
-      | CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): ESLintAST.Token | JSONCComment | null {
-    return this.tokenStore.getFirstTokenBetween(
-      left as never,
-      right as never,
-      options as never,
-    );
+      | CursorWithSkipOptionsWithFilter<JSONCToken>
+      | CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment>,
+  ): JSONCToken | JSONCComment | null {
+    return this.tokenStore.getFirstTokenBetween(left, right, options as never);
   }
 
   /**
@@ -689,28 +669,24 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Gets the first tokens between two non-overlapping nodes with filter options.
    */
-  public getFirstTokensBetween<R extends ESLintAST.Token>(
+  public getFirstTokensBetween<R extends JSONCToken>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Gets the first tokens between two non-overlapping nodes with comment options.
    */
-  public getFirstTokensBetween<R extends ESLintAST.Token | JSONCComment>(
+  public getFirstTokensBetween<R extends JSONCToken | JSONCComment>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getFirstTokensBetween(
@@ -718,14 +694,10 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     right: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getFirstTokensBetween(
-      left as never,
-      right as never,
-      options as never,
-    );
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getFirstTokensBetween(left, right, options as never);
   }
 
   /**
@@ -735,24 +707,24 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
     options?: CursorWithSkipOptionsWithoutFilter,
-  ): ESLintAST.Token | null;
+  ): JSONCToken | null;
 
   /**
    * Gets the last token between two non-overlapping nodes with filter options.
    */
-  public getLastTokenBetween<R extends ESLintAST.Token>(
+  public getLastTokenBetween<R extends JSONCToken>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithSkipOptionsWithFilter<JSONCToken, R>,
   ): R | null;
 
   /**
    * Gets the last token between two non-overlapping nodes with comment options.
    */
-  public getLastTokenBetween<R extends ESLintAST.Token | JSONCComment>(
+  public getLastTokenBetween<R extends JSONCToken | JSONCComment>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment, R>,
+    options: CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R | null;
 
   public getLastTokenBetween(
@@ -760,14 +732,10 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     right: JSONCSyntaxElement,
     options?:
       | CursorWithSkipOptionsWithoutFilter
-      | CursorWithSkipOptionsWithFilter<ESLintAST.Token>
-      | CursorWithSkipOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): ESLintAST.Token | JSONCComment | null {
-    return this.tokenStore.getLastTokenBetween(
-      left as never,
-      right as never,
-      options as never,
-    );
+      | CursorWithSkipOptionsWithFilter<JSONCToken>
+      | CursorWithSkipOptionsWithComment<JSONCToken, JSONCComment>,
+  ): JSONCToken | JSONCComment | null {
+    return this.tokenStore.getLastTokenBetween(left, right, options as never);
   }
 
   /**
@@ -777,28 +745,24 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Gets the last tokens between two non-overlapping nodes with filter options.
    */
-  public getLastTokensBetween<R extends ESLintAST.Token>(
+  public getLastTokensBetween<R extends JSONCToken>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Gets the last tokens between two non-overlapping nodes with comment options.
    */
-  public getLastTokensBetween<R extends ESLintAST.Token | JSONCComment>(
+  public getLastTokensBetween<R extends JSONCToken | JSONCComment>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getLastTokensBetween(
@@ -806,14 +770,10 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     right: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getLastTokensBetween(
-      left as never,
-      right as never,
-      options as never,
-    );
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getLastTokensBetween(left, right, options as never);
   }
 
   /**
@@ -822,36 +782,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
   public getTokens(
     node: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Gets all tokens that are related to the given node with filter options.
    */
-  public getTokens<R extends ESLintAST.Token>(
+  public getTokens<R extends JSONCToken>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Gets all tokens that are related to the given node with comment options.
    */
-  public getTokens<R extends ESLintAST.Token | JSONCComment>(
+  public getTokens<R extends JSONCToken | JSONCComment>(
     node: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getTokens(
     node: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getTokens(node as never, options as never);
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getTokens(node, options as never);
   }
 
   /**
@@ -861,28 +817,24 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
     options?: CursorWithCountOptionsWithoutFilter,
-  ): ESLintAST.Token[];
+  ): JSONCToken[];
 
   /**
    * Gets all of the tokens between two non-overlapping nodes with filter options.
    */
-  public getTokensBetween<R extends ESLintAST.Token>(
+  public getTokensBetween<R extends JSONCToken>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithFilter<ESLintAST.Token, R>,
+    options: CursorWithCountOptionsWithFilter<JSONCToken, R>,
   ): R[];
 
   /**
    * Gets all of the tokens between two non-overlapping nodes with comment options.
    */
-  public getTokensBetween<R extends ESLintAST.Token | JSONCComment>(
+  public getTokensBetween<R extends JSONCToken | JSONCComment>(
     left: JSONCSyntaxElement,
     right: JSONCSyntaxElement,
-    options: CursorWithCountOptionsWithComment<
-      ESLintAST.Token,
-      JSONCComment,
-      R
-    >,
+    options: CursorWithCountOptionsWithComment<JSONCToken, JSONCComment, R>,
   ): R[];
 
   public getTokensBetween(
@@ -890,36 +842,32 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     right: JSONCSyntaxElement,
     options?:
       | CursorWithCountOptionsWithoutFilter
-      | CursorWithCountOptionsWithFilter<ESLintAST.Token>
-      | CursorWithCountOptionsWithComment<ESLintAST.Token, JSONCComment>,
-  ): (ESLintAST.Token | JSONCComment)[] {
-    return this.tokenStore.getTokensBetween(
-      left as never,
-      right as never,
-      options as never,
-    );
+      | CursorWithCountOptionsWithFilter<JSONCToken>
+      | CursorWithCountOptionsWithComment<JSONCToken, JSONCComment>,
+  ): (JSONCToken | JSONCComment)[] {
+    return this.tokenStore.getTokensBetween(left, right, options as never);
   }
 
   public getCommentsInside(nodeOrToken: JSONCSyntaxElement): JSONCComment[] {
-    return this.tokenStore.getCommentsInside(nodeOrToken as never);
+    return this.tokenStore.getCommentsInside(nodeOrToken);
   }
 
   public getCommentsBefore(nodeOrToken: JSONCSyntaxElement): JSONCComment[] {
-    return this.tokenStore.getCommentsBefore(nodeOrToken as never);
+    return this.tokenStore.getCommentsBefore(nodeOrToken);
   }
 
   public getCommentsAfter(nodeOrToken: JSONCSyntaxElement): JSONCComment[] {
-    return this.tokenStore.getCommentsAfter(nodeOrToken as never);
+    return this.tokenStore.getCommentsAfter(nodeOrToken);
   }
 
   public isSpaceBetween(
-    first: ESLintAST.Token | JSONCComment,
-    second: ESLintAST.Token | JSONCComment,
+    first: JSONCToken | JSONCComment,
+    second: JSONCToken | JSONCComment,
   ): boolean {
     // Normalize order: ensure left comes before right
     const [left, right] =
       first.range[1] <= second.range[0] ? [first, second] : [second, first];
-    return this.tokenStore.isSpaceBetween(left as never, right as never);
+    return this.tokenStore.isSpaceBetween(left, right);
   }
 
   /**
@@ -958,7 +906,10 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
    * Compatibility for ESLint's SourceCode API
    * @deprecated
    */
-  public isSpaceBetweenTokens(first: JSONCToken, second: JSONCToken): boolean {
+  public isSpaceBetweenTokens(
+    first: JSONCTokenOrComment,
+    second: JSONCTokenOrComment,
+  ): boolean {
     return this.isSpaceBetween(first, second);
   }
 

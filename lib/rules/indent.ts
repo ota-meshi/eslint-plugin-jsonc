@@ -3,8 +3,6 @@
 import type { AST, RuleListener } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
 import type { JSONSchema4 } from "json-schema";
-import type { Comment, Token } from "../types.ts";
-import type { SourceCode } from "eslint";
 import {
   createGlobalLinebreakMatcher,
   isTokenOnSameLine,
@@ -18,6 +16,11 @@ import {
   isOpeningParenToken,
   isSemicolonToken,
 } from "@eslint-community/eslint-utils";
+import type {
+  JSONCComment,
+  JSONCSourceCode,
+  JSONCToken,
+} from "../language/jsonc-source-code.ts";
 
 const KNOWN_NODES: Set<AST.JSONNode["type"]> = new Set([
   "JSONArrayExpression",
@@ -102,33 +105,39 @@ class IndexMap<T = any> {
  * A helper class to get token-based info related to indentation
  */
 class TokenInfo {
-  private readonly sourceCode: SourceCode;
+  private readonly sourceCode: JSONCSourceCode;
 
-  public readonly firstTokensByLineNumber: Map<number, Token | Comment>;
+  public readonly firstTokensByLineNumber: Map<
+    number,
+    JSONCToken | JSONCComment
+  >;
 
   /**
    * @param sourceCode A SourceCode object
    */
-  public constructor(sourceCode: SourceCode) {
+  public constructor(sourceCode: JSONCSourceCode) {
     this.sourceCode = sourceCode;
     this.firstTokensByLineNumber = new Map();
-    const tokens = [...sourceCode.ast.comments, ...sourceCode.ast.tokens].sort(
-      (a, b) => a.range![0] - b.range![0],
-    );
+    const tokens = (
+      [...sourceCode.ast.comments, ...sourceCode.ast.tokens] as (
+        | JSONCToken
+        | JSONCComment
+      )[]
+    ).sort((a, b) => a.range[0] - b.range[0]);
 
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
 
-      if (!this.firstTokensByLineNumber.has(token.loc!.start.line))
-        this.firstTokensByLineNumber.set(token.loc!.start.line, token);
+      if (!this.firstTokensByLineNumber.has(token.loc.start.line))
+        this.firstTokensByLineNumber.set(token.loc.start.line, token);
 
       if (
-        !this.firstTokensByLineNumber.has(token.loc!.end.line) &&
+        !this.firstTokensByLineNumber.has(token.loc.end.line) &&
         sourceCode.text
-          .slice(token.range![1] - token.loc!.end.column, token.range![1])
+          .slice(token.range[1] - token.loc.end.column, token.range[1])
           .trim()
       )
-        this.firstTokensByLineNumber.set(token.loc!.end.line, token);
+        this.firstTokensByLineNumber.set(token.loc.end.line, token);
     }
   }
 
@@ -137,8 +146,8 @@ class TokenInfo {
    * @param token a node or token
    * @returns The first token on the given line
    */
-  public getFirstTokenOfLine(token: Token | Comment | AST.JSONNode) {
-    return this.firstTokensByLineNumber.get(token.loc!.start.line);
+  public getFirstTokenOfLine(token: JSONCToken | JSONCComment | AST.JSONNode) {
+    return this.firstTokensByLineNumber.get(token.loc.start.line);
   }
 
   /**
@@ -146,7 +155,7 @@ class TokenInfo {
    * @param token The token
    * @returns `true` if the token is the first on its line
    */
-  public isFirstTokenOfLine(token: Token | Comment | AST.JSONNode) {
+  public isFirstTokenOfLine(token: JSONCToken | JSONCComment | AST.JSONNode) {
     return this.getFirstTokenOfLine(token) === token;
   }
 
@@ -155,10 +164,10 @@ class TokenInfo {
    * @param token Token to examine. This should be the first token on its line.
    * @returns The indentation characters that precede the token
    */
-  public getTokenIndent(token: Token | Comment) {
+  public getTokenIndent(token: JSONCToken | JSONCComment) {
     return this.sourceCode.text.slice(
-      token.range![0] - token.loc!.start.column,
-      token.range![0],
+      token.range[0] - token.loc.start.column,
+      token.range[0],
     );
   }
 }
@@ -175,13 +184,18 @@ class OffsetStorage {
 
   private readonly _indexMap: IndexMap;
 
-  private readonly _lockedFirstTokens: WeakMap<Token | Comment, Token> =
-    new WeakMap();
+  private readonly _lockedFirstTokens: WeakMap<
+    JSONCToken | JSONCComment,
+    JSONCToken
+  > = new WeakMap();
 
-  private readonly _desiredIndentCache: WeakMap<Token | Comment, string> =
-    new WeakMap();
+  private readonly _desiredIndentCache: WeakMap<
+    JSONCToken | JSONCComment,
+    string
+  > = new WeakMap();
 
-  private readonly _ignoredTokens: WeakSet<Token | Comment> = new WeakSet();
+  private readonly _ignoredTokens: WeakSet<JSONCToken | JSONCComment> =
+    new WeakSet();
 
   /**
    * @param tokenInfo a TokenInfo instance
@@ -203,8 +217,8 @@ class OffsetStorage {
     this._indexMap.insert(0, { offset: 0, from: null, force: false });
   }
 
-  private _getOffsetDescriptor(token: Token | Comment) {
-    return this._indexMap.findLastNotAfter(token.range![0]);
+  private _getOffsetDescriptor(token: JSONCToken | JSONCComment) {
+    return this._indexMap.findLastNotAfter(token.range[0]);
   }
 
   /**
@@ -214,7 +228,7 @@ class OffsetStorage {
    * @param baseToken The first token
    * @param offsetToken The second token, whose offset should be matched to the first token
    */
-  public matchOffsetOf(baseToken: Token, offsetToken: Token) {
+  public matchOffsetOf(baseToken: JSONCToken, offsetToken: JSONCToken) {
     /**
      * lockedFirstTokens is a map from a token whose indentation is controlled by the "first" option to
      * the token that it depends on. For example, with the `ArrayExpression: first` option, the first
@@ -281,11 +295,11 @@ class OffsetStorage {
    * @param offset The desired indent level
    */
   public setDesiredOffset(
-    token: Token | Comment | undefined | null,
-    fromToken: Token | Comment | undefined | null,
+    token: JSONCToken | JSONCComment | undefined | null,
+    fromToken: JSONCToken | JSONCComment | undefined | null,
     offset: Offset,
   ): void {
-    if (token) this.setDesiredOffsets(token.range!, fromToken, offset);
+    if (token) this.setDesiredOffsets(token.range, fromToken, offset);
   }
 
   /**
@@ -314,7 +328,7 @@ class OffsetStorage {
    */
   public setDesiredOffsets(
     range: [number, number],
-    fromToken: Token | Comment | null | undefined,
+    fromToken: JSONCToken | JSONCComment | null | undefined,
     offset: Offset,
     force = false,
   ) {
@@ -338,8 +352,8 @@ class OffsetStorage {
 
     const fromTokenIsInRange =
       fromToken &&
-      fromToken.range![0] >= range[0] &&
-      fromToken.range![1] <= range[1];
+      fromToken.range[0] >= range[0] &&
+      fromToken.range[1] <= range[1];
     const fromTokenDescriptor =
       fromTokenIsInRange && this._getOffsetDescriptor(fromToken);
 
@@ -354,8 +368,8 @@ class OffsetStorage {
      * even if it's in the current range.
      */
     if (fromTokenIsInRange) {
-      this._indexMap.insert(fromToken.range![0], fromTokenDescriptor);
-      this._indexMap.insert(fromToken.range![1], descriptorToInsert);
+      this._indexMap.insert(fromToken.range[0], fromTokenDescriptor);
+      this._indexMap.insert(fromToken.range[1], descriptorToInsert);
     }
 
     /**
@@ -370,7 +384,7 @@ class OffsetStorage {
    * @param token The token
    * @returns The desired indent of the token
    */
-  public getDesiredIndent(token: Token | Comment) {
+  public getDesiredIndent(token: JSONCToken | JSONCComment) {
     if (!this._desiredIndentCache.has(token)) {
       if (this._ignoredTokens.has(token)) {
         /**
@@ -393,7 +407,7 @@ class OffsetStorage {
             // (space between the start of the first element's line and the first element)
             this._indentType.repeat(
               firstToken.loc.start.column -
-                this._tokenInfo.getFirstTokenOfLine(firstToken)!.loc!.start
+                this._tokenInfo.getFirstTokenOfLine(firstToken)!.loc.start
                   .column,
             ),
         );
@@ -401,7 +415,7 @@ class OffsetStorage {
         const offsetInfo = this._getOffsetDescriptor(token);
         const offset =
           offsetInfo.from &&
-          offsetInfo.from.loc.start.line === token.loc!.start.line &&
+          offsetInfo.from.loc.start.line === token.loc.start.line &&
           !/^\s*?\n/u.test(token.value) &&
           !offsetInfo.force
             ? 0
@@ -421,7 +435,7 @@ class OffsetStorage {
    * Ignores a token, preventing it from being reported.
    * @param token The token
    */
-  public ignoreToken(token: Token | Comment) {
+  public ignoreToken(token: JSONCToken | JSONCComment) {
     if (this._tokenInfo.isFirstTokenOfLine(token))
       this._ignoredTokens.add(token);
   }
@@ -431,7 +445,7 @@ class OffsetStorage {
    * @param token The token
    * @returns The token that the given token depends on, or `null` if the given token is at the top level
    */
-  public getFirstDependency(token: Token | Comment) {
+  public getFirstDependency(token: JSONCToken | JSONCComment) {
     return this._getOffsetDescriptor(token).from;
   }
 }
@@ -751,23 +765,23 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      * @param token Token violating the indent rule
      * @param neededIndent Expected indentation string
      */
-    function report(token: Token | Comment, neededIndent: string) {
+    function report(token: JSONCToken | JSONCComment, neededIndent: string) {
       const actualIndent = Array.from(tokenInfo.getTokenIndent(token));
       const numSpaces = actualIndent.filter((char) => char === " ").length;
       const numTabs = actualIndent.filter((char) => char === "\t").length;
 
       context.report({
-        node: token as any,
+        node: token,
         messageId: "wrongIndentation",
         data: createErrorMessageData(neededIndent.length, numSpaces, numTabs),
         loc: {
-          start: { line: token.loc!.start.line, column: 0 },
-          end: { line: token.loc!.start.line, column: token.loc!.start.column },
+          start: { line: token.loc.start.line, column: 0 },
+          end: { line: token.loc.start.line, column: token.loc.start.column },
         },
         fix(fixer) {
           const range = [
-            token.range![0] - token.loc!.start.column,
-            token.range![0],
+            token.range[0] - token.loc.start.column,
+            token.range[0],
           ] as [number, number];
           const newText = neededIndent;
 
@@ -783,7 +797,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      * @returns `true` if the token's indentation is correct
      */
     function validateTokenIndent(
-      token: Token | Comment,
+      token: JSONCToken | JSONCComment,
       desiredIndent: string,
     ): boolean {
       const indentation = tokenInfo.getTokenIndent(token);
@@ -818,8 +832,8 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      */
     function addElementListIndent(
       elements: (AST.JSONNode | null)[],
-      startToken: Token,
-      endToken: Token,
+      startToken: JSONCToken,
+      endToken: JSONCToken,
       offset: number | string,
     ) {
       /**
@@ -828,7 +842,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
        * @returns The first token of this element
        */
       function getFirstToken(element: AST.JSONNode) {
-        let token: Token = sourceCode.getTokenBefore(element as any)!;
+        let token = sourceCode.getTokenBefore(element)!;
 
         while (isOpeningParenToken(token) && token !== startToken)
           token = sourceCode.getTokenBefore(token)!;
@@ -873,7 +887,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
           const firstTokenOfPreviousElement =
             previousElement && getFirstToken(previousElement);
           const previousElementLastToken =
-            previousElement && sourceCode.getLastToken(previousElement as any)!;
+            previousElement && sourceCode.getLastToken(previousElement);
 
           if (
             previousElement &&
@@ -895,7 +909,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      * Checks the indentation of parenthesized values, given a list of tokens in a program
      * @param tokens A list of tokens
      */
-    function addParensIndent(tokens: Token[]) {
+    function addParensIndent(tokens: JSONCToken[]) {
       const parenStack = [];
       const parenPairs = [];
 
@@ -937,7 +951,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      */
     function ignoreNode(node: AST.JSONNode) {
       const unknownNodeTokens = new Set(
-        sourceCode.getTokens(node as any, { includeComments: true }),
+        sourceCode.getTokens(node, { includeComments: true }),
       );
 
       unknownNodeTokens.forEach((token) => {
@@ -959,11 +973,11 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      *   there exists a blank line between them, `false` otherwise.
      */
     function hasBlankLinesBetween(
-      firstToken: Token | Comment,
-      secondToken: Token | Comment,
+      firstToken: JSONCToken | JSONCComment,
+      secondToken: JSONCToken | JSONCComment,
     ): boolean {
-      const firstTokenLine = firstToken.loc!.end.line;
-      const secondTokenLine = secondToken.loc!.start.line;
+      const firstTokenLine = firstToken.loc.end.line;
+      const secondTokenLine = secondToken.loc.start.line;
 
       if (
         firstTokenLine === secondTokenLine ||
@@ -978,14 +992,13 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
       return false;
     }
 
-    const ignoredNodeFirstTokens = new Set<Token>();
+    const ignoredNodeFirstTokens = new Set<JSONCToken>();
 
     const baseOffsetListeners: RuleListener = {
       JSONArrayExpression(node) {
-        const openingBracket = sourceCode.getFirstToken(node as any)!;
+        const openingBracket = sourceCode.getFirstToken(node);
         const closingBracket = sourceCode.getTokenAfter(
-          ([...node.elements].reverse().find((_) => _) as any) ||
-            openingBracket,
+          [...node.elements].reverse().find((_) => _) || openingBracket,
           isClosingBracketToken,
         )!;
 
@@ -998,10 +1011,10 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
       },
 
       JSONObjectExpression(node) {
-        const openingCurly = sourceCode.getFirstToken(node as any)!;
+        const openingCurly = sourceCode.getFirstToken(node);
         const closingCurly = sourceCode.getTokenAfter(
           node.properties.length
-            ? (node.properties[node.properties.length - 1] as any)
+            ? node.properties[node.properties.length - 1]
             : openingCurly,
           isClosingBraceToken,
         )!;
@@ -1016,8 +1029,8 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
 
       JSONBinaryExpression(node) {
         const operator = sourceCode.getFirstTokenBetween(
-          node.left as any,
-          node.right as any,
+          node.left,
+          node.right,
           (token) => token.value === node.operator,
         )!;
 
@@ -1037,8 +1050,8 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
       JSONProperty(node) {
         if (!node.shorthand && !node.method && node.kind === "init") {
           const colon = sourceCode.getFirstTokenBetween(
-            node.key as any,
-            node.value as any,
+            node.key,
+            node.value,
             isColonToken,
           )!;
 
@@ -1052,7 +1065,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
           const nextQuasi = node.quasis[index + 1];
           const tokenToAlignFrom =
             previousQuasi.loc.start.line === previousQuasi.loc.end.line
-              ? sourceCode.getFirstToken(previousQuasi as any)
+              ? sourceCode.getFirstToken(previousQuasi)
               : null;
 
           offsets.setDesiredOffsets(
@@ -1061,7 +1074,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
             1,
           );
           offsets.setDesiredOffset(
-            sourceCode.getFirstToken(nextQuasi as any),
+            sourceCode.getFirstToken(nextQuasi),
             tokenToAlignFrom,
             0,
           );
@@ -1069,7 +1082,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
       },
 
       "*"(node: AST.JSONNode) {
-        const firstToken = sourceCode.getFirstToken(node as any);
+        const firstToken = sourceCode.getFirstToken(node);
 
         // Ensure that the children of every node are indented at least as much as the first token.
         if (firstToken && !ignoredNodeFirstTokens.has(firstToken))
@@ -1109,7 +1122,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
        */
       offsetListeners[selector] = (node) =>
         listenerCallQueue.push({
-          listener: listener as any,
+          listener,
           node,
         });
     }
@@ -1123,7 +1136,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      */
     function addToIgnoredNodes(node: AST.JSONNode): void {
       ignoredNodes.add(node);
-      ignoredNodeFirstTokens.add(sourceCode.getFirstToken(node as any)!);
+      ignoredNodeFirstTokens.add(sourceCode.getFirstToken(node));
     }
 
     const ignoredNodeListeners = options.ignoredNodes.reduce(
@@ -1174,7 +1187,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
         const precedingTokens = new WeakMap();
 
         for (let i = 0; i < sourceCode.ast.comments.length; i++) {
-          const comment = sourceCode.ast.comments[i];
+          const comment = sourceCode.ast.comments[i] as JSONCComment;
 
           const tokenOrCommentBefore = sourceCode.getTokenBefore(comment, {
             includeComments: true,
@@ -1194,7 +1207,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
 
           const firstTokenOfLine = tokenInfo.firstTokensByLineNumber.get(i)!;
 
-          if (firstTokenOfLine.loc!.start.line !== i) {
+          if (firstTokenOfLine.loc.start.line !== i) {
             // Don't check the indentation of multi-line tokens (e.g. template literals or block comments) twice.
             continue;
           }

@@ -18,8 +18,10 @@ import type { Linter } from "eslint";
 import { getRules } from "./utils/rules.ts";
 import { JSONCLanguage } from "./language/index.ts";
 import type {
+  JSONCComment,
   JSONCLanguageOptions,
   JSONCSourceCode,
+  JSONCToken,
 } from "./language/index.ts";
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion -- For some reason type inference doesn't work will. */
@@ -85,4 +87,6 @@ export type {
   AST,
   JSONCLanguageOptions,
   JSONCSourceCode,
+  JSONCToken,
+  JSONCComment,
 };

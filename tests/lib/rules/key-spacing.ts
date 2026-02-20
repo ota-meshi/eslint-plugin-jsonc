@@ -28,11 +28,11 @@ tester.run("key-spacing", rule, {
         "Extra space after key 'key'.",
         "Missing space before value for key 'key'.",
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

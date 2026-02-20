@@ -37,11 +37,11 @@ tester.run("no-sparse-arrays", rule, {
             "Unexpected comma in middle of array.",
           ]
         : ["Unexpected comma in middle of array."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

@@ -155,13 +155,13 @@ export default createRule<[RuleValueOption | RuleOptions]>("comma-dangle", {
       switch (node.type) {
         case "JSONObjectExpression":
         case "JSONArrayExpression":
-          return sourceCode.getLastToken(node as any, 1);
+          return sourceCode.getLastToken(node, 1);
         default: {
-          const nextToken = sourceCode.getTokenAfter(lastItem as any)!;
+          const nextToken = sourceCode.getTokenAfter(lastItem)!;
 
           if (isCommaToken(nextToken)) return nextToken;
 
-          return sourceCode.getLastToken(lastItem as any);
+          return sourceCode.getLastToken(lastItem);
         }
       }
     }
@@ -201,7 +201,7 @@ export default createRule<[RuleValueOption | RuleOptions]>("comma-dangle", {
 
       if (trailingToken && isCommaToken(trailingToken)) {
         context.report({
-          node: lastItem as any,
+          node: lastItem,
           loc: trailingToken.loc,
           messageId: "unexpected",
           *fix(fixer) {
@@ -250,7 +250,7 @@ export default createRule<[RuleValueOption | RuleOptions]>("comma-dangle", {
       if (!nextToken || !closeBraces.includes(nextToken.value)) return;
 
       context.report({
-        node: lastItem as any,
+        node: lastItem,
         loc: {
           start: trailingToken.loc.end,
           end: getNextLocation(sourceCode, trailingToken.loc.end)!,

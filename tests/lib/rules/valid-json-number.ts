@@ -164,11 +164,11 @@ tester.run("valid-json-number", rule, {
       code: `<custom-block lang="json">0x123</custom-block>`,
       output: `<custom-block lang="json">291</custom-block>`,
       errors: ["Hexadecimal literals are not allowed in JSON."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });
