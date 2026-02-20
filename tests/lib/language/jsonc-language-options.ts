@@ -13,7 +13,7 @@ function createConfig(
     {
       files: ["**/*.json", "**/*.jsonc", "**/*.json5"],
       plugins: { jsonc: plugin },
-      language: "jsonc/jsonc",
+      language: "jsonc/x",
       languageOptions:
         jsonSyntax != null ? { parserOptions: { jsonSyntax } } : {},
       rules,
@@ -206,7 +206,7 @@ describe("JSONC Language Options", () => {
           {
             plugins: { jsonc: plugin },
             files: ["**/*.json"],
-            language: "jsonc/jsonc",
+            language: "jsonc/x",
             rules: { "jsonc/no-dupe-keys": "error" },
           },
         ],
@@ -228,7 +228,7 @@ describe("JSONC Language Options", () => {
           {
             plugins: { jsonc: plugin },
             files: ["**/*.json"],
-            language: "jsonc/jsonc",
+            language: "jsonc/x",
             languageOptions: { parserOptions: { jsonSyntax: "JSON" } },
             rules: {},
           },

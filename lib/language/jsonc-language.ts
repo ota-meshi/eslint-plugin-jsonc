@@ -18,6 +18,11 @@ export type JSONCLanguageOptions = {
   parserOptions?: JSONParserOptions;
 };
 
+export type ParserMode = "JSON" | "JSONC" | "JSON5" | "EXTENDED";
+export type JSONCLanguageInstanceOptions = {
+  mode?: ParserMode;
+};
+
 /**
  * The JSONC language implementation for ESLint.
  */
@@ -47,6 +52,12 @@ export class JSONCLanguage implements Language<{
    */
   public nodeTypeKey = "type" as const;
 
+  private readonly _mode: ParserMode;
+
+  public constructor(options?: JSONCLanguageInstanceOptions) {
+    this._mode = options?.mode ?? "EXTENDED";
+  }
+
   /**
    * Validates the language options.
    */
@@ -64,6 +75,7 @@ export class JSONCLanguage implements Language<{
       ...fakeProperties,
       ...languageOptions,
       parserOptions: {
+        ...(this._mode !== "EXTENDED" ? { jsonSyntax: this._mode } : {}),
         ...languageOptions.parserOptions,
       },
     };
@@ -82,7 +94,9 @@ export class JSONCLanguage implements Language<{
     try {
       const result = parseForESLint(text, {
         // filePath: file.path,
-        jsonSyntax: context.languageOptions?.parserOptions?.jsonSyntax,
+        jsonSyntax:
+          context.languageOptions?.parserOptions?.jsonSyntax ??
+          (this._mode !== "EXTENDED" ? this._mode : undefined),
       });
 
       return {

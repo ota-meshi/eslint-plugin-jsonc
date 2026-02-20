@@ -10,7 +10,7 @@ function createConfig(rules: Linter.RulesRecord): Linter.Config[] {
     {
       files: ["**/*.json"],
       plugins: { jsonc: plugin },
-      language: "jsonc/jsonc",
+      language: "jsonc/x",
       rules,
     },
   ];

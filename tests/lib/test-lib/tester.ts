@@ -44,7 +44,7 @@ class JSONRuleTester {
           ...((rest as any).plugins || {}),
           jsonc: plugin,
         },
-        language: "jsonc/jsonc",
+        language: "jsonc/x",
         languageOptions: {
           ...rest?.languageOptions,
           parser: undefined,
