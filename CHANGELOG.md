@@ -1,5 +1,45 @@
 # eslint-plugin-jsonc
 
+## 3.0.0
+
+### Major Changes
+
+- [#471](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/471) [`d30112b`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/d30112bf2e999d053aeb9af8beb437a7872c1ee8) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add ESLint language plugin support. The plugin now exports a `languages` object that provides language implementations for `json`, `jsonc`, `json5`, and `x`. The shared configurations (`base`, `recommended-with-json`, etc.) now use the `jsonc`-based language implementation by default (via `language: "jsonc/x"` in ESLint flat config) and have been updated to use the new language plugin approach instead of the parser approach.
+
+- [#468](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/468) [`8c87c6c`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/8c87c6c46c6946af27b2f18d6bd5dcd0606bf84d) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Drop support for legacy config. The plugin now exports flat configs as the main configuration format. The previous `flat/*` namespace is kept for backward compatibility.
+
+- [#465](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/465) [`62b2127`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/62b212710f31295002348c4cfb0337bb5a0f737c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Drop support for older ESLint versions. The new minimum supported version is ESLint 9.38.0 or later.
+
+- [#460](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/460) [`cc949e3`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/cc949e3622780fb83a81d58041f546db12e60ad6) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Drop support for older Node.js versions. The new minimum supported versions are: ^20.19.0 || ^22.13.0 || >=24
+
+- [#469](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/469) [`ee27486`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/ee2748695ccedc72831ea7a8ccf273ff02b64e1e) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Convert to ESM-only package. The plugin now uses tsdown for bundling and is distributed as pure ESM. The package no longer supports CommonJS `require()` syntax. Users need to use `import` statements or dynamic `import()` to load the plugin.
+
+- [#466](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/466) [`29e47c4`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/29e47c478031ac49dff1dfb3b2b847cc62c013ef) Thanks [@renovate](https://github.com/apps/renovate)! - Update dependency jsonc-eslint-parser to v3
+
+- [#473](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/473) [`0f6d480`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/0f6d480b9fef765e8cfe288fa75e13f19c468a76) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: include "no-irregular-whitespace" rule in recommended configs
+
+- [#477](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/477) [`75304cf`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/75304cfc65b04e6ff0a29d467a4ad3de07a3578f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Removed re-export from jsonc-eslint-parser
+
+### Minor Changes
+
+- [#474](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/474) [`90c0d61`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/90c0d61116738447996eb9b8ae630313c042f048) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: replace espree with jsonc-eslint-parser for tokenization
+
+- [#476](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/476) [`633b7d1`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/633b7d1f30fd6971700eca84929a70a7b7067f45) Thanks [@ota-meshi](https://github.com/ota-meshi)! - The JSONCSourceCode, JSONCToken, and JSONCComment types are now provided. Using these types, you can define a RuleContext type that is useful for creating JSON rules.
+
+  e.g.
+
+  ```ts
+  import type * as core from "@eslint/core";
+  export type RuleContext<RuleOptions extends unknown[] = unknown[]> =
+    core.RuleContext<{
+      LangOptions: JSONCLanguageOptions;
+      Code: JSONCSourceCode;
+      RuleOptions: RuleOptions;
+      Node: JSONCNodeOrToken;
+      MessageIds: string;
+    }>;
+  ```
+
 ## 2.21.1
 
 ### Patch Changes
