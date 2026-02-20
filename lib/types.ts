@@ -43,6 +43,7 @@ export interface RuleModule<
   ExtRuleDocs: RuleMetaDocs;
 }> {
   meta: RuleMetaData<RuleOptions>;
+  /** @internal */
   jsoncDefineRule: PartialRuleModule<RuleOptions>;
 }
 export type RuleMetaDocs = {

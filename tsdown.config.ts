@@ -11,5 +11,5 @@ export default defineConfig({
   dts: true,
   clean: true,
   outDir: "dist",
-  inlineOnly: false,
+  external: ["json-schema", "@humanwhocodes/momoa", "estree"],
 });

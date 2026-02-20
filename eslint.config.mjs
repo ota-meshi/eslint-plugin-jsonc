@@ -143,7 +143,10 @@ export default [
     files: ["*.md/**", "**/*.md/**"],
     languageOptions: {
       sourceType: "module",
-      project: null,
+      parserOptions: {
+        project: false,
+        projectService: false,
+      },
     },
     rules: {
       "n/no-missing-import": "off",
