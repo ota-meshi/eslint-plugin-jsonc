@@ -80,11 +80,11 @@ tester.run("object-curly-spacing", rule, {
         "There should be no space after '{'.",
         "There should be no space before '}'.",
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
     // always - arraysInObjects
     {

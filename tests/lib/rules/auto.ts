@@ -25,7 +25,7 @@ function buildLinter(): LinterFunction {
   const config: eslint.Linter.Config = {
     files: ["*.js", "**/*.js", "*.json", "**/*.json", "*.vue", "**/*.vue"],
     plugins: {
-      jsonc: plugin as any,
+      jsonc: plugin,
     },
     rules: {
       "jsonc/auto": "error",

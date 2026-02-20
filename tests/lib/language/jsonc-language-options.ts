@@ -248,7 +248,7 @@ describe("JSONC Language Options", () => {
     it("should work with recommended-with-json config", async () => {
       const eslint = new ESLint({
         overrideConfigFile: true,
-        overrideConfig: plugin.configs["recommended-with-json"] as never,
+        overrideConfig: plugin.configs["recommended-with-json"],
       });
 
       const results = await eslint.lintText('{"key": "value"}', {
@@ -262,7 +262,7 @@ describe("JSONC Language Options", () => {
     it("should work with recommended-with-jsonc config", async () => {
       const eslint = new ESLint({
         overrideConfigFile: true,
-        overrideConfig: plugin.configs["recommended-with-jsonc"] as never,
+        overrideConfig: plugin.configs["recommended-with-jsonc"],
       });
 
       const results = await eslint.lintText('/* comment */ {"key": "value"}', {

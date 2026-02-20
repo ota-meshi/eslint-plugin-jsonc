@@ -16,20 +16,20 @@ tester.run("no-octal", rule, {
     {
       code: `01`,
       errors: ["Octal literals should not be used."],
-      ...({
+      ...{
         languageOptions: {
           sourceType: "script",
         },
-      } as any),
+      },
     },
     {
       code: `09`,
       errors: ["Octal literals should not be used."],
-      ...({
+      ...{
         languageOptions: {
           sourceType: "script",
         },
-      } as any),
+      },
     },
   ],
 });

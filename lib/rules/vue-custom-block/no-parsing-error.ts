@@ -1,9 +1,9 @@
 import type { AST } from "jsonc-eslint-parser";
 import type { AST as VueAST } from "vue-eslint-parser";
 import { createRule } from "../../utils/index.ts";
-import type { RuleListener } from "../../types.ts";
+import type { RuleContext, RuleListener } from "../../types.ts";
 import * as jsoncESLintParser from "jsonc-eslint-parser";
-import type { Rule } from "eslint";
+import type { JSONCSourceCode } from "../../language/jsonc-source-code.ts";
 
 export default createRule("vue-custom-block/no-parsing-error", {
   meta: {
@@ -22,19 +22,20 @@ export default createRule("vue-custom-block/no-parsing-error", {
       return {};
     }
     const sourceCode = context.sourceCode;
-    /* eslint-disable no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1 */
-    // @ts-expect-error -- Workaround for bug in vue-eslint-parser v9.3.1
-    const parserServices = context.parserServices ?? sourceCode.parserServices;
+    const parserServices: JSONCSourceCode["parserServices"] & {
+      parseCustomBlockElement?: (parser: any, options: any) => any;
+      customBlock?: VueAST.VElement;
+    } =
+      /* eslint-disable no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1 */
+      // @ts-expect-error -- Workaround for bug in vue-eslint-parser v9.3.1
+      context.parserServices ?? sourceCode.parserServices;
     /* eslint-enable no-restricted-properties -- Workaround for bug in vue-eslint-parser v9.3.1 */
     const parseError = parserServices.parseError;
-    if (parseError) {
+    if (parseError && typeof parseError === "object") {
       return errorReportVisitor(context, parseError);
     }
-    const parseCustomBlockElement:
-      | ((parser: any, options: any) => any)
-      | undefined = parserServices.parseCustomBlockElement;
-    const customBlockElement: VueAST.VElement | undefined =
-      parserServices.customBlock;
+    const parseCustomBlockElement = parserServices.parseCustomBlockElement;
+    const customBlockElement = parserServices.customBlock;
 
     if (customBlockElement && parseCustomBlockElement) {
       let lang = getLang(customBlockElement);
@@ -55,10 +56,7 @@ export default createRule("vue-custom-block/no-parsing-error", {
 /**
  * Report error
  */
-function errorReportVisitor(
-  context: Rule.RuleContext,
-  error: any,
-): RuleListener {
+function errorReportVisitor(context: RuleContext, error: any): RuleListener {
   let loc: AST.Position | undefined = undefined;
   if ("column" in error && "lineNumber" in error) {
     loc = {
@@ -70,7 +68,7 @@ function errorReportVisitor(
     Program(node) {
       context.report({
         // JSONC AST nodes aren't assignable to ESTree AST nodes
-        node: node as never,
+        node,
         loc,
         message: error.message,
       });

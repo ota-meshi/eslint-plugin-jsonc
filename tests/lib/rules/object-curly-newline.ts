@@ -22,11 +22,11 @@ tester.run("object-curly-newline", rule, {
       code: `<custom-block lang="json">{\n"key": "value"}</custom-block>`,
       output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
       errors: ["Unexpected line break after this opening brace."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

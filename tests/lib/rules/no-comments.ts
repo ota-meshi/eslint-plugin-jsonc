@@ -42,11 +42,11 @@ tester.run("no-comments", rule, {
             // comment
             "a"</custom-block>`,
       errors: ["Unexpected comment."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

@@ -15,22 +15,22 @@ tester.run("no-octal-escape", rule, {
     {
       code: '{"BAD": "Copyright \\251"}',
       errors: ["Don't use octal: '\\251'. Use '\\u....' instead."],
-      ...({
+      ...{
         languageOptions: {
           sourceType: "script",
         },
-      } as any),
+      },
     },
     {
       filename: "test.vue",
       code: `<custom-block lang="json">{"BAD": "Copyright \\251"}</custom-block>`,
       errors: ["Don't use octal: '\\251'. Use '\\u....' instead."],
-      ...({
+      ...{
         languageOptions: {
           sourceType: "script",
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

@@ -147,9 +147,9 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
      * @returns A replacement string for this property
      */
     function getUnquotedKey(
-      key: AST.JSONStringLiteral | AST.JSONIdentifier,
+      key: AST.JSONStringLiteral | AST.JSONNumberLiteral | AST.JSONIdentifier,
     ): string {
-      return key.type === "JSONIdentifier" ? key.name : key.value;
+      return key.type === "JSONIdentifier" ? key.name : String(key.value);
     }
 
     /**
@@ -160,7 +160,7 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
     function getQuotedKey(key: AST.JSONLiteral | AST.JSONIdentifier): string {
       if (key.type === "JSONLiteral" && typeof key.value === "string") {
         // If the key is already a string literal, don't replace the quotes with double quotes.
-        return sourceCode.getText(key as any);
+        return sourceCode.getText(key);
       }
 
       // Otherwise, the key is either an identifier or a number literal.
@@ -197,11 +197,10 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
           areQuotesRedundant(key.value, tokens, NUMBERS)
         ) {
           context.report({
-            node: node as any,
+            node,
             messageId: "unnecessarilyQuotedProperty",
             data: { property: key.value },
-            fix: (fixer) =>
-              fixer.replaceText(key as any, getUnquotedKey(key as any)),
+            fix: (fixer) => fixer.replaceText(key, getUnquotedKey(key)),
           });
         }
       } else if (
@@ -210,10 +209,10 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
         isKeyword(key.name)
       ) {
         context.report({
-          node: node as any,
+          node,
           messageId: "unquotedReservedProperty",
           data: { property: key.name },
-          fix: (fixer) => fixer.replaceText(key as any, getQuotedKey(key)),
+          fix: (fixer) => fixer.replaceText(key, getQuotedKey(key)),
         });
       } else if (
         NUMBERS &&
@@ -221,10 +220,10 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
         isNumericLiteral(key)
       ) {
         context.report({
-          node: node as any,
+          node,
           messageId: "unquotedNumericProperty",
           data: { property: String(key.value) },
-          fix: (fixer) => fixer.replaceText(key as any, getQuotedKey(key)),
+          fix: (fixer) => fixer.replaceText(key, getQuotedKey(key)),
         });
       }
     }
@@ -243,14 +242,14 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
         !(key.type === "JSONLiteral" && typeof key.value === "string")
       ) {
         context.report({
-          node: node as any,
+          node,
           messageId: "unquotedPropertyFound",
           data: {
             property:
               (key as AST.JSONIdentifier).name ||
               (key as AST.JSONStringLiteral).value,
           },
-          fix: (fixer) => fixer.replaceText(key as any, getQuotedKey(key)),
+          fix: (fixer) => fixer.replaceText(key, getQuotedKey(key)),
         });
       }
     }
@@ -314,28 +313,25 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
             | AST.JSONStringLiteral
             | AST.JSONIdentifier;
           context.report({
-            node: property as any,
+            node: property,
             messageId: "redundantQuoting",
-            fix: (fixer) => fixer.replaceText(key as any, getUnquotedKey(key)),
+            fix: (fixer) => fixer.replaceText(key, getUnquotedKey(key)),
           });
         });
       } else if (unquotedProps.length && keywordKeyName) {
         unquotedProps.forEach((property) => {
           context.report({
-            node: property as any,
+            node: property,
             messageId: "requireQuotesDueToReservedWord",
             data: { property: keywordKeyName! },
             fix: (fixer) =>
-              fixer.replaceText(
-                property.key as any,
-                getQuotedKey(property.key),
-              ),
+              fixer.replaceText(property.key, getQuotedKey(property.key)),
           });
         });
       } else if (quotedProps.length && unquotedProps.length) {
         unquotedProps.forEach((property) => {
           context.report({
-            node: property as any,
+            node: property,
             messageId: "inconsistentlyQuotedProperty",
             data: {
               key:
@@ -343,10 +339,7 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
                 (property.key as AST.JSONStringLiteral).value,
             },
             fix: (fixer) =>
-              fixer.replaceText(
-                property.key as any,
-                getQuotedKey(property.key),
-              ),
+              fixer.replaceText(property.key, getQuotedKey(property.key)),
           });
         });
       }

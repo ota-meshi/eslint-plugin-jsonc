@@ -2,7 +2,6 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { createRule } from "../utils/index.ts";
-import type { Comment, Token } from "../types.ts";
 import type { JSONSchema4 } from "json-schema";
 import {
   isClosingBraceToken,
@@ -10,6 +9,10 @@ import {
   isOpeningBraceToken,
 } from "@eslint-community/eslint-utils";
 import { isTokenOnSameLine } from "../utils/eslint-ast-utils.ts";
+import type {
+  JSONCComment,
+  JSONCToken,
+} from "../language/jsonc-source-code.ts";
 
 // Schema objects.
 const OPTION_VALUE: JSONSchema4 = {
@@ -119,8 +122,8 @@ function normalizeOptions(options: any) {
 function areLineBreaksRequired(
   node: AST.JSONObjectExpression,
   options: { multiline: boolean; minProperties: number; consistent: boolean },
-  first: Token | Comment,
-  last: Token | Comment,
+  first: JSONCToken | JSONCComment,
+  last: JSONCToken | JSONCComment,
 ) {
   const objectProperties = node.properties;
 
@@ -128,7 +131,7 @@ function areLineBreaksRequired(
     objectProperties.length >= options.minProperties ||
     (options.multiline &&
       objectProperties.length > 0 &&
-      first.loc!.start.line !== last.loc!.end.line)
+      first.loc.start.line !== last.loc.end.line)
   );
 }
 
@@ -188,14 +191,8 @@ export default createRule("object-curly-newline", {
     function check(node: AST.JSONObjectExpression) {
       const options = normalizedOptions[node.type];
 
-      const openBrace = sourceCode.getFirstToken(
-        node as any,
-        isOpeningBraceToken,
-      )!;
-      const closeBrace = sourceCode.getLastToken(
-        node as any,
-        isClosingBraceToken,
-      )!;
+      const openBrace = sourceCode.getFirstToken(node, isOpeningBraceToken)!;
+      const closeBrace = sourceCode.getLastToken(node, isClosingBraceToken)!;
 
       let first = sourceCode.getTokenAfter(openBrace, {
         includeComments: true,
@@ -224,7 +221,7 @@ export default createRule("object-curly-newline", {
         if (isTokenOnSameLine(openBrace, first)) {
           context.report({
             messageId: "expectedLinebreakAfterOpeningBrace",
-            node: node as any,
+            node,
             loc: openBrace.loc,
             fix(fixer) {
               if (hasCommentsFirstToken) return null;
@@ -236,7 +233,7 @@ export default createRule("object-curly-newline", {
         if (isTokenOnSameLine(last, closeBrace)) {
           context.report({
             messageId: "expectedLinebreakBeforeClosingBrace",
-            node: node as any,
+            node,
             loc: closeBrace.loc,
             fix(fixer) {
               if (hasCommentsLastToken) return null;
@@ -264,7 +261,7 @@ export default createRule("object-curly-newline", {
         ) {
           context.report({
             messageId: "unexpectedLinebreakAfterOpeningBrace",
-            node: node as any,
+            node,
             loc: openBrace.loc,
             fix(fixer) {
               if (hasCommentsFirstToken) return null;
@@ -281,7 +278,7 @@ export default createRule("object-curly-newline", {
         ) {
           context.report({
             messageId: "unexpectedLinebreakBeforeClosingBrace",
-            node: node as any,
+            node,
             loc: closeBrace.loc,
             fix(fixer) {
               if (hasCommentsLastToken) return null;

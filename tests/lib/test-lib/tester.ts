@@ -72,7 +72,7 @@ class JSONRuleTester {
         : null;
   }
 
-  public run<RuleOptions>(
+  public run<RuleOptions extends unknown[]>(
     name: string,
     rule: RuleModule<RuleOptions>,
     tests: {

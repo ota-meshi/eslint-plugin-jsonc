@@ -20,11 +20,11 @@ tester.run("no-dupe-keys", rule, {
       filename: "test.vue",
       code: `<custom-block lang="json">{"key": "value", "key": "value"}</custom-block>`,
       errors: ["Duplicate key 'key'."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

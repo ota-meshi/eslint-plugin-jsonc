@@ -199,7 +199,7 @@ describe("JSONCSourceCode", () => {
       if (expr.type !== "JSONObjectExpression")
         throw new Error("Expected object");
       const prop = expr.properties[0];
-      const text = sourceCode.getText(prop.key as never);
+      const text = sourceCode.getText(prop.key);
 
       assert.strictEqual(text, '"key"');
     });
@@ -211,7 +211,7 @@ describe("JSONCSourceCode", () => {
       const sourceCode = createSourceCode(code);
 
       const objNode = sourceCode.ast.body[0].expression;
-      const tokens = sourceCode.getTokens(objNode as never);
+      const tokens = sourceCode.getTokens(objNode);
 
       assert.ok(tokens.length > 0);
       const values = tokens.map((t) => t.value);
@@ -226,7 +226,7 @@ describe("JSONCSourceCode", () => {
       const sourceCode = createSourceCode(code);
 
       const stmt = sourceCode.ast.body[0];
-      const comments = sourceCode.getCommentsBefore(stmt as never);
+      const comments = sourceCode.getCommentsBefore(stmt);
 
       assert.strictEqual(comments.length, 1);
       assert.strictEqual(comments[0].value, " comment before ");
@@ -237,7 +237,7 @@ describe("JSONCSourceCode", () => {
       const sourceCode = createSourceCode(code);
 
       const stmt = sourceCode.ast.body[0];
-      const comments = sourceCode.getCommentsAfter(stmt as never);
+      const comments = sourceCode.getCommentsAfter(stmt);
 
       assert.strictEqual(comments.length, 1);
       assert.strictEqual(comments[0].value, " comment after ");
@@ -249,8 +249,8 @@ describe("JSONCSourceCode", () => {
 
       const stmt = sourceCode.ast.body[0];
 
-      assert.strictEqual(sourceCode.getCommentsBefore(stmt as never).length, 0);
-      assert.strictEqual(sourceCode.getCommentsAfter(stmt as never).length, 0);
+      assert.strictEqual(sourceCode.getCommentsBefore(stmt).length, 0);
+      assert.strictEqual(sourceCode.getCommentsAfter(stmt).length, 0);
     });
   });
 

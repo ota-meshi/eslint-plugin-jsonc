@@ -18,20 +18,20 @@ tester.run("vue-custom-block/no-parsing-error", rule, {
     {
       filename: "test.vue",
       code: `<i18n>{"key": "value"}</i18n>`,
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
     {
       filename: "test.vue",
       code: `<i18n lang="json5">/**/123</i18n>`,
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
   invalid: [
@@ -45,11 +45,11 @@ tester.run("vue-custom-block/no-parsing-error", rule, {
           column: 14,
         },
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
     {
       filename: "test.vue",
@@ -61,11 +61,11 @@ tester.run("vue-custom-block/no-parsing-error", rule, {
           column: 7,
         },
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
     {
       filename: "test.vue",
@@ -77,11 +77,11 @@ tester.run("vue-custom-block/no-parsing-error", rule, {
           column: 7,
         },
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
     {
       filename: "test.vue",
@@ -93,11 +93,11 @@ tester.run("vue-custom-block/no-parsing-error", rule, {
           column: 19,
         },
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

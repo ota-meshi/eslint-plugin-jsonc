@@ -606,14 +606,14 @@ export default createRule<UserOptions>("sort-keys", {
      */
     function hasBlankLine(prev: JSONPropertyData, next: JSONPropertyData) {
       const tokenOrNodes = [
-        ...sourceCode.getTokensBetween(prev.node as never, next.node as never, {
+        ...sourceCode.getTokensBetween(prev.node, next.node, {
           includeComments: true,
         }),
         next.node,
       ];
       let prevLoc = prev.node.loc;
       for (const t of tokenOrNodes) {
-        const loc = t.loc!;
+        const loc = t.loc;
         if (loc.start.line - prevLoc.end.line > 1) {
           return true;
         }

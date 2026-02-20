@@ -22,11 +22,11 @@ tester.run("quote-props", rule, {
       code: `<custom-block lang="json">{key: "value"}</custom-block>`,
       output: `<custom-block lang="json">{"key": "value"}</custom-block>`,
       errors: ["Unquoted property 'key' found."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

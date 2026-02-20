@@ -41,11 +41,11 @@ tester.run("object-property-newline", rule, {
       code: `<custom-block lang="json">{ "foo": "foo", "bar": "bar" }</custom-block>`,
       output: `<custom-block lang="json">{ "foo": "foo",\n"bar": "bar" }</custom-block>`,
       errors: ["Object properties must go on a new line."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

@@ -2,8 +2,9 @@
 // MIT License. Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import type { Comment, Token } from "../types.ts";
 import { tokenize } from "jsonc-eslint-parser";
+import type { JSONCToken } from "../language/index.ts";
+import type { JSONCTokenOrComment } from "../language/jsonc-source-code.ts";
 
 export const LINEBREAKS = new Set(["\r\n", "\r", "\n", "\u2028", "\u2029"]);
 export const LINEBREAK_MATCHER = /\r\n|[\n\r\u2028\u2029]/u;
@@ -27,8 +28,8 @@ export function createGlobalLinebreakMatcher(): RegExp {
  */
 export function canTokensBeAdjacent(
   /* eslint-enable complexity -- ignore */
-  leftValue: Token | string,
-  rightValue: Token | string,
+  leftValue: JSONCToken | string,
+  rightValue: JSONCToken | string,
 ): boolean {
   let leftToken;
 
@@ -140,8 +141,8 @@ export function isNumericLiteral(
  * @public
  */
 export function isTokenOnSameLine(
-  left: Token | Comment | AST.JSONNode | null,
-  right: Token | Comment | AST.JSONNode | null,
+  left: JSONCTokenOrComment | AST.JSONNode | null,
+  right: JSONCTokenOrComment | AST.JSONNode | null,
 ): boolean {
   return left?.loc?.end.line === right?.loc?.start.line;
 }

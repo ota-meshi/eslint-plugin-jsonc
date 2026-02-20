@@ -28,11 +28,11 @@ tester.run("no-regexp-literals", rule, {
       filename: "test.vue",
       code: `<custom-block lang="json">/reg/</custom-block>`,
       errors: ["RegExp literals are not allowed."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

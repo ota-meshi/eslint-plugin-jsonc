@@ -10,8 +10,11 @@ import {
   LINEBREAK_MATCHER,
   isTokenOnSameLine,
 } from "../utils/eslint-ast-utils.ts";
-import type { Comment, Token } from "../types.ts";
 import type { Rule } from "eslint";
+import type {
+  JSONCComment,
+  JSONCToken,
+} from "../language/jsonc-source-code.ts";
 
 export interface RuleOptions {
   exceptions?: Record<string, boolean>;
@@ -113,20 +116,17 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
      */
     function getFixerFunction(
       styleType: string,
-      previousItemToken: Token | Comment,
-      commaToken: Token,
-      currentItemToken: Token,
+      previousItemToken: JSONCToken | JSONCComment,
+      commaToken: JSONCToken,
+      currentItemToken: JSONCToken,
     ) {
       const text =
-        sourceCode.text.slice(
-          previousItemToken.range![1],
-          commaToken.range[0],
-        ) +
+        sourceCode.text.slice(previousItemToken.range[1], commaToken.range[0]) +
         sourceCode.text.slice(commaToken.range[1], currentItemToken.range[0]);
-      const range = [
-        previousItemToken.range![1],
-        currentItemToken.range[0],
-      ] as [number, number];
+      const range = [previousItemToken.range[1], currentItemToken.range[0]] as [
+        number,
+        number,
+      ];
 
       return function (fixer: Rule.RuleFixer) {
         return fixer.replaceTextRange(range, getReplacedText(styleType, text));
@@ -142,10 +142,10 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
      * @private
      */
     function validateCommaItemSpacing(
-      previousItemToken: Token | Comment,
-      commaToken: Token,
-      currentItemToken: Token,
-      reportItem: Token,
+      previousItemToken: JSONCToken | JSONCComment,
+      commaToken: JSONCToken,
+      currentItemToken: JSONCToken,
+      reportItem: JSONCToken,
     ): void {
       // if single line
       if (
@@ -167,7 +167,7 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
 
         // lone comma
         context.report({
-          node: reportItem as any,
+          node: reportItem,
           loc: commaToken.loc,
           messageId: "unexpectedLineBeforeAndAfterComma",
           fix: getFixerFunction(
@@ -182,7 +182,7 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
         !isTokenOnSameLine(commaToken, currentItemToken)
       ) {
         context.report({
-          node: reportItem as any,
+          node: reportItem,
           loc: commaToken.loc,
           messageId: "expectedCommaFirst",
           fix: getFixerFunction(
@@ -197,7 +197,7 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
         isTokenOnSameLine(commaToken, currentItemToken)
       ) {
         context.report({
-          node: reportItem as any,
+          node: reportItem,
           loc: commaToken.loc,
           messageId: "expectedCommaLast",
           fix: getFixerFunction(
@@ -220,21 +220,20 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
       node: T,
       property: K,
     ): void {
-      const items = node[property] as (Token | AST.JSONNode)[];
+      const items = node[property] as (JSONCToken | AST.JSONNode)[];
       const arrayLiteral = node.type === "JSONArrayExpression";
 
       if (items.length > 1 || arrayLiteral) {
         // seed as opening [
-        let previousItemToken: Token | Comment = sourceCode.getFirstToken(
-          node as any,
-        )!;
+        let previousItemToken: JSONCToken | JSONCComment =
+          sourceCode.getFirstToken(node);
 
         items.forEach((item) => {
           const commaToken = item
-            ? sourceCode.getTokenBefore(item as any)!
+            ? sourceCode.getTokenBefore(item)!
             : previousItemToken;
           const currentItemToken = item
-            ? sourceCode.getFirstToken(item as any)!
+            ? sourceCode.getFirstToken(item)
             : sourceCode.getTokenAfter(commaToken)!;
           const reportItem = item || currentItemToken;
 
@@ -257,12 +256,12 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
               previousItemToken,
               commaToken,
               currentItemToken,
-              reportItem as Token,
+              reportItem as JSONCToken,
             );
 
           if (item) {
             const tokenAfterItem = sourceCode.getTokenAfter(
-              item as any,
+              item,
               isNotClosingParenToken,
             );
 
@@ -281,7 +280,7 @@ export default createRule<["first" | "last", RuleOptions]>("comma-style", {
          * dangling comma.
          */
         if (arrayLiteral) {
-          const lastToken = sourceCode.getLastToken(node as any)!;
+          const lastToken = sourceCode.getLastToken(node);
           const nextToLastToken = sourceCode.getTokenBefore(lastToken)!;
 
           if (isCommaToken(nextToLastToken)) {

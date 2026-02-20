@@ -38,11 +38,11 @@ tester.run("array-bracket-newline", rule, {
         "There should be no linebreak after '['.",
         "There should be no linebreak before ']'.",
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

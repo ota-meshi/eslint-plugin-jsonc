@@ -39,11 +39,11 @@ tester.run("no-template-literals", rule, {
       code: `<custom-block lang="json">{"foo":\`template\`}</custom-block>`,
       output: `<custom-block lang="json">{"foo":"template"}</custom-block>`,
       errors: ["The template literals are not allowed."],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

@@ -40,11 +40,11 @@ tester.run("array-element-newline", rule, {
         "There should be a linebreak after this element.",
         "There should be a linebreak after this element.",
       ],
-      ...({
+      ...{
         languageOptions: {
           parser: vueParser,
         },
-      } as any),
+      },
     },
   ],
 });

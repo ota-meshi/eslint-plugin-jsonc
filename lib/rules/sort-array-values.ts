@@ -2,13 +2,13 @@ import naturalCompare from "natural-compare";
 import { createRule } from "../utils/index.ts";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
-import type { SourceCode } from "eslint";
 import type { AroundTarget } from "../utils/fix-sort-elements.ts";
 import {
   fixToMoveDownForSorting,
   fixToMoveUpForSorting,
 } from "../utils/fix-sort-elements.ts";
 import { calcShortestEditScript } from "../utils/calc-shortest-edit-script.ts";
+import type { JSONCSourceCode } from "../language/jsonc-source-code.ts";
 
 type JSONValue = ReturnType<typeof getStaticJSONValue>;
 
@@ -75,14 +75,14 @@ class JSONElementData {
     if (this.node) {
       return (this.cachedAround = {
         node: this.node,
-        before: sourceCode.getTokenBefore(this.node as never)!,
-        after: sourceCode.getTokenAfter(this.node as never)!,
+        before: sourceCode.getTokenBefore(this.node)!,
+        after: sourceCode.getTokenAfter(this.node)!,
       });
     }
     const before =
       this.index > 0
         ? this.array.elements[this.index - 1].around.after
-        : sourceCode.getFirstToken(this.array.node as never)!;
+        : sourceCode.getFirstToken(this.array.node);
     const after = sourceCode.getTokenAfter(before)!;
     return (this.cachedAround = { before, after });
   }
@@ -105,11 +105,14 @@ class JSONElementData {
 class JSONArrayData {
   public readonly node: AST.JSONArrayExpression;
 
-  public readonly sourceCode: SourceCode;
+  public readonly sourceCode: JSONCSourceCode;
 
   private cachedElements: JSONElementData[] | null = null;
 
-  public constructor(node: AST.JSONArrayExpression, sourceCode: SourceCode) {
+  public constructor(
+    node: AST.JSONArrayExpression,
+    sourceCode: JSONCSourceCode,
+  ) {
     this.node = node;
     this.sourceCode = sourceCode;
   }
@@ -259,7 +262,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
             path = `[${JSON.stringify(name)}]${path}`;
           }
         } else if (p.type === "JSONArrayExpression") {
-          const index = p.elements.indexOf(curr as never);
+          const index = (p.elements as AST.JSONNode[]).indexOf(curr);
           path = `[${index}]${path}`;
         }
         curr = p;
@@ -550,7 +553,7 @@ export default createRule<UserOptions>("sort-array-values", {
       if (getJSONPrimitiveType(data.value)) {
         return String(data.value);
       }
-      return sourceCode.getText(data.node! as never);
+      return sourceCode.getText(data.node!);
     }
 
     return {
