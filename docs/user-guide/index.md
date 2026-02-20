@@ -63,7 +63,7 @@ This plugin provides the following language identifiers for use in ESLint config
 - `jsonc/json` ... JSON files
 - `jsonc/jsonc` ... JSONC files
 - `jsonc/json5` ... JSON5 files
-- `jsonc/x` ... Extended JSON files that accept any syntax representing static values parseable by [jsonc-eslint-parser]. Recommended because it allows flexible parsing while strict syntax checks can be enforced and auto-fixed using the plugin's rules.
+- `jsonc/x` ... Extended JSON files that accept any syntax representing static values parseable by [jsonc-eslint-parser](https://github.com/ota-meshi/jsonc-eslint-parser). Recommended because it allows flexible parsing while strict syntax checks can be enforced and auto-fixed using the plugin's rules.
 
 For example, to apply settings specifically to JSON files, you can use the `language` field in your ESLint configuration:
 
@@ -178,3 +178,4 @@ module.exports = {
 You can verify using JSON Schema by checking and installing [eslint-plugin-json-schema-validator]. I believe it will help you.
 
 [eslint-plugin-json-schema-validator]: https://github.com/ota-meshi/eslint-plugin-json-schema-validator
+[jsonc-eslint-parser]: 
