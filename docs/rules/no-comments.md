@@ -10,7 +10,7 @@ since: "v0.1.0"
 
 > disallow comments
 
-- :gear: This rule is included in `"plugin:jsonc/recommended-with-json"`.
+- :gear: This rule is included in `configs["recommended-with-json"]`.
 
 ## :book: Rule Details
 

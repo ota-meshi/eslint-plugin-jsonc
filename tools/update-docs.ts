@@ -98,7 +98,7 @@ class DocFile {
       if (recommended) {
         const presets = [];
         for (const rec of recommended.sort()) {
-          presets.push(`\`"plugin:jsonc/recommended-with-${rec}"\``);
+          presets.push(`\`configs["recommended-with-${rec}"]\``);
         }
         notes.push(
           `- :gear: This rule is included in ${formatItems(presets)}.`,
