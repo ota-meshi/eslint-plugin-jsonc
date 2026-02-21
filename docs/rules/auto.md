@@ -18,7 +18,7 @@ Automatically apply jsonc rules similar to your configured ESLint core rules to 
 
 This rule checks the ESLint core rules you are already using in your configuration and automatically turns ON the equivalent [Extension Rules](./index.md#extension-rules) provided by this plugin.
 
-If you have already configured a particular jsonc rule, either explicitly or via a shared configuration, then that will take precedence over `jsonc/auto`. For example, if you use the `"plugin:jsonc/recommended-with-json"` configuration, the `auto` rule will not turn ON the `jsonc/comma-dangle` rule even if the `comma-dangle` rule is enabled in your core ESLint config.
+If you have already configured a particular jsonc rule, either explicitly or via a shared configuration, then that will take precedence over `jsonc/auto`. For example, if you use the `configs["recommended-with-json"]` configuration, the `auto` rule will not turn ON the `jsonc/comma-dangle` rule even if the `comma-dangle` rule is enabled in your core ESLint config.
 
 ## :wrench: Options
 

@@ -10,7 +10,7 @@ since: "v0.1.0"
 
 > disallow multiline strings
 
-- :gear: This rule is included in `"plugin:jsonc/recommended-with-json"` and `"plugin:jsonc/recommended-with-jsonc"`.
+- :gear: This rule is included in `configs["recommended-with-json"]` and `configs["recommended-with-jsonc"]`.
 
 ## :book: Rule Details
 
