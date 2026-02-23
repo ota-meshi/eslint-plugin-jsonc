@@ -21,6 +21,9 @@ tester.run("object-curly-spacing", rule, {
     { code: "{ //\nfoo:'bar' }", options: ["always"] },
     // always - empty object
     { code: "{}", options: ["always"] },
+    { code: "{ }", options: ["always"] },
+    { code: "{/* */}", options: ["always"] },
+    { code: "{ /* */ }", options: ["always"] },
     // always - objectsInObjects
     {
       code: "{ 'foo': { 'bar': 1, 'baz': 2 }}",
@@ -57,10 +60,32 @@ tester.run("object-curly-spacing", rule, {
     { code: "{ // line comment exception\n foo: 'bar'}", options: ["never"] },
     // never - empty object
     { code: "{}", options: ["never"] },
+    { code: "{ }", options: ["never"] },
+    { code: "{/* */}", options: ["never"] },
+    { code: "{ /* */ }", options: ["never"] },
     // never - objectsInObjects
     {
       code: "{'foo': {'bar': 1, 'baz': 2} }",
       options: ["never", { objectsInObjects: true }],
+    },
+    // emptyObjects: "ignore"
+    { code: "{}", options: ["always", { emptyObjects: "ignore" }] },
+    { code: "{ }", options: ["always", { emptyObjects: "ignore" }] },
+    { code: "{/* */}", options: ["always", { emptyObjects: "ignore" }] },
+    { code: "{ /* */ }", options: ["always", { emptyObjects: "ignore" }] },
+    { code: "{}", options: ["never", { emptyObjects: "ignore" }] },
+    { code: "{ }", options: ["never", { emptyObjects: "ignore" }] },
+    { code: "{/* */}", options: ["never", { emptyObjects: "ignore" }] },
+    { code: "{ /* */ }", options: ["never", { emptyObjects: "ignore" }] },
+    // emptyObjects: "always" with comment
+    {
+      code: "{ /* */ }",
+      options: ["always", { emptyObjects: "always" }],
+    },
+    // emptyObjects: "never" with comment
+    {
+      code: "{/* */}",
+      options: ["never", { emptyObjects: "never" }],
     },
   ],
   invalid: [
@@ -257,6 +282,50 @@ tester.run("object-curly-spacing", rule, {
       output: "{'foo': [1, 2] , 'bar': ['baz', 'qux'] }",
       options: ["never", { arraysInObjects: true }],
       errors: [{ messageId: "requireSpaceBefore" }],
+    },
+    // emptyObjects: "never"
+    {
+      code: "{ }",
+      output: "{}",
+      options: ["always", { emptyObjects: "never" }],
+      errors: [{ messageId: "unexpectedSpaceInEmptyObject" }],
+    },
+    {
+      code: "{ }",
+      output: "{}",
+      options: ["never", { emptyObjects: "never" }],
+      errors: [{ messageId: "unexpectedSpaceInEmptyObject" }],
+    },
+    // emptyObjects: "always"
+    {
+      code: "{}",
+      output: "{ }",
+      options: ["always", { emptyObjects: "always" }],
+      errors: [{ messageId: "requiredSpaceInEmptyObject" }],
+    },
+    {
+      code: "{}",
+      output: "{ }",
+      options: ["never", { emptyObjects: "always" }],
+      errors: [{ messageId: "requiredSpaceInEmptyObject" }],
+    },
+    {
+      code: "{/* */}",
+      output: "{ /* */ }",
+      options: ["never", { emptyObjects: "always" }],
+      errors: [
+        { messageId: "requireSpaceAfter" },
+        { messageId: "requireSpaceBefore" },
+      ],
+    },
+    {
+      code: "{ /* */ }",
+      output: "{/* */}",
+      options: ["always", { emptyObjects: "never" }],
+      errors: [
+        { messageId: "unexpectedSpaceAfter" },
+        { messageId: "unexpectedSpaceBefore" },
+      ],
     },
   ],
 });
