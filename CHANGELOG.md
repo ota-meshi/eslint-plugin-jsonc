@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.1.0
+
+### Minor Changes
+
+- [#487](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/487) [`8a1f4b9`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/8a1f4b9d458b0c2de95249eb66ae0568912ad945) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat(object-curly-spacing): add `emptyObjects` option to control spacing in empty objects
+
 ## 3.0.1
 
 ### Patch Changes
