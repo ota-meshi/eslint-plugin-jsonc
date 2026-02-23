@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.0.1
+
+### Patch Changes
+
+- [#484](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/484) [`8bef6fc`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/8bef6fc87089f34079aa4ec0b81b59ce0ec45227) Thanks [@ota-meshi](https://github.com/ota-meshi)! - update `@ota-meshi/ast-token-store` to v0.3.0
+
 ## 3.0.0
 
 ### Major Changes
