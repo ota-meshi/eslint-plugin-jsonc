@@ -79,7 +79,7 @@ export default {
                 rules.map((rule) => [rule.meta.docs.ruleName, rule]),
               ),
               languages: {
-                jsonc: this.jsoncLanguage,
+                x: this.jsoncLanguage,
               },
             },
           },
