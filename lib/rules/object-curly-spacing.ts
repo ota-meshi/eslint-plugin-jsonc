@@ -339,6 +339,8 @@ export default createRule<["always" | "never", RuleOptions]>(
           );
           return;
         }
+        if (!isTokenOnSameLine(openingToken, closingToken)) return;
+
         const sourceBetween = sourceCode.text.slice(
           openingToken.range[1],
           closingToken.range[0],

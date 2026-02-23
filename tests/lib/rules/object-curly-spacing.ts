@@ -87,6 +87,15 @@ tester.run("object-curly-spacing", rule, {
       code: "{/* */}",
       options: ["never", { emptyObjects: "never" }],
     },
+    // emptyObjects with multiline
+    {
+      code: "{\n}",
+      options: ["always", { emptyObjects: "always" }],
+    },
+    {
+      code: "{ \n }",
+      options: ["never", { emptyObjects: "never" }],
+    },
   ],
   invalid: [
     {
