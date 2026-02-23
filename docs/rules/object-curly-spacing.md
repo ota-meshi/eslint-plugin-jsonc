@@ -40,8 +40,8 @@ This rule enforces consistent spacing inside braces of object literals.
     "jsonc/object-curly-spacing": ["error",
         "never",
         {
-            "arraysInObjects": true,
-            "objectsInObjects": true,
+            "arraysInObjects": false,
+            "objectsInObjects": false,
             "emptyObjects": "ignore"
         }
     ]
