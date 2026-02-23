@@ -38,18 +38,45 @@ This rule enforces consistent spacing inside braces of object literals.
 ```json
 {
     "jsonc/object-curly-spacing": ["error",
-        "never"
+        "never",
+        {
+            "arraysInObjects": false,
+            "objectsInObjects": false,
+            "emptyObjects": "ignore"
+        }
     ]
 }
 ```
 
-Same as [object-curly-spacing] rule option. See [here](https://eslint.org/docs/rules/object-curly-spacing#options) for details.
+This rule has two options, a string option and an object option.
+
+- First option:
+
+  - `"never"` (default) disallows spacing inside of braces
+  - `"always"` requires spacing inside of braces (except `{}`)
+
+- Second option:
+
+  - `"arraysInObjects"` control spacing inside of braces of objects beginning and/or ending with an array element.
+    - `true` requires spacing inside of braces of objects beginning and/or ending with an array element (applies when the first option is set to `never`)
+    - `false` disallows spacing inside of braces of objects beginning and/or ending with an array element (applies when the first option is set to `always`)
+  - `"objectsInObjects"` control spacing inside of braces of objects beginning and/or ending with an object element.
+    - `true` requires spacing inside of braces of objects beginning and/or ending with an object element (applies when the first option is set to `never`)
+    - `false` disallows spacing inside of braces of objects beginning and/or ending with an object element (applies when the first option is set to `always`)
+  - `"emptyObjects"` control spacing within empty objects.
+    - `"ignore"`(default) do not check spacing in empty objects.
+    - `"always"` require a space in empty objects.
+    - `"never"` disallow spaces in empty objects.
+
+These options are almost identical to those of the [@stylistic/object-curly-spacing] rule. See [here](https://eslint.style/rules/object-curly-spacing#options) for details.
 
 ## :couple: Related rules
 
+- [@stylistic/object-curly-spacing]
 - [object-curly-spacing]
 
 [object-curly-spacing]: https://eslint.org/docs/rules/object-curly-spacing
+[@stylistic/object-curly-spacing]: https://eslint.style/rules/object-curly-spacing
 
 ## :rocket: Version
 

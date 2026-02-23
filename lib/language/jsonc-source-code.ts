@@ -860,6 +860,13 @@ export class JSONCSourceCode extends TextSourceCodeBase<{
     return this.tokenStore.getCommentsAfter(nodeOrToken);
   }
 
+  public commentsExistBetween(
+    first: JSONCSyntaxElement,
+    second: JSONCSyntaxElement,
+  ): boolean {
+    return this.tokenStore.commentsExistBetween(first, second);
+  }
+
   public isSpaceBetween(
     first: JSONCToken | JSONCComment,
     second: JSONCToken | JSONCComment,
