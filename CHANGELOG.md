@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.1.1
+
+### Patch Changes
+
+- [#492](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/492) [`36960d6`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/36960d62b87e2df2b5c64954fc08615a1653f9d9) Thanks [@FloEdelmann](https://github.com/FloEdelmann)! - Add `main` field to package.json
+
 ## 3.1.0
 
 ### Minor Changes
