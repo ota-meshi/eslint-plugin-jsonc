@@ -3,6 +3,7 @@
   "version": "3.1.0",
   "description": "ESLint plugin for JSON, JSONC and JSON5 files.",
   "type": "module",
+  "main": "./dist/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
