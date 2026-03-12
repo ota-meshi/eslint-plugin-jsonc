@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.1.2
+
+### Patch Changes
+
+- [#500](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/500) [`d97b2bc`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/d97b2bcfdc378fc7c85f2359f9c417f8c0e0b4b0) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: update eslint-json-compat-utils to 0.2.3 and fixed compatibility with `@eslint/json`
+
 ## 3.1.1
 
 ### Patch Changes
