@@ -1,6 +1,7 @@
 import assert from "node:assert";
 import { Linter } from "eslint";
 import plugin from "../../../lib/index.ts";
+import semver from "semver";
 
 /**
  * Creates a config array for testing with the specified jsonSyntax and rules.
@@ -50,6 +51,7 @@ describe("JSONC Language", () => {
           column: 16,
           ruleId: null,
           severity: 2,
+          ...(semver.lt(Linter.version, "10.0.0") ? { nodeType: null } : {}),
         },
       ]);
     });
