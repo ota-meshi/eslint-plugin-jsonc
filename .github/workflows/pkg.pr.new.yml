@@ -27,7 +27,7 @@ jobs:
           SYNCKIT_TS_RUNNER: oxc
       - run: npx pkg-pr-new publish --compact '.' --json output.json --comment=off
       - name: Add metadata to output
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
