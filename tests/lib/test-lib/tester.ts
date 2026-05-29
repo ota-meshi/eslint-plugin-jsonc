@@ -85,7 +85,7 @@ class JSONRuleTester {
     const vueValid = tests.valid.filter((test) => isUseVueParser(test));
     const vueInvalid = tests.invalid.filter((test) => isUseVueParser(test));
 
-    this.testerForBase.run(name, rule as unknown as eslint.Rule.RuleModule, {
+    this.testerForBase.run(name, rule, {
       valid: nonVueValid.map((test) => {
         if (typeof test === "string") {
           return test;
@@ -102,7 +102,7 @@ class JSONRuleTester {
     });
 
     if (this.testerForVue && (vueValid.length > 0 || vueInvalid.length > 0)) {
-      this.testerForVue.run(name, rule as unknown as eslint.Rule.RuleModule, {
+      this.testerForVue.run(name, rule, {
         valid: vueValid.map((test) => {
           if (typeof test === "string") {
             return test;
@@ -138,7 +138,7 @@ class JSONRuleTester {
     const testerForMomoa = this.testerForMomoa;
     if (!testerForMomoa) return;
     describe(`${name} with momoa`, () => {
-      testerForMomoa.run(name, rule as unknown as eslint.Rule.RuleModule, {
+      testerForMomoa.run(name, rule, {
         valid: momoaValid.map((test) => {
           if (typeof test === "string") {
             return test;
