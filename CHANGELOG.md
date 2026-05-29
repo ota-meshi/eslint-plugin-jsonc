@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.2.0
+
+### Minor Changes
+
+- [#516](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/516) [`f09fa21`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/f09fa21bdbadaed1d0b475b93970751082323350) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add `namespace` to plugin `meta`
+
 ## 3.1.2
 
 ### Patch Changes
