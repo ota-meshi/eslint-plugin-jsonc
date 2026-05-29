@@ -1,5 +1,5 @@
-// IMPORTANT!
-// This file has been automatically generated,
-// in order to update its content execute "npm run update"
-export const name = "eslint-plugin-jsonc" as const;
-export const version = "3.1.2" as const;
+import pkg from "../package.json" with { type: "json" };
+
+export const name = pkg.name;
+export const version = pkg.version;
+export const namespace = "jsonc";
