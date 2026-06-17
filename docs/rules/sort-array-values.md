@@ -65,7 +65,8 @@ The option receives multiple objects with the following properties:
   - Array ... Defines an array of values to enforce the order.
     - String ... Defines the value.
     - Object ... The object has the following properties:
-      - `valuePattern` ... Defines a pattern to match the value. Default is to match all.
+      - `key` ... Sorts arrays of objects by the value of this property. When set, the matcher targets object elements that have this property, and the value at `key` is used for comparison.
+      - `valuePattern` ... Defines a pattern to match the value (or, when `key` is set, the value at `key`). Default is to match all.
       - `order` ... The object has the following properties:
         - `type`:
           - `"asc"` ... Enforce values to be in ascending order. This is default.
@@ -78,7 +79,70 @@ The option receives multiple objects with the following properties:
       - `"desc"` ... Enforce values to be in descending order.
     - `caseSensitive` ... If `true`, enforce values to be in case-sensitive order. Default is `true`.
     - `natural` ... If `true`, enforce values to be in natural order. Default is `false`.
+    - `key` ... Sorts an array of objects by the value of this property. For example, `"key": "name"` sorts the array by each object's `name` value. Non-object elements (and objects missing the property) are handled by `missingKey`.
+    - `missingKey` ... Controls how elements that lack the `key` property are handled. Only relevant when `key` is set.
+      - `"last"` ... Such elements are expected at the end of the array. This is default.
+      - `"first"` ... Such elements are expected at the start of the array.
+      - `"skip"` ... Such elements are ignored when checking the order.
+      - `"error"` ... Such elements are reported (without auto-fix), requiring every element to have the `key` property.
 - `minValues` ... Specifies the minimum number of values that an array should have in order for the array's unsorted values to produce an error. Default is `2`, which means by default all arrays with unsorted values will result in lint errors.
+
+## Sorting object arrays by property key
+
+Use the `key` option to sort an array of objects by the value of a specific property.
+
+<eslint-code-block fix>
+
+<!-- eslint-skip -->
+
+```json5
+/* eslint jsonc/sort-array-values: ['error', { pathPattern: '^categories\\.\\w+$', order: { type: 'asc', key: 'name' } }] */
+{
+    "categories": {
+        "fruits": [
+            /* ✓ GOOD */
+            { "name": "apple" },
+            { "name": "banana" },
+            { "name": "cherry" }
+        ],
+        "vegetables": [
+            /* ✗ BAD */
+            { "name": "carrot" },
+            { "name": "broccoli" },
+            { "name": "asparagus" }
+        ]
+    }
+}
+```
+
+</eslint-code-block>
+
+By default, elements that do not have the `key` property are expected at the end of the array (`missingKey: "last"`). Use `missingKey` to change this to `"first"`, `"skip"` (ignore ordering for those elements), or `"error"` (report any element missing the `key` property).
+
+### Composing with the array form
+
+The array-of-matchers form also accepts `key`, so you can mix object sorting with other rules. For example, sort objects by their `name` property while sorting any remaining values alphabetically:
+
+```json5
+{
+    "jsonc/sort-array-values": ["error",
+        {
+            "pathPattern": "^items$",
+            "order": [
+                {
+                    // Object elements are sorted by their `name` property
+                    "key": "name",
+                    "order": { "type": "asc" }
+                },
+                {
+                    // Remaining (e.g. primitive) values are sorted alphabetically
+                    "order": { "type": "asc" }
+                }
+            ]
+        }
+    ]
+}
+```
 
 ## :couple: Related rules
 

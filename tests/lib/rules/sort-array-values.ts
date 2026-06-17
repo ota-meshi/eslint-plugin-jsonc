@@ -53,6 +53,57 @@ tester.run("sort-array-values", rule, {
       code: '{"key": [["b"], ["a"], "c"] }',
       options: [{ pathPattern: "^key$", order: { type: "asc" } }],
     },
+    // Sort an array of objects by a property value.
+    {
+      code: '{"categories": [{"name": "a"}, {"name": "b"}, {"name": "c"}] }',
+      options: [
+        { pathPattern: "^categories$", order: { type: "asc", key: "name" } },
+      ],
+    },
+    // `missingKey: "last"` keeps key-less elements at the end.
+    {
+      code: '{"categories": [{"name": "a"}, {"name": "b"}, {"id": 1}] }',
+      options: [
+        {
+          pathPattern: "^categories$",
+          order: { type: "asc", key: "name", missingKey: "last" },
+        },
+      ],
+    },
+    // `missingKey: "first"` keeps key-less elements at the start.
+    {
+      code: '{"categories": [{"id": 1}, {"name": "a"}, {"name": "b"}] }',
+      options: [
+        {
+          pathPattern: "^categories$",
+          order: { type: "asc", key: "name", missingKey: "first" },
+        },
+      ],
+    },
+    // Mixed array: objects sorted by `name`, primitives sorted by value,
+    // without interleaving the two cohorts.
+    {
+      code: '{"key": [{"name": "a"}, {"name": "b"}, "x", "y"] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: [
+            { key: "name", order: { type: "asc" } },
+            { order: { type: "asc" } },
+          ],
+        },
+      ],
+    },
+    // Array-of-matchers form using `key`.
+    {
+      code: '{"key": [{"name": "a"}, {"name": "b"}] }',
+      options: [
+        {
+          pathPattern: "^key$",
+          order: [{ key: "name", order: { type: "asc" } }],
+        },
+      ],
+    },
   ],
   invalid: [
     {
@@ -383,6 +434,81 @@ tester.run("sort-array-values", rule, {
         "Expected array values to be in ascending order. 'b' should be after 'a'.",
       ],
       ignoreMomoa: true,
+    },
+    // Object array out of order by `name` is reordered by autofix.
+    {
+      code: '{"categories": [{"name": "c"}, {"name": "b"}, {"name": "a"}] }',
+      output: `{"categories": [ {"name": "b"}, {"name": "a"},{"name": "c"}] }`,
+      options: [
+        { pathPattern: "^categories$", order: { type: "asc", key: "name" } },
+      ],
+      errors: [
+        {
+          message:
+            "Expected array values to be in ascending by 'name' order. 'c' should be after 'a'.",
+          line: 1,
+          column: 17,
+        },
+        {
+          message:
+            "Expected array values to be in ascending by 'name' order. 'b' should be after 'a'.",
+          line: 1,
+          column: 32,
+        },
+      ],
+    },
+    // Missing key defaults to `"last"`: the key-less element moves to the end.
+    {
+      code: '{"categories": [{"name": "a"}, {"id": 1}, {"name": "b"}] }',
+      output: `{"categories": [{"name": "a"}, {"name": "b"}, {"id": 1}] }`,
+      options: [
+        { pathPattern: "^categories$", order: { type: "asc", key: "name" } },
+      ],
+      errors: [
+        {
+          message:
+            "Expected array values to be in ascending by 'name' order. '{\"id\": 1}' should be after 'b'.",
+          line: 1,
+          column: 32,
+        },
+      ],
+    },
+    // `missingKey: "error"` reports the missing key but does not fix.
+    {
+      code: '{"categories": [{"name": "a"}, {"id": 1}, {"name": "b"}] }',
+      output: null,
+      options: [
+        {
+          pathPattern: "^categories$",
+          order: { type: "asc", key: "name", missingKey: "error" },
+        },
+      ],
+      errors: [
+        {
+          message: "Expected array value to have key 'name' to be sorted.",
+          line: 1,
+          column: 32,
+        },
+      ],
+    },
+    // Array-of-matchers composition using `key`.
+    {
+      code: '{"key": [{"name": "b"}, {"name": "a"}] }',
+      output: `{"key": [ {"name": "a"},{"name": "b"}] }`,
+      options: [
+        {
+          pathPattern: "^key$",
+          order: [{ key: "name", order: { type: "asc" } }],
+        },
+      ],
+      errors: [
+        {
+          message:
+            'Expected array values to be in specified order. \'{"name": "b"}\' should be after \'{"name": "a"}\'.',
+          line: 1,
+          column: 10,
+        },
+      ],
     },
   ],
 });
