@@ -60,6 +60,8 @@ class JSONElementData {
 
   private cached: { value: JSONValue } | null = null;
 
+  private cachedKeyValues: Map<string, JSONValue | undefined> | null = null;
+
   private cachedAround: AroundTarget | null = null;
 
   public get reportLoc() {
@@ -110,14 +112,27 @@ class JSONElementData {
 
   /**
    * Get the value of the given property key when this element is an object.
-   * Returns `undefined` for non-object elements or when the key is absent.
+   * Only the matched property's value is evaluated (and memoized per key),
+   * avoiding a full deep conversion of the whole element. Returns `undefined`
+   * for non-object elements or when the key is absent.
    */
   public getValueForKey(key: string): JSONValue | undefined {
-    const val = this.value;
-    if (val !== null && typeof val === "object" && !Array.isArray(val)) {
-      return (val as Record<string, JSONValue>)[key];
+    const cache = (this.cachedKeyValues ??= new Map());
+    if (cache.has(key)) {
+      return cache.get(key);
     }
-    return undefined;
+    let result: JSONValue | undefined;
+    const node = this.node;
+    if (node && node.type === "JSONObjectExpression") {
+      for (const prop of node.properties) {
+        if (getPropertyName(prop) === key) {
+          result = getStaticJSONValue(prop.value);
+          break;
+        }
+      }
+    }
+    cache.set(key, result);
+    return result;
   }
 }
 class JSONArrayData {
@@ -346,17 +361,17 @@ function parseOptions(options: UserOptions): ParsedOption[] {
       return pathPattern.test(path);
     }
   });
+}
 
-  /**
-   * Gets the property name of the given `Property` node.
-   */
-  function getPropertyName(node: AST.JSONProperty): string {
-    const prop = node.key;
-    if (prop.type === "JSONIdentifier") {
-      return prop.name;
-    }
-    return String(getStaticJSONValue(prop));
+/**
+ * Gets the property name of the given `Property` node.
+ */
+function getPropertyName(node: AST.JSONProperty): string {
+  const prop = node.key;
+  if (prop.type === "JSONIdentifier") {
+    return prop.name;
   }
+  return String(getStaticJSONValue(prop));
 }
 
 /**
