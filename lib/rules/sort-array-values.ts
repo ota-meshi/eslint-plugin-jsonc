@@ -25,22 +25,28 @@ type PatternOption = {
     | (
         | string
         | {
+            key?: string;
             valuePattern?: string;
             order?: OrderObject;
           }
       )[];
   minValues?: number;
 };
+type MissingKeyOption = "skip" | "last" | "first" | "error";
 type OrderObject = {
   type?: OrderTypeOption;
   caseSensitive?: boolean;
   natural?: boolean;
+  key?: string;
+  missingKey?: MissingKeyOption;
 };
 type ParsedOption = {
   isTargetArray: (node: JSONArrayData) => boolean;
   ignore: (data: JSONElementData) => boolean;
   isValidOrder: Validator;
   orderText: (data: JSONElementData) => string;
+  key?: string;
+  missingKey?: MissingKeyOption;
 };
 type Validator = (a: JSONElementData, b: JSONElementData) => boolean;
 
@@ -53,6 +59,8 @@ class JSONElementData {
   public readonly index: number;
 
   private cached: { value: JSONValue } | null = null;
+
+  private cachedKeyValues: Map<string, JSONValue | undefined> | null = null;
 
   private cachedAround: AroundTarget | null = null;
 
@@ -101,6 +109,31 @@ class JSONElementData {
       })
     ).value;
   }
+
+  /**
+   * Get the value of the given property key when this element is an object.
+   * Only the matched property's value is evaluated (and memoized per key),
+   * avoiding a full deep conversion of the whole element. Returns `undefined`
+   * for non-object elements or when the key is absent.
+   */
+  public getValueForKey(key: string): JSONValue | undefined {
+    const cache = (this.cachedKeyValues ??= new Map());
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+    let result: JSONValue | undefined;
+    const node = this.node;
+    if (node && node.type === "JSONObjectExpression") {
+      for (const prop of node.properties) {
+        if (getPropertyName(prop) === key) {
+          result = getStaticJSONValue(prop.value);
+          break;
+        }
+      }
+    }
+    cache.set(key, result);
+    return result;
+  }
 }
 class JSONArrayData {
   public readonly node: AST.JSONArrayExpression;
@@ -131,6 +164,8 @@ function buildValidatorFromType(
   order: OrderTypeOption,
   insensitive: boolean,
   natural: boolean,
+  key?: string,
+  missingKey: MissingKeyOption = "last",
 ): Validator {
   type Compare<T> = ([a, b]: T[]) => boolean;
 
@@ -151,16 +186,44 @@ function buildValidatorFromType(
     const baseCompareValue = compareValue;
     compareValue = (args) => baseCompareValue(args.reverse());
   }
-  return (a: JSONElementData, b: JSONElementData) => {
-    if (typeof a.value === "string" && typeof b.value === "string") {
-      return compareText([a.value, b.value]);
+
+  /**
+   * Compare two resolved values (an element value, or a value extracted by key).
+   */
+  function compare(aVal: JSONValue, bVal: JSONValue): boolean {
+    if (typeof aVal === "string" && typeof bVal === "string") {
+      return compareText([aVal, bVal]);
     }
-    const type = getJSONPrimitiveType(a.value);
-    if (type && type === getJSONPrimitiveType(b.value)) {
-      return compareValue([a.value, b.value]);
+    const type = getJSONPrimitiveType(aVal);
+    if (type && type === getJSONPrimitiveType(bVal)) {
+      return compareValue([aVal, bVal]);
     }
     // Unknown
     return true;
+  }
+
+  return (a: JSONElementData, b: JSONElementData) => {
+    if (key) {
+      const aVal = a.getValueForKey(key);
+      const bVal = b.getValueForKey(key);
+      const aMissing = aVal === undefined;
+      const bMissing = bVal === undefined;
+
+      if (aMissing || bMissing) {
+        // "skip" ignores ordering entirely; "error" never reorders (the
+        // missing element is reported separately and left in place).
+        if (missingKey === "skip" || missingKey === "error") return true;
+        if (aMissing && bMissing) return true;
+        // "first": a missing => a should come first => (a,b) is valid order.
+        // "last" (default): b missing => b should come last => valid order.
+        return missingKey === "first" ? aMissing : bMissing;
+      }
+
+      // Both have the key — compare the extracted values.
+      return compare(aVal, bVal);
+    }
+
+    return compare(a.value, b.value);
   };
 }
 
@@ -176,19 +239,30 @@ function parseOptions(options: UserOptions): ParsedOption[] {
       const type: OrderTypeOption = order.type ?? "asc";
       const insensitive = order.caseSensitive === false;
       const natural = Boolean(order.natural);
+      const key = order.key;
+      const missingKey: MissingKeyOption = order.missingKey ?? "last";
 
       return {
         isTargetArray,
         ignore: () => false,
-        isValidOrder: buildValidatorFromType(type, insensitive, natural),
+        isValidOrder: buildValidatorFromType(
+          type,
+          insensitive,
+          natural,
+          key,
+          missingKey,
+        ),
         orderText(data) {
-          if (typeof data.value === "string") {
-            return `${natural ? "natural " : ""}${
-              insensitive ? "insensitive " : ""
-            }${type}ending`;
-          }
-          return `${type}ending`;
+          const base =
+            typeof data.value === "string" || key
+              ? `${natural ? "natural " : ""}${
+                  insensitive ? "insensitive " : ""
+                }${type}ending`
+              : `${type}ending`;
+          return key ? `${base} by '${key}'` : base;
         },
+        key,
+        missingKey,
       };
     }
     const parsedOrder: {
@@ -202,18 +276,31 @@ function parseOptions(options: UserOptions): ParsedOption[] {
           isValidNestOrder: () => true,
         });
       } else {
+        const itemKey = o.key;
         const valuePattern = o.valuePattern ? new RegExp(o.valuePattern) : null;
         const nestOrder = o.order ?? {};
         const type: OrderTypeOption = nestOrder.type ?? "asc";
         const insensitive = nestOrder.caseSensitive === false;
         const natural = Boolean(nestOrder.natural);
         parsedOrder.push({
-          test: (v) =>
-            valuePattern
+          test: (v) => {
+            if (itemKey) {
+              const keyVal = v.getValueForKey(itemKey);
+              return valuePattern
+                ? keyVal !== undefined && valuePattern.test(String(keyVal))
+                : keyVal !== undefined;
+            }
+            return valuePattern
               ? Boolean(getJSONPrimitiveType(v.value)) &&
-                valuePattern.test(String(v.value))
-              : true,
-          isValidNestOrder: buildValidatorFromType(type, insensitive, natural),
+                  valuePattern.test(String(v.value))
+              : true;
+          },
+          isValidNestOrder: buildValidatorFromType(
+            type,
+            insensitive,
+            natural,
+            itemKey,
+          ),
         });
       }
     }
@@ -274,17 +361,17 @@ function parseOptions(options: UserOptions): ParsedOption[] {
       return pathPattern.test(path);
     }
   });
+}
 
-  /**
-   * Gets the property name of the given `Property` node.
-   */
-  function getPropertyName(node: AST.JSONProperty): string {
-    const prop = node.key;
-    if (prop.type === "JSONIdentifier") {
-      return prop.name;
-    }
-    return String(getStaticJSONValue(prop));
+/**
+ * Gets the property name of the given `Property` node.
+ */
+function getPropertyName(node: AST.JSONProperty): string {
+  const prop = node.key;
+  if (prop.type === "JSONIdentifier") {
+    return prop.name;
   }
+  return String(getStaticJSONValue(prop));
 }
 
 /**
@@ -308,6 +395,12 @@ function getJSONPrimitiveType(val: JSONValue) {
 }
 
 const ALLOW_ORDER_TYPES: OrderTypeOption[] = ["asc", "desc"];
+const ALLOW_MISSING_KEY: MissingKeyOption[] = [
+  "skip",
+  "last",
+  "first",
+  "error",
+];
 const ORDER_OBJECT_SCHEMA = {
   type: "object",
   properties: {
@@ -319,6 +412,12 @@ const ORDER_OBJECT_SCHEMA = {
     },
     natural: {
       type: "boolean",
+    },
+    key: {
+      type: "string",
+    },
+    missingKey: {
+      enum: ALLOW_MISSING_KEY,
     },
   },
   additionalProperties: false,
@@ -353,6 +452,9 @@ export default createRule<UserOptions>("sort-array-values", {
                     {
                       type: "object",
                       properties: {
+                        key: {
+                          type: "string",
+                        },
                         valuePattern: {
                           type: "string",
                         },
@@ -383,6 +485,7 @@ export default createRule<UserOptions>("sort-array-values", {
         "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be before '{{targetValue}}'.",
       shouldBeAfter:
         "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be after '{{targetValue}}'.",
+      missingKey: "Expected array value to have key '{{key}}' to be sorted.",
     },
     type: "suggestion",
   },
@@ -424,6 +527,19 @@ export default createRule<UserOptions>("sort-array-values", {
       elements: JSONElementData[],
       option: ParsedOption,
     ) {
+      // Report (without fixing) elements that are missing the sort key when
+      // `missingKey: "error"` is set. Ordering is left untouched for these.
+      if (option.key && option.missingKey === "error") {
+        for (const element of elements) {
+          if (element.getValueForKey(option.key) === undefined) {
+            context.report({
+              loc: element.reportLoc,
+              messageId: "missingKey",
+              data: { key: option.key },
+            });
+          }
+        }
+      }
       const sorted = bubbleSort(elements, option);
       const editScript = calcShortestEditScript(elements, sorted);
       for (let index = 0; index < editScript.length; index++) {
@@ -446,8 +562,8 @@ export default createRule<UserOptions>("sort-array-values", {
             loc: edit.a.reportLoc,
             messageId: "shouldBeAfter",
             data: {
-              thisValue: toText(edit.a),
-              targetValue: toText(target),
+              thisValue: toText(edit.a, option.key),
+              targetValue: toText(target, option.key),
               orderText: option.orderText(edit.a),
             },
             *fix(fixer) {
@@ -469,8 +585,8 @@ export default createRule<UserOptions>("sort-array-values", {
             loc: edit.a.reportLoc,
             messageId: "shouldBeBefore",
             data: {
-              thisValue: toText(edit.a),
-              targetValue: toText(target),
+              thisValue: toText(edit.a, option.key),
+              targetValue: toText(target, option.key),
               orderText: option.orderText(edit.a),
             },
             *fix(fixer) {
@@ -549,7 +665,13 @@ export default createRule<UserOptions>("sort-array-values", {
     /**
      * Convert to display text.
      */
-    function toText(data: JSONElementData) {
+    function toText(data: JSONElementData, key?: string) {
+      if (key) {
+        const keyVal = data.getValueForKey(key);
+        if (keyVal !== undefined) {
+          return String(keyVal);
+        }
+      }
       if (getJSONPrimitiveType(data.value)) {
         return String(data.value);
       }

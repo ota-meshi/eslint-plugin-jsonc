@@ -53,6 +53,25 @@ This rule checks values of array and verifies that values are sorted alphabetica
                     "order": { "type": "asc" }
                 }
             ]
+        },
+        {
+            "pathPattern": "^categories\\.\\w+$", // Hits arrays of objects
+            // Sort each array of objects by its "name" property
+            "order": { "type": "asc", "key": "name" }
+        },
+        {
+            "pathPattern": "^items$",
+            "order": [
+                {
+                    // Sort object elements by their "name" property
+                    "key": "name",
+                    "order": { "type": "asc" }
+                },
+                {
+                    // Sort any remaining values alphabetically
+                    "order": { "type": "asc" }
+                }
+            ]
         }
     ]
 }
@@ -65,7 +84,8 @@ The option receives multiple objects with the following properties:
   - Array ... Defines an array of values to enforce the order.
     - String ... Defines the value.
     - Object ... The object has the following properties:
-      - `valuePattern` ... Defines a pattern to match the value. Default is to match all.
+      - `key` ... Compares object elements by the value of this property. Default is to compare the element value itself.
+      - `valuePattern` ... Defines a pattern to match the value, or the value at `key` when `key` is set. Default is to match all.
       - `order` ... The object has the following properties:
         - `type`:
           - `"asc"` ... Enforce values to be in ascending order. This is default.
@@ -78,6 +98,12 @@ The option receives multiple objects with the following properties:
       - `"desc"` ... Enforce values to be in descending order.
     - `caseSensitive` ... If `true`, enforce values to be in case-sensitive order. Default is `true`.
     - `natural` ... If `true`, enforce values to be in natural order. Default is `false`.
+    - `key` ... Sorts an array of objects by the value of this property. Elements that lack the property are handled by `missingKey`. Default is to compare the element value itself.
+    - `missingKey` ... Defines how to handle elements that lack the `key` property. Used only with `key`.
+      - `"last"` ... Enforce such elements to be at the end of the array. This is default.
+      - `"first"` ... Enforce such elements to be at the start of the array.
+      - `"skip"` ... Ignore such elements when checking the order.
+      - `"error"` ... Report such elements. These are not auto-fixed.
 - `minValues` ... Specifies the minimum number of values that an array should have in order for the array's unsorted values to produce an error. Default is `2`, which means by default all arrays with unsorted values will result in lint errors.
 
 ## :couple: Related rules
