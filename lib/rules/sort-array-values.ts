@@ -32,13 +32,11 @@ type PatternOption = {
       )[];
   minValues?: number;
 };
-type MissingKeyOption = "skip" | "last" | "first" | "error";
 type OrderObject = {
   type?: OrderTypeOption;
   caseSensitive?: boolean;
   natural?: boolean;
   key?: string;
-  missingKey?: MissingKeyOption;
 };
 type ParsedOption = {
   isTargetArray: (node: JSONArrayData) => boolean;
@@ -46,7 +44,6 @@ type ParsedOption = {
   isValidOrder: Validator;
   orderText: (data: JSONElementData) => string;
   key?: string;
-  missingKey?: MissingKeyOption;
 };
 type Validator = (a: JSONElementData, b: JSONElementData) => boolean;
 
@@ -165,7 +162,6 @@ function buildValidatorFromType(
   insensitive: boolean,
   natural: boolean,
   key?: string,
-  missingKey: MissingKeyOption = "last",
 ): Validator {
   type Compare<T> = ([a, b]: T[]) => boolean;
 
@@ -206,20 +202,9 @@ function buildValidatorFromType(
     if (key) {
       const aVal = a.getValueForKey(key);
       const bVal = b.getValueForKey(key);
-      const aMissing = aVal === undefined;
-      const bMissing = bVal === undefined;
-
-      if (aMissing || bMissing) {
-        // "skip" ignores ordering entirely; "error" never reorders (the
-        // missing element is reported separately and left in place).
-        if (missingKey === "skip" || missingKey === "error") return true;
-        if (aMissing && bMissing) return true;
-        // "first": a missing => a should come first => (a,b) is valid order.
-        // "last" (default): b missing => b should come last => valid order.
-        return missingKey === "first" ? aMissing : bMissing;
-      }
-
-      // Both have the key — compare the extracted values.
+      // Elements missing the key are left in place — they are excluded from
+      // ordering by the caller.
+      if (aVal === undefined || bVal === undefined) return true;
       return compare(aVal, bVal);
     }
 
@@ -240,18 +225,15 @@ function parseOptions(options: UserOptions): ParsedOption[] {
       const insensitive = order.caseSensitive === false;
       const natural = Boolean(order.natural);
       const key = order.key;
-      const missingKey: MissingKeyOption = order.missingKey ?? "last";
 
       return {
         isTargetArray,
-        ignore: () => false,
-        isValidOrder: buildValidatorFromType(
-          type,
-          insensitive,
-          natural,
-          key,
-          missingKey,
-        ),
+        // When sorting by a key, elements missing that key are skipped —
+        // excluded from the sort and left in place.
+        ignore: key
+          ? (v) => v.getValueForKey(key) === undefined
+          : () => false,
+        isValidOrder: buildValidatorFromType(type, insensitive, natural, key),
         orderText(data) {
           const base =
             typeof data.value === "string" || key
@@ -262,7 +244,6 @@ function parseOptions(options: UserOptions): ParsedOption[] {
           return key ? `${base} by '${key}'` : base;
         },
         key,
-        missingKey,
       };
     }
     const parsedOrder: {
@@ -395,12 +376,6 @@ function getJSONPrimitiveType(val: JSONValue) {
 }
 
 const ALLOW_ORDER_TYPES: OrderTypeOption[] = ["asc", "desc"];
-const ALLOW_MISSING_KEY: MissingKeyOption[] = [
-  "skip",
-  "last",
-  "first",
-  "error",
-];
 const ORDER_OBJECT_SCHEMA = {
   type: "object",
   properties: {
@@ -415,9 +390,6 @@ const ORDER_OBJECT_SCHEMA = {
     },
     key: {
       type: "string",
-    },
-    missingKey: {
-      enum: ALLOW_MISSING_KEY,
     },
   },
   additionalProperties: false,
@@ -485,7 +457,6 @@ export default createRule<UserOptions>("sort-array-values", {
         "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be before '{{targetValue}}'.",
       shouldBeAfter:
         "Expected array values to be in {{orderText}} order. '{{thisValue}}' should be after '{{targetValue}}'.",
-      missingKey: "Expected array value to have key '{{key}}' to be sorted.",
     },
     type: "suggestion",
   },
@@ -527,19 +498,6 @@ export default createRule<UserOptions>("sort-array-values", {
       elements: JSONElementData[],
       option: ParsedOption,
     ) {
-      // Report (without fixing) elements that are missing the sort key when
-      // `missingKey: "error"` is set. Ordering is left untouched for these.
-      if (option.key && option.missingKey === "error") {
-        for (const element of elements) {
-          if (element.getValueForKey(option.key) === undefined) {
-            context.report({
-              loc: element.reportLoc,
-              messageId: "missingKey",
-              data: { key: option.key },
-            });
-          }
-        }
-      }
       const sorted = bubbleSort(elements, option);
       const editScript = calcShortestEditScript(elements, sorted);
       for (let index = 0; index < editScript.length; index++) {

@@ -60,24 +60,12 @@ tester.run("sort-array-values", rule, {
         { pathPattern: "^categories$", order: { type: "asc", key: "name" } },
       ],
     },
-    // `missingKey: "last"` keeps key-less elements at the end.
+    // Elements missing the sort key are skipped — left in place and not
+    // compared against the sorted elements.
     {
-      code: '{"categories": [{"name": "a"}, {"name": "b"}, {"id": 1}] }',
+      code: '{"categories": [{"name": "a"}, {"id": 1}, {"name": "b"}] }',
       options: [
-        {
-          pathPattern: "^categories$",
-          order: { type: "asc", key: "name", missingKey: "last" },
-        },
-      ],
-    },
-    // `missingKey: "first"` keeps key-less elements at the start.
-    {
-      code: '{"categories": [{"id": 1}, {"name": "a"}, {"name": "b"}] }',
-      options: [
-        {
-          pathPattern: "^categories$",
-          order: { type: "asc", key: "name", missingKey: "first" },
-        },
+        { pathPattern: "^categories$", order: { type: "asc", key: "name" } },
       ],
     },
     // Mixed array: objects sorted by `name`, primitives sorted by value,
@@ -452,40 +440,6 @@ tester.run("sort-array-values", rule, {
         {
           message:
             "Expected array values to be in ascending by 'name' order. 'b' should be after 'a'.",
-          line: 1,
-          column: 32,
-        },
-      ],
-    },
-    // Missing key defaults to `"last"`: the key-less element moves to the end.
-    {
-      code: '{"categories": [{"name": "a"}, {"id": 1}, {"name": "b"}] }',
-      output: `{"categories": [{"name": "a"}, {"name": "b"}, {"id": 1}] }`,
-      options: [
-        { pathPattern: "^categories$", order: { type: "asc", key: "name" } },
-      ],
-      errors: [
-        {
-          message:
-            "Expected array values to be in ascending by 'name' order. '{\"id\": 1}' should be after 'b'.",
-          line: 1,
-          column: 32,
-        },
-      ],
-    },
-    // `missingKey: "error"` reports the missing key but does not fix.
-    {
-      code: '{"categories": [{"name": "a"}, {"id": 1}, {"name": "b"}] }',
-      output: null,
-      options: [
-        {
-          pathPattern: "^categories$",
-          order: { type: "asc", key: "name", missingKey: "error" },
-        },
-      ],
-      errors: [
-        {
-          message: "Expected array value to have key 'name' to be sorted.",
           line: 1,
           column: 32,
         },
