@@ -64,8 +64,7 @@ This rule checks values of array and verifies that values are sorted alphabetica
             "order": [
                 {
                     // Sort object elements by their "name" property
-                    "key": "name",
-                    "order": { "type": "asc" }
+                    "order": { "type": "asc", "key": "name" }
                 },
                 {
                     // Sort any remaining values alphabetically
@@ -84,14 +83,14 @@ The option receives multiple objects with the following properties:
   - Array ... Defines an array of values to enforce the order.
     - String ... Defines the value.
     - Object ... The object has the following properties:
-      - `key` ... Compares object elements by the value of this property. Default is to compare the element value itself.
-      - `valuePattern` ... Defines a pattern to match the value, or the value at `key` when `key` is set. Default is to match all.
+      - `valuePattern` ... Defines a pattern to match the value, or the value at `order.key` when it is set. Default is to match all.
       - `order` ... The object has the following properties:
         - `type`:
           - `"asc"` ... Enforce values to be in ascending order. This is default.
           - `"desc"` ... Enforce values to be in descending order.
         - `caseSensitive` ... If `true`, enforce values to be in case-sensitive order. Default is `true`.
         - `natural` ... If `true`, enforce values to be in natural order. Default is `false`.
+        - `key` ... Sorts an array of objects by the value of this property. Elements that lack the property are left in place and not reordered. Default is to compare the element value itself.
   - Object ... The object has the following properties:
     - `type`:
       - `"asc"` ... Enforce values to be in ascending order. This is default.

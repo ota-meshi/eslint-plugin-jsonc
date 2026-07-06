@@ -76,19 +76,19 @@ tester.run("sort-array-values", rule, {
         {
           pathPattern: "^key$",
           order: [
-            { key: "name", order: { type: "asc" } },
+            { order: { type: "asc", key: "name" } },
             { order: { type: "asc" } },
           ],
         },
       ],
     },
-    // Array-of-matchers form using `key`.
+    // Array-of-matchers form using `order.key`.
     {
       code: '{"key": [{"name": "a"}, {"name": "b"}] }',
       options: [
         {
           pathPattern: "^key$",
-          order: [{ key: "name", order: { type: "asc" } }],
+          order: [{ order: { type: "asc", key: "name" } }],
         },
       ],
     },
@@ -445,14 +445,14 @@ tester.run("sort-array-values", rule, {
         },
       ],
     },
-    // Array-of-matchers composition using `key`.
+    // Array-of-matchers composition using `order.key`.
     {
       code: '{"key": [{"name": "b"}, {"name": "a"}] }',
       output: `{"key": [ {"name": "a"},{"name": "b"}] }`,
       options: [
         {
           pathPattern: "^key$",
-          order: [{ key: "name", order: { type: "asc" } }],
+          order: [{ order: { type: "asc", key: "name" } }],
         },
       ],
       errors: [

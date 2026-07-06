@@ -25,7 +25,6 @@ type PatternOption = {
     | (
         | string
         | {
-            key?: string;
             valuePattern?: string;
             order?: OrderObject;
           }
@@ -257,12 +256,12 @@ function parseOptions(options: UserOptions): ParsedOption[] {
           isValidNestOrder: () => true,
         });
       } else {
-        const itemKey = o.key;
         const valuePattern = o.valuePattern ? new RegExp(o.valuePattern) : null;
         const nestOrder = o.order ?? {};
         const type: OrderTypeOption = nestOrder.type ?? "asc";
         const insensitive = nestOrder.caseSensitive === false;
         const natural = Boolean(nestOrder.natural);
+        const itemKey = nestOrder.key;
         parsedOrder.push({
           test: (v) => {
             if (itemKey) {
@@ -424,9 +423,6 @@ export default createRule<UserOptions>("sort-array-values", {
                     {
                       type: "object",
                       properties: {
-                        key: {
-                          type: "string",
-                        },
                         valuePattern: {
                           type: "string",
                         },
