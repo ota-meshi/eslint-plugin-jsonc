@@ -14,10 +14,7 @@ const DEFAULT_OPTIONS = Object.freeze({
 const closeBraces = ["}", "]", ")", ">"];
 
 export type RuleValueOption =
-  | "always-multiline"
-  | "always"
-  | "never"
-  | "only-multiline";
+  "always-multiline" | "always" | "never" | "only-multiline";
 export type RuleValueWithIgnoreOption = RuleValueOption | "ignore";
 
 export interface RuleOptions {

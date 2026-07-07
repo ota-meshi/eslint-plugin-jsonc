@@ -360,12 +360,10 @@ export default createRule("key-spacing", {
       property: AST.JSONProperty,
     ): property is AST.JSONProperty {
       return !(
-        (
-          ("method" in property && property.method) ||
-          ("shorthand" in property && property.shorthand) ||
-          ("kind" in property && property.kind !== "init") ||
-          property.type !== "JSONProperty"
-        ) // Could be "ExperimentalSpreadProperty" or "SpreadElement"
+        ("method" in property && property.method) ||
+        ("shorthand" in property && property.shorthand) ||
+        ("kind" in property && property.kind !== "init") ||
+        property.type !== "JSONProperty" // Could be "ExperimentalSpreadProperty" or "SpreadElement"
       );
     }
 
@@ -547,10 +545,7 @@ export default createRule("key-spacing", {
         }
 
         let messageId:
-          | "extraKey"
-          | "extraValue"
-          | "missingKey"
-          | "missingValue";
+          "extraKey" | "extraValue" | "missingKey" | "missingValue";
 
         if (isExtra) messageId = side === "key" ? "extraKey" : "extraValue";
         else messageId = side === "key" ? "missingKey" : "missingValue";

@@ -188,8 +188,7 @@ function isUseJsoncESLintParser(
       ? undefined
       : test.languageOptions?.parser;
   const parser = (testParser ?? testerOptions?.languageOptions?.parser) as
-    | { meta?: unknown }
-    | undefined;
+    { meta?: unknown } | undefined;
   return parser?.meta === jsonParser.meta;
 }
 
@@ -198,7 +197,6 @@ function isUseVueParser(
 ): boolean {
   if (typeof test === "string") return false;
   const parser = test.languageOptions?.parser as
-    | { meta?: { name?: string } }
-    | undefined;
+    { meta?: { name?: string } } | undefined;
   return parser?.meta?.name === "vue-eslint-parser";
 }

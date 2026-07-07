@@ -7,10 +7,7 @@ import { keywords } from "../utils/eslint-keywords.ts";
 import { isNumericLiteral } from "../utils/eslint-ast-utils.ts";
 
 export type RulePresetOption =
-  | "always"
-  | "as-needed"
-  | "consistent"
-  | "consistent-as-needed";
+  "always" | "as-needed" | "consistent" | "consistent-as-needed";
 
 export interface RuleOptions {
   keywords?: boolean;
@@ -310,8 +307,7 @@ export default createRule<[RulePresetOption?, RuleOptions?]>("quote-props", {
       if (checkQuotesRedundancy && quotedProps.length && !necessaryQuotes) {
         quotedProps.forEach((property) => {
           const key = property.key as
-            | AST.JSONStringLiteral
-            | AST.JSONIdentifier;
+            AST.JSONStringLiteral | AST.JSONIdentifier;
           context.report({
             node: property,
             messageId: "redundantQuoting",
