@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.3.0
+
+### Minor Changes
+
+- [#519](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/519) [`9f6808a`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/9f6808adee0cc0931ba607f17fb325d9dc09bc54) Thanks [@castastrophe](https://github.com/castastrophe)! - feat(sort-array-values): add `key` option to sort object arrays by property
+
 ## 3.2.0
 
 ### Minor Changes
