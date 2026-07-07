@@ -35,12 +35,14 @@ type OrderObject = {
   type?: OrderTypeOption;
   caseSensitive?: boolean;
   natural?: boolean;
+  key?: string;
 };
 type ParsedOption = {
   isTargetArray: (node: JSONArrayData) => boolean;
   ignore: (data: JSONElementData) => boolean;
   isValidOrder: Validator;
   orderText: (data: JSONElementData) => string;
+  key?: string;
 };
 type Validator = (a: JSONElementData, b: JSONElementData) => boolean;
 
@@ -53,6 +55,8 @@ class JSONElementData {
   public readonly index: number;
 
   private cached: { value: JSONValue } | null = null;
+
+  private cachedKeyValues: Map<string, JSONValue | undefined> | null = null;
 
   private cachedAround: AroundTarget | null = null;
 
@@ -101,6 +105,31 @@ class JSONElementData {
       })
     ).value;
   }
+
+  /**
+   * Get the value of the given property key when this element is an object.
+   * Only the matched property's value is evaluated (and memoized per key),
+   * avoiding a full deep conversion of the whole element. Returns `undefined`
+   * for non-object elements or when the key is absent.
+   */
+  public getValueForKey(key: string): JSONValue | undefined {
+    const cache = (this.cachedKeyValues ??= new Map());
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+    let result: JSONValue | undefined;
+    const node = this.node;
+    if (node && node.type === "JSONObjectExpression") {
+      for (const prop of node.properties) {
+        if (getPropertyName(prop) === key) {
+          result = getStaticJSONValue(prop.value);
+          break;
+        }
+      }
+    }
+    cache.set(key, result);
+    return result;
+  }
 }
 class JSONArrayData {
   public readonly node: AST.JSONArrayExpression;
@@ -131,6 +160,7 @@ function buildValidatorFromType(
   order: OrderTypeOption,
   insensitive: boolean,
   natural: boolean,
+  key?: string,
 ): Validator {
   type Compare<T> = ([a, b]: T[]) => boolean;
 
@@ -151,16 +181,33 @@ function buildValidatorFromType(
     const baseCompareValue = compareValue;
     compareValue = (args) => baseCompareValue(args.reverse());
   }
-  return (a: JSONElementData, b: JSONElementData) => {
-    if (typeof a.value === "string" && typeof b.value === "string") {
-      return compareText([a.value, b.value]);
+
+  /**
+   * Compare two resolved values (an element value, or a value extracted by key).
+   */
+  function compare(aVal: JSONValue, bVal: JSONValue): boolean {
+    if (typeof aVal === "string" && typeof bVal === "string") {
+      return compareText([aVal, bVal]);
     }
-    const type = getJSONPrimitiveType(a.value);
-    if (type && type === getJSONPrimitiveType(b.value)) {
-      return compareValue([a.value, b.value]);
+    const type = getJSONPrimitiveType(aVal);
+    if (type && type === getJSONPrimitiveType(bVal)) {
+      return compareValue([aVal, bVal]);
     }
     // Unknown
     return true;
+  }
+
+  return (a: JSONElementData, b: JSONElementData) => {
+    if (key) {
+      const aVal = a.getValueForKey(key);
+      const bVal = b.getValueForKey(key);
+      // Elements missing the key are left in place — they are excluded from
+      // ordering by the caller.
+      if (aVal === undefined || bVal === undefined) return true;
+      return compare(aVal, bVal);
+    }
+
+    return compare(a.value, b.value);
   };
 }
 
@@ -176,19 +223,26 @@ function parseOptions(options: UserOptions): ParsedOption[] {
       const type: OrderTypeOption = order.type ?? "asc";
       const insensitive = order.caseSensitive === false;
       const natural = Boolean(order.natural);
+      const key = order.key;
 
       return {
         isTargetArray,
-        ignore: () => false,
-        isValidOrder: buildValidatorFromType(type, insensitive, natural),
+        // When sorting by a key, elements missing that key are skipped —
+        // excluded from the sort and left in place.
+        ignore: key
+          ? (v) => v.getValueForKey(key) === undefined
+          : () => false,
+        isValidOrder: buildValidatorFromType(type, insensitive, natural, key),
         orderText(data) {
-          if (typeof data.value === "string") {
-            return `${natural ? "natural " : ""}${
-              insensitive ? "insensitive " : ""
-            }${type}ending`;
-          }
-          return `${type}ending`;
+          const base =
+            typeof data.value === "string" || key
+              ? `${natural ? "natural " : ""}${
+                  insensitive ? "insensitive " : ""
+                }${type}ending`
+              : `${type}ending`;
+          return key ? `${base} by '${key}'` : base;
         },
+        key,
       };
     }
     const parsedOrder: {
@@ -207,13 +261,26 @@ function parseOptions(options: UserOptions): ParsedOption[] {
         const type: OrderTypeOption = nestOrder.type ?? "asc";
         const insensitive = nestOrder.caseSensitive === false;
         const natural = Boolean(nestOrder.natural);
+        const itemKey = nestOrder.key;
         parsedOrder.push({
-          test: (v) =>
-            valuePattern
+          test: (v) => {
+            if (itemKey) {
+              const keyVal = v.getValueForKey(itemKey);
+              return valuePattern
+                ? keyVal !== undefined && valuePattern.test(String(keyVal))
+                : keyVal !== undefined;
+            }
+            return valuePattern
               ? Boolean(getJSONPrimitiveType(v.value)) &&
-                valuePattern.test(String(v.value))
-              : true,
-          isValidNestOrder: buildValidatorFromType(type, insensitive, natural),
+                  valuePattern.test(String(v.value))
+              : true;
+          },
+          isValidNestOrder: buildValidatorFromType(
+            type,
+            insensitive,
+            natural,
+            itemKey,
+          ),
         });
       }
     }
@@ -274,17 +341,17 @@ function parseOptions(options: UserOptions): ParsedOption[] {
       return pathPattern.test(path);
     }
   });
+}
 
-  /**
-   * Gets the property name of the given `Property` node.
-   */
-  function getPropertyName(node: AST.JSONProperty): string {
-    const prop = node.key;
-    if (prop.type === "JSONIdentifier") {
-      return prop.name;
-    }
-    return String(getStaticJSONValue(prop));
+/**
+ * Gets the property name of the given `Property` node.
+ */
+function getPropertyName(node: AST.JSONProperty): string {
+  const prop = node.key;
+  if (prop.type === "JSONIdentifier") {
+    return prop.name;
   }
+  return String(getStaticJSONValue(prop));
 }
 
 /**
@@ -319,6 +386,9 @@ const ORDER_OBJECT_SCHEMA = {
     },
     natural: {
       type: "boolean",
+    },
+    key: {
+      type: "string",
     },
   },
   additionalProperties: false,
@@ -446,8 +516,8 @@ export default createRule<UserOptions>("sort-array-values", {
             loc: edit.a.reportLoc,
             messageId: "shouldBeAfter",
             data: {
-              thisValue: toText(edit.a),
-              targetValue: toText(target),
+              thisValue: toText(edit.a, option.key),
+              targetValue: toText(target, option.key),
               orderText: option.orderText(edit.a),
             },
             *fix(fixer) {
@@ -469,8 +539,8 @@ export default createRule<UserOptions>("sort-array-values", {
             loc: edit.a.reportLoc,
             messageId: "shouldBeBefore",
             data: {
-              thisValue: toText(edit.a),
-              targetValue: toText(target),
+              thisValue: toText(edit.a, option.key),
+              targetValue: toText(target, option.key),
               orderText: option.orderText(edit.a),
             },
             *fix(fixer) {
@@ -549,7 +619,13 @@ export default createRule<UserOptions>("sort-array-values", {
     /**
      * Convert to display text.
      */
-    function toText(data: JSONElementData) {
+    function toText(data: JSONElementData, key?: string) {
+      if (key) {
+        const keyVal = data.getValueForKey(key);
+        if (keyVal !== undefined) {
+          return String(keyVal);
+        }
+      }
       if (getJSONPrimitiveType(data.value)) {
         return String(data.value);
       }
