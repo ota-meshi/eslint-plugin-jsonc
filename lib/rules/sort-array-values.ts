@@ -229,9 +229,7 @@ function parseOptions(options: UserOptions): ParsedOption[] {
         isTargetArray,
         // When sorting by a key, elements missing that key are skipped —
         // excluded from the sort and left in place.
-        ignore: key
-          ? (v) => v.getValueForKey(key) === undefined
-          : () => false,
+        ignore: key ? (v) => v.getValueForKey(key) === undefined : () => false,
         isValidOrder: buildValidatorFromType(type, insensitive, natural, key),
         orderText(data) {
           const base =

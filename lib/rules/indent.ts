@@ -120,8 +120,7 @@ class TokenInfo {
     this.firstTokensByLineNumber = new Map();
     const tokens = (
       [...sourceCode.ast.comments, ...sourceCode.ast.tokens] as (
-        | JSONCToken
-        | JSONCComment
+        JSONCToken | JSONCComment
       )[]
     ).sort((a, b) => a.range[0] - b.range[0]);
 
