@@ -83,7 +83,7 @@ The option receives multiple objects with the following properties:
   - Array ... Defines an array of values to enforce the order.
     - String ... Defines the value.
     - Object ... The object has the following properties:
-      - `valuePattern` ... Defines a pattern to match the value, or the value at `order.key` when it is set. Default is to match all.
+      - `valuePattern` ... Defines a pattern to match the value, or the value at `order.key`, when defined. Default behavior matches the logic to all values.
       - `order` ... The object has the following properties:
         - `type`:
           - `"asc"` ... Enforce values to be in ascending order. This is default.
