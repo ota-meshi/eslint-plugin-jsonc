@@ -84,6 +84,30 @@ tester.run("sort-keys", rule, {
       options: OPTIONS_FOR_JSON_SCHEMA,
     },
 
+    // ignore
+    {
+      code: `{
+        "exports": {
+          ".": {
+            "require": "./index.cjs",
+            "import": "./index.js",
+            "types": "./index.d.ts"
+          }
+        },
+        "name": "example"
+      }`,
+      options: [
+        {
+          pathPattern: '^exports\\["\\."\\]$',
+          order: { type: "ignore" },
+        },
+        {
+          pathPattern: ".*",
+          order: { type: "asc" },
+        },
+      ],
+    },
+
     // nest
     {
       code: `
@@ -284,6 +308,45 @@ tester.run("sort-keys", rule, {
     },
   ],
   invalid: [
+    {
+      code: `{
+        "dependencies": {
+          "z": "1.0.0",
+          "a": "1.0.0"
+        },
+        "exports": {
+          ".": {
+            "require": "./index.cjs",
+            "types": "./index.d.ts"
+          }
+        }
+      }`,
+      output: `{
+        "dependencies": {
+          "a": "1.0.0",
+          "z": "1.0.0"
+        },
+        "exports": {
+          ".": {
+            "require": "./index.cjs",
+            "types": "./index.d.ts"
+          }
+        }
+      }`,
+      options: [
+        {
+          pathPattern: '^exports\\["\\."\\]$',
+          order: { type: "ignore" },
+        },
+        {
+          pathPattern: ".*",
+          order: { type: "asc" },
+        },
+      ],
+      errors: [
+        "Expected object keys to be in ascending order. 'z' should be after 'a'.",
+      ],
+    },
     {
       code: '{"a": 1, "c": 3, "b": 2}',
       output: '{"a": 1, "b": 2, "c": 3}',
