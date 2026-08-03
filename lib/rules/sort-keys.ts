@@ -1,5 +1,6 @@
 import naturalCompare from "natural-compare";
 import { createRule } from "../utils/index.ts";
+import type { JSONSchema4 } from "json-schema";
 import type { AST } from "jsonc-eslint-parser";
 import { getStaticJSONValue } from "jsonc-eslint-parser";
 import {
@@ -32,11 +33,12 @@ type PatternOption = {
   hasProperties: string[];
   order:
     | OrderObject
+    | IgnoreOrderObject
     | (
         | string
         | {
             keyPattern?: string;
-            order?: OrderObject;
+            order?: OrderObject | IgnoreOrderObject;
           }
       )[];
   minKeys?: number;
@@ -46,6 +48,9 @@ type OrderObject = {
   type?: OrderTypeOption;
   caseSensitive?: boolean;
   natural?: boolean;
+};
+type IgnoreOrderObject = {
+  type: "ignore";
 };
 type ParsedOption = {
   isTargetObject: (node: JSONObjectData) => boolean;
@@ -186,6 +191,25 @@ function buildValidatorFromType(
 }
 
 /**
+ * Parse an order option for a property pattern.
+ */
+function parseNestedOrder(order?: OrderObject | IgnoreOrderObject) {
+  if (order?.type === "ignore") {
+    return {
+      ignore: true,
+      isValidNestOrder: () => true,
+    };
+  }
+  const type: OrderTypeOption = order?.type ?? "asc";
+  const insensitive = order?.caseSensitive === false;
+  const natural = Boolean(order?.natural);
+  return {
+    ignore: false,
+    isValidNestOrder: buildValidatorFromType(type, insensitive, natural),
+  };
+}
+
+/**
  * Parse options
  */
 function parseOptions(options: UserOptions): ParsedOption[] {
@@ -216,6 +240,15 @@ function parseOptions(options: UserOptions): ParsedOption[] {
     const minKeys: number = opt.minKeys ?? 2;
     const allowLineSeparatedGroups = opt.allowLineSeparatedGroups || false;
     if (!Array.isArray(order)) {
+      if (order.type === "ignore") {
+        return {
+          isTargetObject,
+          ignore: () => true,
+          isValidOrder: () => true,
+          orderText: "ignored",
+          allowLineSeparatedGroups,
+        };
+      }
       const type: OrderTypeOption = order.type ?? "asc";
       const insensitive = order.caseSensitive === false;
       const natural = Boolean(order.natural);
@@ -232,29 +265,30 @@ function parseOptions(options: UserOptions): ParsedOption[] {
     }
     const parsedOrder: {
       test: (data: JSONPropertyData) => boolean;
+      ignore: boolean;
       isValidNestOrder: Validator;
     }[] = [];
     for (const o of order) {
       if (typeof o === "string") {
         parsedOrder.push({
           test: (data) => data.name === o,
+          ignore: false,
           isValidNestOrder: () => true,
         });
       } else {
         const keyPattern = o.keyPattern ? new RegExp(o.keyPattern) : null;
-        const nestOrder = o.order ?? {};
-        const type: OrderTypeOption = nestOrder.type ?? "asc";
-        const insensitive = nestOrder.caseSensitive === false;
-        const natural = Boolean(nestOrder.natural);
         parsedOrder.push({
           test: (data) => (keyPattern ? keyPattern.test(data.name) : true),
-          isValidNestOrder: buildValidatorFromType(type, insensitive, natural),
+          ...parseNestedOrder(o.order),
         });
       }
     }
     return {
       isTargetObject,
-      ignore: (data) => parsedOrder.every((p) => !p.test(data)),
+      ignore: (data) => {
+        const order = parsedOrder.find((p) => p.test(data));
+        return !order || order.ignore;
+      },
       isValidOrder(a, b) {
         for (const p of parsedOrder) {
           const matchA = p.test(a);
@@ -310,6 +344,16 @@ const ORDER_OBJECT_SCHEMA = {
   },
   additionalProperties: false,
 } as const;
+const IGNORE_ORDER_OBJECT_SCHEMA: JSONSchema4 = {
+  type: "object",
+  properties: {
+    type: {
+      enum: ["ignore"],
+    },
+  },
+  required: ["type"],
+  additionalProperties: false,
+};
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -349,7 +393,12 @@ export default createRule<UserOptions>("sort-keys", {
                             keyPattern: {
                               type: "string",
                             },
-                            order: ORDER_OBJECT_SCHEMA,
+                            order: {
+                              oneOf: [
+                                ORDER_OBJECT_SCHEMA,
+                                IGNORE_ORDER_OBJECT_SCHEMA,
+                              ],
+                            },
                           },
                           additionalProperties: false,
                         },
@@ -358,6 +407,7 @@ export default createRule<UserOptions>("sort-keys", {
                     uniqueItems: true,
                   },
                   ORDER_OBJECT_SCHEMA,
+                  IGNORE_ORDER_OBJECT_SCHEMA,
                 ],
               },
               minKeys: {
