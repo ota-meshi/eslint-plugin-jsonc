@@ -97,6 +97,7 @@ The option receives multiple objects with the following properties:
         - `type`:
           - `"asc"` ... Enforce properties to be in ascending order. This is default.
           - `"desc"` ... Enforce properties to be in descending order.
+          - `"ignore"` ... Do not enforce an order for properties matching `keyPattern`.
         - `caseSensitive` ... If `true`, enforce properties to be in case-sensitive order. Default is `true`.
         - `natural` ... If `true`, enforce properties to be in natural order. Default is `false`.
   - Object ... The object has the following properties:

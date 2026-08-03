@@ -38,7 +38,7 @@ type PatternOption = {
         | string
         | {
             keyPattern?: string;
-            order?: OrderObject;
+            order?: OrderObject | IgnoreOrderObject;
           }
       )[];
   minKeys?: number;
@@ -191,6 +191,25 @@ function buildValidatorFromType(
 }
 
 /**
+ * Parse an order option for a property pattern.
+ */
+function parseNestedOrder(order?: OrderObject | IgnoreOrderObject) {
+  if (order?.type === "ignore") {
+    return {
+      ignore: true,
+      isValidNestOrder: () => true,
+    };
+  }
+  const type: OrderTypeOption = order?.type ?? "asc";
+  const insensitive = order?.caseSensitive === false;
+  const natural = Boolean(order?.natural);
+  return {
+    ignore: false,
+    isValidNestOrder: buildValidatorFromType(type, insensitive, natural),
+  };
+}
+
+/**
  * Parse options
  */
 function parseOptions(options: UserOptions): ParsedOption[] {
@@ -246,29 +265,30 @@ function parseOptions(options: UserOptions): ParsedOption[] {
     }
     const parsedOrder: {
       test: (data: JSONPropertyData) => boolean;
+      ignore: boolean;
       isValidNestOrder: Validator;
     }[] = [];
     for (const o of order) {
       if (typeof o === "string") {
         parsedOrder.push({
           test: (data) => data.name === o,
+          ignore: false,
           isValidNestOrder: () => true,
         });
       } else {
         const keyPattern = o.keyPattern ? new RegExp(o.keyPattern) : null;
-        const nestOrder = o.order ?? {};
-        const type: OrderTypeOption = nestOrder.type ?? "asc";
-        const insensitive = nestOrder.caseSensitive === false;
-        const natural = Boolean(nestOrder.natural);
         parsedOrder.push({
           test: (data) => (keyPattern ? keyPattern.test(data.name) : true),
-          isValidNestOrder: buildValidatorFromType(type, insensitive, natural),
+          ...parseNestedOrder(o.order),
         });
       }
     }
     return {
       isTargetObject,
-      ignore: (data) => parsedOrder.every((p) => !p.test(data)),
+      ignore: (data) => {
+        const order = parsedOrder.find((p) => p.test(data));
+        return !order || order.ignore;
+      },
       isValidOrder(a, b) {
         for (const p of parsedOrder) {
           const matchA = p.test(a);
@@ -373,7 +393,12 @@ export default createRule<UserOptions>("sort-keys", {
                             keyPattern: {
                               type: "string",
                             },
-                            order: ORDER_OBJECT_SCHEMA,
+                            order: {
+                              oneOf: [
+                                ORDER_OBJECT_SCHEMA,
+                                IGNORE_ORDER_OBJECT_SCHEMA,
+                              ],
+                            },
                           },
                           additionalProperties: false,
                         },

@@ -108,6 +108,30 @@ tester.run("sort-keys", rule, {
       ],
     },
 
+    // ignore nested order
+    {
+      code: `{
+        "a": 1,
+        "z": 2,
+        "b": 3
+      }`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: [
+            {
+              keyPattern: "^z$",
+              order: { type: "ignore" },
+            },
+            {
+              keyPattern: ".*",
+              order: { type: "asc" },
+            },
+          ],
+        },
+      ],
+    },
+
     // nest
     {
       code: `
@@ -308,6 +332,67 @@ tester.run("sort-keys", rule, {
     },
   ],
   invalid: [
+    // Nested order patterns use first-match precedence.
+    {
+      code: `{
+        "a": 1,
+        "z": 2,
+        "b": 3
+      }`,
+      output: `{
+        "a": 1,
+        "b": 3,
+        "z": 2
+      }`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: [
+            {
+              keyPattern: ".*",
+              order: { type: "asc" },
+            },
+            {
+              keyPattern: "^z$",
+              order: { type: "ignore" },
+            },
+          ],
+        },
+      ],
+      errors: [
+        "Expected object keys to be in specified order. 'z' should be after 'b'.",
+      ],
+    },
+    {
+      code: `{
+        "b": 1,
+        "z": 2,
+        "a": 3
+      }`,
+      output: `{
+        "z": 2,
+        "a": 3,
+        "b": 1
+      }`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: [
+            {
+              keyPattern: "^z$",
+              order: { type: "ignore" },
+            },
+            {
+              keyPattern: ".*",
+              order: { type: "asc" },
+            },
+          ],
+        },
+      ],
+      errors: [
+        "Expected object keys to be in specified order. 'b' should be after 'a'.",
+      ],
+    },
     {
       code: `{
         "dependencies": {
