@@ -131,6 +131,30 @@ tester.run("sort-keys", rule, {
         },
       ],
     },
+    {
+      code: `{
+        "b": 1,
+
+        "z": 2,
+        "a": 3
+      }`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: [
+            {
+              keyPattern: "^z$",
+              order: { type: "ignore" },
+            },
+            {
+              keyPattern: ".*",
+              order: { type: "asc" },
+            },
+          ],
+          allowLineSeparatedGroups: true,
+        },
+      ],
+    },
 
     // nest
     {
@@ -387,6 +411,41 @@ tester.run("sort-keys", rule, {
               order: { type: "asc" },
             },
           ],
+        },
+      ],
+      errors: [
+        "Expected object keys to be in specified order. 'b' should be after 'a'.",
+      ],
+    },
+    {
+      code: `{
+        "b": 1,
+        "z": [
+
+        ],
+        "a": 3
+      }`,
+      output: `{
+        "z": [
+
+        ],
+        "a": 3,
+        "b": 1
+      }`,
+      options: [
+        {
+          pathPattern: "^$",
+          order: [
+            {
+              keyPattern: "^z$",
+              order: { type: "ignore" },
+            },
+            {
+              keyPattern: ".*",
+              order: { type: "asc" },
+            },
+          ],
+          allowLineSeparatedGroups: true,
         },
       ],
       errors: [
