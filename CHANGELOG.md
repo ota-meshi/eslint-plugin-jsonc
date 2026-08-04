@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.4.0
+
+### Minor Changes
+
+- [#526](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/526) [`b2a546f`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/b2a546f88418a6d299b8721ec1846adf3fb5b9c5) Thanks [@ColumbusLabs](https://github.com/ColumbusLabs)! - Add an `ignore` order type to `jsonc/sort-keys` path options.
+
 ## 3.3.0
 
 ### Minor Changes
