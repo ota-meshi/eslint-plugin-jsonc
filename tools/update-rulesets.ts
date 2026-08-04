@@ -74,7 +74,7 @@ export default [
     rules: {
         // eslint-plugin-jsonc rules
         ${rules
-          .filter(CONFIGS[rec].filter)
+          .filter((rule) => CONFIGS[rec].filter(rule))
           .map((rule) => {
             return `"${rule.meta.docs.ruleId}": "${CONFIGS[rec].option(rule)}"`;
           })
