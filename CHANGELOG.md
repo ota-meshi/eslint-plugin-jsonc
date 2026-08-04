@@ -1,5 +1,11 @@
 # eslint-plugin-jsonc
 
+## 3.4.1
+
+### Patch Changes
+
+- [#532](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/532) [`97a7564`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/97a7564b1ea3b54c213b58de203c96053f222ca8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Fix `allowLineSeparatedGroups` in `jsonc/sort-keys` when ignored properties occur between sorted keys.
+
 ## 3.4.0
 
 ### Minor Changes
