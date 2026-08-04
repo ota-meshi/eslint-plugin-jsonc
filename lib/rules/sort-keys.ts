@@ -483,10 +483,6 @@ export default createRule<UserOptions>("sort-keys", {
       let group: JSONPropertyData[] = [];
       let prev: JSONPropertyData | null = null;
       for (const property of properties) {
-        if (option.ignore(property)) {
-          prev = property;
-          continue;
-        }
         if (
           prev &&
           option.allowLineSeparatedGroups &&
@@ -497,8 +493,11 @@ export default createRule<UserOptions>("sort-keys", {
             group = [];
           }
         }
-        group.push(property);
         prev = property;
+        if (option.ignore(property)) {
+          continue;
+        }
+        group.push(property);
       }
       if (group.length > 0) {
         groups.push(group);
