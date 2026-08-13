@@ -83,6 +83,7 @@
     "@babel/eslint-parser": "^8.0.0",
     "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.0",
+    "@changesets/get-release-plan": "^4.0.16",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.4.1",
     "@eslint/json": "^2.0.0",
     "@ota-meshi/eslint-plugin": "^0.20.0",
