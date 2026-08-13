@@ -8,7 +8,11 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 export async function getNewVersion(): Promise<string> {
   const releasePlan = await getReleasePlan(path.resolve(dirname, "../.."));
 
-  return releasePlan.releases.find(
+  const newVersion = releasePlan.releases.find(
     ({ name }) => name === "eslint-plugin-jsonc",
-  )!.newVersion;
+  )?.newVersion;
+  if (newVersion === undefined) {
+    throw new Error("No release version found for eslint-plugin-jsonc.");
+  }
+  return newVersion;
 }
