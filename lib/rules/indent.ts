@@ -722,40 +722,39 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
     /**
      * Creates an error message for a line, given the expected/actual indentation.
      * @param expectedAmount The expected amount of indentation characters for this line
-     * @param actualSpaces The actual number of indentation spaces that were found on this line
-     * @param actualTabs The actual number of indentation tabs that were found on this line
+     * @param actualIndent The actual indentation characters on this line.
      * @returns An error message for this line
      */
     function createErrorMessageData(
       expectedAmount: number,
-      actualSpaces: number,
-      actualTabs: number,
+      actualIndent: string[],
     ): Record<string, string> {
       const expectedStatement = `${expectedAmount} ${indentType}${
         expectedAmount === 1 ? "" : "s"
       }`; // e.g. "2 tabs"
-      const foundSpacesWord = `space${actualSpaces === 1 ? "" : "s"}`; // e.g. "space"
-      const foundTabsWord = `tab${actualTabs === 1 ? "" : "s"}`; // e.g. "tabs"
-      let foundStatement;
 
-      if (actualSpaces > 0) {
-        /**
-         * Abbreviate the message if the expected indentation is also spaces.
-         * e.g. 'Expected 4 spaces but found 2' rather than 'Expected 4 spaces but found 2 spaces'
-         */
-        foundStatement =
-          indentType === "space"
-            ? actualSpaces
-            : `${actualSpaces} ${foundSpacesWord}`;
-      } else if (actualTabs > 0) {
-        foundStatement =
-          indentType === "tab" ? actualTabs : `${actualTabs} ${foundTabsWord}`;
-      } else {
+      const groups = actualIndent.join("").match(/ +|\t+/gu) ?? [];
+      let foundStatement = "";
+      if (groups.length === 0) {
         foundStatement = "0";
+      } else {
+        foundStatement = groups
+          .map((group) => {
+            const count = group.length;
+            const groupIndentType = group.startsWith("\t") ? "tab" : "space";
+            if (groups.length === 1 && groupIndentType === indentType) {
+              return String(count);
+            }
+            const name = `${groupIndentType}${count === 1 ? "" : "s"}`;
+
+            return `${count} ${name}`;
+          })
+          .join(" ");
       }
+
       return {
         expected: expectedStatement,
-        actual: String(foundStatement),
+        actual: foundStatement,
       };
     }
 
@@ -766,13 +765,11 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
      */
     function report(token: JSONCToken | JSONCComment, neededIndent: string) {
       const actualIndent = Array.from(tokenInfo.getTokenIndent(token));
-      const numSpaces = actualIndent.filter((char) => char === " ").length;
-      const numTabs = actualIndent.filter((char) => char === "\t").length;
 
       context.report({
         node: token,
         messageId: "wrongIndentation",
-        data: createErrorMessageData(neededIndent.length, numSpaces, numTabs),
+        data: createErrorMessageData(neededIndent.length, actualIndent),
         loc: {
           start: { line: token.loc.start.line, column: 0 },
           end: { line: token.loc.start.line, column: token.loc.start.column },
@@ -801,11 +798,7 @@ export default createRule<["tab" | number, RuleOptions]>("indent", {
     ): boolean {
       const indentation = tokenInfo.getTokenIndent(token);
 
-      return (
-        indentation === desiredIndent ||
-        // To avoid conflicts with no-mixed-spaces-and-tabs, don't report mixed spaces and tabs.
-        (indentation.includes(" ") && indentation.includes("\t"))
-      );
+      return indentation === desiredIndent;
     }
 
     /**

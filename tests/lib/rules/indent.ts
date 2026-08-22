@@ -136,6 +136,18 @@ tester.run(
                 `,
       },
     ],
-    [],
+    [
+      {
+        code: '{\n\t "test": 3\n}',
+        output: '{\n    "test": 3\n}',
+        errors: [
+          {
+            message:
+              "Expected indentation of 4 spaces but found 1 tab 1 space.",
+            line: 2,
+          },
+        ],
+      },
+    ],
   ),
 );
