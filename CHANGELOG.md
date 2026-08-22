@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [#545](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/545) [`c541481`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/c54148185bfaeb549264d752492dfdd994371f71) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Fix `jsonc/indent` so mixed spaces and tabs are reported and automatically corrected.
+- [#545](https://github.com/ota-meshi/eslint-plugin-jsonc/pull/545) [`c541481`](https://github.com/ota-meshi/eslint-plugin-jsonc/commit/c54148185bfaeb549264d752492dfdd994371f71) Thanks [@Cherepanov-Pavel](https://github.com/Cherepanov-Pavel)! - Fix `jsonc/indent` so mixed spaces and tabs are reported and automatically corrected.
 
 ## 3.4.1
 
