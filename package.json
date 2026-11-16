@@ -88,7 +88,7 @@
     "@eslint/json": "^2.0.0",
     "@ota-meshi/eslint-plugin": "^0.21.0",
     "@ota-meshi/site-kit-eslint-editor-vue": "^0.2.4",
-    "@stylistic/eslint-plugin": "^5.7.1",
+    "@stylistic/eslint-plugin": "^6.0.0",
     "@swc-node/register": "^1.11.1",
     "@types/mocha": "^10.0.10",
     "@types/natural-compare": "^1.4.3",
